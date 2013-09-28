@@ -1,0 +1,22 @@
+Error 00040. 0x130C10 (Thread 0x0EBC):
+Method called on illegally casted object: Attempt to access 608 byte(s) at
+ 0x011B2D24. The 'this' pointer points to heap block 0x011B2D24 which is only
+ 604 bytes long.
+Call Tree:
+   0x004148A0(=RSign.exe:0x01:0138A0) c:\program files\borland\cbuilder6\include\vcl\ADODB.hpp#965
+   0x0041034A(=RSign.exe:0x01:00F34A) D:\Projects\RSign\DBDataSource.h#67
+   0x0040FF61(=RSign.exe:0x01:00EF61) D:\Projects\RSign\MainUnit.cpp#322
+   0x00640763(=RSign.exe:0x01:23F763)
+   0x006403D6(=RSign.exe:0x01:23F3D6)
+   0x0040D869(=RSign.exe:0x01:00C869) c:\program files\borland\cbuilder6\include\vcl\Forms.hpp#930
+
+The memory block (0x011B2D24) [size: 604 bytes] was allocated with SysGetMem
+Call Tree:
+   0x006AAC83(=RSign.exe:0x01:2A9C83)
+   0x0041034A(=RSign.exe:0x01:00F34A) D:\Projects\RSign\DBDataSource.h#67
+   0x0040FF61(=RSign.exe:0x01:00EF61) D:\Projects\RSign\MainUnit.cpp#322
+   0x00640763(=RSign.exe:0x01:23F763)
+   0x006403D6(=RSign.exe:0x01:23F3D6)
+   0x0040D869(=RSign.exe:0x01:00C869) c:\program files\borland\cbuilder6\include\vcl\Forms.hpp#930
+
+------------------------------------------

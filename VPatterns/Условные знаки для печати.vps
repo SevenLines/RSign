@@ -1,0 +1,82 @@
+Figure=PageSize,Width=297,Height=210
+
+Figure=LabelRect,X1=300,Y1=100,X2=2800,Y2=200,Color=0,Size=18,Bold=1,Italic=0,Underline=0,Format=1,"FontName=Times New Roman","Text=Условные обозначения","Caption=Заголовок"
+
+
+Figure=LabelRect,X1=700,Y1=250,X2=1450,Y2=350,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Мосты","Caption=Мосты"
+Figure=LabelRect,X1=700,Y1=350,X2=1450,Y2=450,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Водопропускные трубы","Caption=Трубы"
+Figure=LabelRect,X1=700,Y1=450,X2=1450,Y2=550,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Коммуникации","Caption=Коммуникации"
+Figure=LabelRect,X1=700,Y1=550,X2=1450,Y2=650,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Железнодорожные переезды","Caption=ЖелДороги"
+Figure=LabelRect,X1=700,Y1=650,X2=1450,Y2=750,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Населенные пункты","Caption=НасПункты"
+Figure=LabelRect,X1=700,Y1=750,X2=1450,Y2=850,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Автобусные остановки","Caption=Остановки"
+Figure=LabelRect,X1=700,Y1=850,X2=1450,Y2=950,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Случаи ДТП","Caption=Случаи ДТП"
+Figure=LabelRect,X1=700,Y1=950,X2=1450,Y2=1050,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Опасные участки дорог","Caption=Опасные участки"
+Figure=LabelRect,X1=700,Y1=1050,X2=1450,Y2=1150,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Водоотводные сооружения","Caption=Водоотводные сооружения"
+
+
+Figure=RoadObject,ObjCode=44,ObjChr=234,Points={400;250}{450;250}{450;1150}{400;1150}
+Figure=RoadObject,ObjCode=18,ObjChr=0,Points={450;330}{450;270}{400;270}{400;330}
+Figure=RoadObject,ObjCode=42,ObjChr=0,Points={375;400;0}{475;400;1}
+Figure=RoadObject,ObjCode=20,ObjChr=0,Points={325;430;0}{325;500;1}{525;500;1}{525;570;1}
+Figure=RoadObject,ObjCode=50,ObjChr=0,Points={300;600;0}{550;600;1}
+Figure=RoadObject,ObjCode=48,ObjChr=0,Points={300;660}{400;660}{400;740}{300;740}
+Figure=RoadObject,ObjCode=48,ObjChr=0,Points={550;660}{450;660}{450;740}{550;740}
+Figure=RoadObject,ObjCode=19,ObjChr=0,Points={500;800}
+Figure=RoadObject,ObjCode=49,ObjChr=0,Points={425;900}
+Figure=RoadObject,ObjCode=53,ObjChr=0,Points={400;960}{450;960}{450;1040}{400;1040}
+Figure=RoadObject,ObjCode=22,ObjChr=0,Points={350;1060;0}{350;1140;1}
+
+Figure=LabelRect,X1=300,Y1=1360,X2=1450,Y2=1480,Color=0,Size=14,Bold=1,Italic=1,Underline=0,Format=1,"FontName=Times New Roman","Text=Дорожные покрытия по материалу","Caption=Заголовок покрытий"
+Figure=LabelRect,X1=700,Y1=1480,X2=1450,Y2=1580,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Асфальтобетонные","Caption=Асфальтобетонные"
+Figure=LabelRect,X1=700,Y1=1580,X2=1450,Y2=1680,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Цементобетонные","Caption=Цементобетонные"
+Figure=LabelRect,X1=700,Y1=1680,X2=1450,Y2=1780,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Щебеночные (гравийные)","Caption=Щебеночные (гравийное)"
+Figure=LabelRect,X1=700,Y1=1780,X2=1450,Y2=1880,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Грунтовые","Caption=Грунтовые"
+Figure=LabelRect,X1=700,Y1=1880,X2=1450,Y2=1980,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Без покрытия","Caption=Без покрытия"
+
+Figure=RoadObject,ObjCode=44,ObjChr=234,Points={300;1490}{550;1490}{550;1570}{300;1570}
+Figure=RoadObject,ObjCode=44,ObjChr=233,Points={300;1590}{550;1590}{550;1670}{300;1670}
+Figure=RoadObject,ObjCode=44,ObjChr=236,Points={300;1690}{550;1690}{550;1770}{300;1770}
+Figure=RoadObject,ObjCode=44,ObjChr=237,Points={300;1790}{550;1790}{550;1870}{300;1870}
+Figure=RoadObject,ObjCode=44,ObjChr=238,Points={300;1890}{550;1890}{550;1970}{300;1970}
+
+
+
+Figure=LabelRect,X1=1650,Y1=250,X2=2800,Y2=370,Color=0,Size=14,Bold=1,Italic=1,Underline=0,Format=1,"FontName=Times New Roman","Text=Ограждения и сигнальные устройства по видам","Caption=Заголовок ограждений"
+Figure=LabelRect,X1=2050,Y1=370,X2=2800,Y2=460,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Барьерные односторонние","Caption=Барьерное одностороннее"
+Figure=LabelRect,X1=2050,Y1=460,X2=2800,Y2=550,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Барьерные двухсторонние","Caption=Барьерное двухстороннее"
+Figure=LabelRect,X1=2050,Y1=550,X2=2800,Y2=640,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Тросовые","Caption=Тросовое"
+Figure=LabelRect,X1=2050,Y1=640,X2=2800,Y2=730,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Парапеты","Caption=Парапеты"
+Figure=LabelRect,X1=2050,Y1=730,X2=2800,Y2=820,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Сетки","Caption=Сетки"
+Figure=LabelRect,X1=2050,Y1=820,X2=2800,Y2=910,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Перила","Caption=Перила"
+Figure=LabelRect,X1=2050,Y1=910,X2=2800,Y2=1000,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=По типу Нью-Джерси","Caption=По типу Нью-Джерси"
+Figure=LabelRect,X1=2050,Y1=1000,X2=2800,Y2=1090,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Металлические","Caption=Металлическое"
+Figure=LabelRect,X1=2050,Y1=1090,X2=2800,Y2=1180,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Направляющие столбики","Caption=Направляющие столбики"
+Figure=LabelRect,X1=2050,Y1=1180,X2=2800,Y2=1270,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Тумбы с искусственным освещением","Caption=Тумбы с искусственным освещением"
+Figure=LabelRect,X1=2050,Y1=1270,X2=2800,Y2=1360,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Сигнальные тумбы","Caption=Сигнальные тумбы"
+Figure=RoadObject,ObjCode=16,ObjChr=112,Points={1650;420;0}{1900;420;1}
+Figure=RoadObject,ObjCode=16,ObjChr=113,Points={1650;510;0}{1900;510;1}
+Figure=RoadObject,ObjCode=16,ObjChr=114,Points={1650;600;0}{1900;600;1}
+Figure=RoadObject,ObjCode=16,ObjChr=115,Points={1650;690;0}{1900;690;1}
+Figure=RoadObject,ObjCode=16,ObjChr=116,Points={1650;780;0}{1900;780;1}
+Figure=RoadObject,ObjCode=16,ObjChr=117,Points={1650;870;0}{1900;870;1}
+Figure=RoadObject,ObjCode=16,ObjChr=118,Points={1650;960;0}{1900;960;1}
+Figure=RoadObject,ObjCode=16,ObjChr=1959537,Points={1650;1050;0}{1900;1050;1}
+Figure=RoadObject,ObjCode=17,ObjChr=181,Points={1650;1140;0}{1900;1140;1}
+Figure=RoadObject,ObjCode=17,ObjChr=182,Points={1650;1230;0}{1900;1230;1}
+Figure=RoadObject,ObjCode=17,ObjChr=183,Points={1650;1320;0}{1900;1320;1}
+
+
+Figure=LabelRect,X1=1650,Y1=1460,X2=2800,Y2=1580,Color=0,Size=14,Bold=1,Italic=1,Underline=0,Format=1,"FontName=Times New Roman","Text=Обочины по видам укреплений","Caption=Заголовок обочин"
+Figure=LabelRect,X1=2050,Y1=1580,X2=2800,Y2=1680,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Твердые","Caption=Твердые"
+Figure=LabelRect,X1=2050,Y1=1680,X2=2800,Y2=1780,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Щебеночные (гравийные)","Caption=Щебеноочное (гравийное)"
+Figure=LabelRect,X1=2050,Y1=1780,X2=2800,Y2=1880,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Засеянные травами","Caption=Засев трав"
+Figure=LabelRect,X1=2050,Y1=1880,X2=2800,Y2=1980,Color=0,Size=12,Bold=0,Italic=0,Underline=0,Format=36,"FontName=Times New Roman","Text=Неукрепленные","Caption=Без укрепления"
+
+Figure=RoadObject,ObjCode=44,ObjChr=234,Points={1650;1650}{1900;1650}{1900;1670}{1650;1670}
+Figure=RoadObject,ObjCode=44,ObjChr=234,Points={1650;1750}{1900;1750}{1900;1770}{1650;1770}
+Figure=RoadObject,ObjCode=44,ObjChr=234,Points={1650;1850}{1900;1850}{1900;1870}{1650;1870}
+Figure=RoadObject,ObjCode=44,ObjChr=234,Points={1650;1950}{1900;1950}{1900;1970}{1650;1970}
+Figure=RoadObject,ObjCode=29,ObjChr=93,Points={1650;1590}{1900;1590}{1900;1650}{1650;1650}
+Figure=RoadObject,ObjCode=29,ObjChr=94,Points={1650;1690}{1900;1690}{1900;1750}{1650;1750}
+Figure=RoadObject,ObjCode=29,ObjChr=1077522,Points={1650;1790}{1900;1790}{1900;1850}{1650;1850}
+Figure=RoadObject,ObjCode=29,ObjChr=82,Points={1650;1890}{1900;1890}{1900;1950}{1650;1950}

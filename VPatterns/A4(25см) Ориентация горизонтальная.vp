@@ -1,0 +1,18 @@
+Figure=PageSize,Section=0,Width=297,Height=210
+Figure=PlanCenter,Section=0,X=1300,Y=950
+Figure=LabelAngle,Section=0,Angle=2700,X=2750,Y=900,Color=0,Size=14,Bold=1,Italic=0,Underline=0,Format=30,"FontName=Times New Roman","Text=$RoadName$ ($StartKm$-$EndKm$)","Caption=Название дороги"
+Figure=Line,Section=0,Color=0,Width=1,X1=10,Y1=200,X2=2590,Y2=200
+Figure=Line,Section=0,Color=0,Width=1,X1=10,Y1=200,X2=10,Y2=1700
+Figure=Line,Section=0,Color=0,Width=1,X1=10,Y1=1700,X2=2590,Y2=1700
+Figure=Line,Section=0,Color=0,Width=1,X1=2590,Y1=200,X2=2590,Y2=1700
+Figure=Line,Section=0,Color=0,Width=1,X1=550,Y1=250,X2=550,Y2=1650
+Figure=Line,Section=0,Color=0,Width=1,X1=1050,Y1=250,X2=1050,Y2=1650
+Figure=Line,Section=0,Color=0,Width=1,X1=1550,Y1=250,X2=1550,Y2=1650
+Figure=Line,Section=0,Color=0,Width=1,X1=2050,Y1=250,X2=2050,Y2=1650
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=0,X1=50,Y1=210,X2=550,Y2=230
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=16777215,X1=550,Y1=210,X2=1050,Y2=230
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=0,X1=1050,Y1=210,X2=1550,Y2=230
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=16777215,X1=1550,Y1=210,X2=2050,Y2=230
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=0,X1=2050,Y1=210,X2=2550,Y2=230
+Figure=LabelRect,Section=0,X1=10,Y1=0,X2=2590,Y2=100,Color=0,Size=14,Bold=1,Italic=1,Underline=1,Format=1,"FontName=Times New Roman","Text=Сделано в политехе","Caption=Название организации"
+

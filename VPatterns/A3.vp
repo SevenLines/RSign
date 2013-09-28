@@ -1,0 +1,8 @@
+Figure=LabelAngle,Section=0,Angle=2700,X=2700,Y=900,Color=255,Size=14,Bold=1,Italic=0,Underline=0,Format=6,"FontName=Times New Roman","Text=$RoadName$ ($StartKm$-$EndKm$)","Caption=Название дороги"
+Figure=PlanCenter,Section=0,X=1300,Y=950
+Figure=Line,Section=0,Color=255,Width=1,X1=10,Y1=200,X2=2590,Y2=200
+Figure=Line,Section=0,Color=255,Width=1,X1=10,Y1=200,X2=10,Y2=1700
+Figure=Line,Section=0,Color=255,Width=1,X1=10,Y1=1700,X2=2590,Y2=1700
+Figure=Line,Section=0,Color=255,Width=1,X1=2590,Y1=200,X2=2590,Y2=1700
+Figure=LabelRect,Section=0,X1=10,Y1=0,X2=2590,Y2=100,Color=255,Size=14,Bold=1,Italic=1,Underline=1,Format=1,"FontName=Times New Roman","Text=Сделано в политехе","Caption=Название организации"
+

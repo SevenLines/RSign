@@ -1,0 +1,25 @@
+Figure=PageSize,Section=0,Width=297,Height=210,LeftOfs=0,RightOfs=0,TopOfs=0,BottomOfs=0
+Figure=PlanCenter,Section=0,X=1450,Y=1050,Width=2500,Height=1500
+Figure=LabelAngle,Section=0,Angle=2700,X=2800,Y=1050,Color=0,Size=16,Bold=1,Italic=0,Underline=0,Format=30,"FontName=Times New Roman","Text=$RoadName$ ($StartKm$-$EndKm$)","Caption=Название дороги"
+Figure=Line,Section=0,Color=0,Width=1,X1=150,Y1=200,X2=2750,Y2=200
+Figure=Line,Section=0,Color=0,Width=1,X1=150,Y1=300,X2=2750,Y2=300
+Figure=Line,Section=0,Color=0,Width=1,X1=150,Y1=200,X2=150,Y2=1800
+Figure=Line,Section=0,Color=0,Width=1,X1=150,Y1=1800,X2=2750,Y2=1800
+Figure=Line,Section=0,Color=0,Width=1,X1=2750,Y1=200,X2=2750,Y2=1800
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=0,X1=200,Y1=260,X2=450,Y2=280
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=16777215,X1=450,Y1=260,X2=700,Y2=280
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=0,X1=700,Y1=260,X2=950,Y2=280
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=16777215,X1=950,Y1=260,X2=1200,Y2=280
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=0,X1=1200,Y1=260,X2=1450,Y2=280
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=16777215,X1=1450,Y1=260,X2=1700,Y2=280
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=0,X1=1700,Y1=260,X2=1950,Y2=280
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=16777215,X1=1950,Y1=260,X2=2200,Y2=280
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=0,X1=2200,Y1=260,X2=2450,Y2=280
+Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=16777215,X1=2450,Y1=260,X2=2700,Y2=280
+Figure=Grid,Section=0,PenColor=0,PenWidth=1,Border=0,VSpace=1500,HSpace=250,X1=200,Y1=300,X2=2700,Y2=1800
+Figure=KmSign,Section=0,PenColor=0,PenWidth=1,BrushColor=255,Size=60,X=200,Y=270
+Figure=KmSign,Section=0,PenColor=0,PenWidth=1,BrushColor=255,Size=60,X=2700,Y=270
+Figure=LabelRect,Section=0,X1=250,Y1=150,X2=2750,Y2=250,Color=0,Size=14,Bold=1,Italic=1,Underline=1,Format=1,"FontName=Times New Roman","Text=Дирекция автодорог ","Caption=Название организации"
+Figure=LabelRect,Section=0,X1=100,Y1=190,X2=300,Y2=740,Color=0,Size=16,Bold=1,Italic=0,Underline=0,Format=1,"FontName=Times New Roman",Text=$StartKm$,"Caption=Отметка 1"
+Figure=LabelRect,Section=0,X1=2600,Y1=190,X2=2800,Y2=740,Color=0,Size=16,Bold=1,Italic=0,Underline=0,Format=1,"FontName=Times New Roman",Text=$EndKm$,"Caption=Отметка 3"
+Figure=LabelAngle,Section=0,Angle=2700,X=100,Y=1920,Color=0,Size=14,Bold=0,Italic=0,Underline=0,Format=30,"FontName=Times New Roman",Text=$PageNum$,"Caption=Номер страницы"

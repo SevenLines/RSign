@@ -1,0 +1,1540 @@
+60 66
+Id=1,"Title=ВСЕ ОБЪЕКТЫ","OneTitle=Дорожный объект",ParentId=0,Flags=1,ClassName=TRoadObject,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=2,"Title=КОНСТРУКТИВНЫЕ ЭЛЕМЕНТЫ ДОРОГИ","OneTitle=Конструктивный элемент дороги",ParentId=1,Flags=1,ClassName=TRoadObject,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=3,"Title=ИСКУССТВЕННЫЕ СООРУЖЕНИЯ","OneTitle=Искусственное сооружение",ParentId=1,Flags=1,ClassName=TRoadObject,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=4,"Title=ЭЛЕМЕНТЫ ОБУСТРОЙСТВА ДОРОГИ","OneTitle=Элемент обустройства дороги",ParentId=1,Flags=1,ClassName=TRoadObject,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=5,"Title=ОБЪЕКТЫ, ВЗАИМОДЕЙСТВУЮЩИЕ С ДОРОГОЙ","OneTitle=Объект, взаимодействующий с дорогой",ParentId=1,Flags=1,ClassName=TCommRoadObject,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=6,"Title=ХАРАКТЕРИСТИКИ ДОРОГИ","OneTitle=Характеристика дороги",ParentId=1,Flags=1,ClassName=TRoadObject,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=7,"Title=ПРОЧИЕ ОБЪЕКТЫ","OneTitle=Прочий объект",ParentId=1,Flags=1,ClassName=TRoadObject,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=11,"Title=Сезонная и среднегодовая интенсивность и состав движения","OneTitle=Сезонная и среднегодовая интенсивность и состав движения",ParentId=6,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=12,"Title=Участки дороги по  продольным уклонам","OneTitle=Участок дороги с продольным уклоном",ParentId=6,Flags=1,ClassName=TDangerSlope,TableName=ListRoadParts,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer)as StartPos, cast(EndPos*100+0.5 as integer)as EndPos,   Value1 as Promille, Reference as Permissible from ListRoadParts where NumPartType=32 and NumRoad=$NumRoad$   and NumDataSource=$NumSource$ order by StartPos,EndPos","SQLSave=update ListRoadParts SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, Value1=$Promille$, DataSource=$SourceType$, NumDataSource=$NumSource$, Reference=$Permissible$ where id_=$Id$","SQLAppend=insert into ListRoadParts (NumPartType, NumRoad, StartPos, EndPos, Value1, Reference, DataSource, NumDataSource, Prev_Id) values (32, $NumRoad$, $L$/100.0, $LMax$/100.0, $Promille$, $Permissible$, $SourceType$, $NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadParts where id_=$Id$",PropCount=4,MainPropId=84,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=83,PropFlag3=7,PropId3=84
+Id=13,"Title=Дорожная одежда","OneTitle=Дорожная одежда",ParentId=2,Flags=1,ClassName=TRoadDress,TableName=CharactRoadDressing,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer)as StartPos, cast(EndPos*100+0.5 as integer)as EndPos,   cast(Height as integer) as Height ,NumTypeRDLayer,(NumMaterial | 16777216) as NumMaterial, LayerNumber from CharactRoadDressing where NumRoad=$NumRoad$   and NumDataSource=$NumSource$ order by StartPos, EndPos, LayerNumber",SQLSave=,SQLAppend=,SQLDelete=,PropCount=6,MainPropId=79,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=79,PropFlag3=7,PropId3=80,PropFlag4=7,PropId4=81,PropFlag5=7,PropId5=82
+Id=15,Title=Разметка,OneTitle=Разметка,ParentId=4,Flags=1,ClassName=TRoadMark,TableName=ListRoadMarks,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer) as StartPos,cast( EndPos*100+0.5 as integer) as EndPos, DrawKind, NumMark, cast(Scale*1000+0.5 as integer) as Scale, cast(Offset*100+0.5 as integer) as Offset, NumMoveDirection, PointsCount, Points from ListRoadMarks where  NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=update ListRoadMarks SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, Scale=$K$/1000.0, Offset=$Offset$/100.0, DrawKind=$DrawKind$, NumMark=$Kind$, NumMoveDirection=$Direction$, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=INSERT INTO ListRoadMarks (NumRoad, StartPos, EndPos, DrawKind, NumMark, NumMoveDirection, Scale, Offset, DataSource, NumDataSource, Prev_Id) VALUES ($NumRoad$, $L$/100.0, $LMax$/100.0, $DrawKind$, $Kind$, $Direction$, $K$/1000.0, $Offset$/100.0, $SourceType$, $NumSource$, $PrevId$)  SELECT @@IDENTITY as 'Identity'","SQLDelete=DELETE FROM ListMarks WHERE id_=$Id$",PropCount=7,MainPropId=43,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=43,PropFlag3=7,PropId3=74,PropFlag4=7,PropId4=75,PropFlag5=7,PropId5=6,PropFlag6=7,PropId6=92
+Id=16,Title=Ограждения,OneTitle=Ограждение,ParentId=4,Flags=1,ClassName=TRoadBarrier,TableName=ListBarriers,"SQL=select cast(StartPos*100+0.5 as integer) as StartPos,cast(EndPos*100+0.5 as integer) as EndPos,id_, Prev_Id, NumPlace,NumBarrierConstruction, PointsCount, Points from ListBarriers where NumTypeGuidingStructure=0 and NumRoad=$NumRoad$ and NumDataSource=$NumSource$","SQLSave=update ListBarriers SET NumBarrierConstruction=$Construction$, StartPos=$L$/100.0, EndPos=$LMax$/100.0, NumPlace=$Placement$, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListBarriers (NumRoad, NumBarrierConstruction, NumPlace, StartPos, EndPos, DataSource, NumDataSource, Prev_Id) values ($NumRoad$, $Construction$, $Placement$, $L$/100.0, $LMax$/100.0, $SourceType$, $NumSource$, $PrevId$)  select @@IDENTITY as 'Identity'","SQLDelete=delete from ListBarriers where id_=$Id$",PropCount=4,MainPropId=7,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=12,PropFlag3=7,PropId3=7
+Id=17,"Title=Сигнальные устройства","OneTitle=Сигнальное устройство",ParentId=4,Flags=1,ClassName=TRoadSignal,TableName=ListBarriers,"SQL=select cast(StartPos*100+0.5 as integer) as StartPos,cast(EndPos*100+0.5 as integer) as EndPos,id_, Prev_Id, NumPlace,NumTypeGuidingStructure,GuidingStructuresCount, PointsCount, Points from ListBarriers where NumTypeGuidingStructure>0 and NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=UPDATE ListBarriers SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, NumPlace=$Placement$, NumTypeGuidingStructure=$Kind$, GuidingStructuresCount=$Count$, DataSource=$SourceType$, NumDataSource=$NumSource$ WHERE id_=$Id$","SQLAppend=INSERT INTO ListBarriers (NumRoad, StartPos, EndPos, NumPlace, NumTypeGuidingStructure, GuidingStructuresCount, DataSource, NumDataSource, Prev_Id) VALUES ($NumRoad$, $L$/100.0, $LMax$/100.0, $Placement$, $Kind$, $Count$, $SourceType$, $NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=DELETE FROM ListBarriers WHERE id_=$Id$",PropCount=5,MainPropId=44,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=12,PropFlag3=7,PropId3=44,PropFlag4=7,PropId4=45
+Id=18,Title=Мосты,OneTitle=Мост,ParentId=3,Flags=1,ClassName=TRoadBridge,TableName=ListBridges,"SQL=select id_, Prev_Id,cast((Displacement-Extent/2)*100+0.5 as integer) as StartPos,cast((Displacement+Extent/2)*100+0.5 as integer) as EndPos, NumTypeObstacle, ObstacleName, BridgeScheme, cast(Width*100+0.5 as integer) as Width, TonnageGeneralInStream, TonnageAxialInStream, TonnageInSingleOrder, (NumBrgMaterial | 16777216) as NumBrgMaterial  FROM   ListBridges where NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=update ListBridges SET Displacement=($L$+$LMax$)/200.0, Extent=($LMax$-$L$)/100.0, NumTypeObstacle=$ObstacleKind$, ObstacleName='$ObstacleName$', BridgeScheme='$Scheme$', Width=$Width$/100.0, TonnageGeneralInStream=$Tonnage1$, TonnageAxialInStream=$Tonnage2$, TonnageInSingleOrder=$Tonnage3$, NumBrgMaterial=$BrgMaterial$&16777215, DataSource=$SourceType$, NumDataSource=$NumSource$ where Id_=$Id$","SQLAppend=insert into ListBridges (NumRoad, Displacement, Extent, NumTypeObstacle, ObstacleName, BridgeScheme, Width, TonnageGeneralInStream, TonnageAxialInStream, TonnageInSingleOrder, NumBrgMaterial, DataSource, NumDataSource, Prev_Id) values ($NumRoad$, ($L$+$LMax$)/200.0, ($LMax$-$L$)/100.0, $ObstacleKind$, '$ObstacleName$', '$Scheme$', $Width$/100.0, $Tonnage1$, $Tonnage2$, $Tonnage3$, $BrgMaterial$&16777215, $SourceType$, $NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListBridges where id_=$Id$",PropCount=10,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=13,PropFlag3=7,PropId3=14,PropFlag4=7,PropId4=15,PropFlag5=7,PropId5=16,PropFlag6=7,PropId6=46,PropFlag7=7,PropId7=47,PropFlag8=7,PropId8=48,PropFlag9=7,PropId9=34
+Id=19,"Title=Автобусные остановки","OneTitle=Автобусная остановка",ParentId=4,Flags=1,ClassName=TBusStop,TableName=ListBusStops,"SQL=select id_, Prev_Id, cast(Displacement*100+0.5 as integer) as StartPos, NumPlace, BusStopName, Pavilion, StopArea, EmbarkationArea,  (NumMaterial | 16777216) as NumMaterial from ListBusStops where NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=UPDATE ListBusStops SET Displacement=$L$/100.0, NumPlace=$Placement$, BusStopName='$Name$', Pavilion=$Pavilion$, StopArea=$StopArea$, EmbarkationArea=$EmbarkationArea$, NumMaterial=$Material$&16777215, DataSource=$SourceType$, NumDataSource=$NumSource$ WHERE id_=$Id$","SQLAppend=INSERT INTO ListBusStops (NumRoad, Displacement, NumPlace, BusStopName, Pavilion, StopArea, EmbarkationArea, NumMaterial, DataSource, NumDataSource, Prev_Id) VALUES ($NumRoad$, $L$/100.0, $Placement$, '$Name$', $Pavilion$, $StopArea$, $EmbarkationArea$, $Material$&16777215, $SourceType$, $NumSource$, $PrevId$)  SELECT @@IDENTITY as 'Identity'","SQLDelete=delete from ListBusStops where id_=$Id$",PropCount=7,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=8,PropFlag2=7,PropId2=40,PropFlag3=7,PropId3=50,PropFlag4=7,PropId4=51,PropFlag5=7,PropId5=91,PropFlag6=7,PropId6=93
+Id=20,"Title=Коммуникационные сооружения","OneTitle=Коммуникационное сооружение",ParentId=5,Flags=1,ClassName=TCommunication,TableName=ListCommunicationStruct,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer) as StartPos, cast(EndPos*100+0.5 as integer) as EndPos,NumPlaceRoad as NumPlace, NumPlaceGround, NumTypeComStructure from ListCommunicationStruct where NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=UPDATE ListCommunicationStruct SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, NumPlaceRoad=$Placement$, NumPlaceGround=$PlaceGround$, NumTypeComStructure=$CommKind$, DataSource=$SourceType$, NumDataSource=$NumSource$ WHERE id_=$Id$","SQLAppend=INSERT INTO ListCommunicationStruct (NumRoad, StartPos,EndPos, NumPlaceRoad, NumPlaceGround, NumTypeComStructure, DataSource, NumDataSource, Prev_Id) VALUES ($NumRoad$, $L$/100.0, $LMax$/100.0, $Placement$, $PlaceGround$, $CommKind$, $SourceType$, $NumSource$, $PrevId$) SELECT @@IDENTITY as 'Identity'","SQLDelete=DELETE FROM ListCommunicationStruct WHERE id_=$Id$",PropCount=5,MainPropId=59,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=57,PropFlag3=7,PropId3=58,PropFlag4=7,PropId4=59
+Id=21,"Title=Полосы отвода","OneTitle=Полоса отвода",ParentId=5,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=22,"Title=Водоотводные сооружения","OneTitle=Водоотводное сооружение",ParentId=2,Flags=0,ClassName=TDrainageObject,TableName=,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer) as StartPos, cast(EndPos*100+0.5 as integer) as EndPos,  NumPlace, NumCondition, NumTypeDrainStructure from ListDrainageStructures where NumRoad=$NumRoad$  and NumDataSource=$NumSource$",SQLSave=,SQLAppend=,SQLDelete=,PropCount=5,MainPropId=77,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=8,PropFlag3=7,PropId3=76,PropFlag4=7,PropId4=77
+Id=23,"Title=Шумозащитные сооружения","OneTitle=Шумозащитное сооружение",ParentId=4,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=24,Title=Съезды,OneTitle=Съезд,ParentId=2,Flags=1,ClassName=TRoadOut,TableName=ListOutRoad,"SQL=select id_, Prev_Id,cast(StartPos*100+Width*50+0.5 as integer) as StartPos, cast(Width*100+0.5 as integer) as Width, cast(Length*100+0.5 as integer) as Length, CrossingCorner, NumPlace, NumTypeSurfacing as Reference, PointsCount, Points from ListOutRoad where NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=UPDATE ListOutRoad SET StartPos=($L$-$Width$/2)/100.0, EndPos=($L$+$Width$/2)/100.0, Width=$Width$/100.0, Length=$Length$/100.0, CrossingCorner=$Angle$, NumPlace=$Placement$, NumTypeSurfacing=$Surface$, DataSource=$SourceType$, NumDataSource=$NumSource$ WHERE id_=$Id$","SQLAppend=INSERT INTO ListOutRoad (NumRoad, StartPos, EndPos, Width, Length, CrossingCorner, NumPlace, NumTypeSurfacing, DataSource, NumDataSource, Prev_Id) VALUES ($NumRoad$, ($L$-$Width$/2)/100.0, ($L$+$Width$/2)/100.0, $Width$/100.0, $Length$/100.0, $Angle$, $Placement$, $Surface$, $SourceType$, $NumSource$, $PrevId$)  SELECT @@IDENTITY as 'Identity'","SQLDelete=DELETE FROM ListOutRoad WHERE id_=$Id$",PropCount=6,MainPropId=5,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=5,PropFlag2=7,PropId2=8,PropFlag3=7,PropId3=53,PropFlag4=7,PropId4=54,PropFlag5=7,PropId5=71
+Id=25,Title=Озеленения,OneTitle=Озеленение,ParentId=4,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=26,"Title=Железнодорожные переезды","OneTitle=Железнодорожный переезд",ParentId=4,Flags=1,ClassName=TRailCross,TableName=ListRailwayPass,"SQL=select id_, Prev_Id, cast(Displacement*100+0.5 as integer) as StartPos, KODM, SIGN, KOLPT, SVET, OXRANA from ListRailwayPass where NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=UPDATE ListRailwayPass SET Displacement=$L$/100.0, KODM=$RailKind$, SIGN=$SignalKind$, KOLPT=$RailCount$, SVET=$Light$, OXRANA=$Guard$, DataSource=$SourceType$, NumDataSource=$NumSource$ WHERE id_=$Id$","SQLAppend=INSERT INTO ListRailwayPass (NumRoad, Displacement, KODM, SIGN, KOLPT, SVET, OXRANA, DataSource, NumDataSource, Prev_Id) VALUES ($NumRoad$, $L$/100.0, $RailKind$, $SignalKind$, $RailCount$, $Light$, $Guard$, $SourceType$, $NumSource$, $PrevId$) SELECT @@IDENTITY as 'Identity'","SQLDelete=delete from ListRailwayPass where id_=$Id$",PropCount=6,MainPropId=35,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=35,PropFlag2=7,PropId2=36,PropFlag3=7,PropId3=37,PropFlag4=7,PropId4=38,PropFlag5=7,PropId5=39
+Id=28,Title=Примыкания,OneTitle=Примыкание,ParentId=2,Flags=1,ClassName=TRoadAttach,TableName=ListRoadAttachments,"SQL=select id_, Prev_Id,cast(StartPos*100+0.5 as integer) as StartPos, AttachmentName, NumPlace, NumTech, CrossingCorner, PointsCount, Points from ListRoadAttachments where NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=UPDATE ListRoadAttachments SET StartPos=$L$/100.0, EndPos=$L$/100.0, CrossingCorner=$Angle$, AttachmentName='$Name$', NumPlace=$Placement$, NumTech=$Tech$, DataSource=$SourceType$, NumDataSource=$NumSource$ WHERE id_=$Id$","SQLAppend=INSERT INTO ListRoadAttachments (NumRoad, StartPos, EndPos, CrossingCorner, AttachmentName, NumPlace, NumTech, DataSource, NumDataSource, Prev_Id) VALUES ($NumRoad$, $L$/100.0, $L$/100.0, $Angle$, '$Name$', $Placement$, $Tech$, $SourceType$, $NumSource$, $PrevId$)  SELECT @@IDENTITY as 'Identity'","SQLDelete=DELETE FROM ListRoadAttachments WHERE id_=$Id$",PropCount=5,MainPropId=20,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=9,PropFlag2=7,PropId2=11,PropFlag3=7,PropId3=20,PropFlag4=7,PropId4=71
+Id=29,Title=Обочины,OneTitle=Обочина,ParentId=2,Flags=1,ClassName=TObochina,TableName=,"SQL=select S.Id_, S.Prev_Id,S.NumPlace,cast(S.StartPos*100+0.5 as integer) as StartPos,cast(S.EndPos*100+0.5 as integer) as EndPos,cast(C.RowWidth*100+0.5 as integer) as RowWidth,C.NumTypeStrengthening from ListRoadSides S  LEFT JOIN CharactRoadSides C ON S.id_=C.NumRoadSide where S.NumRoad=$NumRoad$  and S.NumDataSource=$NumSource$ and C.RowWidth>0","SQLSave=UPDATE ListRoadSides SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, NumPlace=$Placement$, DataSource=$SourceType$, NumDataSource=$NumSource$ WHERE id_=$Id$  UPDATE CharactRoadSides SET RowWidth=$DX$/100.0, NumTypeStrengthening=$Strength$, DataSource=$SourceType$ WHERE NumRoadSide=$Id$ and RowWidth>0","SQLAppend=DECLARE @Iden int  INSERT INTO ListRoadSides (NumRoad, StartPos, EndPos, NumPlace, DataSource, NumDataSource, Prev_Id) VALUES ($NumRoad$, $L$/100.0, $LMax$/100.0, $Placement$, $SourceType$, $NumSource$, $PrevId$)   SELECT @@IDENTITY as 'Identity'  SET @Iden = @@IDENTITY  INSERT INTO CharactRoadSides (RowWidth, NumTypeStrengthening, NumRoadSide, DataSource) VALUES ($DX$/100.0, $Strength$, @Iden, $SourceType$)  SELECT @Iden as 'Identity'","SQLDelete=DELETE FROM ListRoadSides WHERE id_=$Id$  DELETE FROM CharactRoadSides WHERE NumRoadSide=$Id$ and RowWidth>0",PropCount=5,MainPropId=41,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=8,PropFlag3=7,PropId3=41,PropFlag4=7,PropId4=49
+Id=30,"Title=Дорожные знаки","OneTitle=Дорожный знак",ParentId=4,Flags=1,ClassName=TRoadSign,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=2,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=4
+Id=31,"Title=Предупреждающие знаки","OneTitle=Предупреждающий знак",ParentId=30,Flags=1,ClassName=TRoadSign,TableName=ListRoadSigns,"SQL=select rs.id_, rs.Prev_Id, cast(rs.Displacement*100+0.5 as integer) as StartPos, cast(rs.SideDistance*100+0.5 as integer) as SideDistance, rs.NumRoadSign, rs.NumViewKind, rs.NumPlace, rs.NumMoveDirection, rs.NumManTest, rs.ManNote, rs.SignLabel, rs.OnAttach, ltrim(cl.ShortTitle) as GIBDDCODE from ListRoadSigns rs,  Classifier cl where NumRoad=$NumRoad$  and NumDataSource=$NumSource$ and cl.id_=rs.NumRoadSign and cl.ShortTitle like '1%'","SQLSave=update ListRoadSigns SET OnAttach=$OnAttach$, SignLabel='$Label$', NumManTest=$Test$,  ManNote='$Note$', NumRoadSign=$NumRoadSign$, NumViewKind=$ViewKind$, Displacement=$L$/100.0, NumPlace=$Placement$, NumMoveDirection=$Direction$, SideDistance=$DX$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadSigns (NumRoad, NumRoadSign, NumViewKind, Displacement, NumPlace, NumMoveDirection, SideDistance, NumTypeBearing, DataSource, NumDataSource, NumManTest, ManNote, SignLabel, onattach, Prev_Id) values   ($NumRoad$, $NumRoadSign$, $ViewKind$, $L$/100.0, $Placement$, $Direction$, $DX$/100.0, 0, $SourceType$, $NumSource$, $Test$, '$Note$', '$Label$',$OnAttach$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadSigns where id_=$Id$",PropCount=11,MainPropId=21,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=4,PropFlag2=7,PropId2=21,PropFlag3=7,PropId3=6,PropFlag4=7,PropId4=29,PropFlag5=7,PropId5=31,PropFlag6=3,PropId6=30,PropFlag7=3,PropId7=32,PropFlag8=3,PropId8=18,PropFlag9=3,PropId9=19,PropFlag10=7,PropId10=28
+Id=32,"Title=Знаки приоритета","OneTitle=Знак приоритета",ParentId=30,Flags=1,ClassName=TRoadSign,TableName=ListRoadSigns,"SQL=select rs.id_, rs.Prev_Id, cast(rs.Displacement*100+0.5 as integer) as StartPos, cast(rs.SideDistance*100+0.5 as integer) as SideDistance, rs.NumRoadSign, rs.NumViewKind, rs.NumPlace, rs.NumMoveDirection, rs.NumManTest, rs.ManNote, rs.SignLabel, rs.OnAttach, ltrim(cl.ShortTitle) as GIBDDCODE from ListRoadSigns rs,  Classifier cl where NumRoad=$NumRoad$  and NumDataSource=$NumSource$ and cl.id_=rs.NumRoadSign and cl.ShortTitle like '2%'","SQLSave=update ListRoadSigns SET OnAttach=$OnAttach$, SignLabel='$Label$', NumManTest=$Test$,  ManNote='$Note$', NumRoadSign=$NumRoadSign$, NumViewKind=$ViewKind$, Displacement=$L$/100.0, NumPlace=$Placement$, NumMoveDirection=$Direction$, SideDistance=$DX$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadSigns (NumRoad, NumRoadSign, NumViewKind, Displacement, NumPlace, NumMoveDirection, SideDistance, NumTypeBearing, DataSource, NumDataSource, NumManTest, ManNote, SignLabel, onattach, Prev_Id) values   ($NumRoad$, $NumRoadSign$, $ViewKind$, $L$/100.0, $Placement$, $Direction$, $DX$/100.0, 0, $SourceType$, $NumSource$, $Test$, '$Note$', '$Label$',$OnAttach$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadSigns where id_=$Id$",PropCount=11,MainPropId=22,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=4,PropFlag2=7,PropId2=22,PropFlag3=7,PropId3=6,PropFlag4=7,PropId4=29,PropFlag5=7,PropId5=31,PropFlag6=3,PropId6=30,PropFlag7=3,PropId7=32,PropFlag8=3,PropId8=18,PropFlag9=3,PropId9=19,PropFlag10=7,PropId10=28
+Id=33,"Title=Запрещающие знаки","OneTitle=Запрещающий знак",ParentId=30,Flags=1,ClassName=TRoadSign,TableName=ListRoadSigns,"SQL=select rs.id_, rs.Prev_Id, cast(rs.Displacement*100+0.5 as integer) as StartPos, cast(rs.SideDistance*100+0.5 as integer) as SideDistance, rs.NumRoadSign, rs.NumViewKind, rs.NumPlace, rs.NumMoveDirection, rs.NumManTest, rs.ManNote, rs.SignLabel, rs.OnAttach, ltrim(cl.ShortTitle) as GIBDDCODE from ListRoadSigns rs,  Classifier cl where NumRoad=$NumRoad$  and NumDataSource=$NumSource$ and cl.id_=rs.NumRoadSign and cl.ShortTitle like '3%'","SQLSave=update ListRoadSigns SET OnAttach=$OnAttach$, SignLabel='$Label$', NumManTest=$Test$,  ManNote='$Note$', NumRoadSign=$NumRoadSign$, NumViewKind=$ViewKind$, Displacement=$L$/100.0, NumPlace=$Placement$, NumMoveDirection=$Direction$, SideDistance=$DX$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadSigns (NumRoad, NumRoadSign, NumViewKind, Displacement, NumPlace, NumMoveDirection, SideDistance, NumTypeBearing, DataSource, NumDataSource, NumManTest, ManNote, SignLabel, onattach, Prev_Id) values   ($NumRoad$, $NumRoadSign$, $ViewKind$, $L$/100.0, $Placement$, $Direction$, $DX$/100.0, 0, $SourceType$, $NumSource$, $Test$, '$Note$', '$Label$',$OnAttach$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadSigns where id_=$Id$",PropCount=11,MainPropId=23,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=4,PropFlag2=7,PropId2=23,PropFlag3=7,PropId3=6,PropFlag4=7,PropId4=29,PropFlag5=3,PropId5=30,PropFlag6=7,PropId6=31,PropFlag7=3,PropId7=32,PropFlag8=3,PropId8=18,PropFlag9=3,PropId9=19,PropFlag10=7,PropId10=28
+Id=34,"Title=Предписывающие знаки","OneTitle=Предписывающий знак",ParentId=30,Flags=1,ClassName=TRoadSign,TableName=ListRoadSigns,"SQL=select rs.id_, rs.Prev_Id, cast(rs.Displacement*100+0.5 as integer) as StartPos, cast(rs.SideDistance*100+0.5 as integer) as SideDistance, rs.NumRoadSign, rs.NumViewKind, rs.NumPlace, rs.NumMoveDirection, rs.NumManTest, rs.ManNote, rs.SignLabel, rs.OnAttach, ltrim(cl.ShortTitle) as GIBDDCODE from ListRoadSigns rs,  Classifier cl where NumRoad=$NumRoad$  and NumDataSource=$NumSource$ and cl.id_=rs.NumRoadSign and cl.ShortTitle like '4%'","SQLSave=update ListRoadSigns SET OnAttach=$OnAttach$, SignLabel='$Label$', NumManTest=$Test$,  ManNote='$Note$', NumRoadSign=$NumRoadSign$, NumViewKind=$ViewKind$, Displacement=$L$/100.0, NumPlace=$Placement$, NumMoveDirection=$Direction$, SideDistance=$DX$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadSigns (NumRoad, NumRoadSign, NumViewKind, Displacement, NumPlace, NumMoveDirection, SideDistance, NumTypeBearing, DataSource, NumDataSource, NumManTest, ManNote, SignLabel, onattach, Prev_Id) values   ($NumRoad$, $NumRoadSign$, $ViewKind$, $L$/100.0, $Placement$, $Direction$, $DX$/100.0, 0, $SourceType$, $NumSource$, $Test$, '$Note$', '$Label$',$OnAttach$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadSigns where id_=$Id$",PropCount=11,MainPropId=24,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=4,PropFlag2=7,PropId2=24,PropFlag3=7,PropId3=6,PropFlag4=7,PropId4=29,PropFlag5=3,PropId5=30,PropFlag6=7,PropId6=31,PropFlag7=3,PropId7=32,PropFlag8=3,PropId8=18,PropFlag9=3,PropId9=19,PropFlag10=7,PropId10=28
+Id=35,"Title=Информационно-указательные знаки","OneTitle=Информационно-указательный знак",ParentId=30,Flags=1,ClassName=TRoadSign,TableName=ListRoadSigns,"SQL=select rs.id_, rs.Prev_Id, cast(rs.Displacement*100+0.5 as integer) as StartPos, cast(rs.SideDistance*100+0.5 as integer) as SideDistance, rs.NumRoadSign, rs.NumViewKind, rs.NumPlace, rs.NumMoveDirection, rs.NumManTest, rs.ManNote, rs.SignLabel, rs.OnAttach, ltrim(cl.ShortTitle) as GIBDDCODE from ListRoadSigns rs,  Classifier cl where NumRoad=$NumRoad$  and NumDataSource=$NumSource$ and cl.id_=rs.NumRoadSign and cl.ShortTitle like '5%'","SQLSave=update ListRoadSigns SET OnAttach=$OnAttach$, SignLabel='$Label$', NumManTest=$Test$,  ManNote='$Note$', NumRoadSign=$NumRoadSign$, NumViewKind=$ViewKind$, Displacement=$L$/100.0, NumPlace=$Placement$, NumMoveDirection=$Direction$, SideDistance=$DX$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadSigns (NumRoad, NumRoadSign, NumViewKind, Displacement, NumPlace, NumMoveDirection, SideDistance, NumTypeBearing, DataSource, NumDataSource, NumManTest, ManNote, SignLabel, onattach, Prev_Id) values   ($NumRoad$, $NumRoadSign$, $ViewKind$, $L$/100.0, $Placement$, $Direction$, $DX$/100.0, 0, $SourceType$, $NumSource$, $Test$, '$Note$', '$Label$',$OnAttach$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadSigns where id_=$Id$",PropCount=11,MainPropId=25,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=4,PropFlag2=7,PropId2=25,PropFlag3=7,PropId3=6,PropFlag4=7,PropId4=29,PropFlag5=3,PropId5=30,PropFlag6=7,PropId6=31,PropFlag7=3,PropId7=32,PropFlag8=3,PropId8=18,PropFlag9=3,PropId9=19,PropFlag10=7,PropId10=28
+Id=36,"Title=Знаки сервиса","OneTitle=Знак сервиса",ParentId=30,Flags=1,ClassName=TRoadSign,TableName=ListRoadSigns,"SQL=select rs.id_, rs.Prev_Id, cast(rs.Displacement*100+0.5 as integer) as StartPos, cast(rs.SideDistance*100+0.5 as integer) as SideDistance, rs.NumRoadSign, rs.NumViewKind, rs.NumPlace, rs.NumMoveDirection, rs.NumManTest, rs.ManNote, rs.SignLabel, rs.OnAttach, ltrim(cl.ShortTitle) as GIBDDCODE from ListRoadSigns rs,  Classifier cl where NumRoad=$NumRoad$  and NumDataSource=$NumSource$ and cl.id_=rs.NumRoadSign and cl.ShortTitle like '6%'","SQLSave=update ListRoadSigns SET OnAttach=$OnAttach$, SignLabel='$Label$', NumManTest=$Test$,  ManNote='$Note$', NumRoadSign=$NumRoadSign$, NumViewKind=$ViewKind$, Displacement=$L$/100.0, NumPlace=$Placement$, NumMoveDirection=$Direction$, SideDistance=$DX$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadSigns (NumRoad, NumRoadSign, NumViewKind, Displacement, NumPlace, NumMoveDirection, SideDistance, NumTypeBearing, DataSource, NumDataSource, NumManTest, ManNote, SignLabel, onattach, Prev_Id) values   ($NumRoad$, $NumRoadSign$, $ViewKind$, $L$/100.0, $Placement$, $Direction$, $DX$/100.0, 0, $SourceType$, $NumSource$, $Test$, '$Note$', '$Label$',$OnAttach$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadSigns where id_=$Id$",PropCount=11,MainPropId=26,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=4,PropFlag2=7,PropId2=26,PropFlag3=7,PropId3=6,PropFlag4=7,PropId4=29,PropFlag5=3,PropId5=30,PropFlag6=7,PropId6=31,PropFlag7=3,PropId7=32,PropFlag8=3,PropId8=18,PropFlag9=3,PropId9=19,PropFlag10=7,PropId10=28
+Id=37,"Title=Знаки дополнительной информации","OneTitle=Знак дополнительной информации",ParentId=30,Flags=1,ClassName=TRoadSign,TableName=ListRoadSigns,"SQL=select rs.id_, rs.Prev_Id, cast(rs.Displacement*100+0.5 as integer) as StartPos, cast(rs.SideDistance*100+0.5 as integer) as SideDistance, rs.NumRoadSign, rs.NumViewKind, rs.NumPlace, rs.NumMoveDirection, rs.NumManTest, rs.ManNote, rs.SignLabel, rs.OnAttach, ltrim(cl.ShortTitle) as GIBDDCODE from ListRoadSigns rs,  Classifier cl where NumRoad=$NumRoad$  and NumDataSource=$NumSource$ and cl.id_=rs.NumRoadSign and cl.ShortTitle like '7%'","SQLSave=update ListRoadSigns SET OnAttach=$OnAttach$, SignLabel='$Label$', NumManTest=$Test$,  ManNote='$Note$', NumRoadSign=$NumRoadSign$, NumViewKind=$ViewKind$, Displacement=$L$/100.0, NumPlace=$Placement$, NumMoveDirection=$Direction$, SideDistance=$DX$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadSigns (NumRoad, NumRoadSign, NumViewKind, Displacement, NumPlace, NumMoveDirection, SideDistance, NumTypeBearing, DataSource, NumDataSource, NumManTest, ManNote, SignLabel, onattach, Prev_Id) values   ($NumRoad$, $NumRoadSign$, $ViewKind$, $L$/100.0, $Placement$, $Direction$, $DX$/100.0, 0, $SourceType$, $NumSource$, $Test$, '$Note$', '$Label$',$OnAttach$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadSigns where id_=$Id$",PropCount=11,MainPropId=27,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=4,PropFlag2=7,PropId2=27,PropFlag3=7,PropId3=6,PropFlag4=7,PropId4=29,PropFlag5=3,PropId5=30,PropFlag6=7,PropId6=31,PropFlag7=3,PropId7=32,PropFlag8=3,PropId8=18,PropFlag9=3,PropId9=19,PropFlag10=7,PropId10=28
+Id=38,Title=Преграды,OneTitle=Преграда,ParentId=5,Flags=1,ClassName=TRoadObstacle,TableName=,"SQL=select id_, Prev_Id, cast(Displacement*100+0.5 as integer) as StartPos,cast(Extent*50+0.5 as integer) as Width, NumTypeObstacle, ObstacleName  FROM ListBridges where NumRoad=$NumRoad$  and NumDataSource=$NumSource$",SQLSave=,SQLAppend=,SQLDelete=,PropCount=4,MainPropId=13,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=13,PropFlag2=7,PropId2=14,PropFlag3=7,PropId3=16
+Id=39,"Title=Укрепленные откосы насыпей","OneTitle=Укрепленный откос насыпи",ParentId=2,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=40,"Title=Переходно-скоростные полосы","OneTitle=Переходно-скростная полоса",ParentId=2,Flags=1,ClassName=TBandRoadPart,TableName=ListSpeedUpLines,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer)as StartPos, cast(EndPos*100+0.5 as integer)as EndPos,   cast(Width*100+0.5 as integer) as Width, NumPlace  from ListSpeedUpLines where NumRoad=$NumRoad$ and NumDataSource=$NumSource$ order by StartPos,EndPos","SQLSave=update ListSpeedUpLines SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, Width=$Width$/100.0, NumPlace=$Placement$, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListSpeedUpLines (NumPlace, NumRoad, StartPos, EndPos, Width, DataSource, NumDataSource, Prev_Id) values ($Placement$, $NumRoad$, $L$/100.0, $LMax$/100.0, $Width$/100.0, $SourceType$, $NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListSpeedUpLines where id_=$Id$",PropCount=4,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=60,PropFlag3=7,PropId3=8
+Id=41,Title=Подъезды,OneTitle=Подъезд,ParentId=2,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=42,"Title=Водопропускные трубы","OneTitle=Водопропускная труба",ParentId=3,Flags=1,ClassName=TRoadTube,TableName=ListTubes,"SQL=select id_, Prev_Id, NumPlace, cast(Displacement*100+0.5 as integer) as StartPos, cast(Extent*100+0.5 as integer) as Extent, TubeScheme, PointsCount, Points from ListTubes where NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=UPDATE ListTubes SET NumPlace=$Placement$, Displacement=$L$/100.0, Extent=$Length$/100.0, TubeScheme='$Scheme$', DataSource=$SourceType$, NumDataSource=$NumSource$ WHERE id_=$Id$","SQLAppend=INSERT INTO ListTubes (NumRoad, NumPlace, Displacement, Extent, TubeScheme, DataSource, NumDataSource, Prev_Id) VALUES ($NumRoad$, $Placement$, $L$/100.0, $Length$/100.0, '$Scheme$', $SourceType$, $NumSource$, $PrevId$)   SELECT @@IDENTITY as 'Identity'","SQLDelete=DELETE FROM ListTubes WHERE id_=$Id$",PropCount=4,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=55,PropFlag2=7,PropId2=56,PropFlag3=7,PropId3=72
+Id=43,"Title=Земляное полотно","OneTitle=Земляное полотно",ParentId=2,Flags=0,ClassName=TZemPolotno,TableName=ListRoadParts,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer)as StartPos, cast(EndPos*100+0.5 as integer)as EndPos,   cast(Value2*100+0.5 as integer) as TopWidth ,cast(Value5*100+0.5 as integer) as Width  from ListRoadParts where NumPartType=17 and NumRoad=$NumRoad$   and NumDataSource=$NumSource$ order by StartPos,EndPos",SQLSave=,SQLAppend=,SQLDelete=,PropCount=4,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=60,PropFlag3=7,PropId3=78
+Id=44,"Title=Участки дороги по покрытиям","OneTitle=Участок дороги по покрытию",ParentId=2,Flags=1,ClassName=TRoadPart,TableName=ListRoadParts,"SQL=select id_, Prev_Id, Reference, cast(StartPos*100+0.5 as integer) as StartPos,cast( EndPos*100+0.5 as integer) as EndPos from ListRoadParts where NumPartType=13 and NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=update ListRoadParts SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, Reference=$Surface$, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadParts (NumPartType, NumRoad, StartPos, EndPos, Reference, DataSource, NumDataSource, Prev_Id) values (13, $NumRoad$, $L$/100.0, $LMax$/100.0, $Surface$, $SourceType$ ,$NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadParts where id_=$Id$",PropCount=3,MainPropId=5,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=5
+Id=45,"Title=Участки дороги по ширине проезжей части","OneTitle=Участок дороги по ширине проезжей части",ParentId=6,Flags=1,ClassName=TBandRoadPart,TableName=ListRoadParts,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer)as StartPos, cast(EndPos*100+0.5 as integer)as EndPos,   cast(Value2*100+0.5 as integer) as Width  from ListRoadParts where NumPartType=14 and NumRoad=$NumRoad$   and NumDataSource=$NumSource$ order by StartPos,EndPos","SQLSave=update ListRoadParts SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, Value2=$Width$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadParts (NumPartType, NumRoad, StartPos, EndPos, Value2, DataSource, NumDataSource, Prev_Id) values (14, $NumRoad$, $L$/100.0, $LMax$/100.0, $Width$/100.0, $SourceType$, $NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadParts where id_=$Id$",PropCount=3,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=60
+Id=46,"Title=Разделительные полосы","OneTitle=Разделительная полоса",ParentId=2,Flags=1,ClassName=TSquareCenterObject,TableName=ListRoadParts,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer) as StartPos,cast( EndPos*100+0.5 as integer) as EndPos, cast(Value2*100+0.5 as integer) as Width from ListRoadParts where NumPartType=15 and NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=update ListRoadParts SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, Value2=$Width$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadParts (NumRoad, NumPartType, StartPos, EndPos, Value2, DataSource, NumDataSource, Prev_Id) values ( $NumRoad$, 15, $L$/100.0, $LMax$/100.0, $Width$/100.0, $SourceType$, $NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadParts where id_=$Id$",PropCount=3,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=60
+Id=47,"Title=Остановочные полосы","OneTitle=Остановочная полоса",ParentId=2,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=48,"Title=Населенные пункты","OneTitle=Населенный пункт",ParentId=5,Flags=1,ClassName=TTown,TableName=ListRoadParts,"SQL=select RP.id_, RP.Prev_Id, I.FullTitle as FullTitle,cast(StartPos*100+0.5 as integer) as StartPos,cast(EndPos*100+0.5 as integer) as EndPos from ListRoadParts RP LEFT JOIN ListInhabitedLocalities I ON RP.Reference=I.id_ where RP.NumPartType=9 and RP.NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=DECLARE @Ref int  SET @REF=(SELECT isnull(id_,0)  FROM  ListInhabitedLocalities WHERE FullTitle='$Title$')  UPDATE ListRoadParts SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$, Reference=@Ref  WHERE id_=$Id$","SQLAppend=DECLARE @Ref int  SET @REF=(SELECT isnull(id_,0)  FROM  ListInhabitedLocalities WHERE FullTitle='$Title$')  INSERT INTO ListRoadParts (NumRoad, NumPartType, Reference, StartPos, EndPos, DataSource, NumDataSource, Prev_Id) VALUES ($NumRoad$, 9, @Ref, $L$/100.0, $LMax$/100.0, $SourceType$, $NumSource$, $PrevId$) SELECT @@IDENTITY as 'Identity'","SQLDelete=DELETE FROM ListRoadParts WHERE id_=$Id$",PropCount=3,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=42
+Id=49,"Title=Случаи ДТП","OneTitle=Случай ДТП",ParentId=7,Flags=1,ClassName=TDTP,TableName=,"SQL=select id_dtp as id_, cast(real_m*100+0.5 as integer) as StartPos,0 as Prev_Id, pogib, ranen, typ_dtp, kol_chelov, kol_mash, sost_road, osvech, status_road1 from DTP where road=$NumRoad$ and not real_m is NULL",SQLSave=,SQLAppend=,SQLDelete=,PropCount=9,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=67,PropFlag2=7,PropId2=63,PropFlag3=7,PropId3=70,PropFlag4=7,PropId4=65,PropFlag5=7,PropId5=64,PropFlag6=7,PropId6=68,PropFlag7=7,PropId7=69,PropFlag8=7,PropId8=66
+Id=50,"Title=Железные дороги","OneTitle=Железная дорога",ParentId=5,Flags=1,ClassName=TCommunication,TableName=,"SQL=select id_, Prev_Id, cast(Displacement*100+0.5 as integer) as StartPos, cast(Displacement*100+0.5 as integer) as EndPos, KODM,  KOLPT from ListRailwayPass where NumRoad=$NumRoad$  and NumDataSource=$NumSource$",SQLSave=,SQLAppend=,SQLDelete=,PropCount=4,MainPropId=0,PropFlag0=7,PropId0=35,PropFlag1=7,PropId1=38,PropFlag2=7,PropId2=2,PropFlag3=7,PropId3=3
+Id=51,"Title=Метрика дороги","OneTitle=Метрика дороги",ParentId=6,Flags=1,ClassName=TLinearRoadSideObject,TableName=Elem_RoadMetrics,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer) as StartPos, cast(EndPos*100+0.5 as integer) as EndPos,NumPlace, NumLineType, PointsCount, Points from ELEM_RoadMetrics where NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=UPDATE ELEM_RoadMetrics SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, NumPlace=$Placement$, NumLineType=$MetricsKind$, NumDataSource=$NumSource$ WHERE id_=$Id$","SQLAppend=INSERT INTO ELEM_RoadMetrics (NumRoad, StartPos, EndPos, NumPlace, NumLineType, NumDataSource, Prev_Id) VALUES ($NumRoad$, $L$/100.0, $LMax$/100.0, $Placement$, $MetricsKind$, $NumSource$, $PrevId$) SELECT @@IDENTITY as 'Identity'","SQLDelete=DELETE FROM ELEM_RoadMetrics WHERE id_=$Id$",PropCount=4,MainPropId=73,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=8,PropFlag3=7,PropId3=73
+Id=52,"Title=Участки дороги по радиусам поворотов","OneTitle=Участок дороги с радиусом поворота",ParentId=6,Flags=1,ClassName=TDangerCurve,TableName=ListRoadParts,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer)as StartPos, cast(EndPos*100+0.5 as integer)as EndPos,   Value2, Reference,Reference2 as Permissible  from ListRoadParts where NumPartType=34 and NumRoad=$NumRoad$   and NumDataSource=$NumSource$ order by StartPos,EndPos","SQLSave=update ListRoadParts SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, Value2=$Radius$, DataSource=$SourceType$, NumDataSource=$NumSource$, Reference=$Kind$, Reference2=$Permissible$ where id_=$Id$","SQLAppend=insert into ListRoadParts (NumPartType, NumRoad, StartPos, EndPos, Value2, Reference, Reference2, DataSource, NumDataSource, Prev_Id) values (34, $NumRoad$, $L$/100.0, $LMax$/100.0, $Radius$, $Kind$, $Permissible$, $SourceType$, $NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadParts where id_=$Id$",PropCount=5,MainPropId=84,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=85,PropFlag3=7,PropId3=86,PropFlag4=7,PropId4=84
+Id=53,"Title=Опасные участки дороги","OneTitle=Опасный участок дороги",ParentId=4,Flags=1,ClassName=TCarePart,TableName=ListRoadParts,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer) as StartPos,cast( EndPos*100+0.5 as integer) as EndPos from ListRoadParts where NumPartType=19 and NumRoad=$NumRoad$  and NumDataSource=$NumSource$","SQLSave=update ListRoadParts SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadParts (NumPartType, NumRoad, StartPos, EndPos, DataSource, NumDataSource, Prev_Id) values (19, $NumRoad$, $L$/100.0, $LMax$/100.0, $SourceType$, $NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadParts where id_=$Id$",PropCount=2,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3
+Id=54,"Title=Придорожные полосы","OneTitle=Придорожная полоса",ParentId=5,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=56,Title=Путепроводы,OneTitle=Путепровод,ParentId=3,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=57,"Title=Паромные переправы","OneTitle=Паромная переправа",ParentId=3,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=58,"Title=Наплавные мосты","OneTitle=Наплавной мост",ParentId=3,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=59,Title=Тротуары,OneTitle=Тротуар,ParentId=4,Flags=0,ClassName=,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=0,MainPropId=0
+Id=60,Title=Дефекты,OneTitle=Дефект,ParentId=7,Flags=1,ClassName=TRoadDefect,TableName=av_Defect_Registry,"SQL=select Obj.id_ as id_, Prev_Id, cast(StartPos*100+0.5 as integer) as StartPos, cast(EndPos*100+0.5 as integer) as EndPos, cast(isnull(Par.ParamVal,257)as integer) as NumPlace, Defect_Id+33554432 as Defect_Id, PointsCount, Points from av_Defect_registry Obj left join av_DefRegParams Par on Obj. id_=Par.DefReg_id and Par.Param_Id=32 where NumRoad=$NumRoad$  and NumDataSource=$NumSource$",SQLSave=,SQLAppend=,SQLDelete=,PropCount=4,MainPropId=87,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=8,PropFlag3=7,PropId3=87
+Id=61,"Title=Начало конец дороги","OneTitle=Граница дороги",ParentId=6,Flags=1,ClassName=TRoadDescription,TableName=,"SQL=select RP.id_, RP.Prev_Id, cast(RP.StartPos*100+0.5 as integer) as StartPos, cast(RP.EndPos*100+0.5 as integer) as Endpos, LR.Information, LR.BeginName, LR.EndName from ListRoadParts RP left join ListRoads LR on RP.NumRoad=LR.id_  where RP.NumPartType=33 and RP.NumRoad=$NumRoad$ and RP.NumDataSource=$NumSource$","SQLSave=update ListRoadParts SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$ where id_=$Id$","SQLAppend=insert into ListRoadParts (NumPartType, NumRoad, StartPos, EndPos, DataSource, NumDataSource, Prev_Id) values (33, $NumRoad$, $L$/100.0, $LMax$/100.0, $SourceType$, $NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadParts where id_=$Id$",PropCount=5,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=3,PropId2=88,PropFlag3=3,PropId3=89,PropFlag4=3,PropId4=90
+Id=62,"Title=Метрика обочин","OneTitle=Метрика обочины",ParentId=2,Flags=0,ClassName=TSquareRoadSideObject_Kromka,TableName=ListStopAreas,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer) as StartPos, cast(EndPos*100+0.5 as integer) as EndPos, cast(Width*100+0.5 as integer) as Width, NumPlace, NumTypeStrengthening, PointsCount, Points from ListSideMetrics where NumRoad=$NumRoad$  and NumDataSource=$NumSource$",SQLSave=,SQLAppend=,SQLDelete=,PropCount=5,MainPropId=41,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=8,PropFlag3=7,PropId3=16,PropFlag4=7,PropId4=41
+Id=63,"Title=Стоянки, места отдыха","OneTitle=Стоянка, место отдыха",ParentId=4,Flags=0,ClassName=TSquareRoadSideObject_Kromka,TableName=ListRestZones,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer) as StartPos, cast(EndPos*100+0.5 as integer) as EndPos, cast(Width*100+0.5 as integer) as Width, NumPlace, PointsCount, Points from ListRestZones where NumRoad=$NumRoad$  and NumDataSource=$NumSource$",SQLSave=,SQLAppend=,SQLDelete=,PropCount=4,MainPropId=0,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=16,PropFlag3=7,PropId3=8
+Id=64,"Title=Ширина дороги в  точке","OneTitle=Ширина дороги в точке",ParentId=2,Flags=0,ClassName=TRoadWidthMeasure,TableName=,SQL=,SQLSave=,SQLAppend=,SQLDelete=,PropCount=1,MainPropId=0,PropFlag0=7,PropId0=2
+Id=65,"Title=Участки дороги по характеру рельефа","OneTitle=Участок дороги по характеру рельефа",ParentId=6,Flags=0,ClassName=TLinearRoadSideObject,TableName=ListRoadParts,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer)as StartPos, cast(EndPos*100+0.5 as integer)as EndPos,   Reference,Reference2 as NumPlace  from ListRoadParts where NumPartType=35 and NumRoad=$NumRoad$   and NumDataSource=$NumSource$ order by StartPos,EndPos","SQLSave=update ListRoadParts SET StartPos=$L$/100.0, EndPos=$LMax$/100.0, DataSource=$SourceType$, NumDataSource=$NumSource$, Reference=$Kind$, Reference2=$Placement$ where id_=$Id$","SQLAppend=insert into ListRoadParts (NumPartType, NumRoad, StartPos, EndPos, Reference, Reference2, DataSource, NumDataSource, Prev_Id) values (35, $NumRoad$, $L$/100.0, $LMax$/100.0, $Kind$, $Placement$, $SourceType$, $NumSource$, $PrevId$) select @@IDENTITY as 'Identity'","SQLDelete=delete from ListRoadParts where id_=$Id$",PropCount=4,MainPropId=94,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=94,PropFlag3=7,PropId3=8
+Id=66,"Title=Объекты ситуации","OneTitle=Объект ситуации",ParentId=7,Flags=0,ClassName=TLinearRoadSideObject,TableName=ELEM_MapObjects,"SQL=select id_, Prev_Id, cast(StartPos*100+0.5 as integer) as StartPos, cast(EndPos*100+0.5 as integer) as EndPos,NumPlace, NumTypeMapObj, PointsCount, Points from ELEM_MapObjects where NumRoad=$NumRoad$  and NumDataSource=$NumSource$",SQLSave=,SQLAppend=,SQLDelete=,PropCount=4,MainPropId=95,PropFlag0=7,PropId0=2,PropFlag1=7,PropId1=3,PropFlag2=7,PropId2=8,PropFlag3=7,PropId3=95
+95 95
+Id=1,ShortName=Наличие,"PropName=Наличие объекта",ClassName=Exist,FieldName=NumExist,Type=1
+Id=2,"ShortName=Начало (см)","PropName=Расстояние до начала объекта",ClassName=L,FieldName=StartPos,Type=2
+Id=3,"ShortName=Конец (см)","PropName=Расстояние до конца объекта",ClassName=LMax,FieldName=EndPos,Type=2
+Id=4,"ShortName=Расстояние (см)","PropName=Расстояние от кромки дороги",ClassName=DX,FieldName=SideDistance,Type=2
+Id=5,ShortName=Покрытие,"PropName=Тип покрытия",ClassName=Surface,FieldName=Reference,Type=1
+Id=6,ShortName=Направление,"PropName=Направление движения",ClassName=Direction,FieldName=NumMoveDirection,Type=1
+Id=7,ShortName=Конструкция,"PropName=Тип конструкции ограждения",ClassName=Construction,FieldName=NumBarrierConstruction,Type=1
+Id=8,ShortName=Расположение,"PropName=Вид расположения объекта (слева, справа)",ClassName=Placement,FieldName=NumPlace,Type=1
+Id=9,ShortName=Расположение,"PropName=Вид расположения примыкания",ClassName=Placement,FieldName=NumPlace,Type=1
+Id=10,ShortName=Расположение,"PropName=Вид расположения дорожного знака",ClassName=,FieldName=,Type=1
+Id=11,ShortName=Наименование,"PropName=Наименование примыкающей дороги",ClassName=Name,FieldName=AttachmentName,Type=5
+Id=12,ShortName=Расположение,"PropName=Расположение объекта относительно дороги  (слева, справа, на разд. полосе)",ClassName=Placement,FieldName=NumPlace,Type=1
+Id=13,ShortName=Преграда,"PropName=Вид преграды моста",ClassName=ObstacleKind,FieldName=NumTypeObstacle,Type=1
+Id=14,"ShortName=Имя преграды","PropName=Наименование преграды моста",ClassName=ObstacleName,FieldName=ObstacleName,Type=5
+Id=15,ShortName=Схема,"PropName=Схема моста",ClassName=Scheme,FieldName=BridgeScheme,Type=5
+Id=16,ShortName=Ширина,"PropName=Ширина объекта",ClassName=Width,FieldName=Width,Type=2
+Id=17,"ShortName=Тип конструкции","PropName=Тип конструкции моста",ClassName=BridgeKind,FieldName=NumType,Type=1
+Id=18,ShortName=Необходимость,"PropName=Результат ручной проверки",ClassName=Test,FieldName=NumManTest,Type=1
+Id=19,ShortName=Обоснование,"PropName=Обоснование установки или удаления",ClassName=Note,FieldName=ManNote,Type=5
+Id=20,"ShortName=Тех. категория","PropName=Техническая категория дороги",ClassName=Tech,FieldName=NumTech,Type=1
+Id=21,ShortName=Наименование,"PropName=Наименование дорожного предупреждающего  знака",ClassName=NumRoadSign,FieldName=NumRoadSign,Type=1
+Id=22,ShortName=Наименование,"PropName=Наименование дорожного знака приоритета",ClassName=NumRoadSign,FieldName=NumRoadSign,Type=1
+Id=23,ShortName=Наименование,"PropName=Наименование дорожного запрещающего  знака",ClassName=NumRoadSign,FieldName=NumRoadSign,Type=1
+Id=24,ShortName=Наименование,"PropName=Наименование дорожного предписывающего  знака",ClassName=NumRoadSign,FieldName=NumRoadSign,Type=1
+Id=25,ShortName=Наименование,"PropName=Наименование дорожного информационно-указательного  знака",ClassName=NumRoadSign,FieldName=NumRoadSign,Type=1
+Id=26,ShortName=Наименование,"PropName=Наименование дорожного знака сервиса",ClassName=NumRoadSign,FieldName=NumRoadSign,Type=1
+Id=27,ShortName=Наименование,"PropName=Наименование знака дополнительной информации",ClassName=NumRoadSign,FieldName=NumRoadSign,Type=1
+Id=28,"ShortName=Вид отображения","PropName=Вид отображения дорожного знака",ClassName=ViewKind,FieldName=NumViewKind,Type=2
+Id=29,ShortName=Расположение,"PropName=Расположение дорожного знака",ClassName=Placement,FieldName=NumPlace,Type=1
+Id=30,ShortName=Надпись,"PropName=Надпись на дорожном знаке",ClassName=Label,FieldName=SignLabel,Type=5
+Id=31,ShortName=Код,"PropName=Код ГИБДД (для отладки)",ClassName=OldTitle,FieldName=GIBDDCODE,Type=5
+Id=32,"ShortName=На примыкании","PropName=Разворот знака к примыканию",ClassName=OnAttach,FieldName=OnAttach,Type=1
+Id=33,ShortName=,"PropName=Тип пролетных строений моста",ClassName=,FieldName=,Type=1
+Id=34,"ShortName=Материал моста","PropName=Материал  моста",ClassName=BrgMaterial,FieldName=NumBrgMaterial,Type=1
+Id=35,ShortName=Вид,"PropName=Вид пересекаемого пути",ClassName=RailKind,FieldName=KODM,Type=1
+Id=36,ShortName=Сигнализация,"PropName=Тип переездной сигнализации",ClassName=SignalKind,FieldName=SIGN,Type=1
+Id=37,ShortName=Электроосвещение,"PropName=Наличие электроосвящения",ClassName=Light,FieldName=SVET,Type=3
+Id=38,"ShortName=Число путей","PropName=Число путей",ClassName=RailCount,FieldName=KOLPT,Type=2
+Id=39,ShortName=Охраняемый,"PropName=Наличие охраны",ClassName=Guard,FieldName=OXRANA,Type=3
+Id=40,ShortName=Название,"PropName=Название автобусной остановки",ClassName=Name,FieldName=BusStopName,Type=5
+Id=41,ShortName=Укрепление,"PropName=Тип укрепления обочины",ClassName=Strength,FieldName=NumTypeStrengthening,Type=1
+Id=42,ShortName=Название,"PropName=Название населенного пункта",ClassName=Title,FieldName=FullTitle,Type=5
+Id=43,ShortName=Разметка,"PropName=Вид разметки",ClassName=Kind,FieldName=NumMark,Type=1
+Id=44,ShortName=Конструкция,"PropName=Тип сигнального устройства",ClassName=Kind,FieldName=NumTypeGuidingStructure,Type=1
+Id=45,ShortName=Количество,"PropName=Число элементов сигнального устройства",ClassName=Count,FieldName=GuidingStructuresCount,Type=2
+Id=46,ShortName=Грузоподъемность,"PropName=Общая грузоподъемность в потоке",ClassName=Tonnage1,FieldName=TonnageGeneralInStream,Type=2
+Id=47,ShortName=Осевая,"PropName=Осевая грузоподъемность в потоке",ClassName=Tonnage2,FieldName=TonnageAxialInStream,Type=2
+Id=48,ShortName=Одиночная,"PropName=Грузоподъемность в одиночном порядке",ClassName=Tonnage3,FieldName=TonnageInSingleOrder,Type=2
+Id=49,ShortName=Ширина,"PropName=Ширина обочины",ClassName=DX,FieldName=RowWidth,Type=2
+Id=50,ShortName=Павильон,"PropName=Наличие павильона на автобусной остановке",ClassName=Pavilion,FieldName=Pavilion,Type=3
+Id=51,ShortName=Площадка,"PropName=Наличие посадочной площадки",ClassName=EmbarkationArea,FieldName=EmbarkationArea,Type=3
+Id=52,ShortName=Название,"PropName=Название съезда",ClassName=,FieldName=,Type=5
+Id=53,ShortName=Длина,"PropName=Длина съезда",ClassName=Length,FieldName=Length,Type=2
+Id=54,ShortName=Ширина,"PropName=Ширина съезда",ClassName=Width,FieldName=Width,Type=2
+Id=55,ShortName=Длина,"PropName=Длина трубы",ClassName=Length,FieldName=Extent,Type=2
+Id=56,ShortName=Схема,"PropName=Схема трубы",ClassName=Scheme,FieldName=TubeScheme,Type=5
+Id=57,ShortName=Расположение,"PropName=Вид расположения коммуникации",ClassName=Placement,FieldName=NumPlace,Type=1
+Id=58,ShortName=Расположение,"PropName=Расположение коммуникации по высоте",ClassName=PlaceGround,FieldName=NumPlaceGround,Type=1
+Id=59,ShortName=Вид,"PropName=Вид коммуникации",ClassName=CommKind,FieldName=NumTypeComStructure,Type=1
+Id=60,ShortName=Ширина,"PropName=Ширина полосы",ClassName=Width,FieldName=Width,Type=2
+Id=61,ShortName=Необходимость,"PropName=Результат автоматической проверки",ClassName=AutoTest,FieldName=NumAutoTest,Type=1
+Id=62,ShortName=Обоснование,"PropName=Обоснование результата автоматической проверки",ClassName=AutoDescription,FieldName=AutoNote,Type=5
+Id=63,ShortName=Машин,"PropName=Количество машин, участвовавших в ДТП",ClassName=CarCount,FieldName=kol_mash,Type=2
+Id=64,ShortName=Ранены,"PropName=Количество раненых",ClassName=InvCount,FieldName=ranen,Type=2
+Id=65,ShortName=Погибли,"PropName=Количество погибших",ClassName=DeadCount,FieldName=pogib,Type=2
+Id=66,ShortName=Дефект,"PropName=Дефекты, являющиеся причиной  ДТП",ClassName=Defect,FieldName=status_road1,Type=1
+Id=67,ShortName=ДТП,"PropName=Вид ДТП",ClassName=Kind,FieldName=typ_dtp,Type=1
+Id=68,ShortName=Освещенность,"PropName=Освещенность в момент ДТП",ClassName=Light,FieldName=osvech,Type=1
+Id=69,ShortName=Покрытие,"PropName=Состояние покрытия в момент ДТП",ClassName=Surface,FieldName=sost_road,Type=1
+Id=70,ShortName=Человек,"PropName=Количество человек, участвовавших в ДТП",ClassName=ManCount,FieldName=kol_chelov,Type=2
+Id=71,"ShortName=Угол (град.)","PropName=Угол примыкания",ClassName=Angle,FieldName=CrossingCorner,Type=2
+Id=72,ShortName=Расположение,"PropName=Вид расположения трубы",ClassName=Placement,FieldName=NumPlace,Type=1
+Id=73,ShortName=Линия,"PropName=Вид линии на дороге",ClassName=MetricsKind,FieldName=NumLineType,Type=1
+Id=74,ShortName=K,"PropName=Scale разметки",ClassName=K,FieldName=Scale,Type=2
+Id=75,ShortName=Смещение,"PropName=Смещение разметки",ClassName=Offset,FieldName=Offset,Type=2
+Id=76,ShortName=Состояние,"PropName=Состояние объекта",ClassName=Condition,FieldName=NumCondition,Type=1
+Id=77,ShortName=Вид,"PropName=Вид водоотводного сооружения",ClassName=Kind,FieldName=NumTypeDrainStructure,Type=1
+Id=78,"ShortName=Ширина поверху","PropName=Ширина полосы по верху",ClassName=TopWidth,FieldName=TopWidth,Type=2
+Id=79,ShortName=Материал,"PropName=Материал дорожной одежды",ClassName=Material,FieldName=NumMaterial,Type=1
+Id=80,ShortName=Толщина,"PropName=Толщина дорожной одежды",ClassName=Height,FieldName=Height,Type=2
+Id=81,"ShortName=Вид слоя","PropName=Вид слоя дорожной одежды",ClassName=LayerKind,FieldName=NumTypeRDLayer,Type=1
+Id=82,"ShortName=Номер слоя","PropName=Номер слоя дорожной одежды",ClassName=LayerNum,FieldName=LayerNumber,Type=2
+Id=83,ShortName=Крутизна,"PropName=Крутизна уклона в промиллях",ClassName=Promille,FieldName=Promille,Type=2
+Id=84,ShortName=Вид,PropName=Допустимость,ClassName=Permissible,FieldName=Permissible,Type=1
+Id=85,ShortName=Вид,"PropName=Вид кривой в плане",ClassName=Kind,FieldName=Reference,Type=1
+Id=86,ShortName=Радиус,"PropName=Радиус поворота в метрах",ClassName=Radius,FieldName=Value2,Type=2
+Id=87,ShortName=Дефект,"PropName=Вид дефекта",ClassName=Kind,FieldName=Defect_Id,Type=1
+Id=88,ShortName=Описание,"PropName=Описание автодороги",ClassName=Description,FieldName=Information,Type=5
+Id=89,ShortName=Начало,"PropName=Начало автодороги",ClassName=BeginName,FieldName=BeginName,Type=5
+Id=90,ShortName=Конец,"PropName=Конец автодороги",ClassName=EndName,FieldName=EndName,Type=5
+Id=91,ShortName=Карман,"PropName=Наличие кармана на автобусной остановке",ClassName=StopArea,FieldName=StopArea,Type=3
+Id=92,"ShortName=Вид начертания","PropName=Вид начертания разметки",ClassName=DrawKind,FieldName=DrawKind,Type=2
+Id=93,ShortName=Материал,"PropName=Материал  автобусной остановки",ClassName=Material,FieldName=NumMaterial,Type=1
+Id=94,"ShortName=Тип участка","PropName=Тип участка по характеру рельефа",ClassName=Kind,FieldName=Reference,Type=1
+Id=95,"ShortName=Вид объекта","PropName=Вид объекта ситуации",ClassName=Kind,FieldName=NumTypeMapObj,Type=1
+604 603
+Id=2135088,PropId=1,ShortText=,Text=Существующий
+Id=2135089,PropId=1,ShortText=,Text=Проектируемый
+Id=234,PropId=5,ShortText=АБ,Text=асфальтобетон
+Id=233,PropId=5,ShortText=ЦБ,Text=цементобетон
+Id=236,PropId=5,ShortText=Щ-Г2,"Text=щебеночное (гравийное)"
+Id=235,PropId=5,ShortText=Щ-Г1,"Text=щебень (гравий), обработанный вяжущим"
+Id=237,PropId=5,ShortText=Г1,"Text=грунтовое, обработанное вяжущим"
+Id=238,PropId=5,ShortText=ИТДИТП,Text=прочее
+Id=0,PropId=5,ShortText=,Text=
+Id=246,PropId=6,ShortText=,Text=ПРЯМОЕ
+Id=247,PropId=6,ShortText=,Text=ОБРАТНОЕ
+Id=112,PropId=7,ShortText=,"Text=Барьерное одностороннее"
+Id=113,PropId=7,ShortText=,"Text=Барьерное двухстороннее"
+Id=1959537,PropId=7,ShortText=м,Text=Металлическое
+Id=115,PropId=7,ShortText=,Text=Парапеты
+Id=117,PropId=7,ShortText=,Text=Перила
+Id=118,PropId=7,ShortText=,"Text=По типу ""Нью-Джерси"""
+Id=116,PropId=7,ShortText=,Text=Сетки
+Id=114,PropId=7,ShortText=,Text=Тросовое
+Id=0,PropId=7,ShortText=,Text=
+Id=257,PropId=8,ShortText=,Text=СЛЕВА
+Id=258,PropId=8,ShortText=,Text=СПРАВА
+Id=258,PropId=9,ShortText=,Text=СПРАВА
+Id=257,PropId=9,ShortText=,Text=СЛЕВА
+Id=261,PropId=9,ShortText=,Text=пересеч
+Id=257,PropId=10,ShortText=,Text=СЛЕВА
+Id=258,PropId=10,ShortText=,Text=СПРАВА
+Id=259,PropId=10,ShortText=,"Text=НА РАЗДЕЛ. ПОЛОСЕ"
+Id=260,PropId=10,ShortText=,"Text=НАД ПРОЕЗЖ. ЧАСТЬЮ"
+Id=0,PropId=10,ShortText=,Text=
+Id=257,PropId=12,ShortText=,Text=СЛЕВА
+Id=258,PropId=12,ShortText=,Text=СПРАВА
+Id=259,PropId=12,ShortText=,"Text=НА РАЗДЕЛ. ПОЛОСЕ"
+Id=96,PropId=13,ShortText=,"Text=Суходол, овраг, балка, ущелье, болото"
+Id=95,PropId=13,ShortText=,"Text=Река, ручей"
+Id=100,PropId=13,ShortText=,"Text=Путепровод тоннельного типа"
+Id=97,PropId=13,ShortText=,"Text=Железная дорога"
+Id=101,PropId=13,ShortText=,Text=Канал
+Id=98,PropId=13,ShortText=,"Text=Автомобильная дорога"
+Id=102,PropId=13,ShortText=,"Text=Озеро (пруд)"
+Id=99,PropId=13,ShortText=,"Text=Плотина, шлюз"
+Id=103,PropId=13,ShortText=,"Text=Другие препятствия"
+Id=104,PropId=13,ShortText=,Text=Снегозащитные
+Id=139,PropId=17,ShortText=,"Text=Арочная с затяжкой"
+Id=146,PropId=17,ShortText=,Text=Арочная
+Id=145,PropId=17,ShortText=,"Text=Комбинированная система"
+Id=132,PropId=17,ShortText=,Text=Балочно-консольная
+Id=129,PropId=17,ShortText=,"Text=Балочная разрезная"
+Id=131,PropId=17,ShortText=,"Text=Балочная неразрезная с переменной высотой пролет. строения"
+Id=133,PropId=17,ShortText=,"Text=Балочно-консольная с подвесным пролетом"
+Id=147,PropId=17,ShortText=,Text=Рамная
+Id=142,PropId=17,ShortText=,"Text=Арочно-балоч.внешне б/распор.(балка жестк. над гибк. аркой)"
+Id=143,PropId=17,ShortText=,"Text=Висячая с балкой жесткости"
+Id=140,PropId=17,ShortText=,"Text=Арочная безшарнирная"
+Id=141,PropId=17,ShortText=,"Text=Арочно-балоч.внешне распорн.(балка жестк. над гибкой аркой)"
+Id=149,PropId=17,ShortText=,Text=Рамно-подвесная
+Id=148,PropId=17,ShortText=,Text=Рамно-консольная
+Id=144,PropId=17,ShortText=,"Text=Вантовая с балкой жесткости"
+Id=157,PropId=17,ShortText=,"Text=Разводной мост вертикально-подъемной системы"
+Id=158,PropId=17,ShortText=,"Text=Индивидуальные системы"
+Id=155,PropId=17,ShortText=,"Text=Разводной мост раскрывающейся системы"
+Id=152,PropId=17,ShortText=,"Text=Паромная переправа"
+Id=153,PropId=17,ShortText=,Text=Мост-тоннель
+Id=154,PropId=17,ShortText=,Text=Мост-труба
+Id=151,PropId=17,ShortText=,"Text=Наплавной мост"
+Id=156,PropId=17,ShortText=,"Text=Разводной мост поворотной системы"
+Id=138,PropId=17,ShortText=,"Text=Арочная 2-х шарнирная"
+Id=137,PropId=17,ShortText=,"Text=Арочная 3-х шарнирная"
+Id=130,PropId=17,ShortText=,"Text=Балочная неразрезная с пост.высотой пролетного строения"
+Id=136,PropId=17,ShortText=,Text=Подкосная
+Id=150,PropId=17,ShortText=,"Text=Рамная с наклонными опорами (типа ""бегущая лань)"
+Id=135,PropId=17,ShortText=,Text=Ригельно-подкосная
+Id=134,PropId=17,ShortText=,"Text=Балочная температурно-неразрезная"
+Id=2135090,PropId=18,ShortText=,Text=Требуется
+Id=2135091,PropId=18,ShortText=,"Text=Не требуется"
+Id=0,PropId=18,ShortText=,Text=
+Id=189,PropId=20,ShortText=I,Text=I
+Id=188,PropId=20,ShortText=I-a,Text=I-a
+Id=190,PropId=20,ShortText=I-б,Text=I-б
+Id=191,PropId=20,ShortText=II,Text=II
+Id=192,PropId=20,ShortText=III,Text=III
+Id=193,PropId=20,ShortText=IV,Text=IV
+Id=194,PropId=20,ShortText=V,Text=V
+Id=0,PropId=20,ShortText=,Text=
+Id=43619,PropId=21,ShortText=1.1,"Text=Железнодорожный переезд со шлагбаумом"
+Id=43634,PropId=21,ShortText=1.2,"Text=Железодорожный переезд без шлагбаума"
+Id=43645,PropId=21,ShortText=1.3.1,"Text=Однопутная железная дорога"
+Id=43646,PropId=21,ShortText=1.3.2,"Text=Многопутная железная дорога"
+Id=43651,PropId=21,ShortText=1.4.1,"Text=Приближение к железнодорожному переезду"
+Id=43652,PropId=21,ShortText=1.4.2,"Text=Приближение к железнодорожному переезду"
+Id=43653,PropId=21,ShortText=1.4.3,"Text=Приближение к железнодорожному переезду"
+Id=43654,PropId=21,ShortText=1.4.4,"Text=Приближение к железнодорожному переезду"
+Id=43655,PropId=21,ShortText=1.4.5,"Text=Приближение к железнодорожному переезду"
+Id=43656,PropId=21,ShortText=1.4.6,"Text=Приближение к железнодорожному переезду"
+Id=43657,PropId=21,ShortText=1.5,"Text=Пересечение с трамвайной линией"
+Id=43658,PropId=21,ShortText=1.6,"Text=Пересечение равнозначных дорог"
+Id=43659,PropId=21,ShortText=1.7,"Text=Пересечение с круговым движением"
+Id=43660,PropId=21,ShortText=1.8,"Text=Светофорное регулирование"
+Id=43661,PropId=21,ShortText=1.9,"Text=Разводной мост"
+Id=43620,PropId=21,ShortText=1.10,"Text=Выезд на набережную"
+Id=43621,PropId=21,ShortText=1.11.1,"Text=Опасный поворот направо"
+Id=43622,PropId=21,ShortText=1.11.2,"Text=Опасный поворот налево"
+Id=43623,PropId=21,ShortText=1.12.1,"Text=Опасные повороты направо"
+Id=43624,PropId=21,ShortText=1.12.2,"Text=Опасные повороты налево"
+Id=43625,PropId=21,ShortText=1.13,"Text=Крутой спуск"
+Id=43626,PropId=21,ShortText=1.14,"Text=Крутой подъем"
+Id=43627,PropId=21,ShortText=1.15,"Text=Скользкая дорога"
+Id=43628,PropId=21,ShortText=1.16,"Text=Неровная дорога"
+Id=43629,PropId=21,ShortText=1.17,"Text=Выброс гравия"
+Id=43630,PropId=21,ShortText=1.18.1,"Text=Сужение дороги с обеих сторон"
+Id=43631,PropId=21,ShortText=1.18.2,"Text=Сужение дороги справа"
+Id=43632,PropId=21,ShortText=1.18.3,"Text=Сужение дороги слева"
+Id=43633,PropId=21,ShortText=1.19,"Text=Двустороннее движение"
+Id=43635,PropId=21,ShortText=1.20,"Text=Пешеходный переход"
+Id=43636,PropId=21,ShortText=1.21,Text=Дети
+Id=43637,PropId=21,ShortText=1.22,"Text=Пересечение с велосипедной дорожкой"
+Id=43638,PropId=21,ShortText=1.23,"Text=Дорожные работы"
+Id=43639,PropId=21,ShortText=1.24,"Text=Перегон скота"
+Id=43640,PropId=21,ShortText=1.25,"Text=Дикие животные"
+Id=43641,PropId=21,ShortText=1.26,"Text=Падение камней"
+Id=43642,PropId=21,ShortText=1.27,"Text=Боковой ветер"
+Id=43643,PropId=21,ShortText=1.28,"Text=Низколетящие самолеты"
+Id=43644,PropId=21,ShortText=1.29,Text=Тоннель
+Id=43647,PropId=21,ShortText=1.30,"Text=Прочие опасности"
+Id=43648,PropId=21,ShortText=1.31.1,"Text=Направление поворота вправо"
+Id=43649,PropId=21,ShortText=1.31.2,"Text=Направление поворота влево"
+Id=43650,PropId=21,ShortText=1.31.3,"Text=Направление поворота в обе стороны"
+Id=43662,PropId=22,ShortText=2.1,"Text=Главная дорога"
+Id=43663,PropId=22,ShortText=2.2,"Text=Конец главной дороги"
+Id=43664,PropId=22,ShortText=2.3.1,"Text=Пересечение со второстепенной дорогой"
+Id=43665,PropId=22,ShortText=2.3.2,"Text=Примыкание второстепенной дороги справа"
+Id=43666,PropId=22,ShortText=2.3.3,"Text=Примыкание второстепенной дороги слева"
+Id=43667,PropId=22,ShortText=2.4,"Text=Уступите дорогу"
+Id=43668,PropId=22,ShortText=2.5,"Text=Движение без остановки запрещено"
+Id=43669,PropId=22,ShortText=2.6,"Text=Преимущество встречного движения"
+Id=43670,PropId=22,ShortText=2.7,"Text=Преимущество перед встречным движением"
+Id=43671,PropId=23,ShortText=3.1,"Text=Въезд запрещен"
+Id=43684,PropId=23,ShortText=3.2,"Text=Движение запрещено"
+Id=43695,PropId=23,ShortText=3.3,"Text=Движение мех. тр.средств запрещено"
+Id=43698,PropId=23,ShortText=3.4,"Text=Движение грузовых автомобилей запрещено"
+Id=43699,PropId=23,ShortText=3.5,"Text=Движение мотоциклов запрещено"
+Id=43700,PropId=23,ShortText=3.6,"Text=Движение тракторов запрещено"
+Id=43701,PropId=23,ShortText=3.7,"Text=Движение с прицепом запрещено"
+Id=43702,PropId=23,ShortText=3.8,"Text=Движение гужевых повозок запрещено"
+Id=43703,PropId=23,ShortText=3.9,"Text=Движение на велосипедах запрещено"
+Id=43672,PropId=23,ShortText=3.10,"Text=Движение пешеходов запрещено"
+Id=43673,PropId=23,ShortText=3.11,"Text=Ограничение массы"
+Id=43674,PropId=23,ShortText=3.12,"Text=Ограничение нагрузки на ось"
+Id=43675,PropId=23,ShortText=3.13,"Text=Ограничение высоты"
+Id=43676,PropId=23,ShortText=3.14,"Text=Ограничение ширины"
+Id=43677,PropId=23,ShortText=3.15,"Text=Ограничение длины"
+Id=43678,PropId=23,ShortText=3.16,"Text=Ограничение минимальной дистанции"
+Id=43679,PropId=23,ShortText=3.17.1,Text=Таможня
+Id=43680,PropId=23,ShortText=3.17.2,Text=Опасность
+Id=43681,PropId=23,ShortText=3.18.1,"Text=Поворот направо запрещен"
+Id=43682,PropId=23,ShortText=3.18.2,"Text=Поворот налево запрещен"
+Id=43683,PropId=23,ShortText=3.19,"Text=Разворот запрещен"
+Id=43685,PropId=23,ShortText=3.20,"Text=Обгон запрещен"
+Id=43686,PropId=23,ShortText=3.21,"Text=Конец зоны запрещения обгона"
+Id=43687,PropId=23,ShortText=3.22,"Text=Обгон грузовым автомобилям запрещен"
+Id=43688,PropId=23,ShortText=3.23,"Text=Конец зоны запрещения обгона груз.автом."
+Id=43689,PropId=23,ShortText=3.24,"Text=Ограничение максимальной скорости"
+Id=43690,PropId=23,ShortText=3.25,"Text=Конец зоны ограничения максимальной скорости"
+Id=43691,PropId=23,ShortText=3.26,"Text=Подача звукового сигнала запрещена"
+Id=43692,PropId=23,ShortText=3.27,"Text=Остановка запрещена"
+Id=43693,PropId=23,ShortText=3.28,"Text=Стоянка запрещена"
+Id=43694,PropId=23,ShortText=3.29,"Text=Стоянка запрещена по нечетным числам мес"
+Id=43696,PropId=23,ShortText=3.30,"Text=Стоянка запрещена по четным числам месяц"
+Id=43697,PropId=23,ShortText=3.31,"Text=Конец зоны всех ограничений"
+Id=43704,PropId=24,ShortText=4.1.1,"Text=Движение прямо"
+Id=43705,PropId=24,ShortText=4.1.2,"Text=Движение направо"
+Id=43706,PropId=24,ShortText=4.1.3,"Text=Движение налево"
+Id=43707,PropId=24,ShortText=4.1.4,"Text=Движение прямо или направо"
+Id=43708,PropId=24,ShortText=4.1.5,"Text=Движение прямо или налево"
+Id=43709,PropId=24,ShortText=4.1.6,"Text=Движение направо или налево"
+Id=43710,PropId=24,ShortText=4.2.1,"Text=Объезд препядствия справа"
+Id=43711,PropId=24,ShortText=4.2.2,"Text=Объезд препядствия слева"
+Id=43712,PropId=24,ShortText=4.2.3,"Text=Объезд препядствия справа или слева"
+Id=43713,PropId=24,ShortText=4.3,"Text=Круговое движение"
+Id=43714,PropId=24,ShortText=4.4,"Text=Движение легковых автомобилей"
+Id=43715,PropId=24,ShortText=4.5,"Text=Велосипедная дорожка"
+Id=43716,PropId=24,ShortText=4.6,"Text=Пешеходная дорожка"
+Id=43717,PropId=24,ShortText=4.7,"Text=Ограничение минимальной скорости"
+Id=43718,PropId=24,ShortText=4.8,"Text=Конец зоны ограничения миним. скорости"
+Id=2385122,PropId=24,ShortText=4.9.1,"Text=Направление движения т.с. с опасными грузами налево"
+Id=2385123,PropId=24,ShortText=4.9.2,"Text=Направление движения т.с. с опасными грузами прямо"
+Id=2274501,PropId=24,ShortText=4.9.3,"Text=Направление движения т.с. с опасными грузами направо"
+Id=43719,PropId=25,ShortText=5.1,Text=Автомагистраль
+Id=43740,PropId=25,ShortText=5.2,"Text=Конец автомагистрали"
+Id=43755,PropId=25,ShortText=5.3,"Text=Дорога для автомобилей"
+Id=43769,PropId=25,ShortText=5.4,"Text=Конец дороги для автомобилей"
+Id=43770,PropId=25,ShortText=5.5,"Text=Дорога с односторонним движением"
+Id=43771,PropId=25,ShortText=5.6,"Text=Конец дороги с односторонним движением"
+Id=43772,PropId=25,ShortText=5.7.1,"Text=Выезд на дорогу с односторонним движение"
+Id=43773,PropId=25,ShortText=5.7.2,"Text=Выезд на дорогу с односторонним движение"
+Id=43774,PropId=25,ShortText=5.8.1,"Text=Направление движения по полосам"
+Id=43775,PropId=25,ShortText=5.8.2,"Text=Направление движения по полосе"
+Id=43776,PropId=25,ShortText=5.8.3,"Text=Начало полосы"
+Id=43777,PropId=25,ShortText=5.8.4,"Text=Начало полосы"
+Id=43778,PropId=25,ShortText=5.8.5,"Text=Конец полосы"
+Id=43779,PropId=25,ShortText=5.8.6,"Text=Конец полосы"
+Id=43780,PropId=25,ShortText=5.8.7,"Text=Направление движения по полосам"
+Id=43781,PropId=25,ShortText=5.8.8,"Text=Направление движения по полосам"
+Id=43782,PropId=25,ShortText=5.9,"Text=Полоса для тр.ср-в общего пользования"
+Id=43720,PropId=25,ShortText=5.10.1,"Text=Дорога с полосой для тр.ср-в общ. польз."
+Id=43721,PropId=25,ShortText=5.10.2,"Text=Выезд на дор. с полосой для тр.ср-в общ."
+Id=43722,PropId=25,ShortText=5.10.3,"Text=Выезд на дор. с полосой для тр.ср-в общ."
+Id=43723,PropId=25,ShortText=5.10.4,"Text=Конец дор.с пол.для тр.ср-в общ.пользов."
+Id=43724,PropId=25,ShortText=5.11.1,"Text=Место для разворота"
+Id=43725,PropId=25,ShortText=5.11.2,"Text=Зона для разворота"
+Id=43726,PropId=25,ShortText=5.12,"Text=Место для остановки автобуса или троллейбуса"
+Id=43727,PropId=25,ShortText=5.13,"Text=Место остановки трамвая"
+Id=43728,PropId=25,ShortText=5.14,"Text=Место стоянки легковых такси"
+Id=43729,PropId=25,ShortText=5.15,"Text=Место стоянки"
+Id=43730,PropId=25,ShortText=5.16.1,"Text=Пешеходный переход"
+Id=43731,PropId=25,ShortText=5.16.2,"Text=Пешеходный переход"
+Id=43732,PropId=25,ShortText=5.17.1,"Text=Подземный пешеходный переход"
+Id=43733,PropId=25,ShortText=5.17.2,"Text=Подземный пешеходный переход"
+Id=43734,PropId=25,ShortText=5.17.3,"Text=Надземный пешеходный переход"
+Id=43735,PropId=25,ShortText=5.17.4,"Text=Надземный пешеходный переход"
+Id=43736,PropId=25,ShortText=5.18,"Text=Рекомендуемая скорость"
+Id=43737,PropId=25,ShortText=5.19.1,"Text=Тупик прямо"
+Id=43738,PropId=25,ShortText=5.19.2,"Text=Тупик справа"
+Id=43739,PropId=25,ShortText=5.19.3,"Text=Тупик слева"
+Id=43741,PropId=25,ShortText=5.20.1,"Text=Предварительный указатель направлений"
+Id=43742,PropId=25,ShortText=5.20.2,"Text=Предварительный указатель направлений"
+Id=43743,PropId=25,ShortText=5.20.3,"Text=Схема движения"
+Id=43744,PropId=25,ShortText=5.21.1,"Text=Указатель направления"
+Id=43745,PropId=25,ShortText=5.21.2,"Text=Указатель направлений"
+Id=43746,PropId=25,ShortText=5.22,"Text=Начало населенного пункта"
+Id=43747,PropId=25,ShortText=5.23,"Text=Конец населенного пункта"
+Id=43748,PropId=25,ShortText=5.24,"Text=Начало населенного пункта"
+Id=43749,PropId=25,ShortText=5.25,"Text=Конец населенного пункта"
+Id=43750,PropId=25,ShortText=5.26,"Text=Наименование объекта"
+Id=43751,PropId=25,ShortText=5.27,"Text=Указатель расстояний"
+Id=43752,PropId=25,ShortText=5.28,"Text=Километровый знак"
+Id=43753,PropId=25,ShortText=5.29.1,"Text=Номер маршрута"
+Id=43754,PropId=25,ShortText=5.29.2,"Text=Номер маршрута"
+Id=43756,PropId=25,ShortText=5.30.1,"Text=Направление движения для груз. автомоб."
+Id=43757,PropId=25,ShortText=5.30.2,"Text=Направление движения для груз. автомоб."
+Id=43758,PropId=25,ShortText=5.30.3,"Text=Направление движения для груз. автомоб."
+Id=43759,PropId=25,ShortText=5.31,"Text=Схема объезда"
+Id=43760,PropId=25,ShortText=5.32.1,"Text=Направление объезда"
+Id=43761,PropId=25,ShortText=5.32.2,"Text=Направление объезда"
+Id=43762,PropId=25,ShortText=5.32.3,"Text=Направление объезда"
+Id=43763,PropId=25,ShortText=5.33,Text=Стоп-линия
+Id=43764,PropId=25,ShortText=5.34.1,"Text=Предв.указ.перестроения на др.пр.часть"
+Id=43765,PropId=25,ShortText=5.34.2,"Text=Предв.указ.перестроения на др.пр.часть"
+Id=43766,PropId=25,ShortText=5.35,"Text=Реверсивное движение"
+Id=43767,PropId=25,ShortText=5.36,"Text=Конец реверсивного движения"
+Id=43768,PropId=25,ShortText=5.37,"Text=Выезд на дорогу с реверсивным движением"
+Id=43783,PropId=26,ShortText=6.1,"Text=Пункт первой медицинской помощи"
+Id=43787,PropId=26,ShortText=6.2,Text=Больница
+Id=43788,PropId=26,ShortText=6.3,"Text=Автозаправочная станция"
+Id=43789,PropId=26,ShortText=6.4,"Text=Станция тех. обслуживания"
+Id=43790,PropId=26,ShortText=6.5,"Text=Мойка автомобилей"
+Id=43791,PropId=26,ShortText=6.6,Text=Телефон
+Id=43792,PropId=26,ShortText=6.7,"Text=Пункт питания"
+Id=43793,PropId=26,ShortText=6.8,"Text=Питьевая вода"
+Id=43794,PropId=26,ShortText=6.9,"Text=Гостиница или мотель"
+Id=43784,PropId=26,ShortText=6.10,Text=Кемпинг
+Id=43785,PropId=26,ShortText=6.11,"Text=Место отдыха"
+Id=43786,PropId=26,ShortText=6.12,"Text=Пост ГАИ"
+Id=43795,PropId=27,ShortText=7.1.1,"Text=Расстояние до объекта"
+Id=43796,PropId=27,ShortText=7.1.2,"Text=Расстояние до объекта"
+Id=43797,PropId=27,ShortText=7.1.3,"Text=Расстояние до объекта"
+Id=43798,PropId=27,ShortText=7.1.4,"Text=Расстояние до объекта"
+Id=43808,PropId=27,ShortText=7.2.1,"Text=Зона действия"
+Id=43809,PropId=27,ShortText=7.2.2,"Text=Зона действия"
+Id=43810,PropId=27,ShortText=7.2.3,"Text=Зона действия"
+Id=43811,PropId=27,ShortText=7.2.4,"Text=Зона действия"
+Id=43812,PropId=27,ShortText=7.2.5,"Text=Зона действия"
+Id=43813,PropId=27,ShortText=7.2.6,"Text=Зона действия"
+Id=43814,PropId=27,ShortText=7.3.1,"Text=Направление действия"
+Id=43815,PropId=27,ShortText=7.3.2,"Text=Направление действия"
+Id=43816,PropId=27,ShortText=7.3.3,"Text=Направление действия"
+Id=43817,PropId=27,ShortText=7.4.1,"Text=Вид транспортного средства"
+Id=43818,PropId=27,ShortText=7.4.2,"Text=Вид транспортного средства"
+Id=43819,PropId=27,ShortText=7.4.3,"Text=Вид транспортного средства"
+Id=43820,PropId=27,ShortText=7.4.4,"Text=Вид транспортного средства"
+Id=43821,PropId=27,ShortText=7.4.5,"Text=Вид транспортного средства"
+Id=43822,PropId=27,ShortText=7.4.6,"Text=Вид транспортного средства"
+Id=43823,PropId=27,ShortText=7.4.7,"Text=Вид транспортного средства"
+Id=43824,PropId=27,ShortText=7.5.1,"Text=Субботние, воскресные и праздничные дни"
+Id=43825,PropId=27,ShortText=7.5.2,"Text=Рабочие дни"
+Id=43826,PropId=27,ShortText=7.5.3,"Text=Дни недели"
+Id=43827,PropId=27,ShortText=7.5.4,"Text=Время действия"
+Id=43828,PropId=27,ShortText=7.5.5,"Text=Время действия"
+Id=43829,PropId=27,ShortText=7.5.6,"Text=Время действия"
+Id=43830,PropId=27,ShortText=7.5.7,"Text=Время действия"
+Id=43831,PropId=27,ShortText=7.6.1,"Text=Способ постановки тр.ср-ва на стоянку"
+Id=43832,PropId=27,ShortText=7.6.2,"Text=Способ постановки тр.ср-ва на стоянку"
+Id=43833,PropId=27,ShortText=7.6.3,"Text=Способ постановки тр.ср-ва на стоянку"
+Id=43834,PropId=27,ShortText=7.6.4,"Text=Способ постановки тр.ср-ва на стоянку"
+Id=43835,PropId=27,ShortText=7.6.5,"Text=Способ постановки тр.ср-ва на стоянку"
+Id=43836,PropId=27,ShortText=7.6.6,"Text=Способ постановки тр.ср-ва на стоянку"
+Id=43837,PropId=27,ShortText=7.6.7,"Text=Способ постановки тр.ср-ва на стоянку"
+Id=43838,PropId=27,ShortText=7.6.8,"Text=Способ постановки тр.ср-ва на стоянку"
+Id=43839,PropId=27,ShortText=7.6.9,"Text=Способ постановки тр.ср-ва на стоянку"
+Id=43840,PropId=27,ShortText=7.7,"Text=Стоянка с неработающим двигателем"
+Id=43841,PropId=27,ShortText=7.8,"Text=Платные услуги"
+Id=43842,PropId=27,ShortText=7.9,"Text=Ограничение продолжительности стоянки"
+Id=43799,PropId=27,ShortText=7.10,"Text=Место для осмотра автомобилей"
+Id=43800,PropId=27,ShortText=7.11,"Text=Ограничение полной массы"
+Id=43801,PropId=27,ShortText=7.12,"Text=Опасная обочина"
+Id=43802,PropId=27,ShortText=7.13,"Text=Направление главной дороги"
+Id=43803,PropId=27,ShortText=7.14,"Text=Полоса движения"
+Id=43804,PropId=27,ShortText=7.15,"Text=Слепые пешеходы"
+Id=43805,PropId=27,ShortText=7.16,"Text=Влажное покрытие"
+Id=43806,PropId=27,ShortText=7.17,Text=Инвалиды
+Id=43807,PropId=27,ShortText=7.18,"Text=Кроме инвалидов"
+Id=257,PropId=29,ShortText=,Text=СЛЕВА
+Id=258,PropId=29,ShortText=,Text=СПРАВА
+Id=259,PropId=29,ShortText=,"Text=НА РАЗДЕЛ. ПОЛОСЕ"
+Id=260,PropId=29,ShortText=,"Text=НАД ПРОЕЗЖ. ЧАСТЬЮ"
+Id=2117086,PropId=32,ShortText=,"Text=На дороге"
+Id=2117088,PropId=32,ShortText=,"Text=На въезде"
+Id=2117087,PropId=32,ShortText=,"Text=На выезде"
+Id=0,PropId=32,ShortText=,Text=
+Id=271,PropId=33,ShortText=,"Text=Ребристые балки без диафрагм"
+Id=282,PropId=33,ShortText=,"Text=Сквозные ригельно-раскосные фермы"
+Id=270,PropId=33,ShortText=,"Text=Ребристые балки с дифрагмами"
+Id=287,PropId=33,ShortText=,"Text=Пролетные строения из элементов и конструкций гражд. стр-ва"
+Id=276,PropId=33,ShortText=,"Text=Главные балки со сплошной стенкой"
+Id=272,PropId=33,ShortText=,"Text=Коробчатого сечения с раздельными коробками"
+Id=273,PropId=33,ShortText=,"Text=Коробчатого сечения с общей нижней плитой"
+Id=275,PropId=33,ShortText=,"Text=Прокатные двухтавровые балки"
+Id=269,PropId=33,ShortText=,Text=Плитное
+Id=274,PropId=33,ShortText=,"Text=Арки с надарочной конструкцией"
+Id=279,PropId=33,ShortText=,"Text=Простые перегоны"
+Id=285,PropId=33,ShortText=,"Text=Арочные пролетные строения с ездой посередине"
+Id=280,PropId=33,ShortText=,"Text=Сложные перегоны"
+Id=278,PropId=33,ShortText=,"Text=Свод с надсводным строением"
+Id=277,PropId=33,ShortText=,"Text=Сквозные фермы с ездой по верху"
+Id=281,PropId=33,ShortText=,"Text=Дощатые фермы"
+Id=288,PropId=33,ShortText=,"Text=Индивидуальные типы пролетного строения"
+Id=286,PropId=33,ShortText=,"Text=Арочные прол. строения с ездой понизу с закр. верхн. поясом"
+Id=284,PropId=33,ShortText=,"Text=Сквозные фермы с ездой понизу с закрытым верхним поясом"
+Id=283,PropId=33,ShortText=,"Text=Сквозные фермы с ездой понизу с открытым верхним поясом"
+Id=2135092,PropId=35,ShortText=1,"Text=на перегоне"
+Id=2135093,PropId=35,ShortText=2,"Text=на подъездных путях"
+Id=2135094,PropId=35,ShortText=3,"Text=маневровые участки"
+Id=2135095,PropId=35,ShortText=4,"Text=иные пути"
+Id=2135096,PropId=36,ShortText=1,"Text=Дорожные знаки"
+Id=2135097,PropId=36,ShortText=2,"Text=Механизированный шлагбаум"
+Id=2135101,PropId=36,ShortText=6,"Text=Светофорная сигнализация"
+Id=2135099,PropId=36,ShortText=4,"Text=Автоматический шлагбаум"
+Id=2135100,PropId=36,ShortText=5,"Text=Звуковая сигнализация"
+Id=2135098,PropId=36,ShortText=3,"Text=Электрический шлагбаум"
+Id=93,PropId=41,ShortText=,"Text=а/б, ц/б,щебень,гр обработ. вяжущими"
+Id=94,PropId=41,ShortText=,"Text=щебеночное (гравийное)"
+Id=1077522,PropId=41,ShortText=,"Text=Засев трав"
+Id=82,PropId=41,ShortText=,"Text=без укрепления"
+Id=2384961,PropId=43,ShortText=1.1,Text=1.1
+Id=2384962,PropId=43,ShortText=1.2,Text=1.2
+Id=2384963,PropId=43,ShortText=1.3,Text=1.3
+Id=2384964,PropId=43,ShortText=1.4,Text=1.4
+Id=2384965,PropId=43,ShortText=1.5,Text=1.5
+Id=2384966,PropId=43,ShortText=1.6,Text=1.6
+Id=2384967,PropId=43,ShortText=1.7,Text=1.7
+Id=2384968,PropId=43,ShortText=1.8,Text=1.8
+Id=2384969,PropId=43,ShortText=1.9,Text=1.9
+Id=2384970,PropId=43,ShortText=1.10,Text=1.10
+Id=2384971,PropId=43,ShortText=1.11,Text=1.11
+Id=2384972,PropId=43,ShortText=1.12,Text=1.12
+Id=2384973,PropId=43,ShortText=1.13,Text=1.13
+Id=2384974,PropId=43,ShortText=1.14.1,Text=1.14.1
+Id=2384975,PropId=43,ShortText=1.14.2,Text=1.14.2
+Id=2384976,PropId=43,ShortText=1.14.3,Text=1.14.3
+Id=2384977,PropId=43,ShortText=1.15,Text=1.15
+Id=2384978,PropId=43,ShortText=1.16.1,Text=1.16.1
+Id=2384979,PropId=43,ShortText=1.16.2,Text=1.16.2
+Id=2384980,PropId=43,ShortText=1.16.3,Text=1.16.3
+Id=2384981,PropId=43,ShortText=1.17,Text=1.17
+Id=2384984,PropId=43,ShortText=1.18,Text=1.18(налево)
+Id=2384983,PropId=43,ShortText=1.18,Text=1.18(направо)
+Id=2384982,PropId=43,ShortText=1.18,Text=1.18(прямо)
+Id=2384986,PropId=43,ShortText=1.18,"Text=1.18(прямо,налево)"
+Id=2384985,PropId=43,ShortText=1.18,"Text=1.18(прямо,направо)"
+Id=2384987,PropId=43,ShortText=1.18,"Text=1.18(прямо,направо,налево)"
+Id=2384989,PropId=43,ShortText=1.19,Text=1.19(налево)
+Id=2384988,PropId=43,ShortText=1.19,Text=1.19(направо)
+Id=2384990,PropId=43,ShortText=1.20,Text=1.20
+Id=2384991,PropId=43,ShortText=1.21,Text=1.21
+Id=2384992,PropId=43,ShortText=1.22,Text=1.22
+Id=2384993,PropId=43,ShortText=1.23,Text=1.23
+Id=181,PropId=44,ShortText=,"Text=Направляющие столбики"
+Id=183,PropId=44,ShortText=,"Text=Сигнальные тумбы"
+Id=182,PropId=44,ShortText=,"Text=Тумбы с искусственным освещением"
+Id=184,PropId=44,ShortText=,"Text=Направляющ. островки(приподн. над пр.ч.)"
+Id=257,PropId=57,ShortText=,Text=СЛЕВА
+Id=258,PropId=57,ShortText=,Text=СПРАВА
+Id=261,PropId=57,ShortText=,Text=пересеч
+Id=262,PropId=57,ShortText=,Text=пересекает
+Id=263,PropId=58,ShortText=,Text=над
+Id=264,PropId=58,ShortText=,Text=под
+Id=177,PropId=59,ShortText=,"Text=линии связи"
+Id=176,PropId=59,ShortText=,"Text=ЛЭП низкого напряжения"
+Id=175,PropId=59,ShortText=,"Text=ЛЭП высокого напряжения"
+Id=174,PropId=59,ShortText=,Text=путепровод
+Id=178,PropId=59,ShortText=,Text=трубопровод
+Id=179,PropId=59,ShortText=,"Text=канал, акведук"
+Id=180,PropId=59,ShortText=,Text=прочее
+Id=2135090,PropId=61,ShortText=,Text=Требуется
+Id=2135091,PropId=61,ShortText=,"Text=Не требуется"
+Id=0,PropId=61,ShortText=,Text=
+Id=0,PropId=66,ShortText=,Text=
+Id=2384914,PropId=66,ShortText=,"Text=Неровное покрытие"
+Id=2384915,PropId=66,ShortText=,"Text=Дефекты покрытия"
+Id=2384916,PropId=66,ShortText=,"Text=Низкие сцепные качества покрытия"
+Id=2384917,PropId=66,ShortText=,"Text=Неудовлетворительное состояние обочин"
+Id=2384918,PropId=66,ShortText=,"Text=Обочина занижена по отношению к проезжей части"
+Id=2384919,PropId=66,ShortText=,"Text=Несоответствие габарита моста ширине проезжей части"
+Id=2384920,PropId=66,ShortText=,"Text=Плохая видимость светофора"
+Id=2384921,PropId=66,ShortText=,"Text=Неисправность светофора"
+Id=2384922,PropId=66,ShortText=,"Text=Отсутствие горизонтальной разметки"
+Id=2384923,PropId=66,ShortText=,"Text=Отсутствие вертикальной разметки"
+Id=2384924,PropId=66,ShortText=,"Text=Деревья (опоры) на обочине"
+Id=2384925,PropId=66,ShortText=,"Text=Наличие наружной рекламы"
+Id=2384926,PropId=66,ShortText=,"Text=Отсутствие тротуаров (пешеходных дорожек)"
+Id=2384927,PropId=66,ShortText=,"Text=Отсутствие ограждений в необходимых местах"
+Id=2384928,PropId=66,ShortText=,"Text=Недостаточное освещение"
+Id=2384929,PropId=66,ShortText=,"Text=Неисправное освещение"
+Id=2384930,PropId=66,ShortText=,"Text=Сужение проезжей части (снег, строит. материал и пр.)"
+Id=2384931,PropId=66,ShortText=,"Text=Наличие снежных валов, ограничивающих видимость либо сужающих проезжую часть"
+Id=2384932,PropId=66,ShortText=,"Text=Отсутствие ограждений, сигнализации в местах работ"
+Id=2384933,PropId=66,ShortText=,"Text=Плохая видимость дорожных знаков"
+Id=2384934,PropId=66,ShortText=,"Text=Отсутствие дорожных знаков"
+Id=2384935,PropId=66,ShortText=,"Text=Неправильное применение дорожных знаков"
+Id=2384936,PropId=66,ShortText=,"Text=Плохая различимость горизонтальной дорожной разметки"
+Id=2384937,PropId=66,ShortText=,"Text=Ограниченная видимость"
+Id=2384938,PropId=66,ShortText=,"Text=Отсутствие переходно-скоростных полос"
+Id=2384939,PropId=66,ShortText=,"Text=Несоответствие параметров дороги ее категории"
+Id=2384940,PropId=66,ShortText=,"Text=Несоответствие ж/д переезда предъявляемым требованиям"
+Id=2384941,PropId=66,ShortText=,"Text=Неисправность переездной сигнализации"
+Id=2384942,PropId=66,ShortText=,"Text=Отсутствие направляющих устройств и световозвращающих элементов на них"
+Id=2384943,PropId=67,ShortText=,Text=Столкновение
+Id=2384944,PropId=67,ShortText=,Text=Опрокидывание
+Id=2384945,PropId=67,ShortText=,"Text=Наезд на стоящее ТС"
+Id=2384946,PropId=67,ShortText=,"Text=Наезд на препятствие"
+Id=2384947,PropId=67,ShortText=,"Text=Наезд на пешехода"
+Id=2384948,PropId=67,ShortText=,"Text=Наезд на велосипедиста"
+Id=2384949,PropId=67,ShortText=,"Text=Наезд на гужевой транспорт"
+Id=2384950,PropId=67,ShortText=,"Text=Падение пассажира"
+Id=2384951,PropId=67,ShortText=,"Text=Иной вид ДТП"
+Id=0,PropId=68,ShortText=,Text=
+Id=2384841,PropId=68,ShortText=,"Text=Светлое время суток"
+Id=2384842,PropId=68,ShortText=,"Text=Темное время суток, освещение включ"
+Id=2384843,PropId=68,ShortText=,"Text=Темное время суток, освещение не вк"
+Id=2384844,PropId=68,ShortText=,"Text=Темное время суток, освещение отсут"
+Id=0,PropId=69,ShortText=,Text=
+Id=2384906,PropId=69,ShortText=,Text=Сухое
+Id=2384907,PropId=69,ShortText=,Text=Мокрое
+Id=2384908,PropId=69,ShortText=,Text=Загрязненное
+Id=2384909,PropId=69,ShortText=,"Text=Свежеуложенная поверхностная обрабо"
+Id=2384910,PropId=69,ShortText=,Text=Заснеженное
+Id=2384911,PropId=69,ShortText=,Text=Гололедица
+Id=2384912,PropId=69,ShortText=,"Text=Обработанное проивогололед.мат-лом"
+Id=2384913,PropId=69,ShortText=,"Text=Со снежным накатом"
+Id=0,PropId=72,ShortText=,Text=
+Id=257,PropId=72,ShortText=,Text=СЛЕВА
+Id=258,PropId=72,ShortText=,Text=СПРАВА
+Id=262,PropId=72,ShortText=,Text=пересекает
+Id=2384959,PropId=73,ShortText=Кромка,"Text=Кромка дороги"
+Id=2384960,PropId=73,ShortText=Бровка,"Text=Бровка дороги"
+Id=2319,PropId=76,ShortText=,Text=Неудовлетворительное
+Id=2320,PropId=76,ShortText=,Text=Удовлетворительное
+Id=2321,PropId=76,ShortText=,Text=Хорошее
+Id=2322,PropId=76,ShortText=,Text=Отличное
+Id=2323,PropId=76,ShortText=,Text=Аварийное
+Id=119,PropId=77,ShortText=,"Text=продольные лотки"
+Id=120,PropId=77,ShortText=,"Text=поперечные лотки"
+Id=121,PropId=77,ShortText=,"Text=канавы (кюветы)"
+Id=122,PropId=77,ShortText=,"Text=нагорные канавы (для выемок)"
+Id=123,PropId=77,ShortText=,"Text=продольные дренажи мелкого заложения (выше глубины промерзания)"
+Id=124,PropId=77,ShortText=,"Text=продольные дренажи мелкого заложения откосные"
+Id=125,PropId=77,ShortText=,"Text=продольные дренажи глубокого заложения подкюветные"
+Id=126,PropId=77,ShortText=,"Text=продольные дренажи глубокого заложения закюветные"
+Id=127,PropId=77,ShortText=,"Text=продольные дренажи глубокого заложения откосные"
+Id=128,PropId=77,ShortText=,"Text=дренажи поперечные (прорези)"
+Id=254,PropId=81,ShortText=,"Text=слои покрытия"
+Id=255,PropId=81,ShortText=,"Text=слои основания"
+Id=256,PropId=81,ShortText=,Text=доп.слой
+Id=2385042,PropId=84,ShortText=Недопустимо,"Text=Недопустимое значение"
+Id=2385041,PropId=84,ShortText=Допустимо,"Text=Допустимое значение"
+Id=2385043,PropId=85,ShortText=1,"Text=Прямая вставка"
+Id=2385044,PropId=85,ShortText=2,"Text=Переходная кривая правого поворота"
+Id=2385045,PropId=85,ShortText=3,"Text=Круговая кривая"
+Id=2385089,PropId=85,ShortText=,"Text=Переходная кривая левого поворота"
+Id=2385104,PropId=94,ShortText=,"Text=Насыпь выше 1.2 м."
+Id=2385105,PropId=94,ShortText=,Text=Выемка
+Id=2385106,PropId=94,ShortText=,"Text=Насыпь на склоне косогора"
+Id=2385107,PropId=94,ShortText=,"Text=Выемка на склоне косогора"
+Id=2385108,PropId=95,ShortText=,"Text=Линия застройки"
+Id=16779508,PropId=34,ShortText=,Text=Металлические
+Id=16779509,PropId=34,ShortText=,Text=Железобетонные
+Id=16779510,PropId=34,ShortText=,Text=Деревянные
+Id=16777216,PropId=79,ShortText=,Text=
+Id=16779373,PropId=79,ShortText=,Text=Гравий
+Id=16779429,PropId=79,ShortText=,"Text=Песок природный"
+Id=16779438,PropId=79,ShortText=,"Text=Плиты бетонные"
+Id=16779457,PropId=79,ShortText=,"Text=Смесь асфальтобетонная, горячая"
+Id=16779488,PropId=79,ShortText=,Text=Щебень
+Id=16779512,PropId=79,ShortText=,"Text=плотный горячий а/б"
+Id=16779513,PropId=79,ShortText=,"Text=пористый а/б"
+Id=16779515,PropId=79,ShortText=,"Text=черный щебень"
+Id=16779516,PropId=79,ShortText=,Text=цементобетон
+Id=16779517,PropId=79,ShortText=,"Text=тощий бетон, материалы, укрепленные неорганическими вяжущими"
+Id=16779518,PropId=79,ShortText=,"Text=щебень, гравий, шлак"
+Id=18902567,PropId=79,ShortText=,"Text=Песчано-гравийная смесь"
+Id=16779508,PropId=93,ShortText=,Text=Металлические
+Id=16779509,PropId=93,ShortText=,Text=Железобетонные
+Id=16779510,PropId=93,ShortText=,Text=Деревянные
+Id=16779396,PropId=93,ShortText=,Text=Кирпич
+Id=16779521,PropId=93,ShortText=,Text=стеклопластик
+Id=16779444,PropId=93,ShortText=,"Text=Прочие материалы"
+Id=33554433,PropId=87,"ShortText=""Ступенька"" при сопряжении проезжей части и дороги","Text=""Ступенька"" при сопряжении проезжей части и дороги"
+Id=33554434,PropId=87,"ShortText=Выбоины покрытия","Text=Выбоины покрытия"
+Id=33554438,PropId=87,"ShortText=Загрязнение проезжей части мостов","Text=Загрязнение проезжей части мостов"
+Id=33554440,PropId=87,"ShortText=Заиливание сечения и оголовков водопропускных труб","Text=Заиливание сечения и оголовков водопропускных труб"
+Id=33554450,PropId=87,"ShortText=Локальные повреждения бортовых камней (мелкие повреждения глубиной до 3,0 см при суммарной площади свыше 20% или локальные разрушения глубиной более 3 см)","Text=Локальные повреждения бортовых камней (мелкие повреждения глубиной до 3,0 см при суммарной площади свыше 20% или локальные разрушения глубиной более 3 см)"
+Id=33554451,PropId=87,"ShortText=Локальные разрушения укрепления оголовков водопропускных труб","Text=Локальные разрушения укрепления оголовков водопропускных труб"
+Id=33554458,PropId=87,"ShortText=Наличие древесно-кустарниковой растительности на разделительных полосах","Text=Наличие древесно-кустарниковой растительности на разделительных полосах"
+Id=33554459,PropId=87,"ShortText=Наличие древесно-кустарниковой растительности у оголовков водопропускных труб","Text=Наличие древесно-кустарниковой растительности у оголовков водопропускных труб"
+Id=33554460,PropId=87,"ShortText=Наличие локальных разрушений слоев дорожной одежды вдоль деформационных швов, выкрашивание мастики","Text=Наличие локальных разрушений слоев дорожной одежды вдоль деформационных швов, выкрашивание мастики"
+Id=33554466,PropId=87,"ShortText=Наличие отдельных выбоин на покрытии тротуаров","Text=Наличие отдельных выбоин на покрытии тротуаров"
+Id=33554470,PropId=87,"ShortText=Наличие отдельных повреждений, просадок и застоя воды на обочинах, укрепленные","Text=Наличие отдельных повреждений, просадок и застоя воды на обочинах, укрепленные"
+Id=33554477,PropId=87,"ShortText=Наличие снежно-ледяных отложений в теле трубы в период до начала весеннего паводка","Text=Наличие снежно-ледяных отложений в теле трубы в период до начала весеннего паводка"
+Id=33554482,PropId=87,"ShortText=Наличие уплотненного слоя снега на переходном покрытии","Text=Наличие уплотненного слоя снега на переходном покрытии"
+Id=33554483,PropId=87,"ShortText=Наличие уплотненного слоя снега на проезжей части","Text=Наличие уплотненного слоя снега на проезжей части"
+Id=33554486,PropId=87,"ShortText=Отдельные поверхностные повреждения перильных ограждений, ограждений элементов пролетных строений, подлежащих восстановлению в течение 5-и суток","Text=Отдельные поверхностные повреждения перильных ограждений, ограждений элементов пролетных строений, подлежащих восстановлению в течение 5-и суток"
+Id=33554490,PropId=87,"ShortText=Повреждения (выбоины) не более 15х60х5 см (длина х ширина х глубина) на проезжей части моста","Text=Повреждения (выбоины) не более 15х60х5 см (длина х ширина х глубина) на проезжей части моста"
+Id=33554491,PropId=87,"ShortText=Повреждения (выбоины) не более 15х60х5 см (длина) на проезжей части моста","Text=Повреждения (выбоины) не более 15х60х5 см (длина) на проезжей части моста"
+Id=33554495,PropId=87,"ShortText=Пылимость переходного покрытия","Text=Пылимость переходного покрытия"
+Id=33554498,PropId=87,"ShortText=Разрушения откосов регуляционных сооружений, конусов и насыпи","Text=Разрушения откосов регуляционных сооружений, конусов и насыпи"
+Id=33554499,PropId=87,"ShortText=Раскрытые необработанные трещины на покрытии. Наличие незаполненных мастикой деформационных швов на покрытиях","Text=Раскрытые необработанные трещины на покрытии. Наличие незаполненных мастикой деформационных швов на покрытиях"
+Id=33554501,PropId=87,"ShortText=Толщина рыхлого слоя снега на заездных карманах во время снегопада и до окончания снегоуборки","Text=Толщина рыхлого слоя снега на заездных карманах во время снегопада и до окончания снегоуборки"
+Id=33554504,PropId=87,"ShortText=Толщина рыхлого слоя снега на тротуарах мостов во время снегопада и до окончания снегоуборки","Text=Толщина рыхлого слоя снега на тротуарах мостов во время снегопада и до окончания снегоуборки"
+Id=33554505,PropId=87,"ShortText=Толщина уплотненного слоя снега на заездных карманах","Text=Толщина уплотненного слоя снега на заездных карманах"
+Id=33554508,PropId=87,"ShortText=Толщина уплотненного слоя снега на проезжей части мостов","Text=Толщина уплотненного слоя снега на проезжей части мостов"
+Id=33554509,PropId=87,"ShortText=Толщина уплотненного слоя снега на проезжей части мостов, находящихся на автомобильной дороге с переходным типом покрытия","Text=Толщина уплотненного слоя снега на проезжей части мостов, находящихся на автомобильной дороге с переходным типом покрытия"
+Id=33554511,PropId=87,"ShortText=Установка технических средств организации дорожного движения с нарушением действующих стандартов, норм и правил","Text=Установка технических средств организации дорожного движения с нарушением действующих стандартов, норм и правил"
+Id=33554518,PropId=87,"ShortText=Ширина очистки обочин и разделительной полосы от снега (при допустимой толщине рыхлого снега во время снегопада и до окончания снегоуборки)","Text=Ширина очистки обочин и разделительной полосы от снега (при допустимой толщине рыхлого снега во время снегопада и до окончания снегоуборки)"
+Id=33554519,PropId=87,"ShortText=Ширина очистки проезжей части мостов от снега (при допустимой толщине рыхлого слоя снега во время снегопада и до окончания снегоуборки)","Text=Ширина очистки проезжей части мостов от снега (при допустимой толщине рыхлого слоя снега во время снегопада и до окончания снегоуборки)"
+Id=33554435,PropId=87,"ShortText=Гребенка, нарушение профиля на переходном покрытии","Text=Гребенка, нарушение профиля на переходном покрытии"
+Id=33554437,PropId=87,"ShortText=Дефекты (не представляющие угрозы безопасности движения транспортных средств и пешеходов) проезжей части, тротуаров, ограждений и перил мостов","Text=Дефекты (не представляющие угрозы безопасности движения транспортных средств и пешеходов) проезжей части, тротуаров, ограждений и перил мостов"
+Id=33554444,PropId=87,"ShortText=Застой воды у кромки покрытия и части обочины","Text=Застой воды у кромки покрытия и части обочины"
+Id=33554446,PropId=87,"ShortText=Износ дорожной разметки, выполненной краской","Text=Износ дорожной разметки, выполненной краской"
+Id=33554448,PropId=87,"ShortText=Колейность на переходном покрытии","Text=Колейность на переходном покрытии"
+Id=33554455,PropId=87,"ShortText=Наличие грязи на посадочных площадках","Text=Наличие грязи на посадочных площадках"
+Id=33554456,PropId=87,"ShortText=Наличие древесно-кустарниковой растительности на обочинах","Text=Наличие древесно-кустарниковой растительности на обочинах"
+Id=33554461,PropId=87,"ShortText=Наличие на обочинах отдельных посторонних предметов","Text=Наличие на обочинах отдельных посторонних предметов"
+Id=33554463,PropId=87,"ShortText=Наличие на проезжей части снега (при допустимой толщине рыхлого слоя снега во время снегопада и до окончания снегоуборки)","Text=Наличие на проезжей части снега (при допустимой толщине рыхлого слоя снега во время снегопада и до окончания снегоуборки)"
+Id=33554464,PropId=87,"ShortText=Наличие незаделанных швов между звеньями водопропускных труб","Text=Наличие незаделанных швов между звеньями водопропускных труб"
+Id=33554465,PropId=87,"ShortText=Наличие необработанных мест выпотевания битума","Text=Наличие необработанных мест выпотевания битума"
+Id=33554471,PropId=87,"ShortText=Наличие поврежденных элементов ограждений, не восстановленных в течение 5 суток после обнаружения дефекта","Text=Наличие поврежденных элементов ограждений, не восстановленных в течение 5 суток после обнаружения дефекта"
+Id=33554479,PropId=87,"ShortText=Наличие сужения проезжей части на трубах","Text=Наличие сужения проезжей части на трубах"
+Id=33554484,PropId=87,"ShortText=Необеспеченность снегозаносимых участков работоспособной снегозащитой","Text=Необеспеченность снегозаносимых участков работоспособной снегозащитой"
+Id=33554485,PropId=87,"ShortText=Неорганизованные съезды","Text=Неорганизованные съезды"
+Id=33554488,PropId=87,"ShortText=Площадь ям","Text=Площадь ям"
+Id=33554492,PropId=87,"ShortText=Повреждения (выбоины) не более 15х60х5 см (длина), распространяются и на проезжую часть моста","Text=Повреждения (выбоины) не более 15х60х5 см (длина), распространяются и на проезжую часть моста"
+Id=33554493,PropId=87,"ShortText=Просадки, выбоины, выпуклости, проломы на проезжей части водопропускных труб","Text=Просадки, выбоины, выпуклости, проломы на проезжей части водопропускных труб"
+Id=33554494,PropId=87,"ShortText=Просвет более максимального под трехметровой рейкой в местах заделки выбоин и других повреждений","Text=Просвет более максимального под трехметровой рейкой в местах заделки выбоин и других повреждений"
+Id=33554496,PropId=87,"ShortText=Размыв русел водотоков у оголовков водопропускных труб","Text=Размыв русел водотоков у оголовков водопропускных труб"
+Id=33554500,PropId=87,"ShortText=Состояние системы водоотвода (водосбросы, водобойные колодцы, водоотводные канавы)","Text=Состояние системы водоотвода (водосбросы, водобойные колодцы, водоотводные канавы)"
+Id=33554510,PropId=87,"ShortText=Толщина уплотненного слоя снега на тротуарах мостов","Text=Толщина уплотненного слоя снега на тротуарах мостов"
+Id=33554512,PropId=87,"ShortText=Установка технических средств организации дорожного движения с нарушением действующих стандартов, норм и правил","Text=Установка технических средств организации дорожного движения с нарушением действующих стандартов, норм и правил"
+Id=33554513,PropId=87,"ShortText=Установка указательных вех в местах расположения труб, сигнальных столбиков, барьерного ограждения, начала и конца мостов, участков дорог с насыпью более 2 м и на участках кривых малого радиуса","Text=Установка указательных вех в местах расположения труб, сигнальных столбиков, барьерного ограждения, начала и конца мостов, участков дорог с насыпью более 2 м и на участках кривых малого радиуса"
+Id=33554517,PropId=87,"ShortText=Участки с сеткой трещин","Text=Участки с сеткой трещин"
+Id=33554436,PropId=87,"ShortText=Дефекты (не представляющие угрозы безопасности движения транспортных средств и пешеходов) проезжей части, тротуаров, ограждений и перил мостов","Text=Дефекты (не представляющие угрозы безопасности движения транспортных средств и пешеходов) проезжей части, тротуаров, ограждений и перил мостов"
+Id=33554442,PropId=87,"ShortText=Занижение разделительных полос относительно прилегающей кромки проезжей части","Text=Занижение разделительных полос относительно прилегающей кромки проезжей части"
+Id=33554447,PropId=87,"ShortText=Износ дорожной разметки, выполненной термопластиком","Text=Износ дорожной разметки, выполненной термопластиком"
+Id=33554452,PropId=87,"ShortText=Наличие грязи на дорожных знаках","Text=Наличие грязи на дорожных знаках"
+Id=33554454,PropId=87,"ShortText=Наличие грязи на павильонах, площадках отдыха и стоянках транспортных средств","Text=Наличие грязи на павильонах, площадках отдыха и стоянках транспортных средств"
+Id=33554457,PropId=87,"ShortText=Наличие древесно-кустарниковой растительности на откосах","Text=Наличие древесно-кустарниковой растительности на откосах"
+Id=33554462,PropId=87,"ShortText=Наличие на откосах отдельных посторонних предметов","Text=Наличие на откосах отдельных посторонних предметов"
+Id=33554468,PropId=87,"ShortText=Наличие отдельных повреждений, просадок и застоя воды на обочинах, неукрепленные","Text=Наличие отдельных повреждений, просадок и застоя воды на обочинах, неукрепленные"
+Id=33554475,PropId=87,"ShortText=Наличие посторонних предметов, создающих аварийную обстановку, при отсутствии дорожных знаков","Text=Наличие посторонних предметов, создающих аварийную обстановку, при отсутствии дорожных знаков"
+Id=33554476,PropId=87,"ShortText=Наличие просадок в местах сопряжения моста с насыпью","Text=Наличие просадок в местах сопряжения моста с насыпью"
+Id=33554478,PropId=87,"ShortText=Наличие снежно-ледяных отложений, затрудняющих восприятие информации на дорожных знаках","Text=Наличие снежно-ледяных отложений, затрудняющих восприятие информации на дорожных знаках"
+Id=33554481,PropId=87,"ShortText=Наличие травы у оголовков водопропускных труб","Text=Наличие травы у оголовков водопропускных труб"
+Id=33554506,PropId=87,"ShortText=Толщина уплотненного слоя снега на площадках отдыха и стоянках транспортных средств","Text=Толщина уплотненного слоя снега на площадках отдыха и стоянках транспортных средств"
+Id=33554507,PropId=87,"ShortText=Толщина уплотненного слоя снега на посадочных площадках остановок общественного транспорта","Text=Толщина уплотненного слоя снега на посадочных площадках остановок общественного транспорта"
+Id=33554439,PropId=87,"ShortText=Загрязнения опорных узлов","Text=Загрязнения опорных узлов"
+Id=33554441,PropId=87,"ShortText=Занижение обочин относительно прилегающей кромки проезжей части","Text=Занижение обочин относительно прилегающей кромки проезжей части"
+Id=33554449,PropId=87,"ShortText=Кюветы, заросшие древесно-кустарниковой растительностью","Text=Кюветы, заросшие древесно-кустарниковой растительностью"
+Id=33554453,PropId=87,"ShortText=Наличие грязи на ограждениях","Text=Наличие грязи на ограждениях"
+Id=33554474,PropId=87,"ShortText=Наличие полос загрязнения у кромок покрытия","Text=Наличие полос загрязнения у кромок покрытия"
+Id=33554480,PropId=87,"ShortText=Наличие сужения части моста","Text=Наличие сужения части моста"
+Id=33554487,PropId=87,"ShortText=Отклонение бортового камня от проектного положения","Text=Отклонение бортового камня от проектного положения"
+Id=33554489,PropId=87,"ShortText=Повреждение окраски ограждений, кроме оцинкованных поверхностей","Text=Повреждение окраски ограждений, кроме оцинкованных поверхностей"
+Id=33554502,PropId=87,"ShortText=Толщина рыхлого слоя снега на площадках отдыха и стоянках транспортных средств во время снегопада и до окончания снегоуборки","Text=Толщина рыхлого слоя снега на площадках отдыха и стоянках транспортных средств во время снегопада и до окончания снегоуборки"
+Id=33554503,PropId=87,"ShortText=Толщина рыхлого слоя снега на посадочных площадках остановок общественного транспорта во время снегопада и до окончания снегоуборки","Text=Толщина рыхлого слоя снега на посадочных площадках остановок общественного транспорта во время снегопада и до окончания снегоуборки"
+Id=33554515,PropId=87,"ShortText=Участки обочин, размытые или разрушенные","Text=Участки обочин, размытые или разрушенные"
+Id=33554516,PropId=87,"ShortText=Участки одиночных трещин","Text=Участки одиночных трещин"
+Id=33554520,PropId=87,"ShortText=Размытые, разрушенные участки дорог","Text=Размытые, разрушенные участки дорог"
+Id=33554521,PropId=87,"ShortText=Участки дорог с массовыми разрушениями покрытия","Text=Участки дорог с массовыми разрушениями покрытия"
+Id=33554522,PropId=87,"ShortText=Не вертикальность установки сигнального столбика","Text=Не вертикальность установки сигнального столбика"
+Id=33554523,PropId=87,"ShortText=Не вертикальность установки дорожного знака","Text=Не вертикальность установки дорожного знака"
+Id=33554524,PropId=87,"ShortText=Недостаточная высота ограждения","Text=Недостаточная высота ограждения"
+Id=33554525,PropId=87,"ShortText=Ненормативная высота установки дорожного знака","Text=Ненормативная высота установки дорожного знака"
+Id=33554526,PropId=87,"ShortText=Заплаты на проезжей части","Text=Заплаты на проезжей части"
+Id=33554527,PropId=87,"ShortText=Выкрашивание покрытия с потерей материала","Text=Выкрашивание покрытия с потерей материала"
+Id=33554528,PropId=87,"ShortText=Разрушение кромки","Text=Разрушение кромки"
+7 7
+Id=1,"Name=Рисуем полигон"
+Id=2,"Name=Рисуем полилинию"
+Id=3,"Name=Рисуем метафайл"
+Id=4,"Name=Рисуем мост"
+Id=5,"Name=Рисуем прерывистую линию"
+Id=6,"Name=Линия из объектов"
+Id=7,"Name=Изогнутая линия"
+378 378
+Id=1,ProcId=1,PenId=-8,BrushId=1
+Id=2,ProcId=1,PenId=-8,BrushId=2
+Id=3,ProcId=1,PenId=-8,BrushId=3
+Id=4,ProcId=1,PenId=-8,BrushId=4
+Id=5,ProcId=1,PenId=-8,BrushId=5
+Id=6,ProcId=1,PenId=-8,BrushId=9
+Id=7,ProcId=1,PenId=-8,BrushId=1
+Id=8,ProcId=1,PenId=-8,BrushId=2
+Id=9,ProcId=3,MetaId=1,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=10,ProcId=1,PenId=-8,BrushId=4
+Id=11,ProcId=1,PenId=-7,BrushId=-1
+Id=12,ProcId=1,PenId=17,BrushId=1
+Id=13,ProcId=3,MetaId=2,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=14,ProcId=3,MetaId=3,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=15,ProcId=3,MetaId=4,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=16,ProcId=3,MetaId=5,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=17,ProcId=3,MetaId=6,DX=30,DY=60,Width=60,Height=120,DataLeft=0,DataRight=60,DataTop=0,DataBottom=120
+Id=18,ProcId=3,MetaId=7,DX=30,DY=60,Width=60,Height=120,DataLeft=0,DataRight=60,DataTop=0,DataBottom=120
+Id=19,ProcId=3,MetaId=8,DX=30,DY=60,Width=60,Height=120,DataLeft=0,DataRight=60,DataTop=0,DataBottom=120
+Id=20,ProcId=3,MetaId=9,DX=30,DY=60,Width=60,Height=120,DataLeft=0,DataRight=60,DataTop=0,DataBottom=120
+Id=21,ProcId=3,MetaId=10,DX=30,DY=60,Width=60,Height=120,DataLeft=0,DataRight=60,DataTop=0,DataBottom=120
+Id=22,ProcId=3,MetaId=11,DX=30,DY=60,Width=60,Height=120,DataLeft=0,DataRight=60,DataTop=0,DataBottom=120
+Id=23,ProcId=3,MetaId=12,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=24,ProcId=3,MetaId=13,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=25,ProcId=3,MetaId=14,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=26,ProcId=3,MetaId=15,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=27,ProcId=3,MetaId=16,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=28,ProcId=3,MetaId=17,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=29,ProcId=3,MetaId=18,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=30,ProcId=3,MetaId=19,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=31,ProcId=3,MetaId=20,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=32,ProcId=3,MetaId=21,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=33,ProcId=3,MetaId=22,DX=60,DY=60,Width=120,Height=120,DataLeft=30,DataRight=90,DataTop=50,DataBottom=85
+Id=34,ProcId=3,MetaId=23,DX=60,DY=60,Width=120,Height=120,DataLeft=30,DataRight=90,DataTop=50,DataBottom=85
+Id=35,ProcId=3,MetaId=24,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=36,ProcId=3,MetaId=25,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=37,ProcId=3,MetaId=26,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=38,ProcId=3,MetaId=27,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=39,ProcId=3,MetaId=28,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=40,ProcId=3,MetaId=29,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=41,ProcId=3,MetaId=30,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=42,ProcId=3,MetaId=31,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=43,ProcId=3,MetaId=32,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=44,ProcId=3,MetaId=33,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=45,ProcId=3,MetaId=34,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=46,ProcId=3,MetaId=35,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=47,ProcId=3,MetaId=36,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=48,ProcId=3,MetaId=37,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=49,ProcId=3,MetaId=38,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=50,ProcId=3,MetaId=39,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=51,ProcId=3,MetaId=40,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=52,ProcId=3,MetaId=41,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=53,ProcId=3,MetaId=42,DX=120,DY=30,Width=240,Height=60,DataLeft=0,DataRight=240,DataTop=0,DataBottom=60
+Id=54,ProcId=3,MetaId=43,DX=120,DY=30,Width=240,Height=60,DataLeft=0,DataRight=240,DataTop=0,DataBottom=60
+Id=55,ProcId=3,MetaId=44,DX=120,DY=30,Width=240,Height=60,DataLeft=0,DataRight=240,DataTop=0,DataBottom=60
+Id=56,ProcId=1,PenId=-8,BrushId=2
+Id=57,ProcId=1,PenId=-8,BrushId=5
+Id=58,ProcId=1,PenId=17,BrushId=1
+Id=59,ProcId=1,PenId=-8,BrushId=2
+Id=60,ProcId=1,PenId=-8,BrushId=3
+Id=61,ProcId=1,PenId=-8,BrushId=4
+Id=62,ProcId=1,PenId=-8,BrushId=5
+Id=63,ProcId=2,PenId=10,Width=3,ScaleKind=0,Style=,Offset=0
+Id=64,ProcId=3,MetaId=45,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=65,ProcId=3,MetaId=46,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=66,ProcId=3,MetaId=47,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=67,ProcId=3,MetaId=48,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=68,ProcId=3,MetaId=49,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=69,ProcId=3,MetaId=50,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=70,ProcId=3,MetaId=51,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=71,ProcId=3,MetaId=52,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=72,ProcId=3,MetaId=53,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=73,ProcId=3,MetaId=54,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=74,ProcId=3,MetaId=55,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=75,ProcId=3,MetaId=56,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=76,ProcId=3,MetaId=57,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=77,ProcId=3,MetaId=58,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=78,ProcId=3,MetaId=59,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=79,ProcId=3,MetaId=60,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=80,ProcId=3,MetaId=61,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=81,ProcId=3,MetaId=62,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=82,ProcId=3,MetaId=63,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=83,ProcId=3,MetaId=64,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=30,DataBottom=90
+Id=84,ProcId=3,MetaId=65,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=30,DataBottom=70
+Id=85,ProcId=3,MetaId=66,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=45,DataBottom=80
+Id=86,ProcId=3,MetaId=67,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=80,DataTop=45,DataBottom=100
+Id=87,ProcId=3,MetaId=68,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=60,DataBottom=110
+Id=88,ProcId=3,MetaId=69,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=10,DataBottom=50
+Id=89,ProcId=3,MetaId=70,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=90,ProcId=3,MetaId=71,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=91,ProcId=3,MetaId=72,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=92,ProcId=3,MetaId=73,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=93,ProcId=3,MetaId=74,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=94,ProcId=3,MetaId=75,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=95,ProcId=3,MetaId=76,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=96,ProcId=3,MetaId=77,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=97,ProcId=3,MetaId=78,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=98,ProcId=3,MetaId=79,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=30,DataBottom=90
+Id=99,ProcId=3,MetaId=80,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=100,ProcId=3,MetaId=81,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=101,ProcId=3,MetaId=82,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=102,ProcId=3,MetaId=83,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=103,ProcId=3,MetaId=84,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=104,ProcId=3,MetaId=85,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=105,ProcId=3,MetaId=86,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=106,ProcId=3,MetaId=87,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=107,ProcId=3,MetaId=88,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=108,ProcId=3,MetaId=89,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=109,ProcId=3,MetaId=90,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=110,ProcId=3,MetaId=91,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=111,ProcId=3,MetaId=92,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=112,ProcId=3,MetaId=93,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=113,ProcId=3,MetaId=94,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=114,ProcId=3,MetaId=95,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=115,ProcId=3,MetaId=96,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=116,ProcId=3,MetaId=97,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=117,ProcId=3,MetaId=98,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=118,ProcId=3,MetaId=99,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=119,ProcId=3,MetaId=100,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=120,ProcId=3,MetaId=101,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=121,ProcId=4,PenId=11,Width=2,ScaleKind=0,TaleLength=20
+Id=122,ProcId=4,PenId=11,Width=2,ScaleKind=0,TaleLength=15
+Id=123,ProcId=2,PenId=11,Width=2,ScaleKind=0,"Style=10 10 ",Offset=0
+Id=124,ProcId=3,MetaId=227,DX=40,DY=20,Width=80,Height=40,DataLeft=0,DataRight=80,DataTop=0,DataBottom=40
+Id=125,ProcId=1,PenId=-8,BrushId=12
+Id=126,ProcId=1,PenId=-8,BrushId=13
+Id=127,ProcId=2,PenId=10,Width=2,ScaleKind=0,Style=,Offset=0
+Id=128,ProcId=2,PenId=10,Width=3,ScaleKind=0,Style=,Offset=0
+Id=129,ProcId=3,MetaId=102,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=130,ProcId=3,MetaId=103,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=131,ProcId=3,MetaId=104,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=132,ProcId=3,MetaId=105,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=133,ProcId=3,MetaId=106,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=134,ProcId=3,MetaId=107,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=135,ProcId=3,MetaId=108,DX=120,DY=30,Width=240,Height=60,DataLeft=0,DataRight=240,DataTop=0,DataBottom=60
+Id=136,ProcId=3,MetaId=109,DX=120,DY=30,Width=240,Height=60,DataLeft=0,DataRight=240,DataTop=0,DataBottom=60
+Id=137,ProcId=3,MetaId=110,DX=90,DY=60,Width=180,Height=120,DataLeft=0,DataRight=180,DataTop=0,DataBottom=120
+Id=138,ProcId=3,MetaId=111,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=139,ProcId=3,MetaId=112,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=140,ProcId=3,MetaId=113,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=141,ProcId=3,MetaId=114,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=142,ProcId=3,MetaId=115,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=143,ProcId=3,MetaId=116,DX=90,DY=60,Width=180,Height=120,DataLeft=0,DataRight=180,DataTop=0,DataBottom=120
+Id=144,ProcId=3,MetaId=117,DX=90,DY=60,Width=180,Height=120,DataLeft=0,DataRight=180,DataTop=0,DataBottom=120
+Id=145,ProcId=3,MetaId=118,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=146,ProcId=3,MetaId=119,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=147,ProcId=3,MetaId=120,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=148,ProcId=3,MetaId=121,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=149,ProcId=3,MetaId=122,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=150,ProcId=3,MetaId=123,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=151,ProcId=3,MetaId=124,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=152,ProcId=3,MetaId=125,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=153,ProcId=3,MetaId=126,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=154,ProcId=3,MetaId=127,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=155,ProcId=3,MetaId=128,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=156,ProcId=3,MetaId=129,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=157,ProcId=3,MetaId=130,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=158,ProcId=3,MetaId=131,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=159,ProcId=3,MetaId=132,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=160,ProcId=3,MetaId=133,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=161,ProcId=3,MetaId=134,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=162,ProcId=3,MetaId=135,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=0,DataTop=20,DataBottom=40
+Id=163,ProcId=3,MetaId=136,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=164,ProcId=3,MetaId=137,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=165,ProcId=3,MetaId=138,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=166,ProcId=3,MetaId=139,DX=200,DY=150,Width=400,Height=300,DataLeft=40,DataRight=360,DataTop=30,DataBottom=270
+Id=167,ProcId=3,MetaId=140,DX=90,DY=60,Width=180,Height=120,DataLeft=0,DataRight=180,DataTop=0,DataBottom=120
+Id=168,ProcId=3,MetaId=141,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=169,ProcId=3,MetaId=142,DX=150,DY=30,Width=300,Height=60,DataLeft=0,DataRight=300,DataTop=5,DataBottom=45
+Id=170,ProcId=3,MetaId=143,DX=150,DY=60,Width=300,Height=120,DataLeft=0,DataRight=300,DataTop=5,DataBottom=110
+Id=171,ProcId=3,MetaId=144,DX=150,DY=30,Width=300,Height=60,DataLeft=0,DataRight=300,DataTop=5,DataBottom=45
+Id=172,ProcId=3,MetaId=145,DX=150,DY=30,Width=300,Height=60,DataLeft=0,DataRight=300,DataTop=5,DataBottom=45
+Id=173,ProcId=3,MetaId=146,DX=150,DY=30,Width=300,Height=60,DataLeft=0,DataRight=300,DataTop=5,DataBottom=45
+Id=174,ProcId=3,MetaId=147,DX=150,DY=30,Width=300,Height=60,DataLeft=0,DataRight=300,DataTop=5,DataBottom=45
+Id=175,ProcId=3,MetaId=148,DX=150,DY=30,Width=300,Height=60,DataLeft=0,DataRight=300,DataTop=5,DataBottom=45
+Id=176,ProcId=3,MetaId=149,DX=180,DY=90,Width=360,Height=180,DataLeft=0,DataRight=360,DataTop=15,DataBottom=155
+Id=177,ProcId=3,MetaId=150,DX=60,DY=30,Width=120,Height=60,DataLeft=0,DataRight=120,DataTop=10,DataBottom=50
+Id=178,ProcId=3,MetaId=151,DX=60,DY=30,Width=120,Height=60,DataLeft=0,DataRight=120,DataTop=5,DataBottom=45
+Id=179,ProcId=3,MetaId=152,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=180,ProcId=3,MetaId=153,DX=60,DY=60,Width=120,Height=60,DataLeft=0,DataRight=120,DataTop=0,DataBottom=60
+Id=181,ProcId=3,MetaId=154,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=182,ProcId=3,MetaId=155,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=183,ProcId=3,MetaId=156,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=184,ProcId=3,MetaId=157,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=185,ProcId=3,MetaId=158,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=186,ProcId=3,MetaId=159,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=187,ProcId=3,MetaId=160,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=188,ProcId=3,MetaId=161,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=189,ProcId=3,MetaId=162,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=190,ProcId=3,MetaId=163,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=191,ProcId=3,MetaId=164,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=192,ProcId=3,MetaId=165,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=193,ProcId=3,MetaId=166,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=194,ProcId=3,MetaId=167,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=195,ProcId=3,MetaId=168,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=196,ProcId=3,MetaId=169,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=197,ProcId=3,MetaId=170,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=80,DataBottom=115
+Id=198,ProcId=3,MetaId=171,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=199,ProcId=3,MetaId=172,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=200,ProcId=3,MetaId=173,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=201,ProcId=3,MetaId=174,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=202,ProcId=3,MetaId=175,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=203,ProcId=3,MetaId=176,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=204,ProcId=3,MetaId=177,DX=50,DY=60,Width=100,Height=120,DataLeft=0,DataRight=100,DataTop=80,DataBottom=115
+Id=205,ProcId=3,MetaId=178,DX=60,DY=30,Width=120,Height=60,DataLeft=0,DataRight=120,DataTop=10,DataBottom=45
+Id=206,ProcId=3,MetaId=179,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=70,DataBottom=105
+Id=207,ProcId=3,MetaId=180,DX=60,DY=30,Width=120,Height=60,DataLeft=0,DataRight=80,DataTop=10,DataBottom=45
+Id=208,ProcId=3,MetaId=181,DX=60,DY=30,Width=120,Height=60,DataLeft=40,DataRight=120,DataTop=10,DataBottom=45
+Id=209,ProcId=3,MetaId=182,DX=60,DY=30,Width=120,Height=60,DataLeft=0,DataRight=120,DataTop=15,DataBottom=45
+Id=210,ProcId=3,MetaId=183,DX=30,DY=60,Width=60,Height=120,DataLeft=0,DataRight=60,DataTop=40,DataBottom=80
+Id=211,ProcId=3,MetaId=184,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=212,ProcId=3,MetaId=185,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=213,ProcId=3,MetaId=186,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=214,ProcId=3,MetaId=187,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=215,ProcId=3,MetaId=188,DX=60,DY=30,Width=120,Height=60,DataLeft=0,DataRight=120,DataTop=0,DataBottom=60
+Id=216,ProcId=3,MetaId=189,DX=60,DY=30,Width=120,Height=60,DataLeft=0,DataRight=120,DataTop=0,DataBottom=60
+Id=217,ProcId=3,MetaId=190,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=218,ProcId=3,MetaId=191,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=219,ProcId=3,MetaId=192,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=220,ProcId=3,MetaId=193,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=221,ProcId=3,MetaId=194,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=222,ProcId=3,MetaId=195,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=223,ProcId=3,MetaId=196,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=224,ProcId=3,MetaId=197,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=225,ProcId=3,MetaId=198,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=226,ProcId=3,MetaId=199,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=227,ProcId=3,MetaId=200,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=228,ProcId=3,MetaId=201,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=229,ProcId=3,MetaId=202,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=230,ProcId=3,MetaId=203,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=231,ProcId=3,MetaId=204,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=232,ProcId=3,MetaId=205,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=233,ProcId=3,MetaId=206,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=234,ProcId=3,MetaId=207,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=235,ProcId=3,MetaId=208,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=236,ProcId=3,MetaId=209,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=237,ProcId=3,MetaId=210,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=238,ProcId=3,MetaId=211,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=239,ProcId=3,MetaId=212,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=240,ProcId=3,MetaId=213,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=241,ProcId=3,MetaId=214,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=242,ProcId=3,MetaId=215,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=243,ProcId=3,MetaId=216,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=244,ProcId=3,MetaId=217,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=245,ProcId=3,MetaId=218,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=246,ProcId=3,MetaId=219,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=247,ProcId=3,MetaId=220,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=248,ProcId=3,MetaId=221,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=249,ProcId=3,MetaId=222,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=250,ProcId=3,MetaId=223,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=251,ProcId=3,MetaId=224,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=252,ProcId=3,MetaId=225,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=253,ProcId=2,PenId=10,Width=4,ScaleKind=0,"Style=20 10 ",Offset=0
+Id=254,ProcId=3,MetaId=226,DX=80,DY=40,Width=160,Height=80,DataLeft=0,DataRight=160,DataTop=0,DataBottom=80
+Id=255,ProcId=2,PenId=10,Width=16,ScaleKind=0,Style=,Offset=0
+Id=256,ProcId=2,PenId=14,Width=7,ScaleKind=0,"Style=40 40 ",Offset=0
+Id=257,ProcId=6,Kind=1,Size=10,OrSize=0,Space=50,Shift=10,ScaleKind=0,Offset=10,Scaleable=1,PenId=-8,BrushId=-4
+Id=258,ProcId=2,PenId=10,Width=3,ScaleKind=0,Style=,Offset=0
+Id=259,ProcId=6,Kind=0,Size=10,OrSize=0,Space=50,Shift=0,ScaleKind=0,Offset=10,Scaleable=1,PenId=-8,BrushId=-4
+Id=260,ProcId=6,Kind=1,Size=10,OrSize=0,Space=50,Shift=0,ScaleKind=0,Offset=0,Scaleable=1,PenId=-8,BrushId=-4
+Id=261,ProcId=2,PenId=10,Width=10,ScaleKind=0,Style=,Offset=0
+Id=262,ProcId=2,PenId=14,Width=7,ScaleKind=0,"Style=20 20 ",Offset=0
+Id=263,ProcId=2,PenId=11,Width=5,ScaleKind=0,Style=,Offset=0
+Id=264,ProcId=2,PenId=15,Width=5,ScaleKind=0,Style=,Offset=0
+Id=265,ProcId=2,PenId=10,Width=5,ScaleKind=0,Style=,Offset=0
+Id=266,ProcId=2,PenId=10,Width=2,ScaleKind=0,Style=,Offset=0
+Id=267,ProcId=2,PenId=10,Width=3,ScaleKind=0,Style=,Offset=0
+Id=268,ProcId=2,PenId=16,Width=3,ScaleKind=0,Style=,Offset=0
+Id=269,ProcId=2,PenId=10,Width=2,ScaleKind=0,"Style=10 10 ",Offset=0
+Id=270,ProcId=2,PenId=10,Width=2,ScaleKind=0,"Style=30 10 ",Offset=0
+Id=271,ProcId=2,PenId=10,Width=2,ScaleKind=0,"Style=4 4 ",Offset=0
+Id=272,ProcId=2,PenId=10,Width=6,ScaleKind=0,Style=,Offset=0
+Id=273,ProcId=2,PenId=17,Width=2,ScaleKind=0,Style=,Offset=0
+Id=274,ProcId=2,PenId=10,Width=2,ScaleKind=0,"Style=4 16 ",Offset=0
+Id=275,ProcId=2,PenId=10,Width=6,ScaleKind=0,"Style=15 10 ",Offset=0
+Id=276,ProcId=2,PenId=17,Width=2,ScaleKind=0,"Style=15 10 ",Offset=0
+Id=277,ProcId=2,PenId=16,Width=3,ScaleKind=0,"Style=8 8 ",Offset=0
+Id=278,ProcId=6,Kind=2,Size=10,OrSize=10,Space=14,Shift=0,ScaleKind=0,Offset=0,Scaleable=1,PenId=-7,BrushId=-4
+Id=279,ProcId=6,Kind=3,Size=10,OrSize=5,Space=20,Shift=1,ScaleKind=0,Offset=0,Scaleable=1,PenId=-8,BrushId=1
+Id=280,ProcId=1,PenId=1,BrushId=5
+Id=281,ProcId=2,PenId=10,Width=2,ScaleKind=0,Style=,Offset=0
+Id=282,ProcId=2,PenId=10,Width=10,ScaleKind=1,"Style=2 2 ",Offset=0
+Id=283,ProcId=2,PenId=17,Width=5,ScaleKind=0,Style=,Offset=0
+Id=284,ProcId=6,Kind=1,Size=10,OrSize=0,Space=50,Shift=-10,ScaleKind=0,Offset=10,Scaleable=1,PenId=-8,BrushId=-4
+Id=285,ProcId=6,Kind=3,Size=4,OrSize=16,Space=50,Shift=2,ScaleKind=0,Offset=8,Scaleable=1,PenId=-8,BrushId=-4
+Id=286,ProcId=6,Kind=0,Size=6,OrSize=0,Space=20,Shift=0,ScaleKind=0,Offset=6,Scaleable=1,PenId=-8,BrushId=-4
+Id=287,ProcId=6,Kind=2,Size=6,OrSize=6,Space=20,Shift=0,ScaleKind=0,Offset=6,Scaleable=1,PenId=-8,BrushId=-4
+Id=288,ProcId=6,Kind=2,Size=6,OrSize=-6,Space=20,Shift=0,ScaleKind=0,Offset=6,Scaleable=1,PenId=-8,BrushId=-4
+Id=289,ProcId=6,Kind=0,Size=10,OrSize=0,Space=50,Shift=0,ScaleKind=0,Offset=0,Scaleable=1,PenId=-8,BrushId=-4
+Id=290,ProcId=6,Kind=0,Size=6,OrSize=0,Space=50,Shift=0,ScaleKind=0,Offset=0,Scaleable=1,PenId=-8,BrushId=0
+Id=291,ProcId=2,PenId=11,Width=2,ScaleKind=0,"Style=4 4 ",Offset=0
+Id=292,ProcId=1,PenId=-8,BrushId=-1
+Id=293,ProcId=1,PenId=10,BrushId=1
+Id=294,ProcId=1,PenId=10,BrushId=2
+Id=295,ProcId=1,PenId=10,BrushId=3
+Id=296,ProcId=1,PenId=10,BrushId=5
+Id=297,ProcId=1,PenId=-7,BrushId=30
+Id=298,ProcId=1,PenId=-7,BrushId=3
+Id=299,ProcId=2,PenId=21,Width=4,ScaleKind=0,Style=,Offset=0
+Id=300,ProcId=2,PenId=18,Width=4,ScaleKind=0,Style=,Offset=0
+Id=301,ProcId=1,PenId=18,BrushId=12
+Id=302,ProcId=1,PenId=18,BrushId=19
+Id=303,ProcId=1,PenId=18,BrushId=13
+Id=304,ProcId=1,PenId=18,BrushId=5
+Id=305,ProcId=2,PenId=18,Width=1,ScaleKind=0,Style=,Offset=0
+Id=306,ProcId=2,PenId=1,Width=1,ScaleKind=0,Style=,Offset=0
+Id=307,ProcId=1,PenId=21,BrushId=20
+Id=308,ProcId=6,Kind=0,Size=4,OrSize=0,Space=20,Shift=0,ScaleKind=0,Offset=0,Scaleable=1,PenId=22,BrushId=0
+Id=309,ProcId=1,PenId=18,BrushId=-2
+Id=310,ProcId=3,MetaId=228,DX=180,DY=30,Width=360,Height=60,DataLeft=0,DataRight=320,DataTop=5,DataBottom=45
+Id=311,ProcId=3,MetaId=229,DX=180,DY=30,Width=360,Height=60,DataLeft=40,DataRight=360,DataTop=5,DataBottom=45
+Id=312,ProcId=3,MetaId=230,DX=180,DY=30,Width=360,Height=60,DataLeft=0,DataRight=320,DataTop=5,DataBottom=45
+Id=313,ProcId=3,MetaId=231,DX=180,DY=30,Width=360,Height=60,DataLeft=40,DataRight=360,DataTop=5,DataBottom=45
+Id=314,ProcId=3,MetaId=232,DX=180,DY=60,Width=360,Height=120,DataLeft=0,DataRight=320,DataTop=15,DataBottom=95
+Id=315,ProcId=3,MetaId=233,DX=180,DY=60,Width=360,Height=120,DataLeft=40,DataRight=360,DataTop=15,DataBottom=95
+Id=316,ProcId=3,MetaId=234,DX=180,DY=60,Width=360,Height=120,DataLeft=20,DataRight=340,DataTop=15,DataBottom=95
+Id=317,ProcId=3,MetaId=235,DX=180,DY=60,Width=360,Height=120,DataLeft=20,DataRight=340,DataTop=15,DataBottom=95
+Id=318,ProcId=3,MetaId=236,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=319,ProcId=3,MetaId=237,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=320,ProcId=3,MetaId=238,DX=150,DY=90,Width=300,Height=180,DataLeft=25,DataRight=275,DataTop=15,DataBottom=155
+Id=321,ProcId=3,MetaId=238,DX=180,DY=90,Width=360,Height=180,DataLeft=0,DataRight=320,DataTop=15,DataBottom=155
+Id=322,ProcId=3,MetaId=239,DX=180,DY=90,Width=360,Height=180,DataLeft=40,DataRight=360,DataTop=15,DataBottom=155
+Id=323,ProcId=3,MetaId=240,DX=180,DY=60,Width=360,Height=120,DataLeft=20,DataRight=340,DataTop=15,DataBottom=95
+Id=324,ProcId=3,MetaId=241,DX=180,DY=60,Width=360,Height=120,DataLeft=20,DataRight=340,DataTop=15,DataBottom=95
+Id=325,ProcId=3,MetaId=242,DX=180,DY=90,Width=360,Height=180,DataLeft=20,DataRight=340,DataTop=15,DataBottom=155
+Id=326,ProcId=3,MetaId=243,DX=180,DY=90,Width=360,Height=180,DataLeft=20,DataRight=340,DataTop=15,DataBottom=155
+Id=327,ProcId=2,PenId=22,Width=2,ScaleKind=0,Style=,Offset=0
+Id=328,ProcId=3,MetaId=244,DX=180,DY=90,Width=360,Height=180,DataLeft=40,DataRight=360,DataTop=15,DataBottom=155
+Id=329,ProcId=3,MetaId=246,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=330,ProcId=3,MetaId=247,DX=90,DY=60,Width=180,Height=120,DataLeft=0,DataRight=180,DataTop=0,DataBottom=120
+Id=331,ProcId=3,MetaId=248,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=332,ProcId=3,MetaId=249,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=333,ProcId=3,MetaId=250,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=334,ProcId=3,MetaId=251,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=335,ProcId=3,MetaId=252,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=336,ProcId=3,MetaId=253,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=337,ProcId=3,MetaId=254,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=338,ProcId=3,MetaId=255,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=339,ProcId=3,MetaId=245,DX=180,DY=90,Width=360,Height=180,DataLeft=20,DataRight=340,DataTop=15,DataBottom=155
+Id=340,ProcId=1,PenId=-8,BrushId=6
+Id=341,ProcId=1,PenId=-8,BrushId=1
+Id=342,ProcId=3,MetaId=256,DX=180,DY=30,Width=360,Height=60,DataLeft=40,DataRight=360,DataTop=5,DataBottom=45
+Id=343,ProcId=3,MetaId=257,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=344,ProcId=3,MetaId=258,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=345,ProcId=4,PenId=15,Width=3,ScaleKind=0,TaleLength=15
+Id=346,ProcId=4,PenId=15,Width=3,ScaleKind=0,TaleLength=15
+Id=347,ProcId=3,MetaId=259,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=348,ProcId=3,MetaId=260,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=349,ProcId=1,PenId=-8,BrushId=7
+Id=350,ProcId=1,PenId=-8,BrushId=9
+Id=351,ProcId=1,PenId=-8,BrushId=1
+Id=352,ProcId=2,PenId=15,Width=4,ScaleKind=0,Style=,Offset=0
+Id=353,ProcId=2,PenId=23,Width=8,ScaleKind=0,Style=,Offset=0
+Id=354,ProcId=2,PenId=22,Width=8,ScaleKind=0,"Style=10 10 ",Offset=0
+Id=355,ProcId=2,PenId=22,Width=8,ScaleKind=0,"Style=10 10 ",Offset=0
+Id=356,ProcId=2,PenId=14,Width=6,ScaleKind=0,Style=,Offset=0
+Id=357,ProcId=2,PenId=10,Width=3,ScaleKind=0,Style=,Offset=0
+Id=358,ProcId=2,PenId=16,Width=5,ScaleKind=0,Style=,Offset=0
+Id=359,ProcId=1,PenId=15,BrushId=-3
+Id=360,ProcId=1,PenId=18,BrushId=24
+Id=361,ProcId=2,PenId=15,Width=5,ScaleKind=0,Style=,Offset=30
+Id=362,ProcId=2,PenId=15,Width=5,ScaleKind=0,Style=,Offset=0
+Id=363,ProcId=6,Kind=3,Size=4,OrSize=30,Space=50,Shift=0,ScaleKind=0,Offset=10,Scaleable=1,PenId=-8,BrushId=25
+Id=364,ProcId=2,PenId=10,Width=6,ScaleKind=0,Style=,Offset=0
+Id=365,ProcId=1,PenId=18,BrushId=26
+Id=366,ProcId=1,PenId=-8,BrushId=25
+Id=367,ProcId=2,PenId=18,Width=5,ScaleKind=0,Style=,Offset=0
+Id=368,ProcId=1,PenId=-8,BrushId=3
+Id=369,ProcId=1,PenId=-8,BrushId=27
+Id=370,ProcId=1,PenId=-8,BrushId=28
+Id=371,ProcId=1,PenId=-8,BrushId=29
+Id=372,ProcId=3,MetaId=261,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=373,ProcId=3,MetaId=262,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=374,ProcId=3,MetaId=263,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=375,ProcId=3,MetaId=264,DX=60,DY=60,Width=120,Height=120,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=376,ProcId=3,MetaId=265,DX=60,DY=60,Width=120,Height=180,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=377,ProcId=3,MetaId=266,DX=60,DY=60,Width=120,Height=180,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+Id=378,ProcId=3,MetaId=267,DX=60,DY=60,Width=120,Height=180,DataLeft=0,DataRight=120,DataTop=0,DataBottom=120
+390 390
+Id=1,ObjClassId=44,PropValueId=234,DrwParamId0=1,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=2,ObjClassId=44,PropValueId=236,DrwParamId0=2,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=3,ObjClassId=44,PropValueId=235,DrwParamId0=2,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=4,ObjClassId=44,PropValueId=233,DrwParamId0=3,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=5,ObjClassId=44,PropValueId=237,DrwParamId0=4,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=6,ObjClassId=44,PropValueId=238,DrwParamId0=5,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=7,ObjClassId=44,PropValueId=0,DrwParamId0=5,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=8,ObjClassId=29,PropValueId=0,DrwParamId0=6,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=9,ObjClassId=29,PropValueId=93,DrwParamId0=7,DrwParamId1=6,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=10,ObjClassId=29,PropValueId=94,DrwParamId0=8,DrwParamId1=6,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=11,ObjClassId=29,PropValueId=1077522,DrwParamId0=10,DrwParamId1=6,DrwParamId2=0,DrwParamId3=0,Priority=1,Condition=
+Id=12,ObjClassId=31,PropValueId=43619,DrwParamId0=13,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=13,ObjClassId=31,PropValueId=43634,DrwParamId0=14,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=14,ObjClassId=31,PropValueId=43645,DrwParamId0=15,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=15,ObjClassId=31,PropValueId=43646,DrwParamId0=16,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=16,ObjClassId=31,PropValueId=43651,DrwParamId0=17,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=17,ObjClassId=31,PropValueId=43652,DrwParamId0=18,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=18,ObjClassId=31,PropValueId=43653,DrwParamId0=19,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=19,ObjClassId=31,PropValueId=43654,DrwParamId0=20,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=20,ObjClassId=31,PropValueId=43655,DrwParamId0=21,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=21,ObjClassId=31,PropValueId=43656,DrwParamId0=22,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=22,ObjClassId=31,PropValueId=43657,DrwParamId0=23,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=23,ObjClassId=31,PropValueId=43658,DrwParamId0=24,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=24,ObjClassId=31,PropValueId=43659,DrwParamId0=25,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=25,ObjClassId=31,PropValueId=43660,DrwParamId0=26,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=26,ObjClassId=31,PropValueId=43661,DrwParamId0=27,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=27,ObjClassId=31,PropValueId=43620,DrwParamId0=28,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=28,ObjClassId=31,PropValueId=43621,DrwParamId0=29,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=29,ObjClassId=31,PropValueId=43622,DrwParamId0=30,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=30,ObjClassId=31,PropValueId=43623,DrwParamId0=31,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=31,ObjClassId=31,PropValueId=43624,DrwParamId0=32,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=32,ObjClassId=31,PropValueId=43625,DrwParamId0=33,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=33,ObjClassId=31,PropValueId=43626,DrwParamId0=34,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=34,ObjClassId=31,PropValueId=43627,DrwParamId0=35,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=35,ObjClassId=31,PropValueId=43628,DrwParamId0=36,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=36,ObjClassId=31,PropValueId=43629,DrwParamId0=37,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=37,ObjClassId=31,PropValueId=43630,DrwParamId0=38,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=38,ObjClassId=31,PropValueId=43631,DrwParamId0=39,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=39,ObjClassId=31,PropValueId=43632,DrwParamId0=40,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=40,ObjClassId=31,PropValueId=43633,DrwParamId0=41,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=41,ObjClassId=31,PropValueId=43635,DrwParamId0=42,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=42,ObjClassId=31,PropValueId=43636,DrwParamId0=43,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=43,ObjClassId=31,PropValueId=43637,DrwParamId0=44,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=44,ObjClassId=31,PropValueId=43638,DrwParamId0=45,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=45,ObjClassId=31,PropValueId=43639,DrwParamId0=46,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=46,ObjClassId=31,PropValueId=43640,DrwParamId0=47,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=47,ObjClassId=31,PropValueId=43641,DrwParamId0=48,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=48,ObjClassId=31,PropValueId=43642,DrwParamId0=49,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=49,ObjClassId=31,PropValueId=43643,DrwParamId0=50,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=50,ObjClassId=31,PropValueId=43644,DrwParamId0=51,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=51,ObjClassId=31,PropValueId=43647,DrwParamId0=52,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=52,ObjClassId=31,PropValueId=43648,DrwParamId0=53,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=53,ObjClassId=31,PropValueId=43649,DrwParamId0=54,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=54,ObjClassId=31,PropValueId=43650,DrwParamId0=55,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=55,ObjClassId=31,PropValueId=0,DrwParamId0=9,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=56,ObjClassId=32,PropValueId=0,DrwParamId0=9,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=57,ObjClassId=33,PropValueId=0,DrwParamId0=9,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=58,ObjClassId=34,PropValueId=0,DrwParamId0=9,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=59,ObjClassId=35,PropValueId=0,DrwParamId0=9,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=60,ObjClassId=36,PropValueId=0,DrwParamId0=9,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=61,ObjClassId=37,PropValueId=0,DrwParamId0=9,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=62,ObjClassId=46,PropValueId=0,DrwParamId0=11,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=2,Condition=
+Id=63,ObjClassId=28,PropValueId=189,DrwParamId0=12,DrwParamId1=281,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=64,ObjClassId=28,PropValueId=188,DrwParamId0=12,DrwParamId1=281,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=65,ObjClassId=28,PropValueId=190,DrwParamId0=12,DrwParamId1=281,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=66,ObjClassId=28,PropValueId=192,DrwParamId0=12,DrwParamId1=281,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=67,ObjClassId=28,PropValueId=193,DrwParamId0=12,DrwParamId1=281,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=68,ObjClassId=28,PropValueId=191,DrwParamId0=12,DrwParamId1=281,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=69,ObjClassId=28,PropValueId=194,DrwParamId0=56,DrwParamId1=281,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=70,ObjClassId=32,PropValueId=43662,DrwParamId0=64,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=71,ObjClassId=32,PropValueId=43663,DrwParamId0=65,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=72,ObjClassId=32,PropValueId=43664,DrwParamId0=66,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=73,ObjClassId=32,PropValueId=43665,DrwParamId0=67,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=74,ObjClassId=32,PropValueId=43666,DrwParamId0=68,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=75,ObjClassId=32,PropValueId=43667,DrwParamId0=69,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=76,ObjClassId=32,PropValueId=43668,DrwParamId0=70,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=77,ObjClassId=32,PropValueId=43669,DrwParamId0=71,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=78,ObjClassId=32,PropValueId=43670,DrwParamId0=72,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=79,ObjClassId=33,PropValueId=43671,DrwParamId0=73,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=80,ObjClassId=33,PropValueId=43684,DrwParamId0=74,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=81,ObjClassId=33,PropValueId=43695,DrwParamId0=75,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=82,ObjClassId=33,PropValueId=43698,DrwParamId0=76,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=83,ObjClassId=33,PropValueId=43699,DrwParamId0=77,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=84,ObjClassId=33,PropValueId=43700,DrwParamId0=78,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=85,ObjClassId=33,PropValueId=43701,DrwParamId0=79,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=86,ObjClassId=33,PropValueId=43702,DrwParamId0=80,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=87,ObjClassId=33,PropValueId=43703,DrwParamId0=81,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=88,ObjClassId=33,PropValueId=43672,DrwParamId0=82,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=89,ObjClassId=33,PropValueId=43673,DrwParamId0=83,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=90,ObjClassId=33,PropValueId=43674,DrwParamId0=84,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=91,ObjClassId=33,PropValueId=43675,DrwParamId0=85,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=92,ObjClassId=33,PropValueId=43676,DrwParamId0=86,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=93,ObjClassId=33,PropValueId=43677,DrwParamId0=87,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=94,ObjClassId=33,PropValueId=43678,DrwParamId0=88,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=95,ObjClassId=33,PropValueId=43679,DrwParamId0=89,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=96,ObjClassId=33,PropValueId=43680,DrwParamId0=90,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=97,ObjClassId=33,PropValueId=43681,DrwParamId0=91,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=98,ObjClassId=33,PropValueId=43682,DrwParamId0=92,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=99,ObjClassId=33,PropValueId=43683,DrwParamId0=93,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=100,ObjClassId=33,PropValueId=43685,DrwParamId0=94,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=101,ObjClassId=33,PropValueId=43686,DrwParamId0=95,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=102,ObjClassId=33,PropValueId=43687,DrwParamId0=96,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=103,ObjClassId=33,PropValueId=43688,DrwParamId0=97,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=104,ObjClassId=33,PropValueId=43689,DrwParamId0=98,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=105,ObjClassId=33,PropValueId=43690,DrwParamId0=99,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=106,ObjClassId=33,PropValueId=43691,DrwParamId0=100,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=107,ObjClassId=33,PropValueId=43692,DrwParamId0=101,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=108,ObjClassId=33,PropValueId=43693,DrwParamId0=102,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=109,ObjClassId=33,PropValueId=43694,DrwParamId0=103,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=110,ObjClassId=33,PropValueId=43696,DrwParamId0=104,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=111,ObjClassId=33,PropValueId=43697,DrwParamId0=105,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=112,ObjClassId=34,PropValueId=43704,DrwParamId0=106,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=113,ObjClassId=34,PropValueId=43705,DrwParamId0=107,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=114,ObjClassId=34,PropValueId=43706,DrwParamId0=108,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=115,ObjClassId=34,PropValueId=43707,DrwParamId0=109,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=116,ObjClassId=34,PropValueId=43708,DrwParamId0=110,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=117,ObjClassId=34,PropValueId=43709,DrwParamId0=111,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=118,ObjClassId=34,PropValueId=43710,DrwParamId0=112,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=119,ObjClassId=34,PropValueId=43711,DrwParamId0=113,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=120,ObjClassId=34,PropValueId=43712,DrwParamId0=114,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=121,ObjClassId=34,PropValueId=43713,DrwParamId0=115,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=122,ObjClassId=34,PropValueId=43714,DrwParamId0=116,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=123,ObjClassId=34,PropValueId=43715,DrwParamId0=117,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=124,ObjClassId=34,PropValueId=43716,DrwParamId0=118,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=125,ObjClassId=34,PropValueId=43717,DrwParamId0=119,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=126,ObjClassId=34,PropValueId=43718,DrwParamId0=120,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=127,ObjClassId=28,PropValueId=0,DrwParamId0=57,DrwParamId1=281,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=128,ObjClassId=24,PropValueId=0,DrwParamId0=62,DrwParamId1=63,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=129,ObjClassId=24,PropValueId=233,DrwParamId0=60,DrwParamId1=63,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=130,ObjClassId=24,PropValueId=234,DrwParamId0=58,DrwParamId1=63,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=131,ObjClassId=24,PropValueId=237,DrwParamId0=61,DrwParamId1=63,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=132,ObjClassId=24,PropValueId=235,DrwParamId0=59,DrwParamId1=63,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=133,ObjClassId=24,PropValueId=236,DrwParamId0=59,DrwParamId1=63,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=134,ObjClassId=18,PropValueId=0,DrwParamId0=121,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=135,ObjClassId=35,PropValueId=43719,DrwParamId0=129,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=136,ObjClassId=35,PropValueId=43740,DrwParamId0=130,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=137,ObjClassId=35,PropValueId=43755,DrwParamId0=131,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=138,ObjClassId=35,PropValueId=43769,DrwParamId0=132,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=139,ObjClassId=35,PropValueId=43770,DrwParamId0=133,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=140,ObjClassId=35,PropValueId=43771,DrwParamId0=134,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=141,ObjClassId=35,PropValueId=43772,DrwParamId0=135,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=142,ObjClassId=35,PropValueId=43773,DrwParamId0=136,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=143,ObjClassId=35,PropValueId=43774,DrwParamId0=137,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=144,ObjClassId=35,PropValueId=43775,DrwParamId0=138,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=145,ObjClassId=35,PropValueId=43776,DrwParamId0=139,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=146,ObjClassId=35,PropValueId=43777,DrwParamId0=140,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=147,ObjClassId=35,PropValueId=43778,DrwParamId0=141,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=148,ObjClassId=35,PropValueId=43779,DrwParamId0=142,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=149,ObjClassId=35,PropValueId=43780,DrwParamId0=143,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=150,ObjClassId=35,PropValueId=43781,DrwParamId0=144,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=151,ObjClassId=35,PropValueId=43782,DrwParamId0=145,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=152,ObjClassId=35,PropValueId=43720,DrwParamId0=146,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=153,ObjClassId=35,PropValueId=43721,DrwParamId0=147,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=154,ObjClassId=35,PropValueId=43722,DrwParamId0=148,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=155,ObjClassId=35,PropValueId=43723,DrwParamId0=149,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=156,ObjClassId=35,PropValueId=43724,DrwParamId0=150,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=157,ObjClassId=35,PropValueId=43725,DrwParamId0=151,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=158,ObjClassId=35,PropValueId=43726,DrwParamId0=152,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=159,ObjClassId=35,PropValueId=43727,DrwParamId0=153,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=160,ObjClassId=35,PropValueId=43728,DrwParamId0=154,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=161,ObjClassId=35,PropValueId=43729,DrwParamId0=155,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=162,ObjClassId=35,PropValueId=43730,DrwParamId0=156,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=163,ObjClassId=35,PropValueId=43731,DrwParamId0=157,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=164,ObjClassId=35,PropValueId=43732,DrwParamId0=158,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=165,ObjClassId=35,PropValueId=43733,DrwParamId0=159,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=166,ObjClassId=35,PropValueId=43734,DrwParamId0=160,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=167,ObjClassId=35,PropValueId=43735,DrwParamId0=161,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=168,ObjClassId=35,PropValueId=43736,DrwParamId0=162,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=169,ObjClassId=35,PropValueId=43737,DrwParamId0=163,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=170,ObjClassId=35,PropValueId=43738,DrwParamId0=164,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=171,ObjClassId=35,PropValueId=43739,DrwParamId0=165,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=172,ObjClassId=35,PropValueId=43741,DrwParamId0=166,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=173,ObjClassId=35,PropValueId=43742,DrwParamId0=167,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=174,ObjClassId=35,PropValueId=43743,DrwParamId0=168,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=175,ObjClassId=35,PropValueId=43744,DrwParamId0=169,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=176,ObjClassId=35,PropValueId=43745,DrwParamId0=170,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=177,ObjClassId=35,PropValueId=43746,DrwParamId0=171,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=178,ObjClassId=35,PropValueId=43747,DrwParamId0=172,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=179,ObjClassId=35,PropValueId=43748,DrwParamId0=173,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=180,ObjClassId=35,PropValueId=43749,DrwParamId0=174,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=181,ObjClassId=35,PropValueId=43750,DrwParamId0=175,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=182,ObjClassId=35,PropValueId=43751,DrwParamId0=176,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=183,ObjClassId=35,PropValueId=43752,DrwParamId0=177,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=184,ObjClassId=35,PropValueId=43753,DrwParamId0=178,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=185,ObjClassId=35,PropValueId=43754,DrwParamId0=179,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=186,ObjClassId=35,PropValueId=43756,DrwParamId0=180,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=187,ObjClassId=35,PropValueId=43757,DrwParamId0=181,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=188,ObjClassId=35,PropValueId=43758,DrwParamId0=182,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=189,ObjClassId=35,PropValueId=43759,DrwParamId0=183,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=190,ObjClassId=35,PropValueId=43760,DrwParamId0=184,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=191,ObjClassId=35,PropValueId=43761,DrwParamId0=185,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=192,ObjClassId=35,PropValueId=43762,DrwParamId0=186,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=193,ObjClassId=35,PropValueId=43763,DrwParamId0=187,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=194,ObjClassId=35,PropValueId=43764,DrwParamId0=188,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=195,ObjClassId=35,PropValueId=43765,DrwParamId0=189,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=196,ObjClassId=35,PropValueId=43766,DrwParamId0=190,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=197,ObjClassId=35,PropValueId=43767,DrwParamId0=191,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=198,ObjClassId=35,PropValueId=43768,DrwParamId0=192,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=199,ObjClassId=42,PropValueId=0,DrwParamId0=122,DrwParamId1=123,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=200,ObjClassId=36,PropValueId=43783,DrwParamId0=193,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=201,ObjClassId=36,PropValueId=43787,DrwParamId0=194,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=202,ObjClassId=36,PropValueId=43788,DrwParamId0=195,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=203,ObjClassId=36,PropValueId=43789,DrwParamId0=196,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=204,ObjClassId=36,PropValueId=43790,DrwParamId0=197,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=205,ObjClassId=36,PropValueId=43791,DrwParamId0=198,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=206,ObjClassId=36,PropValueId=43792,DrwParamId0=199,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=207,ObjClassId=36,PropValueId=43793,DrwParamId0=200,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=208,ObjClassId=36,PropValueId=43794,DrwParamId0=201,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=209,ObjClassId=36,PropValueId=43784,DrwParamId0=202,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=210,ObjClassId=36,PropValueId=43785,DrwParamId0=203,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=211,ObjClassId=36,PropValueId=43786,DrwParamId0=204,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=212,ObjClassId=37,PropValueId=43795,DrwParamId0=205,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=213,ObjClassId=37,PropValueId=43796,DrwParamId0=206,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=214,ObjClassId=37,PropValueId=43797,DrwParamId0=207,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=215,ObjClassId=37,PropValueId=43798,DrwParamId0=208,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=216,ObjClassId=37,PropValueId=43808,DrwParamId0=209,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=217,ObjClassId=37,PropValueId=43809,DrwParamId0=210,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=218,ObjClassId=37,PropValueId=43810,DrwParamId0=211,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=219,ObjClassId=37,PropValueId=43811,DrwParamId0=212,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=220,ObjClassId=37,PropValueId=43812,DrwParamId0=213,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=221,ObjClassId=37,PropValueId=43813,DrwParamId0=214,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=222,ObjClassId=37,PropValueId=43814,DrwParamId0=215,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=223,ObjClassId=37,PropValueId=43815,DrwParamId0=216,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=224,ObjClassId=37,PropValueId=43816,DrwParamId0=217,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=225,ObjClassId=37,PropValueId=43817,DrwParamId0=218,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=226,ObjClassId=37,PropValueId=43818,DrwParamId0=219,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=227,ObjClassId=37,PropValueId=43819,DrwParamId0=220,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=228,ObjClassId=37,PropValueId=43820,DrwParamId0=221,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=229,ObjClassId=37,PropValueId=43821,DrwParamId0=222,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=230,ObjClassId=37,PropValueId=43822,DrwParamId0=223,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=231,ObjClassId=37,PropValueId=43823,DrwParamId0=224,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=232,ObjClassId=37,PropValueId=43824,DrwParamId0=225,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=233,ObjClassId=37,PropValueId=43825,DrwParamId0=226,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=234,ObjClassId=37,PropValueId=43826,DrwParamId0=227,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=235,ObjClassId=37,PropValueId=43827,DrwParamId0=228,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=236,ObjClassId=37,PropValueId=43828,DrwParamId0=229,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=237,ObjClassId=37,PropValueId=43829,DrwParamId0=230,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=238,ObjClassId=37,PropValueId=43830,DrwParamId0=231,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=239,ObjClassId=37,PropValueId=43831,DrwParamId0=232,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=240,ObjClassId=37,PropValueId=43832,DrwParamId0=233,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=241,ObjClassId=37,PropValueId=43833,DrwParamId0=234,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=242,ObjClassId=37,PropValueId=43834,DrwParamId0=235,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=243,ObjClassId=37,PropValueId=43835,DrwParamId0=236,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=244,ObjClassId=37,PropValueId=43836,DrwParamId0=237,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=245,ObjClassId=37,PropValueId=43837,DrwParamId0=238,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=246,ObjClassId=37,PropValueId=43838,DrwParamId0=239,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=247,ObjClassId=37,PropValueId=43839,DrwParamId0=240,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=248,ObjClassId=37,PropValueId=43840,DrwParamId0=241,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=249,ObjClassId=37,PropValueId=43841,DrwParamId0=242,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=250,ObjClassId=37,PropValueId=43842,DrwParamId0=243,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=251,ObjClassId=37,PropValueId=43799,DrwParamId0=244,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=252,ObjClassId=37,PropValueId=43800,DrwParamId0=245,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=253,ObjClassId=37,PropValueId=43801,DrwParamId0=246,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=254,ObjClassId=37,PropValueId=43802,DrwParamId0=247,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=255,ObjClassId=37,PropValueId=43803,DrwParamId0=248,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=256,ObjClassId=37,PropValueId=43804,DrwParamId0=249,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=257,ObjClassId=37,PropValueId=43805,DrwParamId0=250,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=258,ObjClassId=37,PropValueId=43806,DrwParamId0=251,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=259,ObjClassId=37,PropValueId=43807,DrwParamId0=252,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=260,ObjClassId=48,PropValueId=0,DrwParamId0=125,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=261,ObjClassId=53,PropValueId=0,DrwParamId0=126,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=262,ObjClassId=51,PropValueId=2384960,DrwParamId0=127,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=263,ObjClassId=51,PropValueId=2384959,DrwParamId0=128,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=264,ObjClassId=20,PropValueId=0,DrwParamId0=253,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=2,Condition=
+Id=265,ObjClassId=19,PropValueId=0,DrwParamId0=254,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=266,ObjClassId=16,PropValueId=0,DrwParamId0=255,DrwParamId1=256,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=267,ObjClassId=16,PropValueId=112,DrwParamId0=255,DrwParamId1=257,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=268,ObjClassId=16,PropValueId=113,DrwParamId0=255,DrwParamId1=257,DrwParamId2=284,DrwParamId3=0,Priority=4,Condition=
+Id=269,ObjClassId=16,PropValueId=116,DrwParamId0=258,DrwParamId1=287,DrwParamId2=288,DrwParamId3=0,Priority=4,Condition=
+Id=270,ObjClassId=16,PropValueId=1959537,DrwParamId0=258,DrwParamId1=259,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=271,ObjClassId=17,PropValueId=0,DrwParamId0=260,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=272,ObjClassId=49,PropValueId=0,DrwParamId0=124,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=273,ObjClassId=50,PropValueId=0,DrwParamId0=261,DrwParamId1=262,DrwParamId2=0,DrwParamId3=0,Priority=2,Condition=
+Id=274,ObjClassId=38,PropValueId=0,DrwParamId0=263,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=275,ObjClassId=38,PropValueId=101,DrwParamId0=263,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=276,ObjClassId=38,PropValueId=102,DrwParamId0=263,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=277,ObjClassId=38,PropValueId=95,DrwParamId0=263,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=278,ObjClassId=38,PropValueId=96,DrwParamId0=264,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=279,ObjClassId=15,PropValueId=0,DrwParamId0=266,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=280,ObjClassId=15,PropValueId=2384962,DrwParamId0=267,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=281,ObjClassId=15,PropValueId=2384964,DrwParamId0=268,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=282,ObjClassId=15,PropValueId=2384965,DrwParamId0=269,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=283,ObjClassId=15,PropValueId=2384966,DrwParamId0=270,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=284,ObjClassId=15,PropValueId=2384967,DrwParamId0=271,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=285,ObjClassId=15,PropValueId=2384963,DrwParamId0=272,DrwParamId1=273,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=286,ObjClassId=15,PropValueId=2384968,DrwParamId0=274,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=287,ObjClassId=15,PropValueId=2384969,DrwParamId0=275,DrwParamId1=276,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=288,ObjClassId=15,PropValueId=2384970,DrwParamId0=277,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=289,ObjClassId=15,PropValueId=2384972,DrwParamId0=272,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=290,ObjClassId=15,PropValueId=2384973,DrwParamId0=278,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=291,ObjClassId=15,PropValueId=2384971,DrwParamId0=272,DrwParamId1=273,DrwParamId2=279,DrwParamId3=0,Priority=4,Condition=
+Id=292,ObjClassId=15,PropValueId=2384978,DrwParamId0=280,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=293,ObjClassId=15,PropValueId=2384979,DrwParamId0=280,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=294,ObjClassId=15,PropValueId=2384980,DrwParamId0=280,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=295,ObjClassId=15,PropValueId=2384974,DrwParamId0=282,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=296,ObjClassId=15,PropValueId=2384975,DrwParamId0=282,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=297,ObjClassId=15,PropValueId=2384976,DrwParamId0=282,DrwParamId1=283,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=298,ObjClassId=16,PropValueId=115,DrwParamId0=255,DrwParamId1=256,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=299,ObjClassId=16,PropValueId=117,DrwParamId0=364,DrwParamId1=285,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=300,ObjClassId=16,PropValueId=114,DrwParamId0=258,DrwParamId1=286,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=301,ObjClassId=17,PropValueId=182,DrwParamId0=289,DrwParamId1=290,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=302,ObjClassId=17,PropValueId=183,DrwParamId0=289,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=303,ObjClassId=22,PropValueId=0,DrwParamId0=291,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=304,ObjClassId=43,PropValueId=0,DrwParamId0=292,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=305,ObjClassId=13,PropValueId=0,DrwParamId0=296,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=306,ObjClassId=13,PropValueId=16779488,DrwParamId0=294,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=307,ObjClassId=13,PropValueId=16779457,DrwParamId0=293,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=308,ObjClassId=13,PropValueId=16779516,DrwParamId0=295,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=309,ObjClassId=13,PropValueId=16779512,DrwParamId0=293,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=310,ObjClassId=13,PropValueId=16779513,DrwParamId0=293,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=311,ObjClassId=12,PropValueId=2385041,DrwParamId0=297,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=312,ObjClassId=12,PropValueId=2385042,DrwParamId0=298,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=313,ObjClassId=12,PropValueId=0,DrwParamId0=297,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=314,ObjClassId=52,PropValueId=0,DrwParamId0=299,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=315,ObjClassId=52,PropValueId=2385041,DrwParamId0=299,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=316,ObjClassId=52,PropValueId=2385042,DrwParamId0=300,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=0,Condition=
+Id=317,ObjClassId=60,PropValueId=0,DrwParamId0=301,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=318,ObjClassId=60,PropValueId=33554434,DrwParamId0=366,DrwParamId1=367,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=319,ObjClassId=60,PropValueId=33554516,DrwParamId0=303,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=320,ObjClassId=60,PropValueId=33554517,DrwParamId0=360,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=321,ObjClassId=60,PropValueId=33554433,DrwParamId0=358,DrwParamId1=306,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=322,ObjClassId=60,PropValueId=33554444,DrwParamId0=307,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=323,ObjClassId=60,PropValueId=33554449,DrwParamId0=308,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=324,ObjClassId=60,PropValueId=33554515,DrwParamId0=309,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=325,ObjClassId=35,PropValueId=0,DrwParamId0=310,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=1)                                                                                                                                                                                                                                "
+Id=326,ObjClassId=35,PropValueId=0,DrwParamId0=311,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=2)                                                                                                                                                                                                                                "
+Id=327,ObjClassId=35,PropValueId=0,DrwParamId0=312,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43744)&(ViewKind=1)                                                                                                                                                                                                                                "
+Id=328,ObjClassId=35,PropValueId=0,DrwParamId0=313,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43744)&(ViewKind=2)                                                                                                                                                                                                                                "
+Id=329,ObjClassId=35,PropValueId=0,DrwParamId0=314,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=3)                                                                                                                                                                                                                                "
+Id=330,ObjClassId=35,PropValueId=0,DrwParamId0=315,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=4)                                                                                                                                                                                                                                "
+Id=331,ObjClassId=35,PropValueId=0,DrwParamId0=316,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=5)                                                                                                                                                                                                                                "
+Id=332,ObjClassId=35,PropValueId=0,DrwParamId0=317,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=6)                                                                                                                                                                                                                                "
+Id=333,ObjClassId=35,PropValueId=0,DrwParamId0=318,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43774)&(ViewKind=1)                                                                                                                                                                                                                                "
+Id=334,ObjClassId=35,PropValueId=0,DrwParamId0=319,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43774)&(ViewKind=2)                                                                                                                                                                                                                                "
+Id=335,ObjClassId=38,PropValueId=103,DrwParamId0=264,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=336,ObjClassId=35,PropValueId=0,DrwParamId0=321,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=7)                                                                                                                                                                                                                                "
+Id=337,ObjClassId=35,PropValueId=0,DrwParamId0=322,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=8)                                                                                                                                                                                                                                "
+Id=338,ObjClassId=35,PropValueId=0,DrwParamId0=323,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=9)                                                                                                                                                                                                                                "
+Id=339,ObjClassId=35,PropValueId=0,DrwParamId0=324,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=10)                                                                                                                                                                                                                               "
+Id=340,ObjClassId=35,PropValueId=0,DrwParamId0=325,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=11)                                                                                                                                                                                                                               "
+Id=341,ObjClassId=35,PropValueId=0,DrwParamId0=326,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=12)                                                                                                                                                                                                                               "
+Id=342,ObjClassId=16,PropValueId=118,DrwParamId0=255,DrwParamId1=256,DrwParamId2=258,DrwParamId3=0,Priority=4,Condition=
+Id=343,ObjClassId=61,PropValueId=0,DrwParamId0=327,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=344,ObjClassId=35,PropValueId=0,DrwParamId0=328,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=13)                                                                                                                                                                                                                               "
+Id=345,ObjClassId=35,PropValueId=0,DrwParamId0=339,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=14)                                                                                                                                                                                                                               "
+Id=346,ObjClassId=35,PropValueId=0,DrwParamId0=329,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43774)&(ViewKind=3)                                                                                                                                                                                                                                "
+Id=347,ObjClassId=35,PropValueId=0,DrwParamId0=330,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43774)&(ViewKind=4)                                                                                                                                                                                                                                "
+Id=348,ObjClassId=37,PropValueId=0,DrwParamId0=331,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=1)                                                                                                                                                                                                                                "
+Id=349,ObjClassId=37,PropValueId=0,DrwParamId0=332,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=2)                                                                                                                                                                                                                                "
+Id=350,ObjClassId=37,PropValueId=0,DrwParamId0=333,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=3)                                                                                                                                                                                                                                "
+Id=351,ObjClassId=37,PropValueId=0,DrwParamId0=334,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=4)                                                                                                                                                                                                                                "
+Id=352,ObjClassId=37,PropValueId=0,DrwParamId0=335,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=5)                                                                                                                                                                                                                                "
+Id=353,ObjClassId=37,PropValueId=0,DrwParamId0=336,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=6)                                                                                                                                                                                                                                "
+Id=354,ObjClassId=37,PropValueId=0,DrwParamId0=337,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=7)                                                                                                                                                                                                                                "
+Id=355,ObjClassId=37,PropValueId=0,DrwParamId0=338,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=8)                                                                                                                                                                                                                                "
+Id=356,ObjClassId=62,PropValueId=0,DrwParamId0=350,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=357,ObjClassId=63,PropValueId=0,DrwParamId0=341,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=358,ObjClassId=35,PropValueId=0,DrwParamId0=342,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43745)&(ViewKind=15)                                                                                                                                                                                                                               "
+Id=359,ObjClassId=37,PropValueId=0,DrwParamId0=343,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=9)                                                                                                                                                                                                                                "
+Id=360,ObjClassId=37,PropValueId=0,DrwParamId0=344,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=10)                                                                                                                                                                                                                               "
+Id=361,ObjClassId=64,PropValueId=0,DrwParamId0=346,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=362,ObjClassId=37,PropValueId=0,DrwParamId0=347,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=11)                                                                                                                                                                                                                               "
+Id=363,ObjClassId=37,PropValueId=0,DrwParamId0=348,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=12)                                                                                                                                                                                                                               "
+Id=364,ObjClassId=62,PropValueId=94,DrwParamId0=349,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=365,ObjClassId=62,PropValueId=93,DrwParamId0=340,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=366,ObjClassId=59,PropValueId=0,DrwParamId0=351,DrwParamId1=352,DrwParamId2=0,DrwParamId3=0,Priority=3,Condition=
+Id=367,ObjClassId=66,PropValueId=2385108,DrwParamId0=353,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=368,ObjClassId=65,PropValueId=0,DrwParamId0=355,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=369,ObjClassId=60,PropValueId=33554520,DrwParamId0=309,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=370,ObjClassId=60,PropValueId=33554521,DrwParamId0=301,DrwParamId1=365,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=371,ObjClassId=60,PropValueId=33554499,DrwParamId0=305,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=372,ObjClassId=60,PropValueId=33554488,DrwParamId0=359,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=373,ObjClassId=60,PropValueId=33554492,DrwParamId0=302,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=374,ObjClassId=65,PropValueId=2385105,DrwParamId0=361,DrwParamId1=363,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=375,ObjClassId=65,PropValueId=2385107,DrwParamId0=361,DrwParamId1=363,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=376,ObjClassId=65,PropValueId=2385106,DrwParamId0=362,DrwParamId1=363,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=377,ObjClassId=65,PropValueId=2385104,DrwParamId0=362,DrwParamId1=363,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=378,ObjClassId=60,PropValueId=33554527,DrwParamId0=365,DrwParamId1=304,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=379,ObjClassId=60,PropValueId=33554526,DrwParamId0=366,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=380,ObjClassId=60,PropValueId=33554528,DrwParamId0=305,DrwParamId1=367,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=381,ObjClassId=60,PropValueId=33554435,DrwParamId0=369,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=382,ObjClassId=60,PropValueId=33554448,DrwParamId0=371,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=383,ObjClassId=60,PropValueId=33554485,DrwParamId0=367,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=384,ObjClassId=37,PropValueId=0,DrwParamId0=372,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=13)                                                                                                                                                                                                                               "
+Id=385,ObjClassId=37,PropValueId=0,DrwParamId0=373,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=14)                                                                                                                                                                                                                               "
+Id=386,ObjClassId=37,PropValueId=0,DrwParamId0=374,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=15)                                                                                                                                                                                                                               "
+Id=387,ObjClassId=37,PropValueId=0,DrwParamId0=375,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,"Condition=(NumRoadSign=43802)&(ViewKind=16)                                                                                                                                                                                                                               "
+Id=388,ObjClassId=34,PropValueId=2385122,DrwParamId0=376,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=389,ObjClassId=34,PropValueId=2385123,DrwParamId0=377,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=
+Id=390,ObjClassId=34,PropValueId=2274501,DrwParamId0=378,DrwParamId1=0,DrwParamId2=0,DrwParamId3=0,Priority=4,Condition=

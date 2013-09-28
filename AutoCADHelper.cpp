@@ -1,0 +1,2896 @@
+
+#include "AutoCADHelper.h"
+
+#pragma package(smart_init)
+
+
+AutoCADSignBlockInfo::AutoCADSignBlockInfo(AnsiString _name,int _index)
+{
+   name = _name;
+   index = _index;
+}
+
+int SignsCollection::GetIndexByName(AnsiString name)
+{
+   vector<AutoCADSignBlockInfo>::iterator i1 = signs.begin();
+   while(i1!=signs.end()){
+      if(i1->name == name){
+         return i1->index;
+      }
+      i1++;
+   }
+   return -1;
+}
+
+AnsiString SignsCollection::GetNameByIndex(int index)
+{
+   vector<AutoCADSignBlockInfo>::iterator i1 = signs.begin();
+   while(i1!=signs.end()){
+      if(i1->index == index){
+         return i1->name;
+      }
+      i1++;
+   }
+   return "";
+}
+
+
+void SignsCollection::Clear()
+{
+  signs.clear();
+}
+
+
+void SignsCollection::CheckExistingBlocks()
+{
+   static count,i;
+   AnsiString str;
+   if(Owner){
+      Clear();
+      try{
+        if(Owner->ActiveDocument){
+           count = Owner->BlocksCount;
+           for(i=0;i<count;i++){
+              str = Owner->Blocks[Variant(i)]->Name;
+              /*if(str =="5.19.1_5.19.2"){
+                 str = str;
+              }*/
+              signs.push_back(AutoCADSignBlockInfo(str,i));
+
+           }
+        }
+      }catch(...){
+        return;
+      }
+   }
+}
+
+void SignsCollection::AddBlock(AnsiString name, int i)
+{
+   signs.push_back(AutoCADSignBlockInfo(name,i));
+}
+
+
+int AutoCADHelper::GetTextWidth(AnsiString text, int Height)
+{
+    /*if(!cadActiveDocument) return -1;
+    wchar_t fontName[256];
+    short bold, italic, unuse;
+    cadActiveDocument->ActiveTextStyle->GetFont(&fontName, &bold, &italic, &unuse, &unuse);
+    BMP->Canvas->Font->Name = AnsiString(fontName);
+
+    TFontStyles style;
+    if(bold) style << fsBold;
+    if(italic) style << fsItalic;
+    BMP->Canvas->Font->Style = style;
+    BMP->Canvas->Font->Height = Height;
+
+    return BMP->Canvas->TextWidth(text); */
+}
+
+Variant AutoCADHelper::cadPoint(double x, double y, double z)
+{
+   static bounds[2] = {0,2};
+   Variant vArray;
+   vArray = VarArrayCreate(bounds,1,varDouble);
+   double *ptr = (double*)vArray.ArrayLock();
+   ptr[0] = fInvertXAxe?-x:x;
+   ptr[1] = fInvertYAxe?-y:y;
+   ptr[2] = z;
+   vArray.ArrayUnlock();
+   return vArray; 
+}
+
+Variant AutoCADHelper::cadPointArray(double *points, int Count,
+                                    int coordCount)
+{
+   static j;
+   static bounds[2] = {0};
+   bounds[1] = Count*3-1;
+   Variant vArray;
+   vArray = VarArrayCreate(bounds,1,varDouble);
+   double *_ptr = (double*)vArray.ArrayLock();
+   switch(coordCount){
+        case 1:
+          for(j=0;j<Count;j++){
+            _ptr[j*3] = fInvertXAxe?-points[j]:points[j];
+          }
+          break;
+        case 2:
+          for(j=0;j<Count;j++){
+            _ptr[j*3] = fInvertXAxe?-points[2*j]:points[2*j];
+            _ptr[j*3 + 1] = fInvertYAxe?-points[2*j+1]:points[2*j+1];
+          }
+          break;
+        case 3:
+          memcpy(_ptr,points,Count);
+          break;
+   }
+   vArray.ArrayUnlock();
+
+   return vArray;
+}
+
+Variant AutoCADHelper::cadArray(IDispatch **objects, int count)
+{
+   static j;
+   static bounds[2] = {0};
+   bounds[1] = count-1;
+   Variant vArray;
+   vArray = VarArrayCreate(bounds,1,varDispatch);
+   IDispatch **_ptr = (IDispatch**)vArray.ArrayLock();
+
+   try {
+     for(j=0;j<count;j++){
+        _ptr[j] = objects[j];
+     }
+   }catch(...) {}
+
+   vArray.ArrayUnlock();
+   return vArray;
+}
+
+Variant AutoCADHelper::cadArray(WideString *strings, int count)
+{
+   static j;
+   static bounds[2] = {0};
+   bounds[1] = count-1;
+   Variant vArray;
+   vArray = VarArrayCreate(bounds,1, varOleStr);
+   /*AnsiString *_ptr = ( AnsiString*)vArray.ArrayLock();*/
+   for(j=0;j<count;j++){
+      vArray.PutElement(Variant(strings[j]),j);
+      //_ptr[j] = strings[j];
+   }
+  /* vArray.ArrayUnlock(); */
+   
+   return vArray;
+}
+
+AcadLineType *AutoCADHelper::getLineType(WideString name)
+{
+   try{
+     return  cadActiveDocument->Linetypes->Item(Variant(name));
+   }catch(...){
+     return 0;
+   }
+}
+
+AcadDocument *AutoCADHelper::getActiveDocument()
+{
+   if(cadActiveDocument){
+     return cadActiveDocument->GetDefaultInterface();
+   }else
+     return 0;
+}
+
+AutoCADHelper::AutoCADHelper():fInvertYAxe(0),fInvertXAxe(0)
+{
+   gMakeBlockGap = 0.2;
+   gMakeBlockTextHeight = 1.2;
+   gMakeBlockTextOffsetX = 0.8;
+   comboSignCount = 0;
+   gMakeBlockTextEnable = true;
+   cadActiveDocument = 0;
+   fApplicationRun = false;
+   SignsCollection.Owner = this;
+   gCopyTextObject = 0;
+   gCopyText = 0;
+   BMP = new Graphics::TBitmap();
+}
+
+AutoCADHelper::~AutoCADHelper()
+{
+   if(cadActiveDocument) delete cadActiveDocument;
+   delete BMP;
+}
+
+AcadApplication *AutoCADHelper::BindAutoCAD()
+{
+   if(FAILED(cadApplication.BindRunning())) return 0;
+
+   if(cadApplication->Documents->Count>0){
+       cadActiveDocument = new TAcadDocument(0);
+       cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
+       cadActiveDocument->ConnectTo(cadApplication->ActiveDocument);
+   }
+
+   return cadApplication;
+}
+
+AcadApplication * AutoCADHelper::RunAutoCAD(bool fVisible)
+{
+    if(FAILED(cadApplication.BindRunning())){
+        if(FAILED(cadApplication.Bind(ProgIDToClassID("AutoCAD.Application")))){
+           throw "can't run AutoCAD";
+        }
+    }
+    cadApplication->Visible = fVisible;
+
+    if(cadApplication->Documents->Count>0){
+       cadActiveDocument = new TAcadDocument(0);
+       cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
+       cadActiveDocument->ConnectTo(cadApplication->ActiveDocument);
+       //SignsCollection.CheckExistingBlocks();
+    }
+    return cadApplication;
+
+}
+
+AcadApplication *AutoCADHelper::getApplication()
+{
+   return cadApplication->Application;
+}
+
+IAcadDocument *AutoCADHelper::OpenDocument(AnsiString FileName,
+                                           bool fSetActive,
+                                           bool fReopen)
+{
+  if(!cadApplication) return 0;
+
+  int size = FileName.WideCharBufSize();
+  wchar_t *str = new  wchar_t[size];
+  FileName.WideChar(str,size);
+
+  AcadDocuments *docs;
+  AcadDocument *doc;
+  int count;
+  try{
+  if(fReopen){
+    if(cadActiveDocument)delete cadActiveDocument;
+    cadActiveDocument = new TAcadDocument(0);
+    doc = cadApplication->Documents->Open(str,TNoParam(),TNoParam());
+    cadActiveDocument->ConnectTo(doc);
+    cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
+  }else{
+    docs = cadApplication->Documents;
+    count = docs->Count;
+    for(int i=0;i<count;i++){
+       doc = docs->Item(Variant(i));
+       if(!wcscmp(doc->FullName,str)){
+          if(fSetActive){
+             if(cadActiveDocument)delete cadActiveDocument;
+             cadActiveDocument = new TAcadDocument(0);
+             cadActiveDocument->ConnectTo(doc);
+             cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
+          }
+          //SignsCollection.CheckExistingBlocks();
+          return doc;
+       }
+    }
+    doc=cadApplication->Documents->Open(str,TNoParam(),TNoParam());
+    if(fSetActive){
+       if(cadActiveDocument)delete cadActiveDocument;
+       cadActiveDocument = new TAcadDocument(0);
+       cadActiveDocument->ConnectTo(doc);
+       cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
+    }
+    //SignsCollection.CheckExistingBlocks();
+    return doc;
+  }
+  }__finally{
+     delete[] str;
+  }
+  return 0;
+}
+
+void AutoCADHelper::LoadBlocksFromFile(AnsiString FileName, AnsiString BlockName)
+{
+   static count;
+   static i,j;
+   static IAcadBlock *blocksAlone[1];
+
+   if(!cadActiveDocument) return;
+
+   IAcadBlock **blocks;
+   IAcadBlock *block;
+   Variant v;
+
+   TAcadDocument *cadSingsDefDocument = new TAcadDocument(0);
+   IAcadDocument *doc = OpenDocument(FileName);
+   if(!doc) return;
+   try{
+     cadSingsDefDocument->ConnectTo(doc);
+     TAcadDatabase * dbSource = new TAcadDatabase(0);
+     dbSource->ConnectTo(cadSingsDefDocument->Database);
+     if(!BlockName.IsEmpty()){
+       try{
+         *blocksAlone = cadSingsDefDocument->Blocks->Item(Variant(BlockName));
+         dbSource->CopyObjects(cadArray((IDispatch**)blocksAlone,1),
+               Variant((IDispatch*)cadActiveDocument->ModelSpace),v);
+       }catch(...){
+          throw Exception("Error on loading block");
+       }
+     }else{
+       count = cadSingsDefDocument->Blocks->Count;
+       try
+       {
+         blocks = new IAcadBlock*[count];
+         for(i=0,j=0;i<count;i++){
+            block = cadSingsDefDocument->Blocks->Item(Variant(i));
+            if(!block->IsLayout&&!block->IsXRef){
+               blocks[j++] = block;
+            }
+         }
+         dbSource->CopyObjects(cadArray((IDispatch**)blocks,j),
+               Variant((IDispatch*)cadActiveDocument->ModelSpace),v);
+       }__finally{
+          delete blocks;
+       }
+     }
+     cadActiveDocument->Activate();
+     cadApplication->ZoomAll();
+   }__finally{
+        delete cadSingsDefDocument;
+   }
+}
+
+TAcadDocument *AutoCADHelper::AddDocument(AnsiString _template)
+{
+   if(cadApplication){
+        if(cadActiveDocument){
+           delete cadActiveDocument;
+           cadActiveDocument = 0;
+        }
+        cadActiveDocument = new TAcadDocument(0);
+        cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
+        AcadDocument *doc = cadApplication->Documents->Add(Variant(_template));
+        cadActiveDocument->ConnectTo(doc);
+        //SignsCollection.CheckExistingBlocks();
+        return cadActiveDocument;
+   }
+   return 0;
+}
+
+void __fastcall AutoCADHelper::ActiveDocumentBeginClose(TObject *sender)
+{
+   if(gOnActiveDocumentBeginClose)
+      gOnActiveDocumentBeginClose(sender);
+   if(sender == cadActiveDocument)
+      delete cadActiveDocument;cadActiveDocument = 0;
+}
+
+void AutoCADHelper::ClearModelSpace()
+{
+  while(cadActiveDocument->ModelSpace->Count>0){
+     cadActiveDocument->ModelSpace->Item(Variant(0))->Delete();
+  }
+}
+
+AcadBlockPtr AutoCADHelper::getBlocks(int i)
+{
+   AcadBlock *block = 0;
+   if(cadActiveDocument){
+     try{
+         block = cadActiveDocument->Blocks->Item(Variant(i));
+     }catch(...){
+     }
+   }
+   return block;
+}
+
+AcadBlockPtr AutoCADHelper::getBlocksByName(AnsiString BlockName)
+{
+   AcadBlock *block = 0;
+   if(cadActiveDocument){
+     try{
+         block = cadActiveDocument->Blocks->Item(Variant(BlockName));
+     }catch(...){
+     }
+   }
+   return block;
+}
+
+int AutoCADHelper::getBlocksCount()
+{
+   return cadActiveDocument->Blocks->Count;
+}
+
+
+
+
+
+AcadHatch *AutoCADHelper::FillArea(IDispatch **LoopObjects,
+                                   int LoopObjectsCount,
+                                   int HatchColor,
+                                   WideString sHatchType,
+                                   int hatchScale)
+{
+   AcadHatch *hatch;
+   IAcadHatchDisp * hatch2;
+
+   if(!(hatch = cadActiveDocument->
+                ModelSpace->AddHatch(0,sHatchType,Variant(true)))) return 0;
+
+   hatch->AppendOuterLoop(cadArray(LoopObjects,LoopObjectsCount));
+   hatch->Evaluate();
+   hatch->PatternScale = hatchScale;
+   hatch->color = HatchColor;
+   return hatch;
+}
+
+AcadHatch *AutoCADHelper::FillAreaPS(IDispatch **LoopObjects,
+                                   int LoopObjectsCount,
+                                   int HatchColor,
+                                   WideString sHatchType,
+                                   int hatchScale)
+{
+   AcadHatch *hatch;
+   IAcadHatchDisp * hatch2;
+
+   if(!(hatch = cadActiveDocument->
+                PaperSpace->AddHatch(0,sHatchType,Variant(true)))) return 0;
+
+   hatch->AppendOuterLoop(cadArray(LoopObjects,LoopObjectsCount));
+   hatch->Evaluate();
+   hatch->PatternScale = hatchScale;
+   hatch->color = HatchColor;
+   return hatch;
+}
+
+AcadBlockReferencePtr AutoCADHelper::DrawBlock(WideString BlockName,
+                                        double x, double y,
+                                        double rotation, double scale)
+{
+   AcadBlockReference *refer  =0;
+   if(cadActiveDocument){
+        refer = cadActiveDocument->ModelSpace->InsertBlock(cadPoint(x,y),
+                  BlockName,scale,scale,scale,rotation);
+   }
+   return refer;
+}
+
+bool AutoCADHelper::GetPropertyPoint(AcadBlockReferencePtr ptrBlock,
+                                       AnsiString PropertyName,
+                                       AutoCADPoint &point)
+{
+  Variant vProperities;
+  static count;
+  static AnsiString str;
+  Variant a;
+  AnsiString PropertyNameX = PropertyName + " X";
+  AnsiString PropertyNameY = PropertyName + " Y";
+  AcadDynamicBlockReferencePropertyPtr prop;
+ // AcadBlockReferencePtr ptrBlock = (IDispatch*)block;
+
+  bool setX = false,setY = false;
+
+  PropertyName = PropertyName.UpperCase();
+  try{
+     vProperities = ptrBlock->GetDynamicBlockProperties();
+     if(vProperities.IsArray()){
+       count = vProperities.ArrayHighBound(1)+1;
+       if(count>0){
+         try{
+           for(int i=0;i<count;i++){
+              prop = (AcadDynamicBlockReferencePropertyPtr)(IDispatch*)vProperities.GetElement(i);
+              str = prop->PropertyName;
+              if(str ==  PropertyNameX){
+                 setX = true;
+                 a = prop->get_Value();
+                 point.x = a;
+              }
+              else if(str ==  PropertyNameY){
+                 setY = true;
+                 a = prop->get_Value();
+                 point.y = a;
+              }
+              if(setX&&setY) return true;
+           }
+         }catch(...){};
+       }
+     }
+  }catch(...){
+     return false;
+  }
+  return false;
+}
+
+bool AutoCADHelper::GetSubPropertyPoint(AcadBlockPtr ptrBlock, AnsiString PropertyName, AutoCADPoint &out)
+{
+    static count ,i;
+    static AcadEntityPtr subBlock;
+    count  = ptrBlock->Count;
+    for(i=0;i<count;i++){
+       subBlock = ptrBlock->Item(Variant(i));
+       if(subBlock->EntityType == 7){
+          if(GetPropertyPoint(subBlock, PropertyName, out))
+            return true;
+       }
+    }
+    return false;
+}
+
+bool AutoCADHelper::GetSubPropertyDouble(AcadBlockPtr ptrBlock, AnsiString PropertyName, double &out)
+{
+    static count ,i;
+    static AcadEntityPtr subBlock;
+    count  = ptrBlock->Count;
+    for(i=0;i<count;i++){
+       subBlock = ptrBlock->Item(Variant(i));
+       if(subBlock->EntityType == 7){
+          if(GetPropertyDouble(subBlock, PropertyName, out))
+            return true;
+       }
+    }
+    return false;
+}
+
+void AutoCADHelper::SetAttribute(AcadBlockReferencePtr block,
+                                 AnsiString PropertyName,
+                                 WideString value, int rot)
+{
+   if(!block) return;
+   static count;
+   static AnsiString str;
+   Variant vProperities;
+   Variant a;
+   AcadAttributeReferencePtr attribute;
+
+   PropertyName = PropertyName.UpperCase();
+   try{
+     block->GetAttributes(vProperities);
+     if(vProperities.IsArray()){
+       count = vProperities.ArrayHighBound(1)+1;
+       if(count>0){
+         try{
+           for(int i=0;i<count;i++){
+              attribute = (IDispatch*)vProperities.GetElement(i);
+              str = attribute->TagString;
+              if(str ==  PropertyName){
+                 attribute->set_TextString(value);
+                 if(rot!=-1)attribute->Rotation = (double)rot/360*M_PI;
+                 break;
+              }
+           }
+         }catch(...){};
+       }
+     }
+   }catch(...){}
+}
+
+bool AutoCADHelper::GetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName, double &out)
+{
+  Variant vProperities;
+  static count;
+  static AnsiString str;
+  AcadDynamicBlockReferencePropertyPtr prop;
+
+  try{
+     vProperities = ptrBlock->GetDynamicBlockProperties();
+     if(vProperities.IsArray()){
+       count = vProperities.ArrayHighBound(1)+1;
+       if(count>0){
+         try{
+           for(int i=0;i<count;i++){
+              prop = (IDispatch*)vProperities.GetElement(i);
+              str = prop->PropertyName;
+              if(str ==  PropertyName){
+                 vProperities = prop->get_Value();
+                 out = vProperities;
+                 return true;
+              }
+           }
+         }catch(...){};
+       }
+     }
+  }catch(...){
+     return false;
+  }
+  return false;
+}
+
+bool AutoCADHelper::GetPropertyVariant(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName, Variant &out)
+{
+  Variant vProperities;
+  static count;
+  static AnsiString str;
+  AcadDynamicBlockReferencePropertyPtr prop;
+
+  try{
+     vProperities = ptrBlock->GetDynamicBlockProperties();
+     if(vProperities.IsArray()){
+       count = vProperities.ArrayHighBound(1)+1;
+       if(count>0){
+         try{
+           for(int i=0;i<count;i++){
+              prop = (IDispatch*)vProperities.GetElement(i);
+              str = prop->PropertyName;
+              if(str ==  PropertyName){
+                 vProperities = prop->get_Value();
+                 out = vProperities;
+                 return true;
+              }
+           }
+         }catch(...){};
+       }
+     }
+  }catch(...){
+     return false;
+  }
+  return false;
+}
+
+bool AutoCADHelper::SetPropertyPoint(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
+                                 AutoCADPoint value)
+{
+  Variant vProperities;
+  static count;
+  static AnsiString str;
+  Variant a;
+  AnsiString PropertyNameX = PropertyName + " X";
+  AnsiString PropertyNameY = PropertyName + " Y";
+  AcadDynamicBlockReferencePropertyPtr prop;
+
+  bool setX = false,setY = false;
+
+  PropertyName = PropertyName.UpperCase();
+  try{
+     vProperities = ptrBlock->GetDynamicBlockProperties();
+     if(vProperities.IsArray()){
+       count = vProperities.ArrayHighBound(1)+1;
+       if(count>0){
+         try{
+           for(int i=0;i<count;i++){
+              prop = (AcadDynamicBlockReferencePropertyPtr)(IDispatch*)vProperities.GetElement(i);
+              str = prop->PropertyName;
+              if(str ==  PropertyNameX){
+                 setX = true;
+                 prop->set_Value(Variant(double(value.x)));
+              }
+              else if(str ==  PropertyNameY){
+                 setY = true;
+                 prop->set_Value(Variant(double(value.y)));
+              }
+              if(setX&&setY) return true;
+           }
+         }catch(...){};
+       }
+     }
+  }catch(...){
+     return false;
+  }
+  return false;
+}
+
+bool AutoCADHelper::SetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
+                         double value)
+{
+  Variant vProperities;
+  static count;
+  static AnsiString str;
+  AcadDynamicBlockReferencePropertyPtr prop;
+
+  try{
+     vProperities = ptrBlock->GetDynamicBlockProperties();
+     if(vProperities.IsArray()){
+       count = vProperities.ArrayHighBound(1)+1;
+       if(count>0){
+         try{
+           for(int i=0;i<count;i++){
+              prop = (IDispatch*)vProperities.GetElement(i);
+              str = prop->PropertyName;
+              if(str ==  PropertyName){
+                 prop->set_Value(Variant(value));
+                 return true;
+              }
+           }
+         }catch(...){};
+       }
+     }
+  }catch(...){
+     return false;
+  }
+  return false;
+}
+
+bool AutoCADHelper::SetPropertyListVariant(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
+                                 Variant value)
+{
+  Variant vProperities;
+  static count;
+  static AnsiString str;
+  AcadDynamicBlockReferencePropertyPtr prop;
+
+  try{
+     vProperities = ptrBlock->GetDynamicBlockProperties();
+     if(vProperities.IsArray()){
+       count = vProperities.ArrayHighBound(1)+1;
+       if(count>0){
+         try{
+           for(int i=0;i<count;i++){
+              prop = (IDispatch*)vProperities.GetElement(i);
+              str = prop->PropertyName;
+              if(str ==  PropertyName){
+                 prop->set_Value(value);
+                 return true;
+              }
+           }
+         }catch(...){};
+       }
+     }
+  }catch(...){
+     return false;
+  }
+  return false;
+}
+
+bool AutoCADHelper::SetPropertyList(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
+                                 short value)
+{
+  Variant vProperities;
+  static count;
+  static AnsiString str;
+  AcadDynamicBlockReferencePropertyPtr prop;
+
+  try{
+     vProperities = ptrBlock->GetDynamicBlockProperties();
+     if(vProperities.IsArray()){
+       count = vProperities.ArrayHighBound(1)+1;
+       if(count>0){
+         try{
+           for(int i=0;i<count;i++){
+              prop = (IDispatch*)vProperities.GetElement(i);
+              str = prop->PropertyName;
+              if(str ==  PropertyName){
+                 prop->set_Value(Variant(value));
+                 return true;
+              }
+           }
+         }catch(...){};
+       }
+     }
+  }catch(...){
+     return false;
+  }
+  return false;
+}
+
+AcadLayout *AutoCADHelper::AddPaperSpace(WideString name)
+{
+  try{
+    return cadActiveDocument->Layouts->Add(name);
+  }catch(...){return 0;}
+}
+
+bool AutoCADHelper::SetupViewport(AcadLayout *layout, double x, double y,
+                                double width, double height)
+{
+   AcadPViewportPtr viewport;
+   cadActiveDocument->set_ActiveSpace(acPaperSpace);
+   cadActiveDocument->set_ActiveLayout(layout);
+   try{
+    /* viewport = (IDispatch*)Variant((IDispatch*)cadActiveDocument
+                  ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");  */
+     viewport = cadActiveDocument->ActiveViewport;
+     viewport->set_Center(cadPoint(x+width/2, y+ height/2));
+     viewport->Width = width;
+     viewport->Height = height;
+     //viewport->
+   }catch(...){
+        return false;
+   }
+   return true;
+}
+
+void AutoCADHelper::CheckExistingBlocks()
+{
+   SignsCollection.CheckExistingBlocks();
+}
+
+TAcadDocument *AutoCADHelper::BindToActiveDocument()
+{
+   AcadDocumentPtr doc;
+   try{
+      doc = cadApplication->ActiveDocument;
+      if(doc){
+        if(cadActiveDocument) delete cadActiveDocument;
+        cadActiveDocument = new TAcadDocument(0);
+        cadActiveDocument->ConnectTo(doc);
+        cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
+        //SignsCollection.CheckExistingBlocks();
+        return cadActiveDocument;
+      }
+   }catch(...){
+     return 0;
+   }
+   return 0;
+}
+
+void AutoCADHelper::SetBACKGROUNDPLOT_ZERO()
+{
+   SendCommand("BACKGROUNDPLOT 0\n");
+}
+
+void AutoCADHelper::SelectPaperSpace()
+{
+   cadActiveDocument->set_ActiveSpace(acPaperSpace); 
+}
+
+void AutoCADHelper::SendCommand(WideString command)
+{
+   cadActiveDocument->SendCommand(command);
+}
+
+AcadLayout *AutoCADHelper::SetAsActiveLayout(Variant index)
+{
+   AcadLayout *layout = 0;
+   try{
+     layout = cadActiveDocument->Layouts->Item(index);
+     cadActiveDocument->set_ActiveLayout(layout);
+   }catch(...){
+      return 0;
+   }
+   return layout;
+}
+
+
+bool AutoCADHelper::PrintActiveLayoutToFile(WideString FileName)
+{
+  try{
+   cadActiveDocument->Plot->PlotToFile(FileName);
+  }catch(...){return false;}
+  return true;
+}
+
+bool AutoCADHelper::PrintLayoutsToFile(WideString FileName, int* arrayofindexes, int count)
+{
+   WideString *names = new WideString[count];
+   try{
+     for(int i=0;i<count;i++){
+        names[i] = WideString(cadActiveDocument->Layouts->Item(Variant(arrayofindexes[i]))->Name) + "12";
+     }
+     Variant array;
+     Variant a1;
+     array = cadArray(names,count);
+     cadActiveDocument->Plot->SetLayoutsToPlot(a1);
+     cadActiveDocument->Plot->PlotToFile(FileName);
+   }catch(...){
+        delete[] names;
+        return false;
+   }
+   delete[] names;
+   return true;
+}
+
+bool AutoCADHelper::SetupActiveViewportZoomWindow(double x, double y,
+                                double width, double height)
+{
+   AcadPViewport *viewport = 0;
+   cadActiveDocument->set_ActiveSpace(acPaperSpace);
+   try{
+   viewport = (AcadPViewport*)(IDispatch*)Variant((IDispatch*)cadActiveDocument
+                ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
+
+   viewport->Display(True);
+   cadActiveDocument->set_MSpace(True);
+
+   cadApplication->ZoomWindow(cadPoint(x,y),cadPoint(x+width,y+height));
+
+   cadActiveDocument->set_MSpace(False);
+   cadApplication->ZoomExtents();
+   }catch(...){
+      return false;
+   }
+   return true;
+}
+
+bool AutoCADHelper::SetupActiveViewportZoomScale(double ZoomFactor)
+{
+   AcadPViewport *viewport = 0;
+   cadActiveDocument->set_ActiveSpace(acPaperSpace);
+   try{
+   viewport = (AcadPViewport*)(IDispatch*)Variant((IDispatch*)cadActiveDocument
+                ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
+
+   viewport->Display(True);
+   cadActiveDocument->set_MSpace(True);
+
+   cadApplication->ZoomScaled(ZoomFactor,acZoomScaledAbsolute);
+
+   cadActiveDocument->set_MSpace(False);
+   viewport->Display(False);
+   cadApplication->ZoomExtents();
+   }catch(...){
+      return false;
+   }
+   return true;
+}
+
+bool AutoCADHelper::SetupActiveViewportZoomCenter(double x, double y, double scale)
+{
+   AcadPViewport *viewport = 0;
+   cadActiveDocument->set_ActiveSpace(acPaperSpace);
+   try{
+   viewport = (AcadPViewport*)(IDispatch*)Variant((IDispatch*)cadActiveDocument
+                ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
+
+   viewport->Display(True);
+   cadActiveDocument->set_MSpace(True);
+
+   cadApplication->ZoomCenter(cadPoint(x,y),1);
+   cadActiveDocument->set_MSpace(False);
+   viewport->Display(False);
+   }catch(...){
+      return false;
+   }
+   return true;
+}
+
+void AutoCADHelper::AddPaperSpace(AnsiString name, double x, double y,
+                                        double width, double height)
+{
+   AcadPViewport *viewport = 0;
+   AcadLayout *layout = cadActiveDocument->Layouts->Add(WideString(name));
+
+   cadActiveDocument->set_ActiveSpace(acPaperSpace);
+   cadActiveDocument->set_ActiveLayout(layout);
+
+   viewport = (AcadPViewport*)(IDispatch*)Variant((IDispatch*)cadActiveDocument
+                ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
+   viewport->Display(True);
+   cadActiveDocument->set_MSpace(True);
+
+   cadApplication->ZoomWindow(cadPoint(x,y),cadPoint(x+width,y+height));
+
+   cadActiveDocument->set_MSpace(False);
+   viewport->Display(False);
+   cadApplication->ZoomExtents();
+   cadActiveDocument->PurgeAll();
+}
+
+AcadText *AutoCADHelper::DrawText(AnsiString str, double height,
+                                  double x, double y, double rotation)
+{
+   if(!cadActiveDocument) return 0;
+   AcadText *text;
+   text = cadActiveDocument->ModelSpace->AddText(WideString(str),cadPoint(x,y),height);
+   text->Rotate(cadPoint(x,y),rotation);
+   return text;
+}
+
+AcadText *AutoCADHelper::DrawTextPS(AnsiString str, double height,
+                                  double x, double y, double rotation)
+{
+   if(!cadActiveDocument) return 0;
+   AcadText *text;
+   text = cadActiveDocument->PaperSpace->AddText(WideString(str),cadPoint(x,y),height);
+   text->Rotate(cadPoint(x,y),rotation);
+   return text;
+}
+
+AcadLine *AutoCADHelper::DrawLine(double x1, double y1, double x2, double y2)
+{
+   if(cadActiveDocument){
+      return cadActiveDocument->ModelSpace->AddLine(cadPoint(x1,y1),cadPoint(x2,y2));
+   }
+   return 0;
+}
+
+AcadLine *AutoCADHelper::DrawLinePS(double x1, double y1, double x2, double y2)
+{
+   if(cadActiveDocument){
+      return cadActiveDocument->PaperSpace->AddLine(cadPoint(x1,y1),cadPoint(x2,y2));
+   }
+   return 0;
+}
+
+AcadPolyline *AutoCADHelper::DrawPolyLine(double *array, int count, int coordCount)
+{
+   if(cadActiveDocument){
+        return cadActiveDocument->ModelSpace->AddPolyline(cadPointArray(array,count, coordCount));
+   }
+   return 0;
+}
+
+AcadPolyline *AutoCADHelper::DrawPolyLinePS(double *array, int count, int coordCount)
+{
+   if(cadActiveDocument){
+        return cadActiveDocument->PaperSpace->AddPolyline(cadPointArray(array,count, coordCount));
+   }
+   return 0;
+}
+
+AcadEllipse *AutoCADHelper::DrawEllipse(double centerX, double centerY, double MajorAxis,double MinorAxis)
+{
+   double temp;
+   Variant majAx;
+   
+   if(MinorAxis<0)MinorAxis = -MinorAxis;
+   if(MajorAxis<0)MajorAxis = -MajorAxis;
+
+   if(cadActiveDocument){
+      //MinorAxis = MajorAxis/MinorAxis;
+      if(MajorAxis<MinorAxis){
+         majAx = cadPoint(0,-MinorAxis);
+         temp = MajorAxis / MinorAxis;
+      }else{
+         majAx = cadPoint(MajorAxis);
+         temp = MinorAxis / MajorAxis;
+      }
+
+      AcadEllipse *ellipse = cadActiveDocument->ModelSpace->AddEllipse(cadPoint(centerX,centerY),
+                   majAx,Variant(temp));
+      if(MajorAxis<MinorAxis){
+         //ellipse->Rotate(cadPoint(centerX,centerY),M_PI_2);
+      }
+      return ellipse;
+   }
+   return 0;
+}
+
+AcadPolyline *AutoCADHelper::DrawRect(double centerX, double centerY, double width, double height)
+{
+   static double rect[10];
+   static double width2,height2;
+   if(cadActiveDocument){
+      width2 = width*0.5;
+      height2 = height*0.5;
+
+      rect[0] = centerX - width2;
+      rect[1] = centerY - height2;
+
+      rect[2] = centerX + width2;
+      rect[3] = centerY - height2;
+
+      rect[4] = centerX + width2;
+      rect[5] = centerY + height2;
+
+      rect[6] = centerX - width2;
+      rect[7] = centerY + height2;
+
+      rect[8] = centerX - width2;
+      rect[9] = centerY - height2;
+
+      return DrawPolyLine(rect,5,2);
+   }
+   return 0;
+}
+
+AcadPolyline *AutoCADHelper::DrawRectPS(double centerX, double centerY, double width, double height)
+{
+   static double rect[10];
+   static double width2,height2;
+   if(cadActiveDocument){
+      width2 = width*0.5;
+      height2 = height*0.5;
+
+      rect[0] = centerX - width2;
+      rect[1] = centerY - height2;
+
+      rect[2] = centerX + width2;
+      rect[3] = centerY - height2;
+
+      rect[4] = centerX + width2;
+      rect[5] = centerY + height2;
+
+      rect[6] = centerX - width2;
+      rect[7] = centerY + height2;
+
+      rect[8] = centerX - width2;
+      rect[9] = centerY - height2;
+
+      return DrawPolyLinePS(rect,5,2);
+   }
+   return 0;
+}
+
+AcadArc *AutoCADHelper::DrawArc(double centerX, double centerY,
+                                double radius, double sAngle, double eAngle)
+{
+   if(cadActiveDocument){
+      return cadActiveDocument->ModelSpace->AddArc(cadPoint(centerX,centerY),
+                                                        radius,sAngle,eAngle);
+   }
+   return 0;
+}
+
+AcadCircle *AutoCADHelper::DrawCircle(double centerX, double centerY, double radius)
+{
+   if(cadActiveDocument){
+      return cadActiveDocument->ModelSpace->AddCircle(cadPoint(centerX,centerY),radius);
+   }
+   return 0;
+}
+
+AcadCircle *AutoCADHelper::DrawCirclePS(double centerX, double centerY, double radius)
+{
+   if(cadActiveDocument){
+      return cadActiveDocument->PaperSpace->AddCircle(cadPoint(centerX,centerY),radius);
+   }
+   return 0;
+}
+
+void AutoCADHelper::Regen()
+{
+   //cadActiveDocument->SendCommand("extrim");
+   if(cadActiveDocument){
+     cadActiveDocument->Regen(acAllViewports);
+   }
+}
+
+AcadLineTypePtr AutoCADHelper::LoadLineType(WideString LineTypeName,
+                                          WideString FileName,
+                                          WideString ShapeFileName)
+{
+   if(cadActiveDocument){
+      try{
+         if(!ShapeFileName.IsEmpty()){
+            try{
+            cadActiveDocument->LoadShapeFile(ShapeFileName);
+            }catch(...){}
+         }
+         cadActiveDocument->Linetypes->Load(LineTypeName, FileName);
+         return cadActiveDocument->Linetypes->Item(Variant(LineTypeName));//cadActiveDocument->Linetypes->Add(LineTypeName);
+      }catch(...){}
+   }
+}
+
+WideString AutoCADHelper::GetSignName(AnsiString signName)
+{
+   static i,length,count;
+   length = signName.Length();
+   count = 0; 
+   for(i=1;i<=length;i++){
+      if(signName[i] == '.'){
+         if(count == 2){
+            return signName.SubString(1,i-1);
+         }
+         count++;
+      }
+   }
+   return signName;
+}
+
+void AutoCADHelper::SetSignAttribute(AcadBlockReferencePtr block, WideString str)
+{
+  if(str.IsEmpty()) return;
+  int iString;
+  int strLenght = str.Length();
+  int i,iLast;
+  iLast = 0;
+  iString = 0;
+  for(i=1;i<=strLenght;i++){
+     if(str[i]=='\\'){
+         switch(iString){
+            case 0:
+               SetAttribute(block,"LABEL",str.SubString(iLast+1,(i-iLast-1)));
+            break;
+
+            case 1:
+               SetAttribute(block,"LABEL1",str.SubString(iLast+1,(i-iLast-1)));
+            break;
+
+            case 2:
+               SetAttribute(block,"LABEL2",str.SubString(iLast+1,(i-iLast-1)));
+               return;
+
+            default:
+              return;
+         }
+         iLast = i;
+         iString++;
+      }
+  }
+  switch(iString){
+      case 0:
+         SetAttribute(block,"LABEL",str.SubString(iLast+1,(i-iLast-1)));
+      break;
+
+      case 1:
+         SetAttribute(block,"LABEL1",str.SubString(iLast+1,(i-iLast-1)));
+      break;
+
+      case 2:
+         SetAttribute(block,"LABEL2",str.SubString(iLast+1,(i-iLast-1)));
+         return;
+
+      default:
+        return;
+  }
+}
+
+void AutoCADHelper::ResetBlocksCollection()
+{
+   SignsCollection.Clear();
+}
+
+bool AutoCADHelper::IsLarger(AnsiString name)
+{
+  return false;
+}
+
+
+AcadBlockPtr AutoCADHelper::MakeCombineBlock(WideString block1, WideString label1,
+                                           WideString block2, WideString label2,
+                                           WideString block3, WideString label3,
+                                           WideString block4, WideString label4)
+{
+    static int subBlocksCount;
+    static int i, blockIndex;
+    static bool ffind, fHaveNoLabels;
+    static int count;
+    static double maxWidth,maxWidth2,width, block3Width, height,height2, fullHeight, TopOffset;
+    static float offset,scale;
+    static const float GlobalScale = 1.5; 
+    Variant tVar;
+
+    static AutoCADPoint p1(0,0), p2(0,0), pTop;
+
+    p1.x = p1.y = 0;
+    p2.x = p2.y = 0;
+    pTop.x = 0;
+    fullHeight = 0;
+    AcadBlock * newBlock = 0;
+
+    count = (block1.IsEmpty()?0:1) + (block2.IsEmpty()?0:1)
+             + (block3.IsEmpty()?0:1) + (block4.IsEmpty()?0:1);
+    if(count<2) return newBlock;
+
+    maxWidth = maxWidth2 = 0;
+
+    AcadBlockPtr *block = new AcadBlockPtr[count];
+    AutoCADPoint *blockspos = new AutoCADPoint[count];
+
+    AcadBlockReferencePtr subBlock;
+    AcadEntityPtr entity;
+    WideString newBlockName;
+
+    bool fCheckLostBlock = false;
+
+    for(int i=0;i<count;i++){
+       switch(i){
+          case 0:
+            try{
+                block[0] = cadActiveDocument->Blocks->Item(Variant(block1));
+            }catch(...){
+                fCheckLostBlock = true;
+                if(!strLostBlocks.Pos(block1)){
+                  strLostBlocks+="\n"+block1;
+                }
+            }
+            newBlockName+=block1+ ((i==count-1)?"":"_");
+          break;
+          case 1:
+          
+            try{
+                block[1] = cadActiveDocument->Blocks->Item(Variant(block2));
+            }catch(...){
+                fCheckLostBlock = true;
+                if(!strLostBlocks.Pos(block2)){
+                  strLostBlocks+="\n"+block2;
+                }
+            }
+
+            newBlockName+=block2 + ((i==count-1)?"":"_");
+          break;
+          case 2:
+          
+            try{
+             block[2] = cadActiveDocument->Blocks->Item(Variant(block3));
+            }catch(...){
+                fCheckLostBlock = true;
+                if(!strLostBlocks.Pos(block3)){
+                  strLostBlocks+="\n"+block3;
+                }
+            }
+
+            newBlockName+=block3 + ((i==count-1)?"":"_");
+          break;
+          case 3:
+            try{
+                block[3] = cadActiveDocument->Blocks->Item(Variant(block4));
+            }catch(...){
+                fCheckLostBlock = true;
+                if(!strLostBlocks.Pos(block4)){
+                  strLostBlocks+="\n"+block4;
+                }
+            }
+            newBlockName+=block4 + ((i==count-1)?"":"_");
+          break;
+       }
+    }
+
+    if(fCheckLostBlock) return newBlock;
+
+    fHaveNoLabels = label1.IsEmpty()&&label2.IsEmpty()&&label3.IsEmpty()&&label4.IsEmpty();
+
+    if((blockIndex=SignsCollection.GetIndexByName(newBlockName))!=-1&&fHaveNoLabels){
+       return BlocksByName[newBlockName];
+    }
+
+    if(!fHaveNoLabels){
+      newBlockName+="#"+IntToStr(comboSignCount++);
+    }
+    
+
+    blockspos[0] = p1;
+    subBlocksCount = block[0]->Count;
+    ffind = false;
+    for(i=0;i<subBlocksCount;i++){
+       entity = block[0]->Item(Variant(i));
+       if(entity->EntityType == 7){
+          subBlock=entity;
+          if(GetPropertyDouble(subBlock,"Height",height)){
+              if(GetPropertyDouble(subBlock,"Width",width)){
+                scale = subBlock->XScaleFactor;
+                height*=scale;
+                width*=scale;                
+                maxWidth = width>maxWidth?width:maxWidth;
+                ffind = true;
+                break;
+              }
+          }
+       }
+    }
+
+    if(!ffind) return newBlock;
+
+    TopOffset = height/2;
+    fullHeight+=height;
+
+    ffind = false;
+    subBlocksCount = block[1]->Count;
+    for(i=0;i<subBlocksCount;i++){
+       entity = block[1]->Item(Variant(i));
+       if(entity->EntityType == 7){
+          subBlock = entity;
+          if(GetPropertyDouble(entity,"Height",height2)){
+            if(GetPropertyDouble(entity,"Width",width)){
+                scale = subBlock->XScaleFactor;
+                height2*=scale;
+                width*=scale;
+                maxWidth = width>maxWidth?width:maxWidth;               
+                ffind = true;
+                break;
+            }
+          }
+       }
+    }
+    if(!ffind) return newBlock;
+
+    fullHeight+=height2;
+
+    p2.y = (p1.y - height/2 - height2/2-gMakeBlockGap);
+    p1 = p2;
+    height = height2;
+    blockspos[1] = p2;
+
+    if(count>2){
+        ffind = false;
+        subBlocksCount = block[2]->Count;
+        for(i=0;i<subBlocksCount;i++){
+           entity = block[2]->Item(Variant(i));
+           if(entity->EntityType == 7){
+              subBlock = entity;
+              if(GetPropertyDouble(entity,"Height",height2)){
+                if(GetPropertyDouble(entity,"Width",block3Width)){
+                    scale = subBlock->XScaleFactor;
+                    height2*=scale;
+                    block3Width*=scale;
+                    maxWidth = block3Width>maxWidth?block3Width:maxWidth;
+                    ffind = true;
+                    break;
+                }
+              }
+           }
+        }
+        if(!ffind) return newBlock;
+        fullHeight+=height2;
+
+        p2.y = (p1.y - height/2 - height2/2-gMakeBlockGap);
+        p1 = p2;
+        height = height2;
+        blockspos[2] = p2;
+
+        if(count > 3){
+          ffind = false;
+          subBlocksCount = block[3]->Count;
+          for(i=0;i<subBlocksCount;i++){
+             entity = block[3]->Item(Variant(i));
+             if(entity->EntityType == acBlockReference){
+                subBlock = entity;
+                if(GetPropertyDouble(entity,"Height",height2)){
+                  if(GetPropertyDouble(entity,"Width",block3Width)){
+                      scale = subBlock->XScaleFactor;
+                      height2*=scale;
+                      block3Width*=scale;
+                      maxWidth = block3Width>maxWidth?block3Width:maxWidth;
+                      ffind = true;
+                      break;
+                  }
+                }
+             }
+          }
+          if(!ffind) return newBlock;
+          fullHeight+=height2;
+
+          p2.y = (p1.y - height/2 - height2/2-gMakeBlockGap);
+          p1 = p2;
+          height = height2;
+          blockspos[3] = p2;
+        }
+    }
+
+    offset =  TopOffset - (fullHeight)/2;
+
+    newBlock = cadActiveDocument->Blocks->Add(cadPoint(0,offset),WideString(newBlockName));
+    subBlock = newBlock->InsertBlock(cadPoint(blockspos[0].x,blockspos[0].y),
+        WideString(block1),1,1,1,0,TNoParam());
+    if(!label1.IsEmpty())
+       SetSignAttribute(subBlock,SignLabelParser(block1, label1));
+    subBlock = newBlock->InsertBlock(cadPoint(blockspos[1].x,blockspos[1].y),
+        WideString(block2),1,1,1,0,TNoParam());
+    if(!label2.IsEmpty())
+       SetSignAttribute(subBlock,SignLabelParser(block1,label2));
+    if(count>2){
+        subBlock = newBlock->InsertBlock(cadPoint(blockspos[2].x,blockspos[2].y),
+                WideString(block3),1,1,1,0,TNoParam());
+        if(!label3.IsEmpty())
+           SetSignAttribute(subBlock,SignLabelParser(block1,label3));
+        if(count>3){
+          subBlock = newBlock->InsertBlock(cadPoint(blockspos[3].x,blockspos[3].y),
+                WideString(block4),1,1,1,0,TNoParam());
+          if(!label4.IsEmpty())
+             SetSignAttribute(subBlock,SignLabelParser(block1,label4));
+        }
+    }
+    
+    delete[] block;
+    delete[] blockspos;
+
+    try{
+       SignsCollection.AddBlock(newBlock->Name,cadActiveDocument->Blocks->Count-1);
+    }catch(...){
+       ShowMessage("Error ON:\nSignsCollection.AddBlock(newBlock);");
+    }
+    return newBlock;
+}
+
+void AutoCADHelper::DrawRepeatTextInterval(WideString str, float sPosX, float ePosX,
+                                 float sPosY, float ePosY, float TextHeight, float step)
+{
+   AcadText * text;
+   float Width2;
+   float xOffset,yOffset;
+   AnsiString tStr;
+   static Variant p = cadPoint();
+
+   if(sPosX<0) sPosX = 0;
+   if(ePosX<0||ePosX == sPosX) return;
+
+   int iMax = (int)(ePosX/step)+1;
+   int iMin = (int)(sPosX/step)+1;
+
+   int count = abs(iMax - iMin)+2;
+   int counter = 1;
+   float min,max;
+
+   p.PutElement(sPosY,1);
+
+   if(iMin!=iMax){
+     if(sPosX<iMin*step){
+         p.PutElement(sPosX + (iMin*step-sPosX)/2,0);
+         // = DrawText(str,TextHeight,sPosX + (iMin*step-sPosX)/2,sPosY);
+         text = cadActiveDocument->ModelSpace->AddText(str,p,TextHeight);
+         text->Alignment = acAlignmentMiddle;
+         text->set_TextAlignmentPoint(p);
+     }
+     for(int i=iMin;i<iMax-1;i++){
+         p.PutElement(i*step + step/2,0);
+         text = cadActiveDocument->ModelSpace->AddText(str,p,TextHeight);
+         //text = DrawText(str,TextHeight,i*step + step/2,sPosY);
+         text->Alignment = acAlignmentMiddle;
+         text->set_TextAlignmentPoint(p);
+     }
+     if(ePosX>(iMax-1)*step){
+        p.PutElement((iMax-1)*step + (ePosX-(iMax-1)*step)/2,0);
+        text = cadActiveDocument->ModelSpace->AddText(str,p,TextHeight);
+        text->Alignment = acAlignmentMiddle;
+        text->set_TextAlignmentPoint(p);
+        //text = DrawText(str,TextHeight,(iMax-1)*step + (ePosX-(iMax-1)*step)/2,sPosY);
+        //if(!str.IsEmpty())DrawTextInBordersSpec2(iRow,,ePos,str,fTop,false,kProp);
+     }
+   }else{
+     p.PutElement(sPosX + (ePosX - sPosX)/2,0);
+     text = cadActiveDocument->ModelSpace->AddText(str,p,TextHeight);
+     text->Alignment = acAlignmentMiddle;
+     text->set_TextAlignmentPoint(p);
+     //text = DrawText(str,TextHeight,sPosX + (ePosX - sPosX)/2,sPosY);
+     //DrawTextInBordersSpec2(iRow,sPos,ePos,str,fTop,false,kProp);
+   }
+}
+
+/* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+/*AutoCADTable::AutoCADTable(AutoCADHelper *Owner)
+{
+  gOwner = Owner;
+  gFillGaps = 0;
+  gFillGapsBegin = 0;
+  MinViewFontSize = 0;
+  gaps = 0;
+  emptyMin = 0;
+  HeaderWidth = 0;
+  RowslEnd = 0;
+  RowsCount = 3;
+  FillGaps[-1] = true;
+  RowHeight = 1;
+  HeaderWidth = 3;
+  TableWidth = 10;
+  gRepeatInterval =0;
+  gIsHI = false;
+  kPadding = 0.9;
+}
+
+AutoCADTable::AutoCADTable()
+{
+  gFillGaps = 0;
+  gFillGapsBegin = 0;
+  MinViewFontSize = 0;
+  gaps = 0;
+  gOwner = 0;
+  HeaderWidth = 0;
+  RowslEnd = 0;
+  RowsCount = 3;
+  FillGaps[-1] = true;
+  RowHeight = 1;
+  HeaderWidth = 3;
+  TableWidth = 10;
+  gRepeatInterval =0;
+  gIsHI = false;
+  kPadding = 0.9;
+}     */
+
+AutoCADTable::~AutoCADTable()
+{
+    if(emptyMin) delete[] emptyMin;
+    emptyMin = 0;
+}
+
+
+AutoCADTable::AutoCADTable(AutoCADHelper *Owner, float _TableWidth, int _RowsCount,
+                                float _RowHeight, AutoCADPoint _LeftTop, float _HeaderWidth)
+{
+  gOwner = Owner;
+  emptyMin = 0;
+  gFillGapsBegin = 0;
+  MinViewFontSize = 0;    
+  gaps = 0;  
+  gFillGaps = 0;
+  LeftTop = _LeftTop;
+  RowslEnd = 0;
+  RowsCount = _RowsCount;
+  FillGaps[-1] = true;
+  RowHeight = _RowHeight;
+  HeaderWidth = _HeaderWidth;
+  TableWidth = _TableWidth;
+  gRepeatInterval = 0;
+  gIsHI = false;
+
+  kPadding = 0.9;
+}
+
+void OrderGaps(AutoCADPoint p1,AutoCADPoint p2)
+{
+   if(p1.x>p2.x){}
+}
+
+void AutoCADTable::FillLastGaps(float step, int iRow)
+{
+   AutoCADPointGapGreater great;
+  // stable_sort(gaps[iRow].begin(),gaps[iRow].end(),great);
+   if(iRow==-1){
+     for(int i=0;i<RowsCount;i++){
+        if(gFillGaps[i]) DrawRepeatEmptyInterval(i,RowslEnd[i],TableWidth,step,true);
+     }
+   }else{
+     DrawRepeatEmptyInterval(iRow,RowslEnd[iRow],TableWidth,step,true);
+   }
+}
+
+void AutoCADTable::DrawSnakeBorder(int iRow, float *xOffsets, int count)
+{
+   static iTemp,i,odd;
+   static double yTop,yBottom,yPos,*points;
+
+   yTop = gLeftTop.y - RowOffsetY(iRow);
+   yBottom = gLeftTop.y - RowOffsetY(iRow+1);
+   yPos = yBottom;
+
+   points = new double[count*4];
+
+   for(i=0;i<count;i++){
+      odd = i%2;
+      iTemp = i*4;
+      points[iTemp] = points[iTemp + 2] = xOffsets[i]<0?0:xOffsets[i];
+      points[iTemp+1] = odd?yTop:yBottom;
+      points[iTemp+3] = odd?yBottom:yTop;
+   }
+
+   gOwner->DrawPolyLine(points,count*2,2);
+
+   delete[] points;
+}
+
+void AutoCADTable::DrawSnakeBorder2(int iRow, float sPos, float ePos)
+{
+   float pos[2] = {sPos, ePos};
+   DrawSnakeBorder(iRow,pos,2);
+}
+
+void AutoCADTable::DrawTable()
+{
+   int count;
+   double *points = 0;
+
+    /*ROWS */
+   if(gRowsCount%2==0){
+     count = (7+(gRowsCount/2-1)*4);
+     points = new double[count*2+2 + (gHeaderWidth>0?4:0)];
+
+     double xPosLeft = -(gIsHI?0:gHeaderWidth);
+     double xPos = xPosLeft;
+     double yPos = gLeftTop.y;
+
+     points[0] = gLeftTop.x + gTableWidth;
+     points[1] = gLeftTop.y - iRowsFullHeight;
+
+     points[2] = gLeftTop.x + gTableWidth;
+     points[3] = gLeftTop.y;
+
+     for(int i=2;i<count;i++){
+        points[i*2] = xPos + gLeftTop.x;
+        if(i%2==1){
+           yPos-=gRowHeight;
+           if(xPos==gTableWidth){
+             xPos = xPosLeft;
+           }else{
+             xPos = gTableWidth;
+           }
+        }
+        points[i*2+1] = yPos;
+     }
+
+     points[count*2] =  points[4];
+     points[count*2+1] = points[5];
+
+     if(gHeaderWidth){
+        points[count*2+2] = gLeftTop.x+(gIsHI?gHeaderWidth:0);
+        points[count*2+3] = gLeftTop.y;
+
+        points[count*2+4] = gLeftTop.x+(gIsHI?gHeaderWidth:0);
+        points[count*2+5] = gLeftTop.y - iRowsFullHeight;
+     }
+     
+     gOwner->DrawPolyLine(points, count+1+(gHeaderWidth>0?2:0), 2);
+   
+     delete[] points;
+   }else{
+     count = (7+(gRowsCount/2)*4);
+     points = new double[count*2+2 + (gHeaderWidth>0?4:0)];
+
+     double xPosLeft = -(gIsHI?0:gHeaderWidth);
+     double xPos = xPosLeft;
+     double yPos = gLeftTop.y - iRowsFullHeight;
+
+     points[0] = gLeftTop.x + xPosLeft;
+     points[1] = yPos;
+
+     points[2] = gLeftTop.x + xPosLeft;
+     points[3] = gLeftTop.y;
+
+     points[4] = gLeftTop.x + gTableWidth;
+     points[5] = gLeftTop.y;
+
+     points[6] = gLeftTop.x + gTableWidth;
+     points[7] = yPos;
+
+     for(int i=4;i<count;i++){
+        points[i*2] = xPos + gLeftTop.x;
+        if(i%2==1){
+           yPos+=gRowHeight;
+           if(xPos==gTableWidth){
+             xPos = xPosLeft;
+           }else{
+             xPos = gTableWidth;
+           }
+        }
+        points[i*2+1] = yPos;
+     }
+
+     points[count*2] =  points[4];
+     points[count*2+1] = points[5];
+
+     if(gHeaderWidth){
+        points[count*2+2] = gLeftTop.x+(gIsHI?gHeaderWidth:0);
+        points[count*2+3] = gLeftTop.y;
+
+        points[count*2+4] = gLeftTop.x+(gIsHI?gHeaderWidth:0);
+        points[count*2+5] = gLeftTop.y - iRowsFullHeight;
+     }
+     
+     gOwner->DrawPolyLine(points, count+1+(gHeaderWidth>0?2:0), 2);
+   
+     delete[] points;
+   }
+
+}
+
+AcadLine *AutoCADTable::DrawBorder(int offset, int iRow)
+{
+   if(offset>TableWidth) return 0;
+   int iS = iRow==-1?gLeftTop.y:gLeftTop.y-iRow*gRowHeight;
+   int iE = iRow==-1?gLeftTop.y-iRowsFullHeight:gLeftTop.y-(iRow+1)*gRowHeight;
+   
+   gOwner->DrawLine(gLeftTop.x + offset,iS,
+                  gLeftTop.x +offset,iE);
+}
+
+void AutoCADTable::FillArea(int iRow, float offsetBegin, float offsetEnd, AnsiString strHatch,
+                                float scale, int color)
+{
+    double dblPL[10];
+
+    dblPL[0] = offsetBegin;
+    dblPL[1] = gLeftTop.y - RowOffsetY(iRow);
+
+    dblPL[2] = offsetEnd;
+    dblPL[3] = gLeftTop.y - RowOffsetY(iRow);
+
+    dblPL[4] = offsetEnd;
+    dblPL[5] = gLeftTop.y - RowOffsetY(iRow+1);
+
+    dblPL[6] = offsetBegin;
+    dblPL[7] = gLeftTop.y - RowOffsetY(iRow+1);
+
+    dblPL[8] = offsetBegin;
+    dblPL[9] = gLeftTop.y - RowOffsetY(iRow);
+
+    AcadPolyline *pl[1];
+    pl[0] = gOwner->DrawPolyLine(dblPL, 5, 2);
+
+    AcadHatch *hatch = gOwner->FillArea((IDispatch**)pl, 1, 0, strHatch);
+    AcadAcCmColor *_color =  hatch->TrueColor;
+    _color->set_ColorIndex(color);
+    hatch->set_TrueColor(_color);
+    hatch->PatternScale = scale;
+}
+
+void AutoCADTable::FillArea(int iRow, float offsetBegin, float offsetEnd, AnsiString strHatch,
+                                float scale, long colorR, long colorG, long colorB)
+{
+    double dblPL[10];
+
+    dblPL[0] = offsetBegin;
+    dblPL[1] = gLeftTop.y - RowOffsetY(iRow);
+
+    dblPL[2] = offsetEnd;
+    dblPL[3] = gLeftTop.y - RowOffsetY(iRow);
+
+    dblPL[4] = offsetEnd;
+    dblPL[5] = gLeftTop.y - RowOffsetY(iRow+1);
+
+    dblPL[6] = offsetBegin;
+    dblPL[7] = gLeftTop.y - RowOffsetY(iRow+1);
+
+    dblPL[8] = offsetBegin;
+    dblPL[9] = gLeftTop.y - RowOffsetY(iRow);
+
+    AcadPolyline *pl[1];
+    pl[0] = gOwner->DrawPolyLine(dblPL, 5, 2);
+
+    AcadHatch *hatch = gOwner->FillArea((IDispatch**)pl, 1, 0, strHatch);
+    AcadAcCmColor *color =  hatch->TrueColor;
+    color->SetRGB(colorR, colorG, colorB);
+    hatch->set_TrueColor(color);
+    hatch->PatternScale = scale;
+}
+
+void AutoCADTable::DrawEmpty(int iRow, float offsetBegin, float offsetEnd,
+                        bool fborders, bool fInc )
+{
+   if(offsetBegin<0) offsetBegin = 0;
+   if(offsetEnd<0) offsetEnd = 0;
+   if(EmptyFill.IsEmpty()) {
+     if(fInc){
+       DrawLine(iRow,offsetBegin,0,offsetEnd,1);
+     }else{
+       DrawLine(iRow,offsetBegin,1,offsetEnd,0);
+     }
+   } else {
+      FillArea(iRow, offsetBegin, offsetEnd, EmptyFill, EmptyFillScale);
+   }
+   if(fborders){
+      DrawSnakeBorder2(iRow, offsetBegin,offsetEnd);
+   }
+}
+
+void AutoCADTable::DrawEmpty2(int iRow, float offsetBegin, float offsetEnd,
+                        bool fborders, bool fInc )
+{
+   if(offsetBegin<0) offsetBegin = 0;
+   if(offsetEnd<0) offsetEnd = 0;
+   if(fInc){
+     DrawLine(iRow,offsetBegin,kBottomEmptyPadding,offsetEnd,1);
+   }else{
+     DrawLine(iRow,offsetBegin,1,offsetEnd,kBottomEmptyPadding);
+   }
+   if(fborders){
+      DrawSnakeBorder2(iRow, offsetBegin,offsetEnd);
+   }
+}
+
+AcadText *AutoCADTable::DrawText(int row, float offset,
+                                 AnsiString str, float kProp)
+{
+
+
+   kProp = kProp>1?1:kProp;
+   float xOffset = gLeftTop.x + offset;
+   float yOffset = gLeftTop.y-(RowOffsetY(row) + gRowHeight*0.5);
+   AcadText *text = gOwner->DrawText(WideString(str),kProp*gRowHeight,xOffset,yOffset);
+
+   text->Alignment = acAlignmentMiddleLeft;
+   text->set_TextAlignmentPoint(gOwner->cadPoint(xOffset,yOffset));
+   
+   return text;
+}
+
+
+AcadText *AutoCADTable::DrawHeaderText(int row,AnsiString str, float kProp)
+{
+   DrawTextInBorders(row,gIsHI?0:-gHeaderWidth,
+                         gIsHI?gHeaderWidth:0,WideString(str),false, kProp);
+}
+
+
+void AutoCADTable::DrawRepeatEmptyInterval(int iRow,
+                                float sPos, float ePos, float step,
+                                bool fWithBorders,bool fInc)
+{
+   if(emptyMin && (emptyMin[iRow] > sPos || emptyMin[iRow] > ePos)) {
+      return;
+   }
+
+   if(step==0){
+     if(gRepeatInterval!=0)
+       step=gRepeatInterval;
+     else
+       return;
+   }
+
+   if(sPos<0) sPos = 0;
+   if(ePos<0||ePos == sPos){
+      if(fWithBorders){
+         DrawBorder(sPos,iRow);
+      }
+      return;
+   }
+
+   int iMin = (int)(sPos/step) + 1;
+   int iMax = (int)(ePos/step) + 1;
+
+   int count = abs(iMax - iMin)+2;
+   int counter = 1;
+   float *pos = new float[count];
+   pos[0] = sPos;   
+
+   if(iMin!=iMax){
+     if(sPos<iMin*step){
+         DrawEmpty(iRow,sPos,iMin*step,false,fInc);
+         pos[counter++] = iMin*step;
+     }
+     for(int i=iMin;i<iMax-1;i++){
+         DrawEmpty(iRow,i*step,(i+1)*step,false,fInc);
+         pos[counter++] = (i+1)*step;
+     }
+     if(ePos>(iMax-1)*step){
+        DrawEmpty(iRow,(iMax-1)*step,ePos,false,fInc);
+        pos[counter++] = ePos;
+     }
+     if(fWithBorders)DrawSnakeBorder(iRow,pos,counter);
+   }else{
+     DrawEmpty(iRow,sPos,ePos,false,fInc);
+     if(fWithBorders)DrawSnakeBorder2(iRow,sPos,ePos);
+   }
+   delete[] pos;
+}
+
+void AutoCADTable::DrawRepeatEmptyInterval2(int iRow,
+                                float sPos, float ePos, float step,
+                                bool fWithBorders,bool fInc)
+{
+   /*if(emptyMin && (emptyMin[iRow] > sPos || emptyMin[iRow] > ePos)) {
+      return;
+   }   */
+
+   if(step==0){
+     if(gRepeatInterval!=0)
+       step=gRepeatInterval;
+     else
+       return;
+   }
+
+   if(sPos<0) sPos = 0;
+   if(ePos<0||ePos == sPos){
+      if(fWithBorders){
+         DrawBorder(sPos,iRow);
+      }
+      return;
+   }
+
+   int iMin = (int)(sPos/step) + 1;
+   int iMax = (int)(ePos/step) + 1;
+
+   int count = abs(iMax - iMin)+2;
+   int counter = 1;
+   float *pos = new float[count];
+   pos[0] = sPos;   
+
+   if(iMin!=iMax){
+     if(sPos<iMin*step){
+         DrawEmpty2(iRow,sPos,iMin*step,false,fInc);
+         pos[counter++] = iMin*step;
+     }
+     for(int i=iMin;i<iMax-1;i++){
+         DrawEmpty2(iRow,i*step,(i+1)*step,false,fInc);
+         pos[counter++] = (i+1)*step;
+     }
+     if(ePos>(iMax-1)*step){
+        DrawEmpty2(iRow,(iMax-1)*step,ePos,false,fInc);
+        pos[counter++] = ePos;
+     }
+     if(fWithBorders)DrawSnakeBorder(iRow,pos,counter);
+   }else{
+     DrawEmpty2(iRow,sPos,ePos,false,fInc);
+     if(fWithBorders)DrawSnakeBorder2(iRow,sPos,ePos);
+   }
+   delete[] pos;
+}
+
+
+
+void AutoCADTable::DrawRepeatTextInterval(int iRow, AnsiString str,
+                                float sPos, float ePos,
+                                AnsiString (*func)(float, float),
+                                float step, bool fWithBorders, float kProp)
+{
+
+
+   if(iRow<0) return;
+
+   if(step==0){
+     if(gRepeatInterval!=0)
+       step=gRepeatInterval;
+     else
+       return;
+   }
+
+   AnsiString tStr;
+
+   if(sPos<0) sPos = 0;
+   if(ePos<0||ePos == sPos) return;
+
+   int iMax = (int)(ePos/step)+1;
+   int iMin = (int)(sPos/step)+1;
+
+   int count = abs(iMax - iMin)+2;
+   int counter = 1;
+   float *pos = new float[count];
+   pos[0] = sPos;
+
+
+   if(gFillGaps[iRow]&&RowslEnd[iRow]<=sPos){
+     DrawRepeatEmptyInterval(iRow,RowslEnd[iRow],sPos,step,true);
+     //gaps[iRow].push_back(AutoCADPoint(sPos,ePos));
+   }
+
+   emptyMin[iRow] = max(max(emptyMin[iRow], sPos),ePos);
+
+   float min,max;
+
+   if(iMin!=iMax){
+     if(sPos<iMin*step){
+         if(func){
+             min = sPos;
+             max = iMin*step;
+             if(!str.IsEmpty()){
+                tStr = str+"\n"+func(min,max);
+             }else{
+                tStr=func(min,max);
+             }
+             DrawTextInBorders(iRow,min,max,tStr,false,kProp);
+         }else{
+             if(!str.IsEmpty())DrawTextInBorders(iRow,sPos,iMin*step,str,false,kProp);
+         }
+         pos[counter++] = iMin*step;
+     }
+     for(int i=iMin;i<iMax-1;i++){
+         if(func){
+           min = i*step;
+           max = (i+1)*step;
+           if(!str.IsEmpty()){
+              tStr = str+"\n"+func(min,max);
+           }else{
+              tStr=func(min,max);
+           }
+           DrawTextInBorders(iRow,min,max,tStr,false,kProp);
+         }else{
+           if(!str.IsEmpty())DrawTextInBorders(iRow,i*step,(i+1)*step,str,false,kProp);
+         }
+         pos[counter++] = (i+1)*step;
+     }
+     if(ePos>(iMax-1)*step){
+        if(func){
+           min = (iMax-1)*step;
+           max = ePos;
+           if(!str.IsEmpty()){
+              tStr = str+"\n"+func(min,max);
+           }else{
+              tStr=func(min,max);
+           }
+           DrawTextInBorders(iRow,min,max,tStr,false,kProp);
+        }else{
+           if(!str.IsEmpty())DrawTextInBorders(iRow,(iMax-1)*step,ePos,str,false,kProp);
+        }
+        pos[counter++] = ePos;
+     }
+     if(fWithBorders) DrawSnakeBorder(iRow,pos,counter);
+
+   }else{
+     if(func){
+        min = sPos;
+        max = ePos;
+        if(!str.IsEmpty()){
+           tStr = str+"\n"+func(min,max);
+        }else{
+           tStr=func(min,max);
+        }
+        DrawTextInBorders(iRow,min,max,tStr,false,kProp);
+     }else{
+        if(!str.IsEmpty())DrawTextInBorders(iRow,sPos,ePos,str,false,kProp);
+     }
+     if(gFillGaps[iRow]&&fWithBorders)DrawSnakeBorder2(iRow,sPos,ePos);
+   }
+
+   RowslEnd[iRow] = ePos;
+   delete[] pos;
+}
+
+
+void AutoCADTable::DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
+                                float sPos, float ePos,
+                                AnsiString (*func)(float, float),
+                                float step, bool fWithBorders, float kProp)
+{
+   int t2;
+
+   if(iRow<0) return;
+   if(step==0){
+     if(gRepeatInterval!=0)
+       step=gRepeatInterval;
+     else
+       return;
+   }
+
+
+   AnsiString tStr;
+
+   if(sPos<0) sPos = 0;
+   if(ePos<0||ePos == sPos) return;
+   if(sPos>ePos){
+      int temp =  sPos;
+      sPos = ePos;
+      ePos = temp;
+   }
+
+   int iMax = (int)(ePos/step)+1;
+   int iMin = (int)(sPos/step)+1;
+
+   int count = abs(iMax - iMin)+2;
+   int counter = 1;
+   float *pos = new float[count];
+   pos[0] = sPos;
+
+
+   if(gFillGaps[iRow]&&RowslEnd[iRow]<=sPos){
+     DrawRepeatEmptyInterval(iRow,RowslEnd[iRow],sPos,step,true);
+   }
+   emptyMin[iRow] = max(max(emptyMin[iRow], sPos),ePos);
+
+   float min,max;
+   if(iMin!=iMax){
+     if(sPos<iMin*step){
+         min = sPos;
+         max = iMin*step;
+         if(max-min<lessForVerticalLabels){
+           if(max-min<(lessForVerticalLabels-2000)) {
+           } else {
+             t2 = (int)max%100000/100;
+             DrawVerticalText(IntToStr((int)min%100000/100), iRow, min, 0.5, true, 450);
+             DrawVerticalText(IntToStr(t2==0?1000:t2), iRow, max, 0.5, false, 450);
+           }
+           if(!str.IsEmpty()){
+              tStr = str+func(min,max);
+           }else{
+              tStr=func(min,max);
+           }
+           DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+         } else {
+           if(func){
+               if(!str.IsEmpty()){
+                  tStr = str+func(min,max);//tStr = str+"\n"+func(min,max);
+               }else{
+                  tStr=func(min,max);
+               }
+               DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+           }else{
+               if(!str.IsEmpty())DrawTextInBordersSpec(iRow,sPos,iMin*step,str,false,kProp);
+           }
+         }
+         pos[counter++] = iMin*step;
+     }
+     for(int i=iMin;i<iMax-1;i++){
+         min = i*step;
+         max = (i+1)*step;
+         if(max-min<lessForVerticalLabels){
+           if(max-min<(lessForVerticalLabels-2000)) {
+           } else {
+             t2 = (int)max%100000/100;
+             DrawVerticalText(IntToStr((int)min%100000/100), iRow, min, 0.5, true, 450);
+             DrawVerticalText(IntToStr(t2==0?1000:t2), iRow, max, 0.5, false, 450);
+           }
+           if(!str.IsEmpty()){
+              tStr = str+func(min,max);
+           }else{
+              tStr=func(min,max);
+           }
+           DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+         } else {
+           if(func){
+             if(!str.IsEmpty()){
+                tStr = str+func(min,max);//tStr = str+"\n"+func(min,max);
+             }else{
+                tStr=func(min,max);
+             }
+             DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+           }else{
+             if(!str.IsEmpty())DrawTextInBordersSpec(iRow,i*step,(i+1)*step,str,false,kProp);
+           }
+         }
+         pos[counter++] = (i+1)*step;
+     }
+     if(ePos>(iMax-1)*step){
+         min = (iMax-1)*step;
+         max = ePos;
+         if(max-min<lessForVerticalLabels){
+           if(max-min<(lessForVerticalLabels-2000)) {
+           } else {
+             t2 = (int)max%100000/100;
+             DrawVerticalText(IntToStr((int)min%100000/100), iRow, min, 0.5, true, 450);
+             DrawVerticalText(IntToStr(t2==0?1000:t2), iRow, max, 0.5, false, 450);
+           }
+           if(!str.IsEmpty()){
+              tStr = str+func(min,max);
+           }else{
+              tStr=func(min,max);
+           }
+           DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+         } else {
+           if(func){
+             if(!str.IsEmpty()){
+                tStr = str+func(min,max);//tStr = str+"\n"+func(min,max);
+             }else{
+                tStr=func(min,max);
+             }
+             DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+           }else{
+             if(!str.IsEmpty())DrawTextInBordersSpec(iRow,min,max,str,false,kProp);
+           }
+         }
+        /*if(func){
+           min = (iMax-1)*step;
+           max = ePos;
+           if(!str.IsEmpty()){
+              tStr = str+func(min,max);//tStr = str+"\n"+func(min,max);
+           }else{
+              tStr=func(min,max);
+           }
+           DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+        }else{
+           if(!str.IsEmpty())DrawTextInBordersSpec(iRow,(iMax-1)*step,ePos,str,false,kProp);
+        } */
+        pos[counter++] = ePos;
+     }
+     if(fWithBorders) DrawSnakeBorder(iRow,pos,counter);
+
+   }else{
+     if(ePos-sPos<lessForVerticalLabels){
+       if(ePos-sPos<(lessForVerticalLabels-2000)) {
+       } else {
+         t2 = (int)ePos%100000/100;
+         DrawVerticalText(IntToStr((int)sPos%100000/100), iRow, sPos, 0.5, true, 450);
+         DrawVerticalText(IntToStr(t2==0?1000:t2), iRow, ePos, 0.5, false, 450);
+       }
+       min = sPos;
+       max = ePos;
+       if(!str.IsEmpty()){
+          tStr = str+func(min,max);
+       }else{
+          tStr=func(min,max);
+       }
+       DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+     } else {
+       if(func){
+          min = sPos;
+          max = ePos;
+          if(!str.IsEmpty()){
+             tStr = str+func(min,max);//tStr = str+"\n"+func(min,max);
+          }else{
+             tStr=func(min,max);
+          }
+          DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+       }else{
+          if(!str.IsEmpty())DrawTextInBordersSpec(iRow,sPos,ePos,str,false,kProp);
+       }
+     }
+     if(gFillGaps[iRow]&&fWithBorders)DrawSnakeBorder2(iRow,sPos,ePos);
+   }
+   delete[] pos;
+   RowslEnd[iRow] = ePos;
+}
+
+void AutoCADTable::DrawRepeatTextIntervalSpec2(int iRow, AnsiString str,
+                                float sPos, float ePos,bool fTop,
+                                float step, bool fWithBorders, float kProp)
+{
+
+   if(iRow<0) return;
+
+   if(step==0){
+     if(gRepeatInterval!=0)
+       step=gRepeatInterval;
+     else
+       return;
+   }
+
+   AnsiString tStr;
+
+   if(sPos<0) sPos = 0;
+   if(ePos<0||ePos == sPos) return;
+
+   int iMax = (int)(ePos/step)+1;
+   int iMin = (int)(sPos/step)+1;
+
+   int count = abs(iMax - iMin)+2;
+   int counter = 1;
+   float *pos = new float[count];
+   pos[0] = sPos;
+
+
+   if(gFillGaps[iRow]&&RowslEnd[iRow]<=sPos){
+     DrawRepeatEmptyInterval(iRow,RowslEnd[iRow],sPos,step,true);
+     //gaps[iRow].push_back(AutoCADPoint(sPos,ePos));
+   }
+
+   emptyMin[iRow] = max(max(emptyMin[iRow], sPos),ePos);
+   float min,max;
+   if(iMin!=iMax){
+     if(sPos<iMin*step){
+         if(!str.IsEmpty())DrawTextInBordersSpec2(iRow,sPos,iMin*step,str,fTop,false,kProp);
+         pos[counter++] = iMin*step;
+     }
+     for(int i=iMin;i<iMax-1;i++){
+         if(!str.IsEmpty())DrawTextInBordersSpec2(iRow,i*step,(i+1)*step,str,fTop,false,kProp);
+         pos[counter++] = (i+1)*step;
+     }
+     if(ePos>(iMax-1)*step){
+        if(!str.IsEmpty())DrawTextInBordersSpec2(iRow,(iMax-1)*step,ePos,str,fTop,false,kProp);
+        pos[counter++] = ePos;
+     }
+     if(fWithBorders) DrawSnakeBorder(iRow,pos,counter);
+
+   }else{
+     if(!str.IsEmpty())DrawTextInBordersSpec2(iRow,sPos,ePos,str,fTop,false,kProp);
+     if(gFillGaps[iRow]&&fWithBorders)DrawSnakeBorder2(iRow,sPos,ePos);
+   }
+
+   RowslEnd[iRow] = ePos;
+   delete[] pos;
+}
+
+
+void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
+                                float sHeight, float eHeight,
+                                float step,float kProp)
+{
+   if(iRow<0) return;
+
+   if(step==0){
+     if(gRepeatInterval!=0)
+       step=gRepeatInterval;
+     else
+       return;
+   }
+
+   AnsiString str;
+
+   if(sPos<0) sPos = 0;
+   if(ePos<0||ePos == sPos) return;
+   emptyMin[iRow] = max(max(emptyMin[iRow], sPos),ePos);
+   int curHeight;
+   float k,temp,temp2,xoffset;
+   float width  = ePos-sPos;
+
+   int iMax = (int)(ePos/step)+1;
+   int iMin = (int)(sPos/step)+1;
+
+   int count = abs(iMax - iMin)+2;
+   int counter = 1;
+   xoffset = kProp*gRowHeight*0.1;
+   float *pos = new float[count];
+   pos[0] = sPos;
+   float min,max;
+   float subKProp = 0.75;
+
+
+   if(iMin!=iMax){
+     if(sPos<iMin*step&&int(sPos)%(int)step == 0){
+
+         if((int)sHeight%100==0){
+            str.sprintf("%i м",(int)sHeight/100);
+         }else{
+            if((int)sHeight%10==0){
+              str.sprintf("%.1f м",(float)sHeight/100.0f);
+            }else{
+              str.sprintf("%.2f м",(float)sHeight/100.0f);
+            }
+         }
+
+         temp2 = DrawTextInBordersSpec3(iRow,str,sPos+xoffset,0.875,acAlignmentMiddleLeft,step/2,kProp);
+         DrawTextInBordersSpec3(iRow,(int)sPos%int(step)/100,sPos+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
+         pos[counter++] = iMin*step;
+     }
+
+     temp = iMin*step;
+     k = ((temp-sPos)/width);
+     curHeight = sHeight +  (eHeight-sHeight)*k;
+
+     if((int)curHeight%100==0){
+        str.sprintf("%i м",curHeight/100);
+     }else{
+        if((int)curHeight%10==0){
+          str.sprintf("%.1f м",(float)curHeight/100.0f);
+        }else{
+          str.sprintf("%.2f м",(float)curHeight/100.0f);
+        }
+     }
+
+
+     temp2 = DrawTextInBordersSpec3(iRow,str,temp-xoffset,0.875,acAlignmentMiddleRight,temp - sPos,kProp);
+     DrawTextInBordersSpec3(iRow,1000,temp-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
+
+     for(int i=iMin;i<iMax-1;i++){
+         temp = i*step;
+         k = ((temp-sPos)/width);
+         curHeight = sHeight +  (eHeight-sHeight)*k;
+         if((int)curHeight%100==0){
+            str.sprintf("%i м",curHeight/100);
+         }else{
+            if((int)curHeight%10==0){
+              str.sprintf("%.1f м",(float)curHeight/100.0f);
+            }else{
+              str.sprintf("%.2f м",(float)curHeight/100.0f);
+            }
+         }
+         temp2 = DrawTextInBordersSpec3(iRow,str,temp+xoffset,0.875,acAlignmentMiddleLeft,step/2,kProp);
+         DrawTextInBordersSpec3(iRow,0,temp+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
+
+         temp += step;
+         k = (temp-sPos)/width;
+         curHeight = sHeight +  (eHeight-sHeight)*k;
+         if((int)curHeight%100==0){
+            str.sprintf("%i м",curHeight/100);
+         }else{
+            if((int)curHeight%10==0){
+              str.sprintf("%.1f м",(float)curHeight/100.0f);
+            }else{
+              str.sprintf("%.2f м",(float)curHeight/100.0f);
+            }
+         }
+         temp2 = DrawTextInBordersSpec3(iRow,str,temp-xoffset,0.875,acAlignmentMiddleRight,step/2,kProp);
+         DrawTextInBordersSpec3(iRow,1000,temp-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
+
+         pos[counter++] = (i+1)*step;
+     }
+     if(ePos>(iMax-1)*step){
+        temp = ePos - (iMax-1)*step;
+        k = (float)((iMax-1)*step-sPos)/width;
+        curHeight = sHeight +  (eHeight-sHeight)*k;
+        if((int)curHeight%100==0){
+           str.sprintf("%i м",curHeight/100);
+        }else{
+           if((int)curHeight%10==0){
+             str.sprintf("%.1f м",(float)curHeight/100.0f);
+           }else{
+             str.sprintf("%.2f м",(float)curHeight/100.0f);
+           }
+        }
+        temp2 = DrawTextInBordersSpec3(iRow,str,(iMax-1)*step+xoffset,0.875,acAlignmentMiddleLeft,temp/2,kProp);
+        DrawTextInBordersSpec3(iRow,0,(iMax-1)*step+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
+
+        if((int)eHeight%100==0){
+           str.sprintf("%i м",(int)eHeight/100);
+        }else{
+           if((int)eHeight%10==0){
+             str.sprintf("%.1f м",(float)eHeight/100.0f);
+           }else{
+             str.sprintf("%.2f м",(float)eHeight/100.0f);
+           }
+        }
+
+        temp2 = DrawTextInBordersSpec3(iRow,str,ePos-xoffset,0.875,acAlignmentMiddleRight,temp/2,kProp);
+        DrawTextInBordersSpec3(iRow,(int)ePos%int(step)/100,ePos-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
+
+        pos[counter++] = ePos;
+     }
+     DrawSnakeBorder(iRow,pos,counter);
+
+   }else{
+     if(sPos==iMin*step){
+
+        if((int)sHeight%100==0){
+           str.sprintf("%i м",(int)sHeight/100);
+        }else{
+           if((int)sHeight%10==0){
+             str.sprintf("%.1f м",(float)sHeight/100.0f);
+           }else{
+             str.sprintf("%.2f м",(float)sHeight/100.0f);
+           }
+        }
+        temp2 = DrawTextInBordersSpec3(iRow,str,sPos+xoffset,0.875,acAlignmentMiddleLeft,width,kProp);
+        DrawTextInBordersSpec3(iRow,(int)sPos%int(step)/100,sPos+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
+     }
+
+     if((int)eHeight%100==0){
+        str.sprintf("%i м",(int)eHeight/100);
+     }else{
+        if((int)eHeight%10==0){
+          str.sprintf("%.1f м",(float)eHeight/100.0f);
+        }else{
+          str.sprintf("%.2f м",(float)eHeight/100.0f);
+        }
+     }
+
+     temp2 = DrawTextInBordersSpec3(iRow,str,ePos-xoffset,0.875,acAlignmentMiddleRight,width,kProp);
+     DrawTextInBordersSpec3(iRow,(int)ePos%int(step)/100,ePos-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
+     DrawSnakeBorder2(iRow,sPos,ePos);
+   }
+
+   RowslEnd[iRow] = ePos;
+   delete[] pos;
+}
+
+void AutoCADTable::DrawRepeatVerticalTextInterval(int iRow,
+                                float sPos, float ePos,float kyPos,
+                                float step, bool fWithBorders, float kProp)
+{
+   if(step==0){
+     if(gRepeatInterval!=0)
+       step=gRepeatInterval;
+     else
+       return;
+   }
+
+   AnsiString tStr;
+   emptyMin[iRow] = max(max(emptyMin[iRow], sPos),ePos);
+   if(sPos<0) sPos = 0;
+   if(ePos<0||ePos == sPos) return;
+
+   int iMax = (int)(ePos/step)+1;
+
+   int temp;
+   int iMin = (int)(sPos/step)+1;
+
+   int count = abs(iMax - iMin)+2;
+   int counter = 1;
+   float *pos = new float[count];
+   pos[0] = sPos;
+   float min,max;
+
+   if(iMin!=iMax){
+     if(sPos<iMin*step){
+         if(int(sPos)%int(step) == 0){
+             DrawVerticalText(0,iRow,sPos,1-kyPos,true,kProp);
+         }
+         temp = iMin*step;
+         DrawVerticalText(1000,iRow,temp,kyPos,false,kProp);
+         pos[counter++] = iMin*step;
+     }
+     for(int i=iMin;i<iMax-1;i++){
+         temp = i*step;
+         DrawVerticalText(0,iRow,temp,1-kyPos,true,kProp);
+         temp = (i+1)*step;
+         DrawVerticalText(1000,iRow,temp,kyPos,false,kProp);
+     }
+     if(ePos>(iMax-1)*step){
+        temp = (iMax-1)*step;
+        DrawVerticalText(0,iRow,temp,1-kyPos,true,kProp);
+        pos[counter++] = ePos;
+        DrawVerticalText(int(ePos)%int(step)/100,iRow,ePos,kyPos,false,kProp);
+     }
+     if(fWithBorders) DrawSnakeBorder(iRow,pos,counter);
+
+   }else{
+     if(int(sPos)%int(step) == 0){
+         DrawVerticalText(0,iRow,sPos,1-kyPos,true,kProp);
+     }
+     if(int(ePos)%int(step)==0){
+       DrawVerticalText(1000,iRow,ePos,1-kyPos,true,kProp);
+     }else{
+       DrawVerticalText(int(ePos)%int(step)/100,iRow,ePos,kyPos,false,kProp);
+     }
+
+     if(fWithBorders)DrawSnakeBorder2(iRow,sPos,ePos);
+   }
+
+   RowslEnd[iRow] = ePos;
+   delete[] pos;
+}
+
+
+AcadBlockReferencePtr AutoCADTable::DrawBlock(WideString BlockName, int iRow, float Pos, float yOffset)
+{
+   return gOwner->DrawBlock(BlockName,gLeftTop.x+Pos,gLeftTop.y-RowOffsetY(iRow) - gRowHeight*yOffset);
+}
+
+AcadLine *AutoCADTable::DrawLine(int iRow, float sPos, float ePos)
+{
+   if(iRow==-1) return 0;
+   if(!gOwner) return 0;
+   float y = gLeftTop.y - RowOffsetY(iRow) - gRowHeight/2;
+   return gOwner->DrawLine(gLeftTop.x+sPos,y,gLeftTop.x+ePos,y);
+}
+
+AcadLine *AutoCADTable::DrawLine(int iRow, float sPos,
+                                 float yk1, float ePos, float yk2)
+{
+   if(iRow==-1) return 0;
+   if(!gOwner) return 0;
+   yk1 = gLeftTop.y - RowOffsetY(iRow) - gRowHeight*(1-yk1);
+   yk2 = gLeftTop.y - RowOffsetY(iRow) - gRowHeight*(1-yk2);
+   return gOwner->DrawLine(gLeftTop.x+sPos,yk1,gLeftTop.x+ePos,yk2);
+}
+
+AcadEllipse *AutoCADTable::DrawRightArcEllipse(int iRow, float sPos, float ePos)
+{
+    AcadEllipse *ellipse = gOwner->DrawEllipse(sPos,gLeftTop.y - RowOffsetY(iRow+1),abs(ePos-sPos),gRowHeight/2);
+    return ellipse;
+}
+
+AcadEllipse *AutoCADTable::DrawLeftArcEllipse(int iRow, float sPos, float ePos)
+{
+    return gOwner->DrawEllipse(sPos,gLeftTop.y - RowOffsetY(iRow),abs(ePos-sPos),gRowHeight/2);
+}
+
+AcadText *AutoCADTable::DrawVerticalText(AnsiString txt, int iRow, float Pos,
+                                         float kyPos,bool fRight, float kProp)
+{
+   float xOffset = gLeftTop.x + Pos;
+   float _Height;
+   float yOffset = gLeftTop.y- RowOffsetY(iRow)-gRowHeight*(1-kyPos);
+   if(kProp>10)
+     _Height = kProp;
+   else
+     _Height = gRowHeight*kProp;
+   AcadText *text = gOwner->DrawText(txt,_Height,xOffset,yOffset,M_PI_2);
+   if(fRight){
+     text->Alignment = acAlignmentTopCenter;
+     xOffset += 0.35*_Height;
+   }else{
+     text->Alignment = acAlignmentBottomCenter;
+   }
+   text->set_TextAlignmentPoint(gOwner->cadPoint(xOffset,yOffset)); 
+}
+
+void AutoCADTable::DrawTextInBorders(int row, float offBeg,
+                            float offEnd,AnsiString str,
+                            bool fWithBorders ,float kProp)
+{
+  if(row<0) return;
+  if(offEnd == offBeg) return;
+  
+  //kProp = kProp>1?1:kProp;
+  AcadText *text;
+  float *scale,kPadding = 0.9;
+  int count = 1;
+  int maxLength = 0,temp;
+  int iString;
+  int strLenght = str.Length();
+  int i,iLast;
+  for(i=1;i<=strLenght;i++){
+      if(str[i]=='\n'){
+         count++;
+      }
+  }
+  AnsiString *strings = new AnsiString[count];
+  scale = new float[count];
+  iLast = 0;
+  iString = 0;
+  for(i=1;i<=strLenght;i++){
+     if(str[i]=='\n'){
+         temp = i-iLast-1;
+         strings[iString] = str.SubString(iLast+1,temp);
+         scale[iString] = kProp;
+         iLast = i;
+         iString++;
+      }
+  }
+  temp = strLenght-iLast;
+  strings[iString] = str.SubString(iLast+1,temp);
+  scale[iString] = kProp;
+  float Height = gRowHeight/(float)count;
+
+  float xOffset = gLeftTop.x + offBeg + (offEnd - offBeg)/2;
+  float yOffset = gLeftTop.y- RowOffsetY(row)+Height/2;
+
+  if(kProp<=1) { /*если в пропорциях от высоты строки*/
+    for(i=0;i<count;i++){     
+       yOffset-=Height;
+       text = gOwner->DrawText(strings[i],scale[i]*Height,xOffset,yOffset);
+       text->Alignment = acAlignmentMiddle;
+       text->set_TextAlignmentPoint(gOwner->cadPoint(xOffset,yOffset));
+    }
+  } else {  /*иначе абсолютное значение*/
+    for(i=0;i<count;i++){
+       yOffset-=Height;
+       text = gOwner->DrawText(strings[i],kProp,xOffset,yOffset);
+       text->Alignment = acAlignmentMiddle;
+       text->set_TextAlignmentPoint(gOwner->cadPoint(xOffset,yOffset));
+    }
+  }
+
+  if(fWithBorders){
+      DrawSnakeBorder2(row,offBeg,offEnd);
+  }
+
+  delete[] scale;
+  delete[] strings;
+}
+
+void AutoCADTable::DrawTextInBordersSpec(int row, float offBeg,
+                            float offEnd,AnsiString str,
+                            bool fWithBorders ,float kProp)
+{
+  if(offEnd == offBeg) return;
+
+  static AnsiString strings[3];
+  static float scale[3], xOffset, yOffset, Height, t2;
+
+  kProp = kProp>1?1:kProp;
+  AcadText *text;
+  float temp;
+  int iString;
+  int strLenght = str.Length();
+  int i,iLast;
+  float width = fabs(offEnd-offBeg);
+
+  iLast = 0;
+  iString = 0;
+  scale[0] = scale[1] = scale[2] = 0;
+
+  for(i=1;i<=strLenght;i++){
+     if(str[i]=='\n'){  //если текст должен рисоваться в несколько строк
+         temp = i-iLast-1;
+         strings[iString] = str.SubString(iLast+1,temp);
+
+         temp = temp*gLetterWidth/2;/*длина текста с учетом риования в 2 строки*/
+
+         scale[iString] = width/(temp*kProp);
+         if(scale[iString]>=1)/*влезает ли?*/
+            scale[iString] = kProp;
+         else{
+            scale[iString] = (float)width/temp;
+            scale[iString] *= kPadding;
+            if(scale[iString]>kProp)scale[iString] = kProp;
+         }
+         
+         iLast = i;
+         iString++;
+         break;
+      }
+  }
+  
+  temp = strLenght-iLast;
+
+
+
+
+
+  scale[iString] = width/(temp*gLetterWidth*kProp/(iString+1));
+
+  if( scale[iString] <= 1) {
+    t2 = kProp*(scale[iString]);
+    if(t2>kProp/2) {
+      kProp = t2;
+      scale[iString] = 2;
+    }
+  }
+
+  if(scale[iString]>1){ /* влезает ли 2-ая/1-ая строка */
+  
+    strings[iString] = str.SubString(iLast+1,temp);
+    scale[iString] = kProp;
+
+    Height = gRowHeight/(iString+1);
+
+    xOffset = gLeftTop.x + offBeg + width/2;
+    yOffset = gLeftTop.y- RowOffsetY(row)+Height/2;
+
+    for(i=0;i<=iString;i++){
+       yOffset-=Height;
+       text = gOwner->DrawText(strings[i],scale[i]*Height,xOffset,yOffset);
+       text->Alignment = acAlignmentMiddle;
+       text->set_TextAlignmentPoint(gOwner->cadPoint(xOffset,yOffset));
+    }
+
+    if(fWithBorders){
+        DrawSnakeBorder2(row,offBeg,offEnd);
+    }
+  }else{
+    /* разбиваем до 3/2 строк*/
+    for(i=iLast+1;i<=strLenght;i++){
+       if(str[i]=='-'||str[i]==' '){
+           temp = i-iLast;
+           strings[iString] = str.SubString(iLast+1,temp);
+           temp = temp*gLetterWidth/(iString+2);
+           scale[iString] = width/(temp*kProp);
+           if(scale[iString]>=1)
+              scale[iString] = kProp;
+           else{
+              scale[iString] = width/temp;
+              scale[iString] *= kPadding;
+              if(scale[iString]>kProp)scale[iString] = kProp;
+           }
+           iLast = i;
+           iString++;
+           break;
+        }
+    }
+
+    temp = strLenght-iLast;
+    strings[iString] = str.SubString(iLast+1,temp);
+    temp = temp*gLetterWidth/(iString+1);
+
+    scale[iString] = width/(temp*kProp);
+    if(scale[iString]>=1)
+      scale[iString] = kProp;
+    else{
+      scale[iString] = width/temp;
+      scale[iString] *= kPadding;
+      if(scale[iString]>kProp)scale[iString] = kProp;
+    }
+
+    Height = gRowHeight/(iString+1);
+
+    xOffset = gLeftTop.x + offBeg + width/2;
+    yOffset = gLeftTop.y- RowOffsetY(row)+Height/2;
+
+    if(iString>1)scale[2] = scale[1] = scale[1]>scale[2]?scale[2]:scale[1];
+    //if(scale[0]<scale[1])scale[0] = scale[1];
+
+    for(i=0;i<=iString;i++){
+       yOffset-=Height;
+       text = gOwner->DrawText(strings[i],scale[i]*Height*(i==0?1.2:1),xOffset,yOffset);
+       text->Alignment = acAlignmentMiddle;
+       text->set_TextAlignmentPoint(gOwner->cadPoint(xOffset,yOffset));
+    }
+
+    if(fWithBorders){
+        DrawSnakeBorder2(row,offBeg,offEnd);
+    }
+  }
+}
+
+
+void AutoCADTable::DrawTextInBordersSpec2(int row, float offBeg,
+                            float offEnd,AnsiString str, bool fTop,
+                            bool fWithBorders,float kProp)
+{
+   AcadText *text;
+   AcAlignment align;
+   float width  = (float)abs(offEnd - offBeg)/2;
+   float xOffset = gLeftTop.x + offBeg + width*1.5;
+   float yOffset;
+   float scale;
+
+   scale = (float)width/(float)(str.Length()*(gLetterWidth*kProp));
+
+   if(scale>=1)
+     scale = kProp;
+   else{
+      scale = (float)abs(offEnd-offBeg)/(float)(str.Length()*gLetterWidth);
+      scale *= kPadding;
+      if(scale>kProp)scale = kProp;
+   }
+
+   yOffset = gLeftTop.y- RowOffsetY(row+1)+ 0.5*gRowHeight + gRowHeight*kBottomEmptyPadding*0.5;
+   if(fTop){
+     align = acAlignmentBottomCenter;
+     scale*=(0.5-kBottomEmptyPadding/2);
+   }else{
+     align = acAlignmentTopCenter;
+     scale*=(kBottomEmptyPadding/2+0.5);
+   }
+
+   text = gOwner->DrawText(str,scale*gRowHeight,xOffset,yOffset);
+   text->Alignment = align;
+   text->set_TextAlignmentPoint(gOwner->cadPoint(xOffset,yOffset));     
+}
+
+
+
+
+float AutoCADTable::DrawTextInBordersSpec3(int iRow, AnsiString text,
+                         float Pos, float yPos, AcAlignment align, float width, float kProp)
+{
+   AcadText *aText;
+   bool fwas = false;
+   float scale;
+   if(yPos>1) yPos = 1;
+   float xOffset = gLeftTop.x+Pos;
+   float yOffset = gLeftTop.y-RowOffsetY(iRow)-gRowHeight*(1-yPos);
+
+   if(width>0){
+     scale = (float)width/(float)(text.Length()*(gLetterWidth*kProp));
+
+     if(scale>=1)
+       scale = kProp;
+     else{
+        fwas = true;
+        scale = width/(float)(text.Length()*gLetterWidth);
+        if(scale>kProp)scale = kProp;
+     }
+   }else{
+      scale = kProp;
+   }
+
+   aText = gOwner->DrawText(text,scale*gRowHeight,xOffset,yOffset);
+   aText->Alignment = align;
+   aText->set_TextAlignmentPoint(gOwner->cadPoint(xOffset,yOffset));
+
+   return fwas?scale:0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
