@@ -5,6 +5,7 @@
 
 #include "DesignPattern.h"
 #include "MainUnit.h"
+#include "AttachForm.h"
 #include <math.h>
 
 //---------------------------------------------------------------------------
@@ -16,14 +17,20 @@ TDesignAttachVer2_1 DesignAttachVer2_1;
 TDesignAttachVer2_2 DesignAttachVer2_2;
 TDesignAttachVer3 DesignAttachVer3;
 
-TDesignMetricsPattern *Designers[5]={&DesignAttachVer1_1,&DesignAttachVer1_2,&DesignAttachVer2_1,&DesignAttachVer2_2,&DesignAttachVer3};
-String DesignersName[5]={"Примыкание у кромки без столбиков","Примыкание у бровки без столбиков","Примыкание у кромки и столбики","Примыкание у бровки и столбики","Разметка на примыкании"};
-const int AttachPtCount=10;
+TDesignMetricsPattern *MarkDesigners[1]={&DesignAttachVer3};
+TDesignMetricsPattern *Designers[4]={&DesignAttachVer1_1,&DesignAttachVer1_2,&DesignAttachVer2_1,&DesignAttachVer2_2};
+String DesignersName[4]={"Примыкание у кромки","Примыкание у бровки","Примыкание у кромки и столбики","Примыкание у бровки и столбики"};
+const int AttachPtCount=12;
 const int SignalPointCount=4;
-int AttachCodes1RK[10]={0x130,0x37300,0x38405,0x3100,0x37351,0x38450,0x3101,0x37300,0x38405,0x130};
-int AttachCodes1LK[10]={0x140,0x37300,0x38405,0x4100,0x37361,0x38460,0x4101,0x37300,0x38405,0x140};
-int AttachCodes1RB[10]={0x110,0x37300,0x38405,0x3100,0x37351,0x38450,0x3101,0x37300,0x38405,0x110};
-int AttachCodes1LB[10]={0x120,0x37300,0x38405,0x4100,0x37361,0x38460,0x4101,0x37300,0x38405,0x120};
+AttachCodes1RK[12]={0x3100,0x3101,0x3101,0x3101,0x3101,0x37351,0x38450,0x3101,0x3101,0x3101,0x3101,0x3101};
+AttachCodes1LK[12]={0x4100,0x4101,0x4101,0x4101,0x4101,0x37361,0x38460,0x4101,0x4101,0x4101,0x4101,0x4101};
+AttachCodes1RB[12]={0x1100,0x1101,0x1101,0x1101,0x1101,0x37351,0x38450,0x1101,0x1101,0x1101,0x1101,0x1101};
+AttachCodes1LB[12]={0x2100,0x2101,0x2101,0x2101,0x2101,0x37361,0x38460,0x2101,0x2101,0x2101,0x2101,0x2101};
+
+//int AttachCodes1RK[10]={0x130,0x37300,0x38405,0x3100,0x37351,0x38450,0x3101,0x37300,0x38405,0x130};
+//int AttachCodes1LK[10]={0x140,0x37300,0x38405,0x4100,0x37361,0x38460,0x4101,0x37300,0x38405,0x140};
+//int AttachCodes1RB[10]={0x110,0x37300,0x38405,0x3100,0x37351,0x38450,0x3101,0x37300,0x38405,0x110};
+//int AttachCodes1LB[10]={0x120,0x37300,0x38405,0x4100,0x37361,0x38460,0x4101,0x37300,0x38405,0x120};
 
 const int SignalCodes1R[4]={0x510,0x37300,0x38405,0x1500};
 const int SignalCodes1L[4]={0x520,0x37300,0x38405,0x2500};
@@ -60,10 +67,94 @@ CodesR=AttachCodes1RB;
 
 bool __fastcall TDesignAttachVer1::Design(TRoadObject *Obj, TDtaSource *Data, TDictSource *Dict)
 {
-bool Res;
+bool Res=false;
 TRoadAttach *Att=dynamic_cast<TRoadAttach*>(Obj);
-if (Att)
-    {
+if (Att) {
+    angle=Att->Angle;
+    if (angle==0)
+       angle=90;
+    ewidth=600;
+    bwidth=3*ewidth/2+(int)((ewidth/100)/sin(angle*M_PI/180))*100;
+    elength=600;
+    int ang;
+    // Расчет параметров по метрике
+    if (Att->Poly && Att->Poly->Count>=4) {
+      int last=Att->Poly->Count-1;
+      int pos;  // Ищем точку с фиксированным углом от предыдущей точки
+      for (pos=1;pos<=last;pos++)
+         if (Att->Poly->Points[pos].Code()&0x17300==0x17300 &&
+           (Att->Poly->Points[pos].Code.Leep()==5 || Att->Poly->Points[pos].Code.Leep()==6))
+              break;
+      if (pos<last) {
+         ang=abs(Att->Poly->Points[pos].BasePar1)%360000;
+         if (ang>180000)
+           ang=360000-ang;
+         angle=(ang+500)/1000;
+         elength=abs(Att->Poly->Points[pos].X-Att->Poly->Points[0].X);
+         ewidth=abs(Att->Poly->Points[pos+1].L-Att->Poly->Points[pos].L)*sin(ang*M_PI/180000)+0.5;
+      }
+      bwidth=abs(Att->Poly->Points[0].L-Att->Poly->Points[last].L);
+
+    }
+    frmAttachParams->edAngle->Text=IntToStr(angle);
+    frmAttachParams->edLength->Text=IntToStr(elength);
+    frmAttachParams->edBegWidth->Text=IntToStr(bwidth);
+    frmAttachParams->edEndWidth->Text=IntToStr(ewidth);
+    if (frmAttachParams->ShowModal()==mrOk) {
+      angle=frmAttachParams->edAngle->Text.ToInt();
+      elength=frmAttachParams->edLength->Text.ToInt();
+      bwidth=frmAttachParams->edBegWidth->Text.ToInt();
+      ewidth=frmAttachParams->edEndWidth->Text.ToInt();
+      if (!Att->Poly){
+        Att->Poly=new TPolyline(PtCount,0);
+        Data->PolyList->Add(Att->Poly);
+      } else
+        Att->Poly->Count=PtCount;
+      Att->Angle=angle;
+      const int *Codes;
+      if (Att->Placement==apLeft)
+         Codes=CodesL;
+      else
+         Codes=CodesR;
+      // rad=dl*tan(a/2)*tan((180-a)/2)/(tan(a/2)+tan((180-a)/2))
+      double ta1=tan(angle*M_PI/360);
+      double ta2=tan((180-angle)*M_PI/360);
+      double rad=(bwidth-ewidth/sin(angle*M_PI/180))*ta1*ta2/(ta1+ta2);
+      int last=PtCount/2-2;
+      int sign;
+      if (Att->Placement==apLeft)
+        Codes=CodesL,sign=-1;
+      else
+        Codes=CodesR,sign=1;
+      double maxa=1-cos((angle>90? angle:180-angle)*M_PI/180);
+      for (int i=0;i<=last;i++) {
+         double alf=(angle)*i*M_PI/(180*last);
+         double x=-bwidth/2+rad*sin(alf);
+         double y=/*elength*(1-cos(alf))/maxa*/  rad*(1-cos(alf));
+         Att->Poly->Points[i].Code=Codes[i];
+         Att->Poly->Points[i].LeepPar=0;
+         Att->Poly->Points[i].BasePar1=x;
+         Att->Poly->Points[i].BasePar2=sign*y;
+         alf=(180-angle)*i*M_PI/(180*last);
+         x=bwidth/2-rad*sin(alf);
+         y=/*elength*(1-cos(alf))/maxa*/ rad*(1-cos(alf));
+         Att->Poly->Points[PtCount-1-i].Code=Codes[PtCount-1-i];
+         Att->Poly->Points[PtCount-1-i].LeepPar=0;
+         Att->Poly->Points[PtCount-1-i].BasePar1=x;
+         Att->Poly->Points[PtCount-1-i].BasePar2=sign*y;
+      }
+      Att->Poly->Points[last+1].Code=Codes[last+1];
+      Att->Poly->Points[last+1].LeepPar=0;
+      Att->Poly->Points[last+2].Code=Codes[last+2];
+      Att->Poly->Points[last+2].LeepPar=0;
+      Att->Poly->Points[last+1].BasePar1=sign*angle*1000;
+      Att->Poly->Points[last+2].BasePar1=sign*angle*1000;
+      // BasePar2 будет пересчитано автоматически далее
+      Data->Road->CalcPointsPos(Att->Poly,Att);
+      MainForm->SendBroadCastMessage(CM_UPDATEOBJ,(int)Att,(int)Data);
+    }
+}
+/*
     int W1=0;
     int L=Att->L;
     int L1=0;  // L начала закругления ближней дуги
@@ -192,6 +283,7 @@ if (Att)
     }
 else
     Res=TDesignMetricsPattern::Design(Obj, Data, Dict);
+*/
 return Res;
 }
 
@@ -272,9 +364,101 @@ bool __fastcall TDesignAttachVer3::Design(TRoadObject *Obj, TDtaSource *Data, TD
 {
 bool Res=false;
 TRoadAttach *Att=dynamic_cast<TRoadAttach*>(Obj);
-if (Att)
-    if (Att->Poly)
-        {
+TObjMetaClass *Meta=Dict->ObjClasses->Items[ROADMARKCODE];
+if (Meta && Att && Att->Poly) {
+      int last=Att->Poly->Count-1;
+      int pos;  // Ищем точку с фиксированным углом от предыдущей точки
+      for (pos=1;pos<=last-2;pos++)
+         if (Att->Poly->Points[pos].Code()&0x17300==0x17300 &&
+           (Att->Poly->Points[pos].Code.Leep()==5 || Att->Poly->Points[pos].Code.Leep()==6))
+              break;
+      if (pos<last) {
+         TRoadMark *mark=(TRoadMark*)Data->Factory->CreateRoadObj(Meta->ClassName,0,ROADMARKCODE);
+         mark->Poly=new TPolyline(pos+1,0);
+         mark->SetDirection((Att->Placement==opRight) ? roDirect:roUnDirect);
+         mark->SetKind(ma2_1);
+         for (int i=0;i<pos;i++) {
+            mark->Poly->Points[i].BasePar1=Att->Poly->Points[i].L+50;
+            mark->Poly->Points[i].BasePar2=Att->Poly->Points[i].X;
+            mark->Poly->Points[i].Code=(i==0?0:1);
+         }
+         int left=mark->Poly->Points[0].BasePar1=((Att->Poly->Points[0].L+99)/100)*100;
+         mark->Poly->Points[pos]=Att->Poly->Points[pos];
+         mark->DrwClassId=Dict->SelectDrwParam(mark,ROADMARKPAGE);
+         Data->Road->CalcPointsPos(mark->Poly,mark);
+         mark->UpdatePoly();
+         Data->Buffer->Add(mark);
+
+         mark=(TRoadMark*)Data->Factory->CreateRoadObj(Meta->ClassName,0,ROADMARKCODE);
+         mark->Poly=new TPolyline(last-pos,0);
+         mark->SetDirection((Att->Placement==opRight) ? roDirect:roUnDirect);
+         mark->SetKind(ma2_1);
+         for (int i=0;i<last-pos-1;i++) {
+            mark->Poly->Points[i].BasePar1=Att->Poly->Points[last-i].L-50;
+            mark->Poly->Points[i].BasePar2=Att->Poly->Points[last-i].X;
+            mark->Poly->Points[i].Code=(i==0?0:1);
+         }
+         int right=mark->Poly->Points[0].BasePar1=((Att->Poly->Points[last].L)/100)*100;
+         mark->Poly->Points[last-pos-1]=Att->Poly->Points[pos];
+         mark->DrwClassId=Dict->SelectDrwParam(mark,ROADMARKPAGE);
+         Data->Road->CalcPointsPos(mark->Poly,mark);
+         mark->UpdatePoly();
+         Data->Buffer->Add(mark);
+
+         mark=(TRoadMark*)Data->Factory->CreateRoadObj(Meta->ClassName,0,ROADMARKCODE);
+         mark->Poly=new TPolyline(3,0);
+         mark->SetDirection((Att->Placement==opRight) ? roDirect:roUnDirect);
+         mark->SetKind(ma1);
+         int center=mark->Poly->Points[0].BasePar1=((Att->Poly->Points[0].L+Att->Poly->Points[last].L+100)/200)*100;
+         mark->Poly->Points[0].BasePar2=Att->Poly->Points[0].X;
+         mark->Poly->Points[0].Code=0;
+         if (abs(Att->Poly->Points[pos-1].X)>abs(Att->Poly->Points[pos+2].X)) {
+            mark->Poly->Points[1].BasePar1=Att->Poly->Points[pos-1].L+(Att->Poly->Points[pos+1].L-Att->Poly->Points[pos].L)/2;
+            mark->Poly->Points[1].BasePar2=Att->Poly->Points[pos-1].X;
+         } else {
+            mark->Poly->Points[1].BasePar1=Att->Poly->Points[pos+2].L-(Att->Poly->Points[pos+1].L-Att->Poly->Points[pos].L)/2;
+            mark->Poly->Points[1].BasePar2=Att->Poly->Points[pos+2].X;
+         }
+         mark->Poly->Points[1].Code=1;
+         mark->Poly->Points[2]=Att->Poly->Points[pos];
+         mark->DrwClassId=Dict->SelectDrwParam(mark,ROADMARKPAGE);
+         Data->Road->CalcPointsPos(mark->Poly,mark);
+         mark->UpdatePoly();
+         Data->Buffer->Add(mark);
+
+         mark=(TRoadMark*)Data->Factory->CreateRoadObj(Meta->ClassName,0,ROADMARKCODE);
+         mark->SetDirection((Att->Placement==opRight) ? roDirect:roUnDirect);
+         mark->SetKind(ma7);
+         mark->K=1000;
+         mark->Offset=0;
+         if (Att->Placement==opRight)
+            mark->PutPosition(left,center);
+         else
+            mark->PutPosition(center,right);
+         mark->DrwClassId=Dict->SelectDrwParam(mark,ROADMARKPAGE);
+         Data->Buffer->Add(mark);
+
+         mark=(TRoadMark*)Data->Factory->CreateRoadObj(Meta->ClassName,0,ROADMARKCODE);
+         mark->SetDirection((Att->Placement==opRight) ? roDirect:roUnDirect);
+         mark->SetKind(ma13);
+         mark->K=1000;
+         mark->Offset=0;
+         if (Att->Placement==opRight)
+            mark->PutPosition(center,right);
+         else
+            mark->PutPosition(left,center);
+         mark->DrwClassId=Dict->SelectDrwParam(mark,ROADMARKPAGE);
+         Data->Buffer->Add(mark);
+
+
+         Data->AddFromBufer();
+         MainForm->SendBroadCastMessage(CM_INSERTGROUP,0,(int)Data);
+         Res=true;
+         }
+      }
+
+/*
+
         int c1=0;
         int c2=0;
         for (int i=1;i<Att->Poly->Count;i++)
@@ -309,6 +493,7 @@ if (Att)
                 }
             }
         }
+*/
 return Res;
 }
 

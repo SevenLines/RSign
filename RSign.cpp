@@ -43,6 +43,7 @@ USEFORM("AutoCADPrintForm.cpp", FAutoCADPrint);
 USEFORM("AutoCADExportForm.cpp", FAutoCADExport);
 USEFORM("unSignalsInsert.cpp", frmSignalsInsert);
 USEFORM("unAutoPoints.cpp", FAutoPoints);
+USEFORM("AttachForm.cpp", frmAttachParams);
 //---------------------------------------------------------------------------
 TComModule _ProjectModule(0 /*InitATLServer*/);
 TComModule &_Module = _ProjectModule;
@@ -103,6 +104,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
        Application->CreateForm(__classid(TFAutoCADPrint), &FAutoCADPrint);
        Application->CreateForm(__classid(TFAutoCADExport), &FAutoCADExport);
        Application->CreateForm(__classid(TfrmSignalsInsert), &frmSignalsInsert);
+       Application->CreateForm(__classid(TfrmAttachParams), &frmAttachParams);
        Application->Run();
     }
     catch (Exception &exception)

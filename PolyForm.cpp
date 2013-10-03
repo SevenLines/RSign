@@ -126,7 +126,7 @@ void __fastcall TPolyFrm::CopyPointFromPattern(TObject *Sender) {
       FRefRoad->CalcPointsPos(FPoly,FRefObj);
       BuildList();
       SetActivePoint(-1,true);
-      FVector=FRefForm->BuildPoly(false);
+      FVector=FRefForm->BuildPoly(true);
       FRefForm->PBox->Invalidate();
    }
 }
@@ -500,9 +500,9 @@ FRefForm->PBox->Invalidate();
 void __fastcall TPolyFrm::SpeedButton1Click(TObject *Sender)
 {
 ReplaceSelectedToWidePart();
+BuildList();
 FVector=FRefForm->BuildPoly(true);
 FRefForm->PBox->Invalidate();
-BuildList();
 }
 //---------------------------------------------------------------------------
 

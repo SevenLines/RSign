@@ -23,14 +23,14 @@
 #include "BuildSlopes.h"
 #include "BuildWidePart.h"
 #include "RoadMark.h"
-#include "acadexport.h"
+//#include "acadexport.h"
 #include <Registry.hpp>
 #include <algorithm>
 
 #include "VideoForm.h"
 #include "ProgressFrm.h"
-#include "AutoCADExportForm.h"
-#include "AcadExportThread.h"
+//#include "AutoCADExportForm.h"
+//#include "AcadExportThread.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -979,7 +979,7 @@ for (;minl<maxl;minl+=plen,page++)
 
 void __fastcall TRoadFrm::AcadPrint(void){
 
-
+/*
    TAcadExport *aexp=new TAcadExport();
    int L1=MetricData->Road->LMin;
    int L2=MetricData->Road->LMax;
@@ -996,10 +996,11 @@ void __fastcall TRoadFrm::AcadPrint(void){
    }
    aexp->Print();
 
-   delete aexp;
+   delete aexp;*/
 }
 
 void __fastcall TRoadFrm::AcadExport(void) {
+/*
    FAutoCADExport->SetRoadId(RoadId);
    FAutoCADExport->RoadName = FRoadName;
    if(FAutoCADExport->ShowModal()!=mrOk) return;
@@ -1026,7 +1027,7 @@ void __fastcall TRoadFrm::AcadExport(void) {
    }
 
    thread->Resume();
-
+  */
 }
 
 void __fastcall TRoadFrm::BmpExportDialog(void)
@@ -1610,7 +1611,7 @@ PBox->Canvas->DrawFocusRect(r);
 
 TExtPolyline* __fastcall TRoadFrm::BuildPoly(bool re)
 {
-if (re && FVector!=0 && FPoly!=0) {
+if (!re && FVector!=0 && FPoly!=0) {
       int n=FPoly->Count<FVector->Count?FPoly->Count:FVector->Count;
       FDrawMan->Road->ConvertPoly(n,FPoly->Points,FVector->Points);
 
@@ -1699,7 +1700,7 @@ if (FPoly)
     if (FActivePoint>=0)
         {
         FPoly->DeletePoint(FActivePoint);
-        BuildPoly(false);
+        BuildPoly(true);
         PolyFrm->UpdatePoly(FVector);
         PBox->Invalidate();
         }
@@ -1751,7 +1752,7 @@ void __fastcall TRoadFrm::InsertPoint(TRoadPoint P,int index)
 FPoly->InsertPoint(P,index);
 int ind1,ind2;
 FMetricData->Road->SetPointPos(FPoly,index,FActiveObj,ind1,ind2);
-BuildPoly(false);
+BuildPoly(true);
 PolyFrm->UpdatePoly(FVector);
 PBox->Invalidate();
 }
@@ -1804,7 +1805,7 @@ if (FActiveObj)
         FActiveSource->PolyList->Add(FPoly);
         }
     FEditMetric=true;
-    BuildPoly(false);
+    BuildPoly(true);
     PolyFrm->ShowForm(this,FMetricData->Road,FPoly,FVector,FActiveObj);
     }
 }
@@ -1953,7 +1954,7 @@ if (NeedRepDraw&&FReadyForDrawing)
     DrawMainPlan(FDrawMan,FDrawCont,FSclL,FSclX,FDpsm,(TRect*)&r);
     FDrawCont->FinishUpdating();
     if (FEditMetric) {
-        BuildPoly(true);
+        BuildPoly(false);
     }
     NeedRepDraw=false;
     }
@@ -2177,6 +2178,24 @@ if (FActiveObj)
         }
 }
 
+bool __fastcall TRoadFrm::IsInTown(int L) {
+   for (int i=0;i<MainForm->ResManager->DataCount;i++) {
+      TDtaSource *d=MainForm->ResManager->Data[i];
+      if (d->Id==RoadId) {
+         int ind1,ind2;
+         int count=d->BinarySearch(0,L,ind1,ind2);
+         if (count) {
+            for (;ind1<=ind2;ind1++) {
+                TTown *T=dynamic_cast<TTown*>(d->Objects->Items[ind1]);
+                if (T && T->DictId==TOWNCODE && T->LMax>=L)
+                  return true;
+            }
+         }
+      }
+   }
+   return false;
+}
+
 void __fastcall TRoadFrm::ContinueMarkLine(void)
 {
 if (FActiveObj)
@@ -2189,12 +2208,135 @@ if (FActiveObj)
             TRoadMark *mnew=dynamic_cast<TRoadMark*>(MainForm->Factory->CreateRoadObj(Meta->ClassName,0,Meta->Id));
             if (mnew)
                 {
+                int L=mark->LMax;
+                bool intown=IsInTown(L);
+                // Ищем ближайшее и предыдущее примыкание слева и справа
+                TRoadAttach *NL=0,*NR=0,*PL=0,*PR=0;
+                int roadmaxl=1<<30;
+                for (int i=0;i<MainForm->ResManager->DataCount;i++) {
+                  TDtaSource *d=MainForm->ResManager->Data[i];
+                  if (d->Id==RoadId) {
+                     for (int i=0;i<d->Objects->Count;i++) {
+                        TContRoadObject *CO=dynamic_cast<TContRoadObject*>(d->Objects->Items[i]);
+                        if (CO && CO->DictId==ROADBOUNDCODE)
+                           roadmaxl=CO->LMax;
+                        TRoadAttach *A=dynamic_cast<TRoadAttach*>(d->Objects->Items[i]);
+                        if (A && A->DictId==ROADATTACH) {
+                           if (A->L<=L && A->Placement==opLeft) {
+                              if (PL==0 || PL->L<A->L)
+                                 PL=A;
+                           } else if (A->L<=L) {
+                              if (PR==0 || PR->L<A->L)
+                                 PR=A;
+                           } else if (A->Placement==opLeft) {
+                              if (NL==0 || NL->L>A->L)
+                                 NL=A;
+                           } else {
+                              if (NR==0 || NR->L>A->L)
+                                 NR=A;
+                           }
+                        }
+                     }
+                  }
+                }
                 mnew->SetDirection(mark->Direction);
-                mnew->L=mark->LMax;
-                mnew->SetLMax(mnew->L+10000);
-                mnew->SetKind(mark->Kind);
+                mnew->L=L;
                 mnew->SetK(mark->K);
                 mnew->SetOffset(mark->Offset);
+                mnew->SetLMax(mnew->L+10000);
+                mnew->SetKind(mark->Kind);
+               int minl=1<<30,maxl=1<<30,minr=1<<30,maxr=1<<30;
+               if (NL && NL->Poly)
+                  minl=min(NL->Poly->Points[0].L,NL->Poly->Points[NL->Poly->Count-1].L),
+                  maxl=max(NL->Poly->Points[0].L,NL->Poly->Points[NL->Poly->Count-1].L);
+               if (NR && NR->Poly)
+                  minr=min(NR->Poly->Points[0].L,NR->Poly->Points[NR->Poly->Count-1].L),
+                  maxr=max(NR->Poly->Points[0].L,NR->Poly->Points[NR->Poly->Count-1].L);
+                  minl=((minl+99)/100)*100;
+                  minr=((minr+99)/100)*100;
+                  maxl=((maxl)/100)*100;
+                  maxr=((maxr)/100)*100;
+
+// Особые случаи
+                if (mark->Kind==ma1||mark->Kind==ma3) {// сплошная
+                  int minv=min(minl,minr);
+                  if (minv<L+500) {  // Дальше перекресток, рисуем 1.7
+                     mnew->SetKind(ma7);
+                     if (min(maxl,maxr)>=max(minl,minr))
+                        mnew->SetLMax(max(maxl,maxr));
+                     else
+                        mnew->SetLMax(min(maxl,maxr));
+                  }  else {
+                     mnew->SetKind(ma6);
+                     mnew->SetLMax(L+(intown ? 5000: 10000));
+                  }
+                } else if (mark->Kind==ma2_1||mark->Kind==ma2_2) {
+                  if (mark->Direction==roUnDirect && minl<L+500)
+                     mnew->SetKind(ma7),mnew->SetLMax(maxl);
+                  else if (mark->Direction==roDirect && minr<L+500)
+                     mnew->SetKind(ma7),mnew->SetLMax(maxr);
+                  else
+                     mnew->SetKind(ma4);
+                } else if (mark->Kind==ma4 || mark->Kind==ma10) {
+                  mnew->SetKind(ma2_1);
+                  if (mark->Direction==roUnDirect)
+                     mnew->SetLMax(minl);
+                  else
+                     mnew->SetLMax(minr);
+                } else if (mark->Kind==ma5) {
+                  mnew->SetKind(ma6);
+                  mnew->SetLMax(L+(intown?5000:10000));
+                } else if (mark->Kind==ma6) {
+                  TRoadMark *pr=0;
+                  int i;
+                  for (i=0;i<FActiveSource->Objects->Count;i++) {
+                       pr=dynamic_cast<TRoadMark*>(FActiveSource->Objects->Items[i]);
+                       if (pr && pr->K==mark->K && pr->Offset==mark->Offset && abs(pr->LMax-mark->L)<200)
+                        break;
+                  }
+                  if (i<FActiveSource->Objects->Count && pr->Kind==ma1) {
+                     mnew->SetKind(ma5);
+                     mnew->SetLMax(min(minl,minr)-(IsInTown(min(minl,minr))?7000:14000));
+                  } else {
+                     mnew->SetKind(ma1);
+                     mnew->SetLMax(min(minl,minr));
+                  }
+                } else if (mark->Kind==ma7||mark->Kind==ma13) {
+                  if (mark->K==0 && mark->Offset==0) {
+                     mnew->SetKind(ma1);
+                     if (intown) {
+                        if (min(minl,minr)<=L+15000)
+                           mnew->SetLMax(min(minl,minr));
+                        else
+                           mnew->SetLMax(L+2000);
+                     } else {
+                        if (min(minl,minr)<=L+29000)
+                           mnew->SetLMax(min(minl,minr));
+                        else
+                           mnew->SetLMax(L+4000);
+                     }
+                  } else {
+                     mnew->SetKind(ma2_1);
+                     mnew->SetLMax(mark->Direction==roDirect?minr:minl);
+                  }
+                } else if ((mark->Kind==ma11l || mark->Kind==ma11r) && mark->Kind==0 && mark->Offset==0) {
+                                  TRoadMark *pr=0;
+                  int i;
+                  for (i=0;i<FActiveSource->Objects->Count;i++) {
+                       pr=dynamic_cast<TRoadMark*>(FActiveSource->Objects->Items[i]);
+                       if (pr && pr->K==mark->K && pr->Offset==mark->Offset && abs(pr->LMax-mark->L)<200)
+                        break;
+                  }
+                  if (i<FActiveSource->Objects->Count && pr->Kind==ma1) {
+                     mnew->SetKind(ma6);
+                     mnew->SetLMax(L+(intown ? 5000: 10000));
+                  } else {
+                     mnew->SetKind(ma1);
+                     mnew->SetLMax(min(minl,minr));
+                  }
+                }
+                if (mnew->LMax>roadmaxl)
+                  mnew->SetLMax(roadmaxl);
                 if (frmMarkParam->Execute(Dict,mnew))
                     {
                     mnew->DrwClassId=Dict->SelectDrwParam(mnew,FCurPage);
@@ -2308,7 +2450,7 @@ if (FActiveObj)
 
 void __fastcall TRoadFrm::CalculateRoadMarkLength(void)
 {
-TDtaSource *src=NULL;
+TDtaSource *src;
 if (FEditedData)
     src=FEditedData;
 else if (FMetricData)
@@ -2534,6 +2676,21 @@ if (FActiveObj&&FMetricData)
     }
 }
 
+void __fastcall TRoadFrm::DesignAttachMark(void)
+{
+if (FEditedData) {
+   MarkDesigners[0]->Design(FActiveObj,FEditedData,Dict);
+   if (FActiveObj&&FMetricData)
+      {
+      if (FActiveObj->Poly)
+         {
+         FMetricData->Road->CalcPointsPos(FActiveObj->Poly,FActiveObj);
+         FActiveObj->PostEditPoly();
+         }
+      }
+   }
+}
+
 void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 {
 if (FInsertingObj)
@@ -2755,6 +2912,7 @@ if (FActiveObj)
         c=true;
 
 MainForm->AttDesignBut->Enabled=c;
+MainForm->RMDesignBut->Enabled=c;
 // Видео
 bool v_en=frmVideoForm->Visible&&(frmVideoForm->Data==FVideoData);
 SpeedButton18->Down=v_en&&(frmVideoForm->Direction==1);
@@ -3885,6 +4043,8 @@ if (frmVideoForm->Data==FVideoData)
     {
     HideVideo();
     }
+if (FEditMetric)
+   StopEditPoly();
 MainForm->ActiveRoad=NULL;
 CloseRoad();
 MainForm->ResManager->ReleaseDictSource(FDictSour->DictId);

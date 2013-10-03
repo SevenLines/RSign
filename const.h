@@ -104,7 +104,7 @@
 //#define OBJROADSIDECODE 18
 
 //Населенные пункты
-//#define TOWNCODE 19
+#define TOWNCODE 48
 
 //Участки опасных уклонов
 #define DANGERSLOPECODE 12
@@ -120,6 +120,8 @@
 
 // Точка измерения ширины
 #define WIDTHMEASURECODE 64
+
+#define ROADBOUNDCODE 61
 
 // Мосты и трубы
 #define ROADBRIDGECODE 18

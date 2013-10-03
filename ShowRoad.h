@@ -429,7 +429,7 @@ public:         // User declarations
     void __fastcall ChangeActiveSignCode(void);
     void __fastcall EditActiveMarkParams(void);// редактирует новый объект разметки, продолжая текущий
     void __fastcall ContinueMarkLine(void);   // Создает новый объект разметки, продолжая текущий
-    void __fastcall NewMarkLine(void);        // Создает новый объект разметки. Если выделена разметка, то ее можно дублировать    
+    void __fastcall NewMarkLine(void);        // Создает новый объект разметки. Если выделена разметка, то ее можно дублировать
     void __fastcall MoveActiveObject(void);
     void __fastcall AddNewObject(void);
     void __fastcall AddNewObject(int DictId);
@@ -472,6 +472,8 @@ public:         // User declarations
     void __fastcall QuickDesign(void);
     void __fastcall SetKmSigns(void);
     void __fastcall DesignAttach(void);
+    bool __fastcall IsInTown(int L);
+    void __fastcall DesignAttachMark(void);    
     void __fastcall BuildKmSet(__int32 Km);
     void __fastcall KmSetText(void);
     void __fastcall MetaExportDialog(void);

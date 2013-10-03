@@ -20,6 +20,7 @@ protected:
 int *CodesL;
 int *CodesR;
 int PtCount;
+int angle,bwidth,ewidth,elength;
 public:
 virtual bool __fastcall Design(TRoadObject *Obj, TDtaSource *Data, TDictSource *Dict);
 };
@@ -62,8 +63,9 @@ public:
 virtual bool __fastcall Design(TRoadObject *Obj, TDtaSource *Data, TDictSource *Dict);
 };
 
-const int DesignersCount=5;
-extern PACKAGE TDesignMetricsPattern *Designers[5];
-extern PACKAGE String DesignersName[5];
+const int DesignersCount=4;
+extern PACKAGE TDesignMetricsPattern *Designers[4];
+extern PACKAGE String DesignersName[4];
+extern PACKAGE TDesignMetricsPattern *MarkDesigners[1];
 
 #endif

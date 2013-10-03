@@ -498,8 +498,8 @@ class TRoadMark : public TContRoadObject
 protected:
 DEFPROPERTYRW(int, Length)   // Длина
 DEFPROPERTYRW(int, Area)   // Площадь
-DEFPROPERTY(int, Offset)   // Смещение
-DEFPROPERTY(int, K)        // Коэффициент.
+DEFPROPERTYRW(int, Offset)   // Смещение
+DEFPROPERTYRW(int, K)        // Коэффициент.
 DEFPROPERTY(TRoadDirection,Direction) // Направление
 DEFPROPERTY(TMarkKind,Kind)  // Вид разметки
 // Местоположение определяется по формуле Width*K/1000+Offset, где
@@ -792,7 +792,7 @@ private:
 DEFPROPERTY(TRoadClass,Tech)            // Тех категория дороги
 DEFPROPERTY(String,Name)                //Наименование примыкания
 DEFPROPERTY(TAttachPlacement,Placement) //Направление примыкания
-DEFPROPERTY(int,Angle)                  // Угол примыкания
+DEFPROPERTYRW(int,Angle)                  // Угол примыкания
 DEFPROPERTY(int,Width)                  // Ширина примыкающей дороги в точке примыкания
 DEFPROPERTY(String,Comment)             //Наименование примыкания
 public:

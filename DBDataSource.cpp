@@ -10,6 +10,7 @@
 #include "DBQuery.h"
 #include "time.h"
 #include "ProgressFrm.h"
+#include <vector.h>
 //---------------------------------------------------------------------------
 
 #pragma package(smart_init)
@@ -558,7 +559,7 @@ for (int i=0;i<DrwParams->Count;i++)
         command->CommandText=Sql;
         command->Execute();
         }
-    }
+    }                                        
 delete lst;
 
 command->CommandText = "delete from GDI_Show";
@@ -587,7 +588,8 @@ delete command;
 }
 
 __fastcall TDBDataSource::TDBDataSource(void) : ::TDtaSource()
-{FConnection=NULL;}
+{
+FConnection=NULL;}
 
 __fastcall TDBDataSource::TDBDataSource(__int32 id_,__int32 dataclass_,TDictSource *Dict,TADOConnection *con,TRoadObjFactory *factory) : ::TDtaSource()
 {
@@ -820,9 +822,9 @@ if (!FConnection)
    if (!LoadVideoInfo1())
        LoadVideoInfo();
    delete DB;
-
    ProgressForm->Hide();
 }
+
 
 #endif
 

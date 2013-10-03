@@ -18,8 +18,8 @@ object frmMarkParam: TfrmMarkParam
   object ListKinds: TListBox
     Left = 193
     Top = 0
-    Width = 162
-    Height = 319
+    Width = 154
+    Height = 308
     Style = lbOwnerDrawFixed
     Align = alClient
     ItemHeight = 16
@@ -30,7 +30,7 @@ object frmMarkParam: TfrmMarkParam
     Left = 0
     Top = 0
     Width = 193
-    Height = 319
+    Height = 308
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
@@ -167,7 +167,7 @@ object frmMarkParam: TfrmMarkParam
     end
     object Panel2: TPanel
       Left = 0
-      Top = 278
+      Top = 267
       Width = 193
       Height = 41
       Align = alBottom

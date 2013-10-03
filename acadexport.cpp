@@ -1511,17 +1511,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
           break;
 
           case ma25:  /*Обозначение искусственных неровностей*/
-            x = Poly->Points[0].x;
-            y = Poly->Points[0].y;
-            height = ScaleY*(Poly->Points[count-1].y - y);
-            if(height<0){
-              rot = M_PI/2;
-              height = -height;
-            }else{
-              rot = -M_PI/2;
-            }
-            block = AutoCAD.DrawBlock("r_1.25",x,-ScaleY*y,rot,1);
-            AutoCAD.SetPropertyDouble(block, "Width", height);
+             //tableBottom.DrawRepeatTextInterval(0,"1.25",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
           break;
        }
      }

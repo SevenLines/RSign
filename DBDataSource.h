@@ -46,6 +46,8 @@ bool __fastcall LoadGeometry(void);
 bool __fastcall LoadGeometryBlob(void);
 void __fastcall SaveMetrics(TDictSource *Dict);
 public:
+
+__fastcall ~TDBDataSource() {}
 __fastcall TDBDataSource(void);
 __fastcall TDBDataSource(__int32 id_,__int32 dataclass_,TDictSource *Dict,TADOConnection *con,TRoadObjFactory *factory);
 void virtual __fastcall Load(__int32 id_,__int32 dataclass_,TDictSource *Dict);

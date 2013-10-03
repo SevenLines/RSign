@@ -1115,7 +1115,7 @@ if (par)
         int ofs=(double)par->Offset*Poly->DirectionVal*FBaseScaleX/FSclX*FDpsm/100;
         if (FPlanDirect==pdUndirect)
             ofs*=-1;
-        TExtPolyline *NPoly=NULL;
+        TExtPolyline *NPoly;
         if (FPlanKind==pkGorizontal)
             NPoly=new TExtPolyline(Poly,0,ofs);
         else
@@ -2826,12 +2826,14 @@ void __fastcall TDrawManager::DrawVisibleMode(TDrawContents *Cont,TRect *OutRect
             }
             int drclass=Dvm->DrwClassId;
             TDrwClassesRec *ClRec=DrCl->Items[drclass];
-            for (int k=0;k<MAXDRWPARAM;k++) {
-               TDrwParamRec *Rec=NULL;
-               try{Rec=DrPar->Items[ClRec->DrwParamId[k]];}
-               catch (...) {}
-               if (!Rec)  continue;
-               CallDrawFunc(Cont,Poly,Rec,&R,false);
+            if (ClRec!=0) {
+               for (int k=0;k<MAXDRWPARAM;k++) {
+                  TDrwParamRec *Rec=NULL;
+                  try{Rec=DrPar->Items[ClRec->DrwParamId[k]];}
+                  catch (...) {}
+                  if (!Rec)  continue;
+                  CallDrawFunc(Cont,Poly,Rec,&R,false);
+               }
             }
          }
       }

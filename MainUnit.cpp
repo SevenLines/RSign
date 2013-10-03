@@ -27,7 +27,7 @@
 #include "DesignPattern.h"
 #include "MacrosForm.h"
 #include "ConstHelp.h"
-#include "AutoCADPrintForm.h"
+//#include "AutoCADPrintForm.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -154,6 +154,7 @@ if (R!=FActiveRoad)
         AddDangBut->Enabled=false;
         AddSignBut->Enabled=false;
         AttDesignBut->Enabled=false;
+        RMDesignBut->Enabled=false;        
         ShowDocBut->Enabled=false;
         N63->Enabled=false;
         N70->Enabled=false;
@@ -1024,7 +1025,7 @@ void __fastcall TMainForm::N72Click(TObject *Sender)
      FActiveRoad->AcadPrint();
      FActiveRoad->WindowState = state;
   }else{
-     FAutoCADPrint->ShowModal();
+     //FAutoCADPrint->ShowModal();
   }
 }
 //---------------------------------------------------------------------------
@@ -1053,6 +1054,13 @@ void __fastcall TMainForm::N75Click(TObject *Sender)
 {
 if (FActiveRoad)
     FActiveRoad->ShowVisPlan();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::RMDesignButClick(TObject *Sender)
+{
+if (FActiveRoad)
+    FActiveRoad->DesignAttachMark();
 }
 //---------------------------------------------------------------------------
 
