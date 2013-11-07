@@ -3,7 +3,7 @@
 <PROJECT>
   <MACROS>
     <VERSION value="BCB.06.00"/>
-    <PROJECT value="RSign.exe"/>
+    <PROJECT value="RSign_misha.exe"/>
     <OBJFILES value="RSign.obj MainUnit.obj RoadObj.obj Metrics.obj DataSour.obj DrawMan.obj 
       ShowRoad.obj RoadDict.obj Lists.obj BaseSour.obj Ruler.obj ListForm.obj 
       ObjForm.obj const.obj DrawSetting.obj FileSour.obj DBDataSource.obj 

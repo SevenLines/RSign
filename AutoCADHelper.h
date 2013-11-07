@@ -328,7 +328,10 @@ public:
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /*днйслемрш -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-        TAcadDocument *AddDocument(AnsiString _template/* *.dwt */="acadiso.dwt");
+        TAcadDocument *CreateDocumentFromInterface(IAcadDocument* doc = 0, bool setAsActive = true); // create document
+        void DeleteDocument(TAcadDocument** doc); // delete document
+
+        IAcadDocument *AddDocument(AnsiString _template="acadiso.dwt");
         TAcadDocument *BindToActiveDocument();
         IAcadDocument *OpenDocument(AnsiString FileName,
                                     bool fSetActive = false,
@@ -372,7 +375,7 @@ public:
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /*акнйх -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-        void LoadBlocksFromFile(AnsiString FileName, AnsiString BlockName="");
+        //void LoadBlocksFromFile(AnsiString FileName, AnsiString BlockName="");
         void SetAttribute(AcadBlockReferencePtr block, AnsiString PropertyName,
                                  WideString value, int rot = -1);
                                  

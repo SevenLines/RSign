@@ -302,15 +302,13 @@ bool __fastcall TAcadExport::OpenDocument(AnsiString name)
 
 bool __fastcall TAcadExport::BindActiveDocument()
 {
-      try{
-        AutoCAD.ResetBlocksCollection();
-        AutoCAD.BindToActiveDocument();
+      AutoCAD.ResetBlocksCollection();
+      if ( AutoCAD.BindToActiveDocument() ) { // function return false on error
         AutoCAD.CheckExistingBlocks();
         AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
-      }catch(...){
-        return false;
+        return true;
       }
-      return true;
+      return false;
 }
 
 bool __fastcall TAcadExport::BeginDocument(TRoad *road) {

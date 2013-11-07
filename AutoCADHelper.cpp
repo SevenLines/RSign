@@ -1,5 +1,7 @@
 
 #include "AutoCADHelper.h"
+#include <cstdio>
+#include <iostream>
 
 #pragma package(smart_init)
 
@@ -84,10 +86,13 @@ int AutoCADHelper::GetTextWidth(AnsiString text, int Height)
     if(italic) style << fsItalic;
     BMP->Canvas->Font->Style = style;
     BMP->Canvas->Font->Height = Height;
-
-    return BMP->Canvas->TextWidth(text); */
+                                        */
+    return BMP->Canvas->TextWidth(text);
 }
 
+/**
+* Create cadPoint
+*/
 Variant AutoCADHelper::cadPoint(double x, double y, double z)
 {
    static bounds[2] = {0,2};
@@ -242,9 +247,30 @@ AcadApplication *AutoCADHelper::getApplication()
    return cadApplication->Application;
 }
 
+TAcadDocument *AutoCADHelper::CreateDocumentFromInterface(IAcadDocument *docToConnect, bool setAsActive)
+{
+     TAcadDocument *doc = new TAcadDocument(0);
+     doc->OnBeginClose = ActiveDocumentBeginClose;
+     if ( docToConnect )
+        doc->ConnectTo(docToConnect);
+     if ( setAsActive ) {
+        DeleteDocument(&cadActiveDocument);
+        cadActiveDocument = doc; // set as active document
+     }
+     return doc;
+}
+
+void AutoCADHelper::DeleteDocument(TAcadDocument** doc)
+{
+     if(*doc) {
+       delete *doc;
+       *doc = 0;
+     }
+}
+
 IAcadDocument *AutoCADHelper::OpenDocument(AnsiString FileName,
-                                           bool fSetActive,
-                                           bool fReopen)
+                                           bool fSetActive, // set opened document as active document
+                                           bool fReopen) // reopen document even if inside autocad documents list
 {
   if(!cadApplication) return 0;
 
@@ -252,48 +278,37 @@ IAcadDocument *AutoCADHelper::OpenDocument(AnsiString FileName,
   wchar_t *str = new  wchar_t[size];
   FileName.WideChar(str,size);
 
-  AcadDocuments *docs;
-  AcadDocument *doc;
-  int count;
+  IAcadDocument *doc = 0;  // used o iterate over documents;
+
   try{
-  if(fReopen){
-    if(cadActiveDocument)delete cadActiveDocument;
-    cadActiveDocument = new TAcadDocument(0);
-    doc = cadApplication->Documents->Open(str,TNoParam(),TNoParam());
-    cadActiveDocument->ConnectTo(doc);
-    cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
-  }else{
-    docs = cadApplication->Documents;
-    count = docs->Count;
-    for(int i=0;i<count;i++){
-       doc = docs->Item(Variant(i));
-       if(!wcscmp(doc->FullName,str)){
-          if(fSetActive){
-             if(cadActiveDocument)delete cadActiveDocument;
-             cadActiveDocument = new TAcadDocument(0);
-             cadActiveDocument->ConnectTo(doc);
-             cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
-          }
-          //SignsCollection.CheckExistingBlocks();
-          return doc;
-       }
+    if(fReopen){
+      // open existing document
+      doc = cadApplication->Documents->Open(str,TNoParam(),TNoParam());
+    }else{
+      // trying to find is current document with name opened
+      AcadDocuments *docs = cadApplication->Documents;
+      int count = docs->Count;
+      for(int i=0;i<count;i++){
+         doc = docs->Item(Variant(i));
+         if(!wcscmp(doc->FullName,str)){
+            break;
+         }
+      }
+      // if nothing find just open
+      doc = cadApplication->Documents->Open(str,TNoParam(),TNoParam());
     }
-    doc=cadApplication->Documents->Open(str,TNoParam(),TNoParam());
-    if(fSetActive){
-       if(cadActiveDocument)delete cadActiveDocument;
-       cadActiveDocument = new TAcadDocument(0);
-       cadActiveDocument->ConnectTo(doc);
-       cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
-    }
-    //SignsCollection.CheckExistingBlocks();
-    return doc;
-  }
+
   }__finally{
      delete[] str;
   }
-  return 0;
+  // if we should set opened document as active
+  if(fSetActive && doc){
+     CreateDocumentFromInterface(doc, true);
+  }
+  return doc;
 }
 
+/*
 void AutoCADHelper::LoadBlocksFromFile(AnsiString FileName, AnsiString BlockName)
 {
    static count;
@@ -343,31 +358,26 @@ void AutoCADHelper::LoadBlocksFromFile(AnsiString FileName, AnsiString BlockName
    }__finally{
         delete cadSingsDefDocument;
    }
-}
+} */
 
-TAcadDocument *AutoCADHelper::AddDocument(AnsiString _template)
+IAcadDocument *AutoCADHelper::AddDocument(AnsiString _template)
 {
+   AcadDocument *doc = 0;
    if(cadApplication){
-        if(cadActiveDocument){
-           delete cadActiveDocument;
-           cadActiveDocument = 0;
-        }
-        cadActiveDocument = new TAcadDocument(0);
-        cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
-        AcadDocument *doc = cadApplication->Documents->Add(Variant(_template));
-        cadActiveDocument->ConnectTo(doc);
-        //SignsCollection.CheckExistingBlocks();
-        return cadActiveDocument;
+        doc = cadApplication->Documents->Add(Variant(_template));
+        CreateDocumentFromInterface(doc);
    }
-   return 0;
+   return doc;
 }
 
 void __fastcall AutoCADHelper::ActiveDocumentBeginClose(TObject *sender)
 {
-   if(gOnActiveDocumentBeginClose)
+   if(gOnActiveDocumentBeginClose) {
       gOnActiveDocumentBeginClose(sender);
-   if(sender == cadActiveDocument)
-      delete cadActiveDocument;cadActiveDocument = 0;
+   }
+   if(sender == cadActiveDocument) {
+      DeleteDocument(&cadActiveDocument);
+   }
 }
 
 void AutoCADHelper::ClearModelSpace()
@@ -800,21 +810,13 @@ void AutoCADHelper::CheckExistingBlocks()
 
 TAcadDocument *AutoCADHelper::BindToActiveDocument()
 {
-   AcadDocumentPtr doc;
+   TAcadDocument *doc = 0;
    try{
-      doc = cadApplication->ActiveDocument;
-      if(doc){
-        if(cadActiveDocument) delete cadActiveDocument;
-        cadActiveDocument = new TAcadDocument(0);
-        cadActiveDocument->ConnectTo(doc);
-        cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
-        //SignsCollection.CheckExistingBlocks();
-        return cadActiveDocument;
-      }
+     doc = CreateDocumentFromInterface(cadApplication->ActiveDocument);
    }catch(...){
-     return 0;
+     std::cerr << "Не могу подключиться к активному документу T_T\nСкорее всего AutoCAD не запущен, либо нету активных документов";
    }
-   return 0;
+   return doc;
 }
 
 void AutoCADHelper::SetBACKGROUNDPLOT_ZERO()

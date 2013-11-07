@@ -61,7 +61,8 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     try
     {
         Application->Initialize();
-        Application->CreateForm(__classid(TMainForm), &MainForm);
+        Application->Title = "RSign";
+                 Application->CreateForm(__classid(TMainForm), &MainForm);
                  Application->CreateForm(__classid(TVPatFrm), &VPatFrm);
                  Application->CreateForm(__classid(TDrwSetFrm), &DrwSetFrm);
                  Application->CreateForm(__classid(TOpenRoadDialog), &OpenRoadDialog);
