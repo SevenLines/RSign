@@ -112,7 +112,7 @@ bool TFAutoCADPrint::BindViewports()
   page.Unbind();
   roadName.Unbind();
 
-  if(!helper->ActiveDocument) return false;
+  if(!helper->ActiveDocument.IsBound()) return false;
   helper->ActiveDocument->Activate();
 
   bool finfo = chkInfo->Checked;   

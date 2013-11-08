@@ -226,8 +226,8 @@ public:
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /* SPECIFIC -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-        AcadEllipse *DrawLeftArcEllipse(int iRow, float sPos, float ePos);
-        AcadEllipse *DrawRightArcEllipse(int iRow, float sPos, float ePos);
+        AcadEllipsePtr DrawLeftArcEllipse(int iRow, float sPos, float ePos);
+        AcadEllipsePtr DrawRightArcEllipse(int iRow, float sPos, float ePos);
         void DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
                                 float sPos, float ePos,
                                 AnsiString (*func)(float _min, float _max) = 0,
@@ -288,11 +288,13 @@ private:
 
         SignsCollection SignsCollection;
         
-        AcadApplication *getApplication();
+        AcadApplicationPtr getApplication();
+
         AcadBlockPtr getBlocks(int i);
         AcadBlockPtr getBlocksByName(AnsiString BlockName);
-        AcadLineType *getLineType(WideString name);
-        AcadDocument *getActiveDocument();
+        AcadLineTypePtr getLineType(WideString name);
+        AcadDocumentPtr getActiveDocument();
+
         void SetSignAttribute(AcadBlockReferencePtr block, WideString value);
         WideString GetSignName(AnsiString signName);
         int getBlocksCount();
@@ -312,8 +314,6 @@ public:
         AnsiString strLostBlocks;
         AnsiString (*SignLabelParser)(AnsiString , AnsiString );
 
-
-
         Variant cadPoint(double x = 0, double y = 0, double z = 0);
         Variant cadPointArray(double *points, int Count/*кол-во точек, а не координат в массиве*/,
                                     int coordCount = 2/*кол-во координат у точки*/);
@@ -328,12 +328,12 @@ public:
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /*ƒќ ”ћ≈Ќ“џ -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-        TAcadDocument *CreateDocumentFromInterface(IAcadDocument* doc = 0, bool setAsActive = true); // create document
-        void DeleteDocument(TAcadDocument** doc); // delete document
+        TAcadDocument *CreateDocumentFromInterface(IAcadDocument *docToConnect = 0, bool setAsActive = true); // create document
+        void DeleteDocument(TAcadDocument *doc); // delete document
 
-        IAcadDocument *AddDocument(AnsiString _template="acadiso.dwt");
-        TAcadDocument *BindToActiveDocument();
-        IAcadDocument *OpenDocument(AnsiString FileName,
+        AcadDocumentPtr AddDocument(AnsiString _template="acadiso.dwt");
+        TAcadDocument * BindToActiveDocument();
+        AcadDocumentPtr OpenDocument(AnsiString FileName,
                                     bool fSetActive = false,
                                     bool fReopen = false);
         void SendCommand(WideString command);
@@ -345,29 +345,32 @@ public:
         /* %func_name%PS - рисование в пространстве листа;
            дл€ выбора активного листа использовать SetAsActiveLayout*/
 
-        AcadPolyline *DrawPolyLine(double *array, int count, int coordCount = 2);
-        AcadPolyline *DrawPolyLinePS(double *array, int count, int coordCount = 2);
+        AcadPolylinePtr DrawPolyLine(double *array, int count, int coordCount = 2);
+        AcadPolylinePtr DrawPolyLinePS(double *array, int count, int coordCount = 2);
 
-        AcadPolyline *DrawRect(double centerX, double centerY, double width, double height);
-        AcadPolyline *DrawRectPS(double centerX, double centerY, double width, double height);
+        AcadPolylinePtr DrawRect(double centerX, double centerY, double width, double height);
+        AcadPolylinePtr DrawRectPS(double centerX, double centerY, double width, double height);
 
-        AcadCircle *DrawCircle(double centerX, double centerY, double radius);
-        AcadCircle *DrawCirclePS(double centerX, double centerY, double radius);
+        AcadCirclePtr DrawCircle(double centerX, double centerY, double radius);
+        AcadCirclePtr DrawCirclePS(double centerX, double centerY, double radius);
 
-        AcadLine *DrawLine(double x1, double y1, double x2, double y2);
-        AcadLine *DrawLinePS(double x1, double y1, double x2, double y2);
+        AcadLinePtr DrawLine(double x1, double y1, double x2, double y2);
+        AcadLinePtr DrawLinePS(double x1, double y1, double x2, double y2);
 
-        AcadText *DrawText(AnsiString str, double height,
+        AcadTextPtr DrawText(AnsiString str, double height,
                         double x = 0, double y = 0, double rotation = 0);
-        AcadText *DrawTextPS(AnsiString str, double height,
+        AcadTextPtr DrawTextPS(AnsiString str, double height,
                         double x = 0, double y = 0, double rotation = 0);
-        AcadArc *DrawArc(double centerX, double centerY, double radius, double sAngle, double eAngle);
-        AcadEllipse *DrawEllipse(double centerX, double centerY, double MajorAxis,double MinorAxis);
+        AcadArcPtr DrawArc(double centerX, double centerY, double radius, double sAngle, double eAngle);
+        AcadEllipsePtr DrawEllipse(double centerX, double centerY, double MajorAxis,double MinorAxis);
 
-        AcadHatch *FillArea(IDispatch **LoopObjects, int LoopObjectsCount,
+        AcadHatchPtr FillArea(IDispatch **LoopObjects, int LoopObjectsCount,
                          int HatchColor = 0, WideString sHatchType = "SOLID", int hatchScale = 75);
-        AcadHatch *FillAreaPS(IDispatch **LoopObjects, int LoopObjectsCount,
+        AcadHatchPtr FillAreaPS(IDispatch **LoopObjects, int LoopObjectsCount,
                          int HatchColor = 0, WideString sHatchType = "SOLID", int hatchScale = 75);
+        AcadHatchPtr FillAreaBase(AcadHatchPtr hatch, IDispatch **LoopObjects, int LoopObjectsCount,
+                         int HatchColor = 0, int hatchScale = 75);
+                         
         void DrawRepeatTextInterval(WideString str, float sPosX, float ePosX,
                                          float sPosY, float ePosY, float TextHeight,
                                          float step = 100000);
@@ -375,10 +378,12 @@ public:
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /*ЅЋќ » -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-        //void LoadBlocksFromFile(AnsiString FileName, AnsiString BlockName="");
+        /**
+         * set atribute with name PropertyName of block, with value,
+         * set rot to -1 if u don't want to rotate object
+        */
         void SetAttribute(AcadBlockReferencePtr block, AnsiString PropertyName,
                                  WideString value, int rot = -1);
-                                 
         bool SetPropertyPoint(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
                                  AutoCADPoint value);
         bool SetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
@@ -406,10 +411,12 @@ public:
         /*PAPERSPACE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
         void AddPaperSpace(AnsiString name, double x, double y,
                                         double width, double height);
-        AcadLayout *AddPaperSpace(WideString name);
-        bool SetupViewport(AcadLayout *layout, double x, double y,
+        AcadLayoutPtr AddPaperSpace(WideString name);
+        bool SetupViewport(AcadLayoutPtr layout, double x, double y,
                                         double width, double height);
 
+        void BeginMSpace(AcadPViewportPtr viewport);
+        void EndMSpace(AcadPViewportPtr viewport);                               
         bool SetupActiveViewportZoomWindow(double x, double y,
                    double width, double height);/*настроить вид видового экрана*/
         bool SetupActiveViewportZoomScale(double ZoomFactor);
@@ -417,7 +424,7 @@ public:
 
         bool PrintActiveLayoutToFile(WideString FileName);
         bool PrintLayoutsToFile(WideString FileName, int* arrayofindexes, int count);
-        AcadLayout *SetAsActiveLayout(Variant index); /*выбрать активный Layout*/
+        AcadLayoutPtr SetAsActiveLayout(Variant index); /*выбрать активный Layout*/
         void SetBACKGROUNDPLOT_ZERO();/*надо вызвать перед 2 и более вызовами
                                         PrintActiveLayoutToFile */
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
@@ -434,7 +441,7 @@ public:
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         __property AcadApplication *Application = {read = getApplication};
-        __property AcadDocument *ActiveDocument = {read = getActiveDocument};
+        __property AcadDocumentPtr ActiveDocument = {read = getActiveDocument};
         __property AcadBlockPtr Blocks[int] = {read = getBlocks};
         __property AcadBlockPtr BlocksByName[AnsiString] = {read = getBlocksByName};
         __property bool InvertYAxe = {read = fInvertYAxe, write = fInvertYAxe};

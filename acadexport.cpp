@@ -303,7 +303,7 @@ bool __fastcall TAcadExport::OpenDocument(AnsiString name)
 bool __fastcall TAcadExport::BindActiveDocument()
 {
       AutoCAD.ResetBlocksCollection();
-      if ( AutoCAD.BindToActiveDocument() ) { // function return false on error
+      if ( AutoCAD.BindToActiveDocument()->IsBound() ) { // function return false on error
         AutoCAD.CheckExistingBlocks();
         AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
         return true;

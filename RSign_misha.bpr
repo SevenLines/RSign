@@ -57,10 +57,10 @@
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I..\..\Borland\CBuilder6\Projects -IActiveX -I$(BCB)\include 
-      -I$(BCB)\include\vcl -I$(BCB)\include\atl 
-      -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot; -src_suffix cpp 
-      -DNO_PROMPT_ON_ASSERTE_FAILURE -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -boa"/>
+    <IDLCFLAGS value="-src_suffix cpp -DNO_PROMPT_ON_ASSERTE_FAILURE 
+      -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -I..\..\Borland\CBuilder6\Projects 
+      -IActiveX -I$(BCB)\include -I$(BCB)\include\vcl -I$(BCB)\include\atl 
+      -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot; -boa"/>
     <CFLAG1 value="-Od -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; -Hc -Vx -Ve 
       -Tkh30000 -X- -r- -a8 -b -k -y -v -vi- -c -tW -tWM"/>
     <CFLAG2 value=""/>
@@ -217,7 +217,7 @@ Item4=_DEBUG
 DebugSourceDirs=$(BCB)\source\vcl
 
 [Parameters]
-RunParams=
+RunParams=&gt; log.txt
 Launcher=
 UseLauncher=0
 DebugCWD=

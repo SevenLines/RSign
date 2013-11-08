@@ -1,7 +1,8 @@
-
-#include "AutoCADHelper.h"
 #include <cstdio>
 #include <iostream>
+
+#include "AutoCADHelper.h"
+#include "MickMacros.h"
 
 #pragma package(smart_init)
 
@@ -50,7 +51,7 @@ void SignsCollection::CheckExistingBlocks()
    if(Owner){
       Clear();
       try{
-        if(Owner->ActiveDocument){
+        if(Owner->ActiveDocument.IsBound()){
            count = Owner->BlocksCount;
            for(i=0;i<count;i++){
               str = Owner->Blocks[Variant(i)]->Name;
@@ -172,21 +173,21 @@ Variant AutoCADHelper::cadArray(WideString *strings, int count)
    return vArray;
 }
 
-AcadLineType *AutoCADHelper::getLineType(WideString name)
+AcadLineTypePtr AutoCADHelper::getLineType(WideString name)
 {
    try{
      return  cadActiveDocument->Linetypes->Item(Variant(name));
    }catch(...){
-     return 0;
+     return AcadLineTypePtr();
    }
 }
 
-AcadDocument *AutoCADHelper::getActiveDocument()
+AcadDocumentPtr AutoCADHelper::getActiveDocument()
 {
    if(cadActiveDocument){
      return cadActiveDocument->GetDefaultInterface();
    }else
-     return 0;
+     return AcadDocumentPtr();
 }
 
 AutoCADHelper::AutoCADHelper():fInvertYAxe(0),fInvertXAxe(0)
@@ -196,7 +197,7 @@ AutoCADHelper::AutoCADHelper():fInvertYAxe(0),fInvertXAxe(0)
    gMakeBlockTextOffsetX = 0.8;
    comboSignCount = 0;
    gMakeBlockTextEnable = true;
-   cadActiveDocument = 0;
+   cadActiveDocument = new TAcadDocument(0);
    fApplicationRun = false;
    SignsCollection.Owner = this;
    gCopyTextObject = 0;
@@ -206,7 +207,7 @@ AutoCADHelper::AutoCADHelper():fInvertYAxe(0),fInvertXAxe(0)
 
 AutoCADHelper::~AutoCADHelper()
 {
-   if(cadActiveDocument) delete cadActiveDocument;
+   DeleteDocument(cadActiveDocument);
    delete BMP;
 }
 
@@ -214,10 +215,8 @@ AcadApplication *AutoCADHelper::BindAutoCAD()
 {
    if(FAILED(cadApplication.BindRunning())) return 0;
 
-   if(cadApplication->Documents->Count>0){
-       cadActiveDocument = new TAcadDocument(0);
-       cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
-       cadActiveDocument->ConnectTo(cadApplication->ActiveDocument);
+   if(cadApplication->Documents->Count>0 && cadApplication->ActiveDocument){
+       CreateDocumentFromInterface(cadApplication->ActiveDocument, true);
    }
 
    return cadApplication;
@@ -232,27 +231,23 @@ AcadApplication * AutoCADHelper::RunAutoCAD(bool fVisible)
     }
     cadApplication->Visible = fVisible;
 
-    if(cadApplication->Documents->Count>0){
-       cadActiveDocument = new TAcadDocument(0);
-       cadActiveDocument->OnBeginClose = ActiveDocumentBeginClose;
-       cadActiveDocument->ConnectTo(cadApplication->ActiveDocument);
-       //SignsCollection.CheckExistingBlocks();
+    if(cadApplication->Documents->Count>0 && cadApplication->ActiveDocument){
+       CreateDocumentFromInterface(cadApplication->ActiveDocument, true);
     }
     return cadApplication;
 
 }
 
-AcadApplication *AutoCADHelper::getApplication()
+AcadApplicationPtr AutoCADHelper::getApplication()
 {
    return cadApplication->Application;
 }
 
-TAcadDocument *AutoCADHelper::CreateDocumentFromInterface(IAcadDocument *docToConnect, bool setAsActive)
+AcadDocumentPtr AutoCADHelper::CreateDocumentFromInterface(IAcadDocument *docToConnect, bool setAsActive)
 {
-     TAcadDocument *doc = new TAcadDocument(0);
-     doc->OnBeginClose = ActiveDocumentBeginClose;
+     doc.OnBeginClose = ActiveDocumentBeginClose;
      if ( docToConnect )
-        doc->ConnectTo(docToConnect);
+        doc.ConnectTo(docToConnect);
      if ( setAsActive ) {
         DeleteDocument(&cadActiveDocument);
         cadActiveDocument = doc; // set as active document
@@ -260,33 +255,30 @@ TAcadDocument *AutoCADHelper::CreateDocumentFromInterface(IAcadDocument *docToCo
      return doc;
 }
 
-void AutoCADHelper::DeleteDocument(TAcadDocument** doc)
+void AutoCADHelper::DeleteDocument(TAcadDocument &doc)
 {
-     if(*doc) {
-       delete *doc;
-       *doc = 0;
-     }
+    doc.Disconnect();
 }
 
-IAcadDocument *AutoCADHelper::OpenDocument(AnsiString FileName,
+AcadDocumentPtr AutoCADHelper::OpenDocument(AnsiString FileName,
                                            bool fSetActive, // set opened document as active document
                                            bool fReopen) // reopen document even if inside autocad documents list
 {
-  if(!cadApplication) return 0;
+  if(!cadApplication.IsBound()) return AcadDocumentPtr();
 
   int size = FileName.WideCharBufSize();
   wchar_t *str = new  wchar_t[size];
   FileName.WideChar(str,size);
 
-  IAcadDocument *doc = 0;  // used o iterate over documents;
+  AcadDocumentPtr doc;  // used o iterate over documents;
 
   try{
     if(fReopen){
       // open existing document
-      doc = cadApplication->Documents->Open(str,TNoParam(),TNoParam());
+      doc = cadApplication.Documents->Open(str,TNoParam(),TNoParam());
     }else{
       // trying to find is current document with name opened
-      AcadDocuments *docs = cadApplication->Documents;
+      AcadDocuments *docs = cadApplication.Documents;
       int count = docs->Count;
       for(int i=0;i<count;i++){
          doc = docs->Item(Variant(i));
@@ -295,14 +287,14 @@ IAcadDocument *AutoCADHelper::OpenDocument(AnsiString FileName,
          }
       }
       // if nothing find just open
-      doc = cadApplication->Documents->Open(str,TNoParam(),TNoParam());
+      doc = cadApplication.Documents->Open(str,TNoParam(),TNoParam());
     }
 
   }__finally{
      delete[] str;
   }
   // if we should set opened document as active
-  if(fSetActive && doc){
+  if(fSetActive && doc.IsBound()){
      CreateDocumentFromInterface(doc, true);
   }
   return doc;
@@ -354,17 +346,17 @@ void AutoCADHelper::LoadBlocksFromFile(AnsiString FileName, AnsiString BlockName
        }
      }
      cadActiveDocument->Activate();
-     cadApplication->ZoomAll();
+     cadApplication.ZoomAll();
    }__finally{
         delete cadSingsDefDocument;
    }
 } */
 
-IAcadDocument *AutoCADHelper::AddDocument(AnsiString _template)
+AcadDocumentPtr AutoCADHelper::AddDocument(AnsiString _template)
 {
-   AcadDocument *doc = 0;
+   AcadDocumentPtr doc;
    if(cadApplication){
-        doc = cadApplication->Documents->Add(Variant(_template));
+        doc = cadApplication.Documents->Add(Variant(_template));
         CreateDocumentFromInterface(doc);
    }
    return doc;
@@ -389,11 +381,12 @@ void AutoCADHelper::ClearModelSpace()
 
 AcadBlockPtr AutoCADHelper::getBlocks(int i)
 {
-   AcadBlock *block = 0;
+   AcadBlockPtr block;
    if(cadActiveDocument){
      try{
          block = cadActiveDocument->Blocks->Item(Variant(i));
      }catch(...){
+         cerr << "Ошибка при попытке получить доступ к " << i << "-му блоку"  << endl;
      }
    }
    return block;
@@ -401,11 +394,12 @@ AcadBlockPtr AutoCADHelper::getBlocks(int i)
 
 AcadBlockPtr AutoCADHelper::getBlocksByName(AnsiString BlockName)
 {
-   AcadBlock *block = 0;
+   AcadBlockPtr block;
    if(cadActiveDocument){
      try{
          block = cadActiveDocument->Blocks->Item(Variant(BlockName));
      }catch(...){
+         cerr << "Ошибка при попытке получить доступ к '" << BlockName.c_str() << "' блоку"  << endl;
      }
    }
    return block;
@@ -417,44 +411,40 @@ int AutoCADHelper::getBlocksCount()
 }
 
 
-
-
-
-AcadHatch *AutoCADHelper::FillArea(IDispatch **LoopObjects,
+AcadHatchPtr AutoCADHelper::FillAreaBase(AcadHatchPtr hatch,  IDispatch **LoopObjects,
                                    int LoopObjectsCount,
                                    int HatchColor,
-                                   WideString sHatchType,
                                    int hatchScale)
 {
-   AcadHatch *hatch;
-   IAcadHatchDisp * hatch2;
-
-   if(!(hatch = cadActiveDocument->
-                ModelSpace->AddHatch(0,sHatchType,Variant(true)))) return 0;
-
+   WARNING_AND_RETURN_VALUE_ON_0(hatch.IsBound(), hatch);
    hatch->AppendOuterLoop(cadArray(LoopObjects,LoopObjectsCount));
    hatch->Evaluate();
    hatch->PatternScale = hatchScale;
    hatch->color = HatchColor;
    return hatch;
-}
+}                                   
 
-AcadHatch *AutoCADHelper::FillAreaPS(IDispatch **LoopObjects,
+AcadHatchPtr AutoCADHelper::FillArea(IDispatch **LoopObjects,
                                    int LoopObjectsCount,
                                    int HatchColor,
                                    WideString sHatchType,
                                    int hatchScale)
 {
-   AcadHatch *hatch;
-   IAcadHatchDisp * hatch2;
+   AcadHatchPtr hatch;
+   hatch = cadActiveDocument->ModelSpace->AddHatch(0,sHatchType,Variant(true));
+   FillAreaBase(hatch, LoopObjects, LoopObjectsCount, HatchColor, hatchScale);
+   return hatch;
+}
 
-   if(!(hatch = cadActiveDocument->
-                PaperSpace->AddHatch(0,sHatchType,Variant(true)))) return 0;
-
-   hatch->AppendOuterLoop(cadArray(LoopObjects,LoopObjectsCount));
-   hatch->Evaluate();
-   hatch->PatternScale = hatchScale;
-   hatch->color = HatchColor;
+AcadHatchPtr AutoCADHelper::FillAreaPS(IDispatch **LoopObjects,
+                                   int LoopObjectsCount,
+                                   int HatchColor,
+                                   WideString sHatchType,
+                                   int hatchScale)
+{
+   AcadHatchPtr hatch;
+   hatch = cadActiveDocument->PaperSpace->AddHatch(0,sHatchType,Variant(true));
+   FillAreaBase(hatch, LoopObjects, LoopObjectsCount, HatchColor, hatchScale);
    return hatch;
 }
 
@@ -462,27 +452,27 @@ AcadBlockReferencePtr AutoCADHelper::DrawBlock(WideString BlockName,
                                         double x, double y,
                                         double rotation, double scale)
 {
-   AcadBlockReference *refer  =0;
-   if(cadActiveDocument){
-        refer = cadActiveDocument->ModelSpace->InsertBlock(cadPoint(x,y),
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument, AcadBlockReferencePtr());
+   AcadBlockReferencePtr refer = cadActiveDocument->ModelSpace->InsertBlock(cadPoint(x,y),
                   BlockName,scale,scale,scale,rotation);
-   }
    return refer;
 }
 
-bool AutoCADHelper::GetPropertyPoint(AcadBlockReferencePtr ptrBlock,
+bool AutoCADHelper::GetPropertyPoint(  AcadBlockReferencePtr ptrBlock,
                                        AnsiString PropertyName,
                                        AutoCADPoint &point)
 {
-  Variant vProperities;
-  static count;
-  static AnsiString str;
+  WARNING_AND_RETURN_VALUE_ON_0(ptrBlock.IsBound(), false);
+
+  int count;
+  AnsiString str;  
+
   Variant a;
+  Variant vProperities;
   AnsiString PropertyNameX = PropertyName + " X";
   AnsiString PropertyNameY = PropertyName + " Y";
   AcadDynamicBlockReferencePropertyPtr prop;
- // AcadBlockReferencePtr ptrBlock = (IDispatch*)block;
-
+  
   bool setX = false,setY = false;
 
   PropertyName = PropertyName.UpperCase();
@@ -491,7 +481,6 @@ bool AutoCADHelper::GetPropertyPoint(AcadBlockReferencePtr ptrBlock,
      if(vProperities.IsArray()){
        count = vProperities.ArrayHighBound(1)+1;
        if(count>0){
-         try{
            for(int i=0;i<count;i++){
               prop = (AcadDynamicBlockReferencePropertyPtr)(IDispatch*)vProperities.GetElement(i);
               str = prop->PropertyName;
@@ -507,24 +496,27 @@ bool AutoCADHelper::GetPropertyPoint(AcadBlockReferencePtr ptrBlock,
               }
               if(setX&&setY) return true;
            }
-         }catch(...){};
        }
      }
   }catch(...){
-     return false;
+      std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+      << " of object " << ptrBlock->Name  << endl;
   }
   return false;
 }
 
 bool AutoCADHelper::GetSubPropertyPoint(AcadBlockPtr ptrBlock, AnsiString PropertyName, AutoCADPoint &out)
 {
-    static count ,i;
-    static AcadEntityPtr subBlock;
+    WARNING_AND_RETURN_VALUE_ON_0(ptrBlock.IsBound(), false);
+
+    int count ,i;
+    AcadEntityPtr subBlock;    
+
     count  = ptrBlock->Count;
     for(i=0;i<count;i++){
        subBlock = ptrBlock->Item(Variant(i));
        if(subBlock->EntityType == 7){
-          if(GetPropertyPoint(subBlock, PropertyName, out))
+          if(GetPropertyPoint( (AcadBlockReferencePtr) subBlock, PropertyName, out))
             return true;
        }
     }
@@ -533,57 +525,66 @@ bool AutoCADHelper::GetSubPropertyPoint(AcadBlockPtr ptrBlock, AnsiString Proper
 
 bool AutoCADHelper::GetSubPropertyDouble(AcadBlockPtr ptrBlock, AnsiString PropertyName, double &out)
 {
-    static count ,i;
-    static AcadEntityPtr subBlock;
+    WARNING_AND_RETURN_VALUE_ON_0(ptrBlock.IsBound(), false);
+
+    int count ,i;
+    AcadEntityPtr subBlock;    
+
     count  = ptrBlock->Count;
     for(i=0;i<count;i++){
        subBlock = ptrBlock->Item(Variant(i));
        if(subBlock->EntityType == 7){
-          if(GetPropertyDouble(subBlock, PropertyName, out))
+          if(GetPropertyDouble( (AcadBlockReferencePtr) subBlock, PropertyName, out))
             return true;
        }
     }
     return false;
 }
 
-void AutoCADHelper::SetAttribute(AcadBlockReferencePtr block,
+void AutoCADHelper::SetAttribute(AcadBlockReferencePtr ptrBlock,
                                  AnsiString PropertyName,
                                  WideString value, int rot)
 {
-   if(!block) return;
-   static count;
-   static AnsiString str;
+   WARNING_AND_RETURN_ON_0(ptrBlock.IsBound());
+
+   int count;
+   AnsiString str;   
+
    Variant vProperities;
    Variant a;
    AcadAttributeReferencePtr attribute;
 
    PropertyName = PropertyName.UpperCase();
    try{
-     block->GetAttributes(vProperities);
+     ptrBlock->GetAttributes(vProperities);
      if(vProperities.IsArray()){
        count = vProperities.ArrayHighBound(1)+1;
        if(count>0){
-         try{
            for(int i=0;i<count;i++){
               attribute = (IDispatch*)vProperities.GetElement(i);
               str = attribute->TagString;
               if(str ==  PropertyName){
                  attribute->set_TextString(value);
-                 if(rot!=-1)attribute->Rotation = (double)rot/360*M_PI;
+                 if(rot!=-1)attribute->Rotation = (double)rot/180*M_PI;
                  break;
               }
            }
-         }catch(...){};
        }
      }
-   }catch(...){}
+   }catch(...){
+         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                   << " of object " << ptrBlock->Name << endl;
+   }
 }
 
 bool AutoCADHelper::GetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName, double &out)
 {
-  Variant vProperities;
-  static count;
-  static AnsiString str;
+  WARNING_AND_RETURN_VALUE_ON_0(ptrBlock.IsBound(), false);
+
+  int count;
+  AnsiString str;
+
+  Variant vProperities;  
   AcadDynamicBlockReferencePropertyPtr prop;
 
   try{
@@ -591,7 +592,6 @@ bool AutoCADHelper::GetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString
      if(vProperities.IsArray()){
        count = vProperities.ArrayHighBound(1)+1;
        if(count>0){
-         try{
            for(int i=0;i<count;i++){
               prop = (IDispatch*)vProperities.GetElement(i);
               str = prop->PropertyName;
@@ -601,20 +601,23 @@ bool AutoCADHelper::GetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString
                  return true;
               }
            }
-         }catch(...){};
        }
      }
   }catch(...){
-     return false;
+       std::cerr << "Failed to get '" << PropertyName.c_str() << "'"
+                 << " of object " << ptrBlock->Name << endl;
   }
   return false;
 }
 
 bool AutoCADHelper::GetPropertyVariant(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName, Variant &out)
 {
+  WARNING_AND_RETURN_VALUE_ON_0(ptrBlock.IsBound(), false);
+
+  int count;
+  AnsiString str;
+
   Variant vProperities;
-  static count;
-  static AnsiString str;
   AcadDynamicBlockReferencePropertyPtr prop;
 
   try{
@@ -622,7 +625,6 @@ bool AutoCADHelper::GetPropertyVariant(AcadBlockReferencePtr ptrBlock, AnsiStrin
      if(vProperities.IsArray()){
        count = vProperities.ArrayHighBound(1)+1;
        if(count>0){
-         try{
            for(int i=0;i<count;i++){
               prop = (IDispatch*)vProperities.GetElement(i);
               str = prop->PropertyName;
@@ -632,11 +634,11 @@ bool AutoCADHelper::GetPropertyVariant(AcadBlockReferencePtr ptrBlock, AnsiStrin
                  return true;
               }
            }
-         }catch(...){};
        }
      }
   }catch(...){
-     return false;
+      std::cerr << "Failed to get '" << PropertyName.c_str() << "'"
+           << " of object " << ptrBlock->Name << endl;
   }
   return false;
 }
@@ -644,9 +646,12 @@ bool AutoCADHelper::GetPropertyVariant(AcadBlockReferencePtr ptrBlock, AnsiStrin
 bool AutoCADHelper::SetPropertyPoint(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
                                  AutoCADPoint value)
 {
+  WARNING_AND_RETURN_VALUE_ON_0(ptrBlock.IsBound(), false);
+
+  int count;
+  AnsiString str;
+
   Variant vProperities;
-  static count;
-  static AnsiString str;
   Variant a;
   AnsiString PropertyNameX = PropertyName + " X";
   AnsiString PropertyNameY = PropertyName + " Y";
@@ -660,7 +665,6 @@ bool AutoCADHelper::SetPropertyPoint(AcadBlockReferencePtr ptrBlock, AnsiString 
      if(vProperities.IsArray()){
        count = vProperities.ArrayHighBound(1)+1;
        if(count>0){
-         try{
            for(int i=0;i<count;i++){
               prop = (AcadDynamicBlockReferencePropertyPtr)(IDispatch*)vProperities.GetElement(i);
               str = prop->PropertyName;
@@ -674,11 +678,11 @@ bool AutoCADHelper::SetPropertyPoint(AcadBlockReferencePtr ptrBlock, AnsiString 
               }
               if(setX&&setY) return true;
            }
-         }catch(...){};
        }
      }
   }catch(...){
-     return false;
+         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                   << " of object " << ptrBlock->Name << endl;
   }
   return false;
 }
@@ -686,9 +690,12 @@ bool AutoCADHelper::SetPropertyPoint(AcadBlockReferencePtr ptrBlock, AnsiString 
 bool AutoCADHelper::SetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
                          double value)
 {
+  WARNING_AND_RETURN_VALUE_ON_0(ptrBlock.IsBound(), false);
+
+  int count;
+  AnsiString str;
+
   Variant vProperities;
-  static count;
-  static AnsiString str;
   AcadDynamicBlockReferencePropertyPtr prop;
 
   try{
@@ -696,7 +703,6 @@ bool AutoCADHelper::SetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString
      if(vProperities.IsArray()){
        count = vProperities.ArrayHighBound(1)+1;
        if(count>0){
-         try{
            for(int i=0;i<count;i++){
               prop = (IDispatch*)vProperities.GetElement(i);
               str = prop->PropertyName;
@@ -705,11 +711,11 @@ bool AutoCADHelper::SetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString
                  return true;
               }
            }
-         }catch(...){};
        }
      }
   }catch(...){
-     return false;
+         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                   << " of object " << ptrBlock->Name << endl;
   }
   return false;
 }
@@ -717,9 +723,12 @@ bool AutoCADHelper::SetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString
 bool AutoCADHelper::SetPropertyListVariant(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
                                  Variant value)
 {
+  WARNING_AND_RETURN_VALUE_ON_0(ptrBlock.IsBound(), false);
+
+  int count;
+  AnsiString str;
+
   Variant vProperities;
-  static count;
-  static AnsiString str;
   AcadDynamicBlockReferencePropertyPtr prop;
 
   try{
@@ -727,7 +736,6 @@ bool AutoCADHelper::SetPropertyListVariant(AcadBlockReferencePtr ptrBlock, AnsiS
      if(vProperities.IsArray()){
        count = vProperities.ArrayHighBound(1)+1;
        if(count>0){
-         try{
            for(int i=0;i<count;i++){
               prop = (IDispatch*)vProperities.GetElement(i);
               str = prop->PropertyName;
@@ -736,11 +744,11 @@ bool AutoCADHelper::SetPropertyListVariant(AcadBlockReferencePtr ptrBlock, AnsiS
                  return true;
               }
            }
-         }catch(...){};
        }
      }
   }catch(...){
-     return false;
+         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                   << " of object " << ptrBlock->Name << endl;
   }
   return false;
 }
@@ -748,9 +756,12 @@ bool AutoCADHelper::SetPropertyListVariant(AcadBlockReferencePtr ptrBlock, AnsiS
 bool AutoCADHelper::SetPropertyList(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
                                  short value)
 {
+  WARNING_AND_RETURN_VALUE_ON_0(ptrBlock.IsBound(), false);  
+
+  int count;
+  AnsiString str;
+
   Variant vProperities;
-  static count;
-  static AnsiString str;
   AcadDynamicBlockReferencePropertyPtr prop;
 
   try{
@@ -758,7 +769,6 @@ bool AutoCADHelper::SetPropertyList(AcadBlockReferencePtr ptrBlock, AnsiString P
      if(vProperities.IsArray()){
        count = vProperities.ArrayHighBound(1)+1;
        if(count>0){
-         try{
            for(int i=0;i<count;i++){
               prop = (IDispatch*)vProperities.GetElement(i);
               str = prop->PropertyName;
@@ -767,38 +777,39 @@ bool AutoCADHelper::SetPropertyList(AcadBlockReferencePtr ptrBlock, AnsiString P
                  return true;
               }
            }
-         }catch(...){};
        }
      }
   }catch(...){
-     return false;
+         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                   << " of object " << ptrBlock->Name << endl;
   }
   return false;
 }
 
-AcadLayout *AutoCADHelper::AddPaperSpace(WideString name)
+AcadLayoutPtr AutoCADHelper::AddPaperSpace(WideString name)
 {
   try{
     return cadActiveDocument->Layouts->Add(name);
-  }catch(...){return 0;}
+  }catch(...){
+    std::cerr << "Failed to add PaperSpace '" << AnsiString(name).c_str() << "'" << endl;
+  }
+  return AcadLayoutPtr();
 }
 
-bool AutoCADHelper::SetupViewport(AcadLayout *layout, double x, double y,
+bool AutoCADHelper::SetupViewport(AcadLayoutPtr layout, double x, double y,
                                 double width, double height)
 {
    AcadPViewportPtr viewport;
    cadActiveDocument->set_ActiveSpace(acPaperSpace);
    cadActiveDocument->set_ActiveLayout(layout);
    try{
-    /* viewport = (IDispatch*)Variant((IDispatch*)cadActiveDocument
-                  ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");  */
      viewport = cadActiveDocument->ActiveViewport;
      viewport->set_Center(cadPoint(x+width/2, y+ height/2));
      viewport->Width = width;
      viewport->Height = height;
-     //viewport->
    }catch(...){
-        return false;
+      std::cerr << "Failed to setup ViewPort" << endl;
+      return false;
    }
    return true;
 }
@@ -810,11 +821,12 @@ void AutoCADHelper::CheckExistingBlocks()
 
 TAcadDocument *AutoCADHelper::BindToActiveDocument()
 {
-   TAcadDocument *doc = 0;
+   TAcadDocument *doc;
    try{
-     doc = CreateDocumentFromInterface(cadApplication->ActiveDocument);
+     doc = CreateDocumentFromInterface(cadApplication.ActiveDocument);
    }catch(...){
-     std::cerr << "Не могу подключиться к активному документу T_T\nСкорее всего AutoCAD не запущен, либо нету активных документов";
+     std::cerr << "Не могу подключиться к активному документу T_T" << endl 
+               << "Скорее всего AutoCAD не запущен, либо нету активных документов" << endl;
    }
    return doc;
 }
@@ -834,14 +846,14 @@ void AutoCADHelper::SendCommand(WideString command)
    cadActiveDocument->SendCommand(command);
 }
 
-AcadLayout *AutoCADHelper::SetAsActiveLayout(Variant index)
+AcadLayoutPtr AutoCADHelper::SetAsActiveLayout(Variant index)
 {
-   AcadLayout *layout = 0;
+   AcadLayoutPtr layout;
    try{
      layout = cadActiveDocument->Layouts->Item(index);
      cadActiveDocument->set_ActiveLayout(layout);
    }catch(...){
-      return 0;
+     std::cerr << "Failed to set layout with number '" << index << "' as active" << endl;
    }
    return layout;
 }
@@ -850,8 +862,11 @@ AcadLayout *AutoCADHelper::SetAsActiveLayout(Variant index)
 bool AutoCADHelper::PrintActiveLayoutToFile(WideString FileName)
 {
   try{
-   cadActiveDocument->Plot->PlotToFile(FileName);
-  }catch(...){return false;}
+    cadActiveDocument->Plot->PlotToFile(FileName);
+  }catch(...){
+    std::cerr << "Failed to print active layout to file: "
+              << AnsiString(FileName).c_str() << endl;
+  }
   return true;
 }
 
@@ -868,30 +883,47 @@ bool AutoCADHelper::PrintLayoutsToFile(WideString FileName, int* arrayofindexes,
      cadActiveDocument->Plot->SetLayoutsToPlot(a1);
      cadActiveDocument->Plot->PlotToFile(FileName);
    }catch(...){
-        delete[] names;
-        return false;
+      std::cerr << "Failed to print layouts to file: "
+              << AnsiString(FileName).c_str() << endl;
+      delete[] names;
+      return false;
    }
    delete[] names;
    return true;
 }
 
+void AutoCADHelper::BeginMSpace(AcadPViewportPtr viewport)
+{
+     WARNING_AND_RETURN_ON_NULL( viewport.IsBound() );
+     viewport->Display(True);
+     AcadDocumentPtr doc = viewport->Document;
+     doc->set_MSpace(True);
+}
+
+void AutoCADHelper::EndMSpace(AcadPViewportPtr viewport)
+{
+     WARNING_AND_RETURN_ON_NULL( viewport.IsBound() );
+     AcadDocumentPtr doc = viewport->Document;
+     doc->set_MSpace(False);
+     viewport->Display(False);
+}
+
 bool AutoCADHelper::SetupActiveViewportZoomWindow(double x, double y,
                                 double width, double height)
 {
-   AcadPViewport *viewport = 0;
+   AcadPViewportPtr viewport;
    cadActiveDocument->set_ActiveSpace(acPaperSpace);
    try{
-   viewport = (AcadPViewport*)(IDispatch*)Variant((IDispatch*)cadActiveDocument
-                ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
+     viewport = (IDispatch*)Variant((IDispatch*)cadActiveDocument
+                  ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
 
-   viewport->Display(True);
-   cadActiveDocument->set_MSpace(True);
+     BeginMSpace(viewport);
+       cadApplication.ZoomWindow(cadPoint(x,y),cadPoint(x+width,y+height));
+     EndMSpace(viewport);
 
-   cadApplication->ZoomWindow(cadPoint(x,y),cadPoint(x+width,y+height));
-
-   cadActiveDocument->set_MSpace(False);
-   cadApplication->ZoomExtents();
+     cadApplication.ZoomExtents();
    }catch(...){
+      std::cerr << "Failed to setup zoom window" << endl;
       return false;
    }
    return true;
@@ -899,21 +931,19 @@ bool AutoCADHelper::SetupActiveViewportZoomWindow(double x, double y,
 
 bool AutoCADHelper::SetupActiveViewportZoomScale(double ZoomFactor)
 {
-   AcadPViewport *viewport = 0;
+   AcadPViewportPtr viewport;
    cadActiveDocument->set_ActiveSpace(acPaperSpace);
    try{
-   viewport = (AcadPViewport*)(IDispatch*)Variant((IDispatch*)cadActiveDocument
-                ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
+     viewport = (IDispatch*)Variant((IDispatch*)cadActiveDocument
+                  ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
 
-   viewport->Display(True);
-   cadActiveDocument->set_MSpace(True);
+     BeginMSpace(viewport);
+       cadApplication.ZoomScaled(ZoomFactor,acZoomScaledAbsolute);
+     EndMSpace(viewport);
 
-   cadApplication->ZoomScaled(ZoomFactor,acZoomScaledAbsolute);
-
-   cadActiveDocument->set_MSpace(False);
-   viewport->Display(False);
-   cadApplication->ZoomExtents();
+     cadApplication.ZoomExtents();
    }catch(...){
+      std::cerr << "Failed to setup zoom window" << endl;   
       return false;
    }
    return true;
@@ -921,19 +951,19 @@ bool AutoCADHelper::SetupActiveViewportZoomScale(double ZoomFactor)
 
 bool AutoCADHelper::SetupActiveViewportZoomCenter(double x, double y, double scale)
 {
-   AcadPViewport *viewport = 0;
+   AcadPViewportPtr viewport;
    cadActiveDocument->set_ActiveSpace(acPaperSpace);
    try{
-   viewport = (AcadPViewport*)(IDispatch*)Variant((IDispatch*)cadActiveDocument
-                ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
+     viewport = (IDispatch*)Variant((IDispatch*)cadActiveDocument
+                  ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
 
-   viewport->Display(True);
-   cadActiveDocument->set_MSpace(True);
+     BeginMSpace(viewport);
+       cadApplication.ZoomCenter(cadPoint(x,y),1);
+     EndMSpace(viewport);
 
-   cadApplication->ZoomCenter(cadPoint(x,y),1);
-   cadActiveDocument->set_MSpace(False);
-   viewport->Display(False);
+     cadApplication.ZoomExtents();
    }catch(...){
+      std::cerr << "Failed to setup zoom window" << endl;   
       return false;
    }
    return true;
@@ -942,215 +972,187 @@ bool AutoCADHelper::SetupActiveViewportZoomCenter(double x, double y, double sca
 void AutoCADHelper::AddPaperSpace(AnsiString name, double x, double y,
                                         double width, double height)
 {
-   AcadPViewport *viewport = 0;
-   AcadLayout *layout = cadActiveDocument->Layouts->Add(WideString(name));
+   AcadPViewportPtr viewport;
+   AcadLayoutPtr layout = cadActiveDocument->Layouts->Add(WideString(name));
 
    cadActiveDocument->set_ActiveSpace(acPaperSpace);
    cadActiveDocument->set_ActiveLayout(layout);
 
-   viewport = (AcadPViewport*)(IDispatch*)Variant((IDispatch*)cadActiveDocument
-                ->GetDefaultInterface()).OlePropertyGet("ActivePViewport");
-   viewport->Display(True);
-   cadActiveDocument->set_MSpace(True);
-
-   cadApplication->ZoomWindow(cadPoint(x,y),cadPoint(x+width,y+height));
-
-   cadActiveDocument->set_MSpace(False);
-   viewport->Display(False);
-   cadApplication->ZoomExtents();
+   SetupActiveViewportZoomWindow(x, y, width, height);
+   
    cadActiveDocument->PurgeAll();
 }
 
-AcadText *AutoCADHelper::DrawText(AnsiString str, double height,
+AcadTextPtr AutoCADHelper::DrawText(AnsiString str, double height,
                                   double x, double y, double rotation)
 {
-   if(!cadActiveDocument) return 0;
-   AcadText *text;
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadTextPtr());
+   AcadTextPtr text;
    text = cadActiveDocument->ModelSpace->AddText(WideString(str),cadPoint(x,y),height);
    text->Rotate(cadPoint(x,y),rotation);
    return text;
 }
 
-AcadText *AutoCADHelper::DrawTextPS(AnsiString str, double height,
+AcadTextPtr AutoCADHelper::DrawTextPS(AnsiString str, double height,
                                   double x, double y, double rotation)
 {
-   if(!cadActiveDocument) return 0;
-   AcadText *text;
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadTextPtr());
+   AcadTextPtr text;
    text = cadActiveDocument->PaperSpace->AddText(WideString(str),cadPoint(x,y),height);
    text->Rotate(cadPoint(x,y),rotation);
    return text;
 }
 
-AcadLine *AutoCADHelper::DrawLine(double x1, double y1, double x2, double y2)
+AcadLinePtr AutoCADHelper::DrawLine(double x1, double y1, double x2, double y2)
 {
-   if(cadActiveDocument){
-      return cadActiveDocument->ModelSpace->AddLine(cadPoint(x1,y1),cadPoint(x2,y2));
-   }
-   return 0;
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadLinePtr());
+   return cadActiveDocument->ModelSpace->AddLine(cadPoint(x1,y1),cadPoint(x2,y2));
 }
 
-AcadLine *AutoCADHelper::DrawLinePS(double x1, double y1, double x2, double y2)
+AcadLinePtr AutoCADHelper::DrawLinePS(double x1, double y1, double x2, double y2)
 {
-   if(cadActiveDocument){
-      return cadActiveDocument->PaperSpace->AddLine(cadPoint(x1,y1),cadPoint(x2,y2));
-   }
-   return 0;
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadLinePtr());
+   return cadActiveDocument->PaperSpace->AddLine(cadPoint(x1,y1),cadPoint(x2,y2));
 }
 
-AcadPolyline *AutoCADHelper::DrawPolyLine(double *array, int count, int coordCount)
+AcadPolylinePtr AutoCADHelper::DrawPolyLine(double *array, int count, int coordCount)
 {
-   if(cadActiveDocument){
-        return cadActiveDocument->ModelSpace->AddPolyline(cadPointArray(array,count, coordCount));
-   }
-   return 0;
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadPolylinePtr());
+   return cadActiveDocument->ModelSpace->AddPolyline(cadPointArray(array,count, coordCount));
 }
 
-AcadPolyline *AutoCADHelper::DrawPolyLinePS(double *array, int count, int coordCount)
+AcadPolylinePtr AutoCADHelper::DrawPolyLinePS(double *array, int count, int coordCount)
 {
-   if(cadActiveDocument){
-        return cadActiveDocument->PaperSpace->AddPolyline(cadPointArray(array,count, coordCount));
-   }
-   return 0;
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadPolylinePtr());
+   return cadActiveDocument->PaperSpace->AddPolyline(cadPointArray(array,count, coordCount));
 }
 
-AcadEllipse *AutoCADHelper::DrawEllipse(double centerX, double centerY, double MajorAxis,double MinorAxis)
+AcadEllipsePtr AutoCADHelper::DrawEllipse(double centerX, double centerY, double MajorAxis,double MinorAxis)
 {
-   double temp;
-   Variant majAx;
+    WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadEllipsePtr());
+
+    double temp;
+    Variant majAx;
    
-   if(MinorAxis<0)MinorAxis = -MinorAxis;
-   if(MajorAxis<0)MajorAxis = -MajorAxis;
+    if(MinorAxis<0)MinorAxis = -MinorAxis;
+    if(MajorAxis<0)MajorAxis = -MajorAxis;
 
-   if(cadActiveDocument){
-      //MinorAxis = MajorAxis/MinorAxis;
-      if(MajorAxis<MinorAxis){
-         majAx = cadPoint(0,-MinorAxis);
-         temp = MajorAxis / MinorAxis;
-      }else{
-         majAx = cadPoint(MajorAxis);
-         temp = MinorAxis / MajorAxis;
-      }
+    if(MajorAxis<MinorAxis){
+       majAx = cadPoint(0,-MinorAxis);
+       temp = MajorAxis / MinorAxis;
+    }else{
+       majAx = cadPoint(MajorAxis);
+       temp = MinorAxis / MajorAxis;
+    }
 
-      AcadEllipse *ellipse = cadActiveDocument->ModelSpace->AddEllipse(cadPoint(centerX,centerY),
-                   majAx,Variant(temp));
-      if(MajorAxis<MinorAxis){
-         //ellipse->Rotate(cadPoint(centerX,centerY),M_PI_2);
-      }
-      return ellipse;
-   }
-   return 0;
+    AcadEllipsePtr ellipse = cadActiveDocument->ModelSpace->AddEllipse(cadPoint(centerX,centerY),
+                 majAx,Variant(temp));
+    if(MajorAxis<MinorAxis){
+       //ellipse->Rotate(cadPoint(centerX,centerY),M_PI_2);
+    }
+    return ellipse;
 }
 
-AcadPolyline *AutoCADHelper::DrawRect(double centerX, double centerY, double width, double height)
+AcadPolylinePtr AutoCADHelper::DrawRect(double centerX, double centerY, double width, double height)
 {
-   static double rect[10];
-   static double width2,height2;
-   if(cadActiveDocument){
-      width2 = width*0.5;
-      height2 = height*0.5;
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadPolylinePtr());
 
-      rect[0] = centerX - width2;
-      rect[1] = centerY - height2;
+   double rect[10];
+   double width2,height2;
+   width2 = width*0.5;
+   height2 = height*0.5;
 
-      rect[2] = centerX + width2;
-      rect[3] = centerY - height2;
+   rect[0] = centerX - width2;
+   rect[1] = centerY - height2;
 
-      rect[4] = centerX + width2;
-      rect[5] = centerY + height2;
+   rect[2] = centerX + width2;
+   rect[3] = centerY - height2;
 
-      rect[6] = centerX - width2;
-      rect[7] = centerY + height2;
+   rect[4] = centerX + width2;
+   rect[5] = centerY + height2;
 
-      rect[8] = centerX - width2;
-      rect[9] = centerY - height2;
+   rect[6] = centerX - width2;
+   rect[7] = centerY + height2;
 
-      return DrawPolyLine(rect,5,2);
-   }
-   return 0;
+   rect[8] = centerX - width2;
+   rect[9] = centerY - height2;
+
+   return DrawPolyLine(rect,5,2);
 }
 
-AcadPolyline *AutoCADHelper::DrawRectPS(double centerX, double centerY, double width, double height)
+AcadPolylinePtr AutoCADHelper::DrawRectPS(double centerX, double centerY, double width, double height)
 {
-   static double rect[10];
-   static double width2,height2;
-   if(cadActiveDocument){
-      width2 = width*0.5;
-      height2 = height*0.5;
+    WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadPolylinePtr());
+    double rect[10];
+    double width2,height2;
 
-      rect[0] = centerX - width2;
-      rect[1] = centerY - height2;
+    width2 = width*0.5;
+    height2 = height*0.5;
 
-      rect[2] = centerX + width2;
-      rect[3] = centerY - height2;
+    rect[0] = centerX - width2;
+    rect[1] = centerY - height2;
 
-      rect[4] = centerX + width2;
-      rect[5] = centerY + height2;
+    rect[2] = centerX + width2;
+    rect[3] = centerY - height2;
 
-      rect[6] = centerX - width2;
-      rect[7] = centerY + height2;
+    rect[4] = centerX + width2;
+    rect[5] = centerY + height2;
 
-      rect[8] = centerX - width2;
-      rect[9] = centerY - height2;
+    rect[6] = centerX - width2;
+    rect[7] = centerY + height2;
 
-      return DrawPolyLinePS(rect,5,2);
-   }
-   return 0;
+    rect[8] = centerX - width2;
+    rect[9] = centerY - height2;
+
+    return DrawPolyLinePS(rect,5,2);
 }
 
-AcadArc *AutoCADHelper::DrawArc(double centerX, double centerY,
+AcadArcPtr AutoCADHelper::DrawArc(double centerX, double centerY,
                                 double radius, double sAngle, double eAngle)
 {
-   if(cadActiveDocument){
-      return cadActiveDocument->ModelSpace->AddArc(cadPoint(centerX,centerY),
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadArcPtr());
+   return cadActiveDocument->ModelSpace->AddArc(cadPoint(centerX,centerY),
                                                         radius,sAngle,eAngle);
-   }
-   return 0;
 }
 
-AcadCircle *AutoCADHelper::DrawCircle(double centerX, double centerY, double radius)
+AcadCirclePtr AutoCADHelper::DrawCircle(double centerX, double centerY, double radius)
 {
-   if(cadActiveDocument){
-      return cadActiveDocument->ModelSpace->AddCircle(cadPoint(centerX,centerY),radius);
-   }
-   return 0;
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadCirclePtr());
+   return cadActiveDocument->ModelSpace->AddCircle(cadPoint(centerX,centerY),radius);
 }
 
-AcadCircle *AutoCADHelper::DrawCirclePS(double centerX, double centerY, double radius)
+AcadCirclePtr AutoCADHelper::DrawCirclePS(double centerX, double centerY, double radius)
 {
-   if(cadActiveDocument){
-      return cadActiveDocument->PaperSpace->AddCircle(cadPoint(centerX,centerY),radius);
-   }
-   return 0;
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadCirclePtr());
+   return cadActiveDocument->PaperSpace->AddCircle(cadPoint(centerX,centerY),radius);
 }
 
 void AutoCADHelper::Regen()
 {
-   //cadActiveDocument->SendCommand("extrim");
-   if(cadActiveDocument){
-     cadActiveDocument->Regen(acAllViewports);
-   }
+   WARNING_AND_RETURN_ON_0(cadActiveDocument);
+   cadActiveDocument->Regen(acAllViewports);
 }
 
 AcadLineTypePtr AutoCADHelper::LoadLineType(WideString LineTypeName,
                                           WideString FileName,
                                           WideString ShapeFileName)
 {
-   if(cadActiveDocument){
-      try{
-         if(!ShapeFileName.IsEmpty()){
-            try{
-            cadActiveDocument->LoadShapeFile(ShapeFileName);
-            }catch(...){}
-         }
-         cadActiveDocument->Linetypes->Load(LineTypeName, FileName);
-         return cadActiveDocument->Linetypes->Item(Variant(LineTypeName));//cadActiveDocument->Linetypes->Add(LineTypeName);
-      }catch(...){}
+   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadLineTypePtr());
+   try{
+       if(!ShapeFileName.IsEmpty()){
+          cadActiveDocument->LoadShapeFile(ShapeFileName);
+       }
+       cadActiveDocument->Linetypes->Load(LineTypeName, FileName);
+       return cadActiveDocument->Linetypes->Item(Variant(LineTypeName));
+   }catch(...){
+       std::cerr << "failed to get linetype '" << AnsiString(LineTypeName).c_str() << "'";
    }
+   return AcadLineTypePtr();
 }
 
 WideString AutoCADHelper::GetSignName(AnsiString signName)
 {
-   static i,length,count;
+   int i,length,count;
    length = signName.Length();
    count = 0; 
    for(i=1;i<=length;i++){
@@ -2585,15 +2587,14 @@ AcadLine *AutoCADTable::DrawLine(int iRow, float sPos,
    return gOwner->DrawLine(gLeftTop.x+sPos,yk1,gLeftTop.x+ePos,yk2);
 }
 
-AcadEllipse *AutoCADTable::DrawRightArcEllipse(int iRow, float sPos, float ePos)
+AcadEllipsePtr AutoCADTable::DrawRightArcEllipse(int iRow, float sPos, float ePos)
 {
-    AcadEllipse *ellipse = gOwner->DrawEllipse(sPos,gLeftTop.y - RowOffsetY(iRow+1),abs(ePos-sPos),gRowHeight/2);
-    return ellipse;
+    return gOwner->DrawEllipse(sPos,gLeftTop.y - RowOffsetY(iRow+1),abs((int)(ePos-sPos)),gRowHeight/2);
 }
 
-AcadEllipse *AutoCADTable::DrawLeftArcEllipse(int iRow, float sPos, float ePos)
+AcadEllipsePtr AutoCADTable::DrawLeftArcEllipse(int iRow, float sPos, float ePos)
 {
-    return gOwner->DrawEllipse(sPos,gLeftTop.y - RowOffsetY(iRow),abs(ePos-sPos),gRowHeight/2);
+    return gOwner->DrawEllipse(sPos,gLeftTop.y - RowOffsetY(iRow),abs((int)(ePos-sPos)),gRowHeight/2);
 }
 
 AcadText *AutoCADTable::DrawVerticalText(AnsiString txt, int iRow, float Pos,
@@ -2822,7 +2823,7 @@ void AutoCADTable::DrawTextInBordersSpec2(int row, float offBeg,
 {
    AcadText *text;
    AcAlignment align;
-   float width  = (float)abs(offEnd - offBeg)/2;
+   float width  = (float)abs(int(offEnd - offBeg))/2;
    float xOffset = gLeftTop.x + offBeg + width*1.5;
    float yOffset;
    float scale;
@@ -2832,7 +2833,7 @@ void AutoCADTable::DrawTextInBordersSpec2(int row, float offBeg,
    if(scale>=1)
      scale = kProp;
    else{
-      scale = (float)abs(offEnd-offBeg)/(float)(str.Length()*gLetterWidth);
+      scale = (float)abs(int(offEnd-offBeg))/(float)(str.Length()*gLetterWidth);
       scale *= kPadding;
       if(scale>kProp)scale = kProp;
    }
