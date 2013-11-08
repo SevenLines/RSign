@@ -180,13 +180,13 @@ public:
         __property float FillGapsBegin = {read = gFillGapsBegin, write = SetFillGapsBegin};
 
         /* рейяр -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-        AcadText *DrawText(int row, float offset, AnsiString str,
+        AcadTextPtr DrawText(int row, float offset, AnsiString str,
                                 float kProp = 0.34);
         void DrawTextInBorders(int row, float offBeg,
                                     float offEnd,AnsiString str,
                                     bool fWithBorders = true,float kProp = 0.43);
-        AcadText *DrawHeaderText(int row,AnsiString str, float kProp = 0.34);
-        AcadText *DrawVerticalText(AnsiString txt, int iRow, float Pos, float kyPos = 0.5,
+        void DrawHeaderText(int row,AnsiString str, float kProp = 0.34);
+        AcadTextPtr DrawVerticalText(AnsiString txt, int iRow, float Pos, float kyPos = 0.5,
                                         bool fRight = true, float kProp = 0.2);
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
@@ -203,17 +203,21 @@ public:
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /* GEOMETRY -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-        AcadLine *DrawBorder(int offset,int iRow=-1);
+        AcadLinePtr DrawBorder(int offset,int iRow=-1);
         void DrawSnakeBorder(int iRow, float *xOffsets, int count);
-        void DrawSnakeBorder2(int iRow, float sPos, float ePos);
+        void DrawSnakeBorder(int iRow, float sPos, float ePos);
+
         void DrawEmpty(int Row, float offsetBegin, float offsetEnd,
                         bool fWithBorders = false, bool fInc = false);
+        /*void DrawEmpty2(int Row, float offsetBegin, float offsetEnd,
+                        bool fWithBorders = false, bool fInc = false);*/
+
         AcadBlockReferencePtr DrawBlock(WideString BlockName, int iRow, float Pos, float yOffset=0.5);
-        AcadLine *DrawLine(int iRow, float sPos, float ePos);
-        AcadLine *DrawLine(int iRow, float sPos, float yk1/* 0<=yk1<=1 */, float ePos, float yk2);
-        AcadLine *DrawFull(int offsetBegin, int OffsetEnd);
-        void FillArea(int iRow, float offsetBegin, float offsetEnd, AnsiString strHatch, float scale = 75, int color = 0);
-        void FillArea(int iRow, float offsetBegin, float offsetEnd, AnsiString strHatch, float scale, long colorR, long colorG, long colorB);
+        AcadLinePtr DrawLine(int iRow, float sPos, float ePos);
+        AcadLinePtr DrawLine(int iRow, float sPos, float yk1/* 0<=yk1<=1 */, float ePos, float yk2);
+        AcadLinePtr DrawFull(int offsetBegin, int OffsetEnd);
+        AcadHatchPtr FillArea(int iRow, float offsetBegin, float offsetEnd, AnsiString strHatch, float scale = 75, int color = 0);
+        AcadHatchPtr FillArea(int iRow, float offsetBegin, float offsetEnd, AnsiString strHatch, float scale, long colorR, long colorG, long colorB);
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /* TABLE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
@@ -233,6 +237,9 @@ public:
                                 AnsiString (*func)(float _min, float _max) = 0,
                                 float step = 0,
                                 bool fWithBorders = true, float kProp = 0.43);
+        /*void DrawRepeatEmptyInterval2(int iRow,
+                                float sPos, float ePos, float step = 0,
+                                bool fWithBorders = true, bool fInc = false); */
         void DrawRepeatTextIntervalSpec2(int iRow, AnsiString str,
                                 float sPos, float ePos, bool fTop, float step = 0,
                                 bool fWithBorders = true, float kProp = 0.43);
@@ -252,11 +259,8 @@ public:
                                     bool fWithBorders = true,float kProp = 0.43);
         float DrawTextInBordersSpec3(int iRow, AnsiString text, float Pos, float yPos,
                                   AcAlignment align,float width =0, float kProp = 0.43);
-        void DrawEmpty2(int Row, float offsetBegin, float offsetEnd,
-                        bool fWithBorders = false, bool fInc = false);
-        void DrawRepeatEmptyInterval2(int iRow,
-                                float sPos, float ePos, float step = 0,
-                                bool fWithBorders = true, bool fInc = false);
+
+
         float kBottomEmptyPadding;
         float kPadding;
         float MinViewFontSize;
@@ -295,7 +299,7 @@ private:
         AcadLineTypePtr getLineType(WideString name);
         AcadDocumentPtr getActiveDocument();
 
-        void SetSignAttribute(AcadBlockReferencePtr block, WideString value);
+
         WideString GetSignName(AnsiString signName);
         int getBlocksCount();
         void __fastcall ActiveDocumentBeginClose(TObject *sender);
@@ -328,11 +332,11 @@ public:
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /*днйслемрш -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
-        TAcadDocument *CreateDocumentFromInterface(IAcadDocument *docToConnect = 0, bool setAsActive = true); // create document
+        TAcadDocument *SetActive(AcadDocumentPtr docToConnect); // create document
         void DeleteDocument(TAcadDocument *doc); // delete document
 
         AcadDocumentPtr AddDocument(AnsiString _template="acadiso.dwt");
-        TAcadDocument * BindToActiveDocument();
+        bool BindToActiveDocument();
         AcadDocumentPtr OpenDocument(AnsiString FileName,
                                     bool fSetActive = false,
                                     bool fReopen = false);
@@ -357,8 +361,7 @@ public:
         AcadLinePtr DrawLine(double x1, double y1, double x2, double y2);
         AcadLinePtr DrawLinePS(double x1, double y1, double x2, double y2);
 
-        AcadTextPtr DrawText(AnsiString str, double height,
-                        double x = 0, double y = 0, double rotation = 0);
+        AcadTextPtr DrawText(AnsiString str, double height, AcAlignment alignment, double x, double y, double rotation = 0);
         AcadTextPtr DrawTextPS(AnsiString str, double height,
                         double x = 0, double y = 0, double rotation = 0);
         AcadArcPtr DrawArc(double centerX, double centerY, double radius, double sAngle, double eAngle);
@@ -372,7 +375,7 @@ public:
                          int HatchColor = 0, int hatchScale = 75);
                          
         void DrawRepeatTextInterval(WideString str, float sPosX, float ePosX,
-                                         float sPosY, float ePosY, float TextHeight,
+                                         float PosY, float TextHeight,
                                          float step = 100000);
         int GetTextWidth(AnsiString text, int Height);
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
@@ -382,6 +385,8 @@ public:
          * set atribute with name PropertyName of block, with value,
          * set rot to -1 if u don't want to rotate object
         */
+        void SetSignLabels(AcadBlockReferencePtr block, WideString value);
+        void SplitString(AnsiString str, char delim, vector<AnsiString> &out, bool fRemoveEmpties = true);
         void SetAttribute(AcadBlockReferencePtr block, AnsiString PropertyName,
                                  WideString value, int rot = -1);
         bool SetPropertyPoint(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,
