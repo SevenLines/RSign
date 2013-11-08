@@ -13,6 +13,7 @@
 #include <Dialogs.hpp>
 #include <ComCtrls.hpp>
 #include <IniFiles.hpp>
+#include <list>
 
 enum AutoCADPrintOutputStyle{posFile = 0, posDevice};
 
@@ -145,9 +146,14 @@ public:		// User declarations
        void Print2();
 
 
+       bool BeginPrint();
+       bool PauseLastFramePrint(std::list<AnsiString> &fileNames);
+       bool SetFrame(int position, int width);
+       bool EndPrint();
+
        AutoCADHelper *helper;
        float vcTop,vcCenter,vcBottom, vStep, sPos, ePos;
-       IAcadDocument *lastDoc;
+       AcadDocumentPtr lastDoc;
        AnsiString FileName;
        AutoCADPrintOutputStyle OutputStyle;
         __fastcall TFAutoCADPrint(TComponent* Owner);
