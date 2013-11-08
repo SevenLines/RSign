@@ -468,6 +468,11 @@ bool __fastcall TAcadExport::ExportTables(TFAutoCADExport *form)
 
   iStart = form->ExportSection?100*form->Start:-1;
   iEnd = form->ExportSection?100*form->End:-1;
+  
+  if (~iStart) {
+     tableBottom.FillGapsBegin = iStart;
+     tableTop.FillGapsBegin = iStart;
+  }
 
   UnderTextYOffset = form->UnderTextYOffset;
   UnderTextHeight = form->UnderTextHeight;
@@ -2186,31 +2191,27 @@ bool __fastcall TAcadExport::ExportSlope(TDangerSlope *s, int fase, bool fEnd) {
    }
 
    if(s->Promille>0){
-     if(iTopSlopes>=0)tableTop.DrawRepeatTextIntervalSpec2(iTopSlopes,"l=" + IntToStr(abs(s->Promille)) + "‰",s->LMin,s->LMax,false,iStep);
-     if(iBottomSlopes>=0)tableBottom.DrawRepeatTextIntervalSpec2(iBottomSlopes,"l=" + IntToStr(abs(s->Promille)) + "‰",s->LMin,s->LMax,false,iStep);
-
-   }else if(s->Promille<0){
-     if(iTopSlopes>=0)tableTop.DrawRepeatTextIntervalSpec2(iTopSlopes,"l=" + IntToStr(abs(s->Promille)) + "‰",s->LMin,s->LMax,true,iStep);
-     if(iBottomSlopes>=0)tableBottom.DrawRepeatTextIntervalSpec2(iBottomSlopes,"l=" + IntToStr(abs(s->Promille)) + "‰",s->LMin,s->LMax,true,iStep);
-   }
-   if(s->Promille>0){
      if(iTopSlopes>=0){
-       tableTop.DrawRepeatEmptyInterval(iTopSlopes,s->LMin,s->LMax,iStep,true,true);
+       tableTop.DrawRepeatEmptyInterval(iTopSlopes,s->LMin,s->LMax,iStep,true,true,true);
        tableTop.DrawRepeatVerticalTextInterval(iTopSlopes,s->LMin,s->LMax,0.33,iStep,false,0.15);
      }
      if(iBottomSlopes>=0){
-       tableBottom.DrawRepeatEmptyInterval(iBottomSlopes,s->LMin,s->LMax,iStep,true,true);
+       tableBottom.DrawRepeatEmptyInterval(iBottomSlopes,s->LMin,s->LMax,iStep,true,true,true);
        tableBottom.DrawRepeatVerticalTextInterval(iBottomSlopes,s->LMin,s->LMax,0.33,iStep,false,0.15);
      }
+     if(iTopSlopes>=0)tableTop.DrawRepeatTextIntervalSpec2(iTopSlopes,"l=" + IntToStr(abs(s->Promille)) + "‰",s->LMin,s->LMax,false,iStep);
+     if(iBottomSlopes>=0)tableBottom.DrawRepeatTextIntervalSpec2(iBottomSlopes,"l=" + IntToStr(abs(s->Promille)) + "‰",s->LMin,s->LMax,false,iStep);
    }else if(s->Promille<0){
      if(iTopSlopes>=0){
-       tableTop.DrawRepeatEmptyInterval(iTopSlopes,s->LMin,s->LMax,iStep,true,false);
+       tableTop.DrawRepeatEmptyInterval(iTopSlopes,s->LMin,s->LMax,iStep,true,true,false);
        tableTop.DrawRepeatVerticalTextInterval(iTopSlopes,s->LMin,s->LMax,0.66,iStep,false,0.15);
      }
      if(iBottomSlopes>=0){
-       tableBottom.DrawRepeatEmptyInterval(iBottomSlopes,s->LMin,s->LMax,iStep,true,false);
+       tableBottom.DrawRepeatEmptyInterval(iBottomSlopes,s->LMin,s->LMax,iStep,true,true,false);
        tableBottom.DrawRepeatVerticalTextInterval(iBottomSlopes,s->LMin,s->LMax,0.66,iStep,false,0.15);
      }
+     if(iTopSlopes>=0)tableTop.DrawRepeatTextIntervalSpec2(iTopSlopes,"l=" + IntToStr(abs(s->Promille)) + "‰",s->LMin,s->LMax,true,iStep);
+     if(iBottomSlopes>=0)tableBottom.DrawRepeatTextIntervalSpec2(iBottomSlopes,"l=" + IntToStr(abs(s->Promille)) + "‰",s->LMin,s->LMax,true,iStep);
    }else{
      if(iTopSlopes>=0){
        tableTop.DrawLine(iTopSlopes,s->LMin,tableTop.kBottomEmptyPadding,s->LMax,tableTop.kBottomEmptyPadding);
@@ -2265,9 +2266,9 @@ bool __fastcall TAcadExport::ExportSidewalk(TExtPolyline *Poly,TSquareRoadSideOb
        if(s->LMin>iEnd) return true;
    }
 
-   AcadPolyline *pl[1];
+   AcadPolylinePtr pl[1];
    pl[0] = DrawPolyPoints(Poly, false, true);
-   IAcadHatch *hatch = AutoCAD.FillArea((IDispatch**)pl,1,!exist?NotExistColor:0,strSidewalksHatch);
+   AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl,1,!exist?NotExistColor:0,strSidewalksHatch);
    if(hatch) hatch->PatternScale = iSidewalsHatchScale;
    AnsiString str = "1.5ì,à/á";
    switch(s->Placement){
@@ -2335,7 +2336,7 @@ bool __fastcall TAcadExport::ExportBorder(TExtPolyline *Poly,TLinearRoadSideObje
    }
    DrawBorder(points, "borderblock", exist);
    */
-   AcadPolyline *line = DrawPolyPoints(Poly, false);
+   AcadPolylinePtr line = DrawPolyPoints(Poly, false);
    line->set_Lineweight(acLnWt050);
 
    if(!exist) {

@@ -1657,38 +1657,20 @@ AcadHatchPtr AutoCADTable::FillArea(int iRow, float offsetBegin, float offsetEnd
 }
 
 void AutoCADTable::DrawEmpty(int iRow, float offsetBegin, float offsetEnd,
-                        bool fborders, bool fInc )
+                             bool fWithBorders, bool fWithoutFill, bool fInc )
 {
    if(offsetBegin<0) offsetBegin = 0;
    if(offsetEnd<0) offsetEnd = 0;
-   if(EmptyFill.IsEmpty()) {
-     if(fInc){
-       DrawLine(iRow,offsetBegin,0,offsetEnd,1);
-     }else{
-       DrawLine(iRow,offsetBegin,1,offsetEnd,0);
-     }
+   if(EmptyFill.IsEmpty() || fWithoutFill) {  // draw cross line if EmptyFIll is not set, or forced fWithoutFill
+      DrawLine(iRow,offsetBegin,fInc?0:1,offsetEnd,fInc?1:0);
    } else {
       FillArea(iRow, offsetBegin, offsetEnd, EmptyFill, EmptyFillScale);
    }
-   if(fborders){
+   if(fWithBorders){
       DrawSnakeBorder(iRow, offsetBegin, offsetEnd);
    }
 }
-/*
-void AutoCADTable::DrawEmpty2(int iRow, float offsetBegin, float offsetEnd,
-                        bool fborders, bool fInc )
-{
-   if(offsetBegin<0) offsetBegin = 0;
-   if(offsetEnd<0) offsetEnd = 0;
-   if(fInc){
-      DrawLine(iRow,offsetBegin,kBottomEmptyPadding,offsetEnd,1);
-   }else{
-      DrawLine(iRow,offsetBegin,1,offsetEnd,kBottomEmptyPadding);
-   }
-   if(fborders){
-      DrawSnakeBorder(iRow, offsetBegin,offsetEnd);
-   }
-}  */
+
 
 AcadTextPtr AutoCADTable::DrawText(int row, float offset,
                                  AnsiString str, float kProp)
@@ -1714,10 +1696,18 @@ void AutoCADTable::DrawHeaderText(int row,AnsiString str, float kProp)
 
 void AutoCADTable::DrawRepeatEmptyInterval(int iRow,
                                 float sPos, float ePos, float step,
-                                bool fWithBorders,bool fInc)
+                                bool fWithBorders, bool fWithoutFill, bool fInc)
 {
-   if(emptyMin && (emptyMin[iRow] > sPos || emptyMin[iRow] > ePos)) {
-      return;
+   if(emptyMin) {
+      if ( emptyMin[iRow] > ePos ) {
+         return;
+      }
+      if ( emptyMin[iRow] > sPos ) {
+         sPos = emptyMin[iRow];
+         if (sPos > ePos) {
+            return;
+         }
+      }
    }
 
    if(step==0){
@@ -1745,74 +1735,24 @@ void AutoCADTable::DrawRepeatEmptyInterval(int iRow,
 
    if(iMin!=iMax){
      if(sPos<iMin*step){
-         DrawEmpty(iRow,sPos,iMin*step,false,fInc);
+         DrawEmpty(iRow,sPos,iMin*step,false,fWithoutFill, fInc);
          pos[counter++] = iMin*step;
      }
      for(int i=iMin;i<iMax-1;i++){
-         DrawEmpty(iRow,i*step,(i+1)*step,false,fInc);
+         DrawEmpty(iRow,i*step,(i+1)*step,false,fWithoutFill, fInc);
          pos[counter++] = (i+1)*step;
      }
      if(ePos>(iMax-1)*step){
-        DrawEmpty(iRow,(iMax-1)*step,ePos,false,fInc);
+        DrawEmpty(iRow,(iMax-1)*step,ePos,false,fWithoutFill, fInc);
         pos[counter++] = ePos;
      }
      if(fWithBorders)DrawSnakeBorder(iRow,pos,counter);
    }else{
-     DrawEmpty(iRow,sPos,ePos,false,fInc);
+     DrawEmpty(iRow, sPos, ePos, false, fWithoutFill, fInc);
      if(fWithBorders)DrawSnakeBorder(iRow,sPos,ePos);
    }
    delete[] pos;
 }
-/*
-void AutoCADTable::DrawRepeatEmptyInterval2(int iRow,
-                                float sPos, float ePos, float step,
-                                bool fWithBorders,bool fInc)
-{
-
-   if(step==0){
-     if(gRepeatInterval!=0)
-       step=gRepeatInterval;
-     else
-       return;
-   }
-
-   if(sPos<0) sPos = 0;
-   if(ePos<0||ePos == sPos){
-      if(fWithBorders){
-         DrawBorder(sPos,iRow);
-      }
-      return;
-   }
-
-   int iMin = (int)(sPos/step) + 1;
-   int iMax = (int)(ePos/step) + 1;
-
-   int count = abs(iMax - iMin)+2;
-   int counter = 1;
-   float *pos = new float[count];
-   pos[0] = sPos;   
-
-   if(iMin!=iMax){
-     if(sPos<iMin*step){
-         DrawEmpty2(iRow,sPos,iMin*step,false,fInc);
-         pos[counter++] = iMin*step;
-     }
-     for(int i=iMin;i<iMax-1;i++){
-         DrawEmpty2(iRow,i*step,(i+1)*step,false,fInc);
-         pos[counter++] = (i+1)*step;
-     }
-     if(ePos>(iMax-1)*step){
-        DrawEmpty2(iRow,(iMax-1)*step,ePos,false,fInc);
-        pos[counter++] = ePos;
-     }
-     if(fWithBorders)DrawSnakeBorder(iRow,pos,counter);
-   }else{
-     DrawEmpty2(iRow,sPos,ePos,false,fInc);
-     if(fWithBorders)DrawSnakeBorder(iRow,sPos,ePos);
-   }
-   delete[] pos;
-}
- */
 
 
 void AutoCADTable::DrawRepeatTextInterval(int iRow, AnsiString str,

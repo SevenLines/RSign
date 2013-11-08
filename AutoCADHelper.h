@@ -199,7 +199,7 @@ public:
 
         void DrawRepeatEmptyInterval(int iRow,
                                 float sPos, float ePos, float step = 0,
-                                bool fWithBorders = true, bool fInc = false);
+                                bool fWithBorders=true, bool fWithoutFill = false, bool fInc = false);
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /* GEOMETRY -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
@@ -208,9 +208,7 @@ public:
         void DrawSnakeBorder(int iRow, float sPos, float ePos);
 
         void DrawEmpty(int Row, float offsetBegin, float offsetEnd,
-                        bool fWithBorders = false, bool fInc = false);
-        /*void DrawEmpty2(int Row, float offsetBegin, float offsetEnd,
-                        bool fWithBorders = false, bool fInc = false);*/
+                        bool fWithBorders, bool fWithoutFill, bool fInc);
 
         AcadBlockReferencePtr DrawBlock(WideString BlockName, int iRow, float Pos, float yOffset=0.5);
         AcadLinePtr DrawLine(int iRow, float sPos, float ePos);
