@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <iostream>
+#include <algorithm>
 
 #include "AutoCADHelper.h"
 #include "MickMacros.h"
@@ -114,13 +115,15 @@ void AutoCADHelper::SplitString(AnsiString str, char delim, vector<AnsiString> &
     int i,iLast = 1;
     for(i=2;i<=strLenght;i++){
       if(str[i]==delim){
-         if ( !(fRemoveEmpties && i - iLast > 0 ) ) {
+         if ( !fRemoveEmpties || (fRemoveEmpties && i - iLast > 0 ) ) {
             out.push_back(str.SubString(iLast, i - iLast));
          }
          iLast = i + 1;
       }
     }
-    out.push_back(str.SubString(iLast, strLenght - iLast + 1));    
+    if ( !fRemoveEmpties || (fRemoveEmpties && strLenght - iLast + 1 > 0) ) {
+       out.push_back(str.SubString(iLast, strLenght - iLast + 1));
+    }
 }
 
 Variant AutoCADHelper::cadPointArray(double *points, int Count,
@@ -946,7 +949,6 @@ void AutoCADHelper::AddPaperSpace(AnsiString name, double x, double y,
 AcadTextPtr AutoCADHelper::DrawText(AnsiString str, double height, AcAlignment alignment,
                                   double x, double y, double rotation)
 {
-//   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument->IsBound(), AcadTextPtr());
    AcadTextPtr text;
    text = cadActiveDocument->ModelSpace->AddText(WideString(str),cadPoint(x,y),height);
    text->Rotate(cadPoint(x,y),rotation);
@@ -1785,7 +1787,6 @@ void AutoCADTable::DrawRepeatTextInterval(int iRow, AnsiString str,
 
    if(gFillGaps[iRow]&&RowslEnd[iRow]<=sPos){
      DrawRepeatEmptyInterval(iRow,RowslEnd[iRow],sPos,step,true);
-     //gaps[iRow].push_back(AutoCADPoint(sPos,ePos));
    }
 
    emptyMin[iRow] = max(max(emptyMin[iRow], sPos),ePos);
@@ -1861,7 +1862,7 @@ void AutoCADTable::DrawRepeatTextInterval(int iRow, AnsiString str,
 }
 
 
-void AutoCADTable::DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
+void AutoCADTable::DrawRepeatTextIntervalRoadMark(int iRow, AnsiString str,
                                 float sPos, float ePos,
                                 AnsiString (*func)(float, float),
                                 float step, bool fWithBorders, float kProp)
@@ -1918,7 +1919,7 @@ void AutoCADTable::DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
            }else{
               tStr=func(min,max);
            }
-           DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+           DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
          } else {
            if(func){
                if(!str.IsEmpty()){
@@ -1926,7 +1927,7 @@ void AutoCADTable::DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
                }else{
                   tStr=func(min,max);
                }
-               DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+               DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
            }else{
                if(!str.IsEmpty())DrawTextInBordersSpec(iRow,sPos,iMin*step,str,false,kProp);
            }
@@ -1948,7 +1949,7 @@ void AutoCADTable::DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
            }else{
               tStr=func(min,max);
            }
-           DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+           DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
          } else {
            if(func){
              if(!str.IsEmpty()){
@@ -1956,7 +1957,7 @@ void AutoCADTable::DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
              }else{
                 tStr=func(min,max);
              }
-             DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+             DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
            }else{
              if(!str.IsEmpty())DrawTextInBordersSpec(iRow,i*step,(i+1)*step,str,false,kProp);
            }
@@ -1978,7 +1979,7 @@ void AutoCADTable::DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
            }else{
               tStr=func(min,max);
            }
-           DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+           DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
          } else {
            if(func){
              if(!str.IsEmpty()){
@@ -1986,7 +1987,7 @@ void AutoCADTable::DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
              }else{
                 tStr=func(min,max);
              }
-             DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+             DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
            }else{
              if(!str.IsEmpty())DrawTextInBordersSpec(iRow,min,max,str,false,kProp);
            }
@@ -2010,7 +2011,7 @@ void AutoCADTable::DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
        }else{
           tStr=func(min,max);
        }
-       DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+       DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
      } else {
        if(func){
           min = sPos;
@@ -2020,7 +2021,7 @@ void AutoCADTable::DrawRepeatTextIntervalSpec(int iRow, AnsiString str,
           }else{
              tStr=func(min,max);
           }
-          DrawTextInBordersSpec(iRow,min,max,tStr,false,kProp);
+          DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
        }else{
           if(!str.IsEmpty())DrawTextInBordersSpec(iRow,sPos,ePos,str,false,kProp);
        }
@@ -2382,6 +2383,111 @@ AcadTextPtr AutoCADTable::DrawVerticalText(AnsiString txt, int iRow, float Pos,
    return text;
 }
 
+// returns the rest of words started from index
+AnsiString GetRestOfStringAfter(int index, vector<AnsiString> words, AnsiString delimiter = " ")
+{
+   AnsiString str;
+   for(int i=index;i<words.size(); ++i ) {
+      if (i!=index) str += delimiter;
+      str += words[i];
+   }
+   return str;
+}
+
+// returns the rest of words started from index
+AnsiString GetRestOfStringBefore(int index, vector<AnsiString> words, AnsiString delimiter = " ")
+{
+   AnsiString str;
+   for(int i=index;i>=0; --i ) {
+      str += words[i];
+      if (i!=index) str += delimiter;
+   }
+   return str;
+}
+
+void AutoCADTable::SplitTextForRoadMark(AnsiString str, int RectHeight, int RectWidth, vector<LineInfo> &lines)
+{
+#define GETK(str) (float)RectWidth / (str.Length()* LetterWidth)
+
+    int width, minLinesCount;
+    int LetterWidth = gLetterWidth / 4;
+    int LetterHeight;
+    int linesCount;
+    float kOffset, k, kTitle, k0 = 0, k1 = 0, k2 = 0;
+    vector<AnsiString> strs;
+
+    // for each subline check is it possible to increase size of letters
+    linesCount = 1; // at least we have one line
+
+    kTitle = k = GETK(str); //(float)RectWidth / (); // get relation between RectWidth and text width
+    LetterHeight = kTitle * RectHeight;  // recalculate LetterHeight
+
+    // check is text box wide enough
+    if (k <= 0.5) {
+       AnsiString rest;
+       // let's split string on words
+       vector<AnsiString> words;
+       gOwner->SplitString(str, ' ', words); // split line with spaces
+
+       // try to split string on two lines
+       linesCount = 2;
+       rest = GetRestOfStringAfter(1, words);
+       kTitle = GETK( words[0] );
+       k0 = std::min<float>( kTitle, GETK( rest ) ) / linesCount;
+       k0 = std::min<float> ( k0, 1.0 / linesCount);
+       // is it use?
+       if (kTitle > k && words.size() > 2) {
+         // try to split string on three lines
+         linesCount = 3;
+         rest = GetRestOfStringAfter(2, words);
+         k1 = std::min<float>( std::min<float>( GETK(words[0]), GETK(words[1]) ), GETK(rest) ) / linesCount;
+         k1 = std::min<float> ( k1, 1.0 / linesCount);
+         // is it use?
+         if ( k1 > 1.4*k0) {
+           strs.push_back(words[0]);
+           strs.push_back(words[1]);
+           strs.push_back(GetRestOfStringAfter(2, words));
+           k = k1;
+           kTitle = std::min<float> ( (GETK( words[0] )) / 3, 1.0 / 3);
+         } else {
+           strs.push_back(words[0]);
+           strs.push_back(GetRestOfStringAfter(1, words));
+           k = k0;
+           kTitle = std::min<float> ( (GETK( words[0] )) / 2, 1.0 / 2);
+         }
+       } else {
+         strs.push_back(str); // otherwise just push string to lines array
+         kTitle = k;
+       }
+    } else { // perfect solution, no dividig is needed
+       strs.push_back(str); // otherwise just push string to lines array
+       kTitle = k;
+    }
+
+    // loop over string lines
+    kOffset =  1.0 / ( strs.size() + 1);
+    for (int i=0;i<strs.size() ;++i) {
+       LineInfo li;
+
+       if (i == 0) { // fot title or first substring we have special case
+          if ( strs.size() > 1 ) { // move title a bit higher
+            li.kOffset = kOffset - kTitle*0.1;
+          }  else {
+            li.kOffset = kOffset;
+          }
+          li.Height = min( RectHeight, kTitle * RectHeight);
+       } else { // if not title
+          li.Height = min( RectHeight, k * RectHeight);
+          li.kOffset = (i+1)*kOffset + kTitle*0.1;
+       }
+
+       li.Text = strs[i];
+       // push lineInfo to array
+       lines.push_back(li);
+    }
+#undef GETK
+}
+
 void AutoCADTable::DrawTextInBorders(int row, float offBeg,
                             float offEnd,AnsiString str,
                             bool fWithBorders ,float kProp)
@@ -2417,133 +2523,32 @@ void AutoCADTable::DrawTextInBorders(int row, float offBeg,
   }
 }
 
-void AutoCADTable::DrawTextInBordersSpec(int row, float offBeg,
+void AutoCADTable::DrawTextInBordersRoadMark(int row, float offBeg,
                             float offEnd,AnsiString str,
                             bool fWithBorders ,float kProp)
 {
-  if(offEnd == offBeg) return;
+  if (RowslEnd[row] > offBeg) offBeg = RowslEnd[row];
+  if(offEnd <= offBeg) return;
 
-  static AnsiString strings[3];
-  static float scale[3], xOffset, yOffset, Height, t2;
-
-  kProp = kProp>1?1:kProp;
-  AcadTextPtr text;
-  float temp;
-  int iString;
-  int strLenght = str.Length();
-  int i,iLast;
+  float xOffset, yOffset;
   float width = fabs(offEnd-offBeg);
 
-  iLast = 0;
-  iString = 0;
-  scale[0] = scale[1] = scale[2] = 0;
+  vector<LineInfo> strings;
+  SplitTextForRoadMark(str, gRowHeight, offEnd - offBeg, strings);
 
-  for(i=1;i<=strLenght;i++){
-     if(str[i]=='\n'){  //если текст должен рисоваться в несколько строк
-         temp = i-iLast-1;
-         strings[iString] = str.SubString(iLast+1,temp);
+  xOffset = gLeftTop.x + offBeg + width/2;
+  yOffset = gLeftTop.y - RowOffsetY(row);
 
-         temp = temp*gLetterWidth/2;/*длина текста с учетом риования в 2 строки*/
-
-         scale[iString] = width/(temp*kProp);
-         if(scale[iString]>=1)/*влезает ли?*/
-            scale[iString] = kProp;
-         else{
-            scale[iString] = (float)width/temp;
-            scale[iString] *= kPadding;
-            if(scale[iString]>kProp)scale[iString] = kProp;
-         }
-         
-         iLast = i;
-         iString++;
-         break;
-      }
-  }
-  
-  temp = strLenght-iLast;
-
-
-
-
-
-  scale[iString] = width/(temp*gLetterWidth*kProp/(iString+1));
-
-  if( scale[iString] <= 1) {
-    t2 = kProp*(scale[iString]);
-    if(t2>kProp/2) {
-      kProp = t2;
-      scale[iString] = 2;
-    }
+  for(int i=0;i<strings.size();i++){
+     gOwner->DrawText(strings[i].Text,
+        kProp*strings[i].Height,
+        acAlignmentMiddle,
+        xOffset,
+        yOffset - strings[i].kOffset * gRowHeight);
   }
 
-  if(scale[iString]>1){ /* влезает ли 2-ая/1-ая строка */
-  
-    strings[iString] = str.SubString(iLast+1,temp);
-    scale[iString] = kProp;
-
-    Height = gRowHeight/(iString+1);
-
-    xOffset = gLeftTop.x + offBeg + width/2;
-    yOffset = gLeftTop.y- RowOffsetY(row)+Height/2;
-
-    for(i=0;i<=iString;i++){
-       yOffset-=Height;
-       text = gOwner->DrawText(strings[i],scale[i]*Height,acAlignmentMiddle, xOffset,yOffset);
-    }
-
-    if(fWithBorders){
-        DrawSnakeBorder(row,offBeg,offEnd);
-    }
-  }else{
-    /* разбиваем до 3/2 строк*/
-    for(i=iLast+1;i<=strLenght;i++){
-       if(str[i]=='-'||str[i]==' '){
-           temp = i-iLast;
-           strings[iString] = str.SubString(iLast+1,temp);
-           temp = temp*gLetterWidth/(iString+2);
-           scale[iString] = width/(temp*kProp);
-           if(scale[iString]>=1)
-              scale[iString] = kProp;
-           else{
-              scale[iString] = width/temp;
-              scale[iString] *= kPadding;
-              if(scale[iString]>kProp)scale[iString] = kProp;
-           }
-           iLast = i;
-           iString++;
-           break;
-        }
-    }
-
-    temp = strLenght-iLast;
-    strings[iString] = str.SubString(iLast+1,temp);
-    temp = temp*gLetterWidth/(iString+1);
-
-    scale[iString] = width/(temp*kProp);
-    if(scale[iString]>=1)
-      scale[iString] = kProp;
-    else{
-      scale[iString] = width/temp;
-      scale[iString] *= kPadding;
-      if(scale[iString]>kProp)scale[iString] = kProp;
-    }
-
-    Height = gRowHeight/(iString+1);
-
-    xOffset = gLeftTop.x + offBeg + width/2;
-    yOffset = gLeftTop.y- RowOffsetY(row)+Height/2;
-
-    if(iString>1)scale[2] = scale[1] = scale[1]>scale[2]?scale[2]:scale[1];
-    //if(scale[0]<scale[1])scale[0] = scale[1];
-
-    for(i=0;i<=iString;i++){
-       yOffset-=Height;
-       text = gOwner->DrawText(strings[i],scale[i]*Height*(i==0?1.2:1),acAlignmentMiddle, xOffset,yOffset);
-    }
-
-    if(fWithBorders){
-        DrawSnakeBorder(row,offBeg,offEnd);
-    }
+  if(fWithBorders){
+      DrawSnakeBorder(row,offBeg,offEnd);
   }
 }
 
