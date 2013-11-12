@@ -37,6 +37,8 @@ void __fastcall TProgressForm::FormShow(TObject *Sender)
 void __fastcall TProgressForm::addLogLine(AnsiString &line)
 {
    edtLog->Lines->Add(line);
+   edtLog->SelStart = edtLog->GetTextLen();
+   edtLog->Perform(EM_SCROLLCARET, 0, 0);
 }
 
 void __fastcall TProgressForm::cmdAbortClick(TObject *Sender)

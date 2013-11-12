@@ -91,6 +91,7 @@ object ProgressForm: TProgressForm
       Height = 200
       Align = alClient
       ReadOnly = True
+      ScrollBars = ssVertical
       TabOrder = 0
     end
   end

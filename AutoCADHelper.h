@@ -231,7 +231,10 @@ public:
         /* SPECIFIC -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
         AcadEllipsePtr DrawLeftArcEllipse(int iRow, float sPos, float ePos);
         AcadEllipsePtr DrawRightArcEllipse(int iRow, float sPos, float ePos);
-        
+
+         // for drawing road mark and barriers text
+        struct LineInfo { AnsiString Text; int Height; float kOffset; };
+        void SplitTextForRoadMark(AnsiString str, int RectHeight, int RectWidth, vector<LineInfo> &lines);        
         void DrawRepeatTextIntervalRoadMark(int iRow, AnsiString str,
                                 float sPos, float ePos,
                                 AnsiString (*func)(float _min, float _max) = 0,
@@ -240,26 +243,28 @@ public:
         void DrawTextInBordersRoadMark(int row, float offBeg,
                                     float offEnd,AnsiString str,
                                     bool fWithBorders = true,float kProp = 0.52);
+        // -=-=-=-=-=-=-=-=-=-=-
 
-
-        struct LineInfo { AnsiString Text; int Height; float kOffset; };
-        void SplitTextForRoadMark(AnsiString str, int RectHeight, int RectWidth, vector<LineInfo> &lines);
+        // for drawing mound heights text
+        void DrawRepeatTextIntervalMoundHeight(int iRow,float sPos, float ePos,
+                                float sHeight, float eHeight,
+                                float step,float kProp=0.18);
+        float DrawTextInBordersMoundHeight(int iRow, AnsiString text, float Pos, float yPos,
+                                  AcAlignment align,float width =0, float kProp = 0.43);
 
         void DrawRepeatTextIntervalSpec2(int iRow, AnsiString str,
                                 float sPos, float ePos, bool fTop, float step = 0,
                                 bool fWithBorders = true, float kProp = 0.43);
+        // -=-=-=-=-=-=-=-=-=-=-
 
-        void DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
-                                float sHeight, float eHeight,
-                                float step,float kProp=0.18);
+
         void DrawRepeatVerticalTextInterval(int iRow,float sPos, float ePos,
                                 float step = 0,float kyPos = 0.75,
                                 bool fWithBorders = true, float kProp = 0.43);
         void DrawTextInBordersSpec2(int row, float offBeg,
                                     float offEnd,AnsiString str, bool fTop,
                                     bool fWithBorders = true,float kProp = 0.43);
-        float DrawTextInBordersSpec3(int iRow, AnsiString text, float Pos, float yPos,
-                                  AcAlignment align,float width =0, float kProp = 0.43);
+
 
 
         float kBottomEmptyPadding;

@@ -1862,175 +1862,7 @@ void AutoCADTable::DrawRepeatTextInterval(int iRow, AnsiString str,
 }
 
 
-void AutoCADTable::DrawRepeatTextIntervalRoadMark(int iRow, AnsiString str,
-                                float sPos, float ePos,
-                                AnsiString (*func)(float, float),
-                                float step, bool fWithBorders, float kProp)
-{
-   int t2;
 
-   if(iRow<0) return;
-   if(step==0){
-     if(gRepeatInterval!=0)
-       step=gRepeatInterval;
-     else
-       return;
-   }
-
-
-   AnsiString tStr;
-
-   if(sPos<0) sPos = 0;
-   if(ePos<0||ePos == sPos) return;
-   if(sPos>ePos){
-      int temp =  sPos;
-      sPos = ePos;
-      ePos = temp;
-   }
-
-   int iMax = (int)(ePos/step)+1;
-   int iMin = (int)(sPos/step)+1;
-
-   int count = abs(iMax - iMin)+2;
-   int counter = 1;
-   float *pos = new float[count];
-   pos[0] = sPos;
-
-
-   if(gFillGaps[iRow]&&RowslEnd[iRow]<=sPos){
-     DrawRepeatEmptyInterval(iRow,RowslEnd[iRow],sPos,step,true);
-   }
-   emptyMin[iRow] = max(max(emptyMin[iRow], sPos),ePos);
-
-   float min,max;
-   if(iMin!=iMax){
-     if(sPos<iMin*step){
-         min = sPos;
-         max = iMin*step;
-         if(max-min<lessForVerticalLabels){
-           if(max-min<(lessForVerticalLabels-2000)) {
-           } else {
-             t2 = (int)max%100000/100;
-             DrawVerticalText(IntToStr((int)min%100000/100), iRow, min, 0.5, true, 450);
-             DrawVerticalText(IntToStr(t2==0?1000:t2), iRow, max, 0.5, false, 450);
-           }
-           if(!str.IsEmpty()){
-              tStr = str+func(min,max);
-           }else{
-              tStr=func(min,max);
-           }
-           DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
-         } else {
-           if(func){
-               if(!str.IsEmpty()){
-                  tStr = str+func(min,max);//tStr = str+"\n"+func(min,max);
-               }else{
-                  tStr=func(min,max);
-               }
-               DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
-           }else{
-               if(!str.IsEmpty())DrawTextInBordersSpec(iRow,sPos,iMin*step,str,false,kProp);
-           }
-         }
-         pos[counter++] = iMin*step;
-     }
-     for(int i=iMin;i<iMax-1;i++){
-         min = i*step;
-         max = (i+1)*step;
-         if(max-min<lessForVerticalLabels){
-           if(max-min<(lessForVerticalLabels-2000)) {
-           } else {
-             t2 = (int)max%100000/100;
-             DrawVerticalText(IntToStr((int)min%100000/100), iRow, min, 0.5, true, 450);
-             DrawVerticalText(IntToStr(t2==0?1000:t2), iRow, max, 0.5, false, 450);
-           }
-           if(!str.IsEmpty()){
-              tStr = str+func(min,max);
-           }else{
-              tStr=func(min,max);
-           }
-           DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
-         } else {
-           if(func){
-             if(!str.IsEmpty()){
-                tStr = str+func(min,max);//tStr = str+"\n"+func(min,max);
-             }else{
-                tStr=func(min,max);
-             }
-             DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
-           }else{
-             if(!str.IsEmpty())DrawTextInBordersSpec(iRow,i*step,(i+1)*step,str,false,kProp);
-           }
-         }
-         pos[counter++] = (i+1)*step;
-     }
-     if(ePos>(iMax-1)*step){
-         min = (iMax-1)*step;
-         max = ePos;
-         if(max-min<lessForVerticalLabels){
-           if(max-min<(lessForVerticalLabels-2000)) {
-           } else {
-             t2 = (int)max%100000/100;
-             DrawVerticalText(IntToStr((int)min%100000/100), iRow, min, 0.5, true, 450);
-             DrawVerticalText(IntToStr(t2==0?1000:t2), iRow, max, 0.5, false, 450);
-           }
-           if(!str.IsEmpty()){
-              tStr = str+func(min,max);
-           }else{
-              tStr=func(min,max);
-           }
-           DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
-         } else {
-           if(func){
-             if(!str.IsEmpty()){
-                tStr = str+func(min,max);//tStr = str+"\n"+func(min,max);
-             }else{
-                tStr=func(min,max);
-             }
-             DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
-           }else{
-             if(!str.IsEmpty())DrawTextInBordersSpec(iRow,min,max,str,false,kProp);
-           }
-         }
-        pos[counter++] = ePos;
-     }
-     if(fWithBorders) DrawSnakeBorder(iRow,pos,counter);
-
-   }else{
-     if(ePos-sPos<lessForVerticalLabels){
-       if(ePos-sPos<(lessForVerticalLabels-2000)) {
-       } else {
-         t2 = (int)ePos%100000/100;
-         DrawVerticalText(IntToStr((int)sPos%100000/100), iRow, sPos, 0.5, true, 450);
-         DrawVerticalText(IntToStr(t2==0?1000:t2), iRow, ePos, 0.5, false, 450);
-       }
-       min = sPos;
-       max = ePos;
-       if(!str.IsEmpty()){
-          tStr = str+func(min,max);
-       }else{
-          tStr=func(min,max);
-       }
-       DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
-     } else {
-       if(func){
-          min = sPos;
-          max = ePos;
-          if(!str.IsEmpty()){
-             tStr = str+func(min,max);//tStr = str+"\n"+func(min,max);
-          }else{
-             tStr=func(min,max);
-          }
-          DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp);
-       }else{
-          if(!str.IsEmpty())DrawTextInBordersSpec(iRow,sPos,ePos,str,false,kProp);
-       }
-     }
-     if(gFillGaps[iRow]&&fWithBorders)DrawSnakeBorder(iRow,sPos,ePos);
-   }
-   delete[] pos;
-   RowslEnd[iRow] = ePos;
-}
 
 void AutoCADTable::DrawRepeatTextIntervalSpec2(int iRow, AnsiString str,
                                 float sPos, float ePos,bool fTop,
@@ -2091,7 +1923,7 @@ void AutoCADTable::DrawRepeatTextIntervalSpec2(int iRow, AnsiString str,
 }
 
 
-void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
+void AutoCADTable::DrawRepeatTextIntervalMoundHeight(int iRow,float sPos, float ePos,
                                 float sHeight, float eHeight,
                                 float step,float kProp)
 {
@@ -2127,7 +1959,6 @@ void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
 
    if(iMin!=iMax){
      if(sPos<iMin*step&&int(sPos)%(int)step == 0){
-
          if((int)sHeight%100==0){
             str.sprintf("%i ì",(int)sHeight/100);
          }else{
@@ -2137,9 +1968,8 @@ void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
               str.sprintf("%.2f ì",(float)sHeight/100.0f);
             }
          }
-
-         temp2 = DrawTextInBordersSpec3(iRow,str,sPos+xoffset,0.875,acAlignmentMiddleLeft,step/2,kProp);
-         DrawTextInBordersSpec3(iRow,(int)sPos%int(step)/100,sPos+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
+         temp2 = DrawTextInBordersMoundHeight(iRow,str,sPos+xoffset,0.875,acAlignmentMiddleLeft,step/2,kProp);
+         DrawTextInBordersMoundHeight(iRow,(int)sPos%int(step)/100,sPos+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
          pos[counter++] = iMin*step;
      }
 
@@ -2158,8 +1988,8 @@ void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
      }
 
 
-     temp2 = DrawTextInBordersSpec3(iRow,str,temp-xoffset,0.875,acAlignmentMiddleRight,temp - sPos,kProp);
-     DrawTextInBordersSpec3(iRow,1000,temp-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
+     temp2 = DrawTextInBordersMoundHeight(iRow,str,temp-xoffset,0.875,acAlignmentMiddleRight,temp - sPos,kProp);
+     DrawTextInBordersMoundHeight(iRow,1000,temp-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
 
      for(int i=iMin;i<iMax-1;i++){
          temp = i*step;
@@ -2174,8 +2004,8 @@ void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
               str.sprintf("%.2f ì",(float)curHeight/100.0f);
             }
          }
-         temp2 = DrawTextInBordersSpec3(iRow,str,temp+xoffset,0.875,acAlignmentMiddleLeft,step/2,kProp);
-         DrawTextInBordersSpec3(iRow,0,temp+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
+         temp2 = DrawTextInBordersMoundHeight(iRow,str,temp+xoffset,0.875,acAlignmentMiddleLeft,step/2,kProp);
+         DrawTextInBordersMoundHeight(iRow,0,temp+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
 
          temp += step;
          k = (temp-sPos)/width;
@@ -2189,8 +2019,8 @@ void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
               str.sprintf("%.2f ì",(float)curHeight/100.0f);
             }
          }
-         temp2 = DrawTextInBordersSpec3(iRow,str,temp-xoffset,0.875,acAlignmentMiddleRight,step/2,kProp);
-         DrawTextInBordersSpec3(iRow,1000,temp-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
+         temp2 = DrawTextInBordersMoundHeight(iRow,str,temp-xoffset,0.875,acAlignmentMiddleRight,step/2,kProp);
+         DrawTextInBordersMoundHeight(iRow,1000,temp-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
 
          pos[counter++] = (i+1)*step;
      }
@@ -2207,8 +2037,8 @@ void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
              str.sprintf("%.2f ì",(float)curHeight/100.0f);
            }
         }
-        temp2 = DrawTextInBordersSpec3(iRow,str,(iMax-1)*step+xoffset,0.875,acAlignmentMiddleLeft,temp/2,kProp);
-        DrawTextInBordersSpec3(iRow,0,(iMax-1)*step+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
+        temp2 = DrawTextInBordersMoundHeight(iRow,str,(iMax-1)*step+xoffset,0.875,acAlignmentMiddleLeft,temp/2,kProp);
+        DrawTextInBordersMoundHeight(iRow,0,(iMax-1)*step+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
 
         if((int)eHeight%100==0){
            str.sprintf("%i ì",(int)eHeight/100);
@@ -2220,8 +2050,8 @@ void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
            }
         }
 
-        temp2 = DrawTextInBordersSpec3(iRow,str,ePos-xoffset,0.875,acAlignmentMiddleRight,temp/2,kProp);
-        DrawTextInBordersSpec3(iRow,(int)ePos%int(step)/100,ePos-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
+        temp2 = DrawTextInBordersMoundHeight(iRow,str,ePos-xoffset,0.875,acAlignmentMiddleRight,temp/2,kProp);
+        DrawTextInBordersMoundHeight(iRow,(int)ePos%int(step)/100,ePos-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
 
         pos[counter++] = ePos;
      }
@@ -2239,8 +2069,8 @@ void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
              str.sprintf("%.2f ì",(float)sHeight/100.0f);
            }
         }
-        temp2 = DrawTextInBordersSpec3(iRow,str,sPos+xoffset,0.875,acAlignmentMiddleLeft,width,kProp);
-        DrawTextInBordersSpec3(iRow,(int)sPos%int(step)/100,sPos+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
+        temp2 = DrawTextInBordersMoundHeight(iRow,str,sPos+xoffset,0.875,acAlignmentMiddleLeft,width,kProp);
+        DrawTextInBordersMoundHeight(iRow,(int)sPos%int(step)/100,sPos+xoffset,0.625,acAlignmentMiddleLeft,0,(!temp2?kProp*subKProp:temp2*subKProp));
      }
 
      if((int)eHeight%100==0){
@@ -2253,8 +2083,8 @@ void AutoCADTable::DrawRepeatTextIntervalSpec3(int iRow,float sPos, float ePos,
         }
      }
 
-     temp2 = DrawTextInBordersSpec3(iRow,str,ePos-xoffset,0.875,acAlignmentMiddleRight,width,kProp);
-     DrawTextInBordersSpec3(iRow,(int)ePos%int(step)/100,ePos-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
+     temp2 = DrawTextInBordersMoundHeight(iRow,str,ePos-xoffset,0.875,acAlignmentMiddleRight,width,kProp);
+     DrawTextInBordersMoundHeight(iRow,(int)ePos%int(step)/100,ePos-xoffset,0.625,acAlignmentMiddleRight,0,(!temp2?kProp*subKProp:temp2*subKProp));
      DrawSnakeBorder(iRow,sPos,ePos);
    }
 
@@ -2436,14 +2266,14 @@ void AutoCADTable::SplitTextForRoadMark(AnsiString str, int RectHeight, int Rect
        k0 = std::min<float>( kTitle, GETK( rest ) ) / linesCount;
        k0 = std::min<float> ( k0, 1.0 / linesCount);
        // is it use?
-       if (kTitle > k && words.size() > 2) {
+       if ( kTitle > k && words.size() > 2 ) {
          // try to split string on three lines
          linesCount = 3;
          rest = GetRestOfStringAfter(2, words);
          k1 = std::min<float>( std::min<float>( GETK(words[0]), GETK(words[1]) ), GETK(rest) ) / linesCount;
          k1 = std::min<float> ( k1, 1.0 / linesCount);
          // is it use?
-         if ( k1 > 1.4*k0) {
+         if ( k1 > 1.3*k0) { // that cause overall text size is more important then size of just one header
            strs.push_back(words[0]);
            strs.push_back(words[1]);
            strs.push_back(GetRestOfStringAfter(2, words));
@@ -2455,8 +2285,8 @@ void AutoCADTable::SplitTextForRoadMark(AnsiString str, int RectHeight, int Rect
            k = k0;
            kTitle = std::min<float> ( (GETK( words[0] )) / 2, 1.0 / 2);
          }
-       } else {
-         strs.push_back(str); // otherwise just push string to lines array
+       } else { // if spliting only spoils result revert to one line
+         strs.push_back(str);
          kTitle = k;
        }
     } else { // perfect solution, no dividig is needed
@@ -2487,6 +2317,116 @@ void AutoCADTable::SplitTextForRoadMark(AnsiString str, int RectHeight, int Rect
     }
 #undef GETK
 }
+
+
+void AutoCADTable::DrawTextInBordersRoadMark(int row, float offBeg,
+                            float offEnd,AnsiString str,
+                            bool fWithBorders ,float kProp)
+{
+  if (RowslEnd[row] > offBeg) offBeg = RowslEnd[row];
+  if(offEnd <= offBeg) return;
+
+  float xOffset, yOffset;
+  float width = fabs(offEnd-offBeg);
+
+  vector<LineInfo> strings;
+  SplitTextForRoadMark(str, gRowHeight, offEnd - offBeg, strings);
+
+  xOffset = gLeftTop.x + offBeg + width/2;
+  yOffset = gLeftTop.y - RowOffsetY(row);
+
+  for(int i=0;i<strings.size();i++){
+     gOwner->DrawText(strings[i].Text,
+        kProp*strings[i].Height,
+        acAlignmentMiddle,
+        xOffset,
+        yOffset - strings[i].kOffset * gRowHeight);
+  }
+
+  if(fWithBorders){
+      DrawSnakeBorder(row,offBeg,offEnd);
+  }
+}
+
+void AutoCADTable::DrawRepeatTextIntervalRoadMark(int iRow, AnsiString str,
+                                float sPos, float ePos,
+                                AnsiString (*func)(float, float),
+                                float step, bool fWithBorders, float kProp)
+{
+#define DRAWTEXT(min, max)  \
+        if(func){ \
+           AnsiString tStr; \
+           if(!str.IsEmpty()){ \
+              tStr = str+func(min,max); \
+           }else{ \
+              tStr=func(min,max); \
+           } \
+           DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp); \
+        }else{ \
+           if(!str.IsEmpty())DrawTextInBordersRoadMark(iRow,min,max,str,false,kProp); \
+        }     
+
+   if(iRow<0) return;
+   if(step==0){
+     if(gRepeatInterval!=0)
+       step=gRepeatInterval;
+     else
+       return;
+   }
+
+   if(sPos<0) sPos = 0;
+   if(ePos<0||ePos == sPos) return;
+   
+   if(sPos>ePos){
+      int temp =  sPos;
+      sPos = ePos;
+      ePos = temp;
+   }
+
+   int iMax = (int)(ePos/step)+1;
+   int iMin = (int)(sPos/step)+1;
+
+   int count = abs(iMax - iMin)+2;
+   int counter = 1;
+   float *pos = new float[count];
+   pos[0] = sPos;
+
+   if(gFillGaps[iRow]&&RowslEnd[iRow]<=sPos){
+     DrawRepeatEmptyInterval(iRow,RowslEnd[iRow],sPos,step,true);
+   }
+   emptyMin[iRow] = max(max(emptyMin[iRow], sPos),ePos);
+
+   float min,max;
+   if(iMin!=iMax){
+     if(sPos<iMin*step){
+        min = sPos;
+        max = iMin*step;
+        DRAWTEXT(min, max);
+        pos[counter++] = max; 
+     }
+     for(int i=iMin;i<iMax-1;i++){
+        min = i*step;
+        max = (i+1)*step;
+        DRAWTEXT(min, max);
+        pos[counter++] = max; 
+     }
+     if(ePos>(iMax-1)*step){
+        min = (iMax-1)*step;
+        max = ePos;
+        DRAWTEXT(min, max);
+        pos[counter++] = max; 
+     }
+     if(fWithBorders) DrawSnakeBorder(iRow,pos,counter);
+   }else{
+     DRAWTEXT(sPos, ePos);
+     if(gFillGaps[iRow]&&fWithBorders)DrawSnakeBorder(iRow,sPos,ePos);
+   }
+   delete[] pos;
+   RowslEnd[iRow] = ePos;
+   
+#undef DRAWTEXT
+}
+
 
 void AutoCADTable::DrawTextInBorders(int row, float offBeg,
                             float offEnd,AnsiString str,
@@ -2522,36 +2462,6 @@ void AutoCADTable::DrawTextInBorders(int row, float offBeg,
       DrawSnakeBorder(row,offBeg,offEnd);
   }
 }
-
-void AutoCADTable::DrawTextInBordersRoadMark(int row, float offBeg,
-                            float offEnd,AnsiString str,
-                            bool fWithBorders ,float kProp)
-{
-  if (RowslEnd[row] > offBeg) offBeg = RowslEnd[row];
-  if(offEnd <= offBeg) return;
-
-  float xOffset, yOffset;
-  float width = fabs(offEnd-offBeg);
-
-  vector<LineInfo> strings;
-  SplitTextForRoadMark(str, gRowHeight, offEnd - offBeg, strings);
-
-  xOffset = gLeftTop.x + offBeg + width/2;
-  yOffset = gLeftTop.y - RowOffsetY(row);
-
-  for(int i=0;i<strings.size();i++){
-     gOwner->DrawText(strings[i].Text,
-        kProp*strings[i].Height,
-        acAlignmentMiddle,
-        xOffset,
-        yOffset - strings[i].kOffset * gRowHeight);
-  }
-
-  if(fWithBorders){
-      DrawSnakeBorder(row,offBeg,offEnd);
-  }
-}
-
 
 void AutoCADTable::DrawTextInBordersSpec2(int row, float offBeg,
                             float offEnd,AnsiString str, bool fTop,
@@ -2589,7 +2499,7 @@ void AutoCADTable::DrawTextInBordersSpec2(int row, float offBeg,
 
 
 
-float AutoCADTable::DrawTextInBordersSpec3(int iRow, AnsiString text,
+float AutoCADTable::DrawTextInBordersMoundHeight(int iRow, AnsiString text,
                          float Pos, float yPos, AcAlignment align, float width, float kProp)
 {
    AcadTextPtr aText;
@@ -2617,15 +2527,4 @@ float AutoCADTable::DrawTextInBordersSpec3(int iRow, AnsiString text,
 
    return fwas?scale:0;
 }
-
-
-
-
-
-
-
-
-
-
-
 
