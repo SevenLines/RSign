@@ -2239,6 +2239,8 @@ void AutoCADTable::SplitTextForRoadMark(AnsiString str, int RectHeight, int Rect
 {
 #define GETK(str) (float)RectWidth / (str.Length()* LetterWidth)
 
+    WARNING_AND_RETURN_ON_0(str.Length());
+
     int width, minLinesCount;
     int LetterWidth = gLetterWidth / 4;
     int LetterHeight;
@@ -2252,13 +2254,12 @@ void AutoCADTable::SplitTextForRoadMark(AnsiString str, int RectHeight, int Rect
     kTitle = k = GETK(str); //(float)RectWidth / (); // get relation between RectWidth and text width
     LetterHeight = kTitle * RectHeight;  // recalculate LetterHeight
 
+    // let's split string on words
+    vector<AnsiString> words;
+    gOwner->SplitString(str, ' ', words); // split line with spaces
     // check is text box wide enough
-    if (k <= 0.5) {
+    if (k <= 0.5 && words.size() > 1) {
        AnsiString rest;
-       // let's split string on words
-       vector<AnsiString> words;
-       gOwner->SplitString(str, ' ', words); // split line with spaces
-
        // try to split string on two lines
        linesCount = 2;
        rest = GetRestOfStringAfter(1, words);
@@ -2273,7 +2274,7 @@ void AutoCADTable::SplitTextForRoadMark(AnsiString str, int RectHeight, int Rect
          k1 = std::min<float>( std::min<float>( GETK(words[0]), GETK(words[1]) ), GETK(rest) ) / linesCount;
          k1 = std::min<float> ( k1, 1.0 / linesCount);
          // is it use?
-         if ( k1 > 1.3*k0) { // that cause overall text size is more important then size of just one header
+         if ( k1 > 1.35*k0) { // that cause overall text size is more important then size of just one header
            strs.push_back(words[0]);
            strs.push_back(words[1]);
            strs.push_back(GetRestOfStringAfter(2, words));

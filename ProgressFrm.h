@@ -10,6 +10,7 @@
 #include <ComCtrls.hpp>
 #include "CGAUGES.h"
 #include <ExtCtrls.hpp>
+#include <iostream>
 
 //---------------------------------------------------------------------------
 class TProgressForm : public TForm
@@ -30,8 +31,10 @@ private:	// User declarations
     String __fastcall GetNote(void)
         {return Label->Caption;}
     void __fastcall SetNote(String s)
-        {Label->Caption=s;
-         Repaint();}
+    {
+       Label->Caption=s;
+       Repaint();
+    }
     int __fastcall GetPosition(void)
         {return ProgressBar->Progress;}
 

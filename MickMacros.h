@@ -9,6 +9,9 @@
 #define __FUNCTION__ __FUNC__
 #endif
 
+#define BUILDER // comment this line if ur not in C++ BUILDER
+
+
 // если переменная равна нулю, сообщает об этом в qWarning и выходит
 #define WARNING_AND_RETURN_ON_NULL(var) if (var == NULL) { \
     std::cerr << __LINE__ << " " << __FUNCTION__ << ": value of \"" << #var << "\" is NULL\"" << std::endl; \
@@ -28,6 +31,10 @@
 #define WARNING(msg) { \
     std::cerr << __LINE__ << " "<< __FUNCTION__ << ": " << msg << std::endl;  \
 }
+
+#ifdef  BUILDER
+#define BUILDER_ERROR(msg) std::cerr << "[ERROR]" << "[" << Now().TimeString().c_str() << "]" << msg << std::endl
+#endif
 
 #define RETURN_ON_EQUALS(var1, var2) if (var1 == var2) return;
 #define RETURN_VALUE_ON_EQUALS(var1, var2, returnValue) if (var1 == var2) return returnValue;

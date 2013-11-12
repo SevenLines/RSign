@@ -39,6 +39,7 @@ void __fastcall TProgressForm::addLogLine(AnsiString &line)
    edtLog->Lines->Add(line);
    edtLog->SelStart = edtLog->GetTextLen();
    edtLog->Perform(EM_SCROLLCARET, 0, 0);
+   std::cout << "[" << Now().TimeString().c_str() << "]" << line.c_str() << std::endl;
 }
 
 void __fastcall TProgressForm::cmdAbortClick(TObject *Sender)
@@ -48,6 +49,7 @@ void __fastcall TProgressForm::cmdAbortClick(TObject *Sender)
       ModalResult = mrOk;
   }
   Terminated = true;
+  std::cout << "[" << Now().TimeString().c_str() << "]" << "Отмена" << std::endl;
 }
 //---------------------------------------------------------------------------
 void __fastcall TProgressForm::setShowLog(bool value) {

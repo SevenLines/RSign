@@ -4,6 +4,7 @@
 
 #include "acadexport.h"
 #include <list.h>
+#include "MickMacros.h"
 
 using namespace std;
 
@@ -725,7 +726,8 @@ bool __fastcall TAcadExport::ExportRoadMetric(TExtPolyline *Poly,TMetricsKind ki
 //   Координаты целые в сантиметрах!
    if(fEnd){
        if(smallGridMarkHeight!=0) {
-         for(int i=curRoad->LMin;i<curRoad->LMax;i+=10000) {
+         int step = 10000;
+         for(int i=(curRoad->LMin / step) * step;i<curRoad->LMax;i+=step) {
             AutoCAD.DrawLine(i,-smallGridMarkHeight/2,i,smallGridMarkHeight/2);
          }
        }
@@ -904,7 +906,9 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
          default:;
       }
     }catch(...){
-
+        AnsiString message = "Ошибка вывода знака: " + signs[0]->OldTitle + " на позиции " + IntToStr(Poly->Points[0].x);
+        BUILDER_ERROR( message.c_str() );
+        return false;
     }
    return true;
 }
@@ -1524,6 +1528,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
        }
      }
    }catch(...){
+     BUILDER_ERROR( ("Ошибка вывода разметки " + IntToStr((int)m->Kind) + " на позиции " + IntToStr(Poly->Points[0].x)).c_str() );
      return false;
    }
    return true;
@@ -1932,7 +1937,10 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool
      delete[] length;
      delete[] signalsPos;
    }
-   }catch(...){return false;}
+   }catch(...){
+      BUILDER_ERROR( ("Ошибка вывода столбиков на промежутке [" + IntToStr(s->LMin) + "; " + IntToStr(s->LMax) + "]").c_str() );
+      return false;
+   }
    return true;
 }
 
@@ -2155,7 +2163,10 @@ bool __fastcall TAcadExport::ExportCurve(TDangerCurve *c, bool fEnd) {
           tableBottom.DrawLine(iBottomCurves,c->LMin,c->LMax);
         break;
      }
-   }catch(...){}
+   }catch(...){
+      BUILDER_ERROR( ("Ошибка вывода кривой в плане на промежутке [" + IntToStr(c->LMin) + "; " + IntToStr(c->LMax) + "]").c_str() );
+      return false;
+   }
    lKind = c->Kind;
 
    lessForVerticalLabels = tLessForVerticalLabels;
@@ -2534,12 +2545,9 @@ int __fastcall TAcadExport::ExportGraphicPath(AnsiString path, bool check)
         }
 
         file.close();
-        try{
-          if(pointsArray.size()) {
-            AutoCAD.DrawPolyLine(pointsArray.begin(),pointsArray.size()/2,2);
-          }
-        }catch(...){}
-
+        if(pointsArray.size()) {
+          AutoCAD.DrawPolyLine(pointsArray.begin(),pointsArray.size()/2,2);
+        }
       }
     }
     return iRow;

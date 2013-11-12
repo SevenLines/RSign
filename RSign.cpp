@@ -3,6 +3,10 @@
 #pragma hdrstop
 #include <atl\atlmod.h>
 #include "RoadViewImpl.h"
+#include <iostream>
+#include <fstream>
+#include <ios>
+#include <string>
 USEFORM("MainUnit.cpp", MainForm);
 USEFORM("ShowRoad.cpp", RoadFrm);
 USEFORM("ListForm.cpp", ListFrm);
@@ -58,60 +62,76 @@ END_OBJECT_MAP()
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
+    /*// redirect output to the file
+    std::ofstream out("Rsign.log", std::ios_base::out | std::ios_base::app );
+    std::streambuf *stdCerr = std::cerr.rdbuf();
+    std::streambuf *stdCout = std::cerr.rdbuf();
+    
+    std::cout.rdbuf(out.rdbuf());
+    // redirect errors to the file
+    std::cerr.rdbuf(out.rdbuf()); */
+    std::cout << std::endl << "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" << std::endl;
+    std::cout << "[" << Now().DateTimeString().c_str() << "] Начало сеанса RSign" << std::endl;
     try
     {
-        Application->Initialize();
-        Application->Title = "RSign";
-                 Application->CreateForm(__classid(TMainForm), &MainForm);
-                 Application->CreateForm(__classid(TVPatFrm), &VPatFrm);
-                 Application->CreateForm(__classid(TDrwSetFrm), &DrwSetFrm);
-                 Application->CreateForm(__classid(TOpenRoadDialog), &OpenRoadDialog);
-                 Application->CreateForm(__classid(TAddSignFrm), &AddSignFrm);
-                 Application->CreateForm(__classid(TBmpParam), &BmpParam);
-                 Application->CreateForm(__classid(TPrnParam), &PrnParam);
-                 Application->CreateForm(__classid(TAddObjFrm), &AddObjFrm);
-                 Application->CreateForm(__classid(TPreViewFrm), &PreViewFrm);
-                 Application->CreateForm(__classid(TfrmSetSigns), &frmSetSigns);
-                 Application->CreateForm(__classid(TfrmCheckSigns), &frmCheckSigns);
-                 Application->CreateForm(__classid(TfrmSignsReports), &frmSignsReports);
-                 Application->CreateForm(__classid(TOpenSourceDialog), &OpenSourceDialog);
-                 Application->CreateForm(__classid(TAddProjectForm), &AddProjectForm);
-                 Application->CreateForm(__classid(TFrmSetting), &FrmSetting);
-                 Application->CreateForm(__classid(TPolyFrm), &PolyFrm);
-                 Application->CreateForm(__classid(TMetaParam), &MetaParam);
-                 Application->CreateForm(__classid(TSignForm), &SignForm);
-                 Application->CreateForm(__classid(TPictureForm), &PictureForm);
-                 Application->CreateForm(__classid(TDumpDialog), &DumpDialog);
-                 Application->CreateForm(__classid(TProgressForm), &ProgressForm);
-                 Application->CreateForm(__classid(TfrmCrvPlan), &frmCrvPlan);
-                 Application->CreateForm(__classid(TfrmVideoForm), &frmVideoForm);
-                 Application->CreateForm(__classid(TSaveViewFrm), &SaveViewFrm);
-                 Application->CreateForm(__classid(TOpenViewFrm), &OpenViewFrm);
-                 Application->CreateForm(__classid(TNewViewDialog), &NewViewDialog);
-                 Application->CreateForm(__classid(TSaveViewFrm), &SaveViewFrm);
-                 Application->CreateForm(__classid(TOpenViewFrm), &OpenViewFrm);
-                 Application->CreateForm(__classid(TNewViewDialog), &NewViewDialog);
-                 Application->CreateForm(__classid(TfrmMacros), &frmMacros);
-                 Application->CreateForm(__classid(TfrmConstHelp), &frmConstHelp);
-                 Application->CreateForm(__classid(TfrmConstHelp), &frmConstHelp);
-                 Application->CreateForm(__classid(TfrmMacros), &frmMacros);
-                 Application->CreateForm(__classid(TfrmConstHelp), &frmConstHelp);
-                 Application->CreateForm(__classid(TfrmBuildSlopes), &frmBuildSlopes);
-                 Application->CreateForm(__classid(TfrmWidePartDialog), &frmWidePartDialog);
-                 Application->CreateForm(__classid(TfrmMarkParam), &frmMarkParam);
-                 Application->CreateForm(__classid(TErrorObjectDialog), &ErrorObjectDialog);
-                 Application->CreateForm(__classid(TFAutoCADPrint), &FAutoCADPrint);
-                 Application->CreateForm(__classid(TFAutoCADPrint), &FAutoCADPrint);
-                 Application->CreateForm(__classid(TFAutoCADExport), &FAutoCADExport);
-                 Application->CreateForm(__classid(TfrmSignalsInsert), &frmSignalsInsert);
-                 Application->CreateForm(__classid(TfrmAttachParams), &frmAttachParams);
-                 Application->CreateForm(__classid(TfrmAttachParams), &frmAttachParams);
-                 Application->Run();
+       Application->Initialize();
+       Application->Title = "RSign";
+       Application->CreateForm(__classid(TMainForm), &MainForm);
+       Application->CreateForm(__classid(TVPatFrm), &VPatFrm);
+       Application->CreateForm(__classid(TDrwSetFrm), &DrwSetFrm);
+       Application->CreateForm(__classid(TOpenRoadDialog), &OpenRoadDialog);
+       Application->CreateForm(__classid(TAddSignFrm), &AddSignFrm);
+       Application->CreateForm(__classid(TBmpParam), &BmpParam);
+       Application->CreateForm(__classid(TPrnParam), &PrnParam);
+       Application->CreateForm(__classid(TAddObjFrm), &AddObjFrm);
+       Application->CreateForm(__classid(TPreViewFrm), &PreViewFrm);
+       Application->CreateForm(__classid(TfrmSetSigns), &frmSetSigns);
+       Application->CreateForm(__classid(TfrmCheckSigns), &frmCheckSigns);
+       Application->CreateForm(__classid(TfrmSignsReports), &frmSignsReports);
+       Application->CreateForm(__classid(TOpenSourceDialog), &OpenSourceDialog);
+       Application->CreateForm(__classid(TAddProjectForm), &AddProjectForm);
+       Application->CreateForm(__classid(TFrmSetting), &FrmSetting);
+       Application->CreateForm(__classid(TPolyFrm), &PolyFrm);
+       Application->CreateForm(__classid(TMetaParam), &MetaParam);
+       Application->CreateForm(__classid(TSignForm), &SignForm);
+       Application->CreateForm(__classid(TPictureForm), &PictureForm);
+       Application->CreateForm(__classid(TDumpDialog), &DumpDialog);
+       Application->CreateForm(__classid(TProgressForm), &ProgressForm);
+       Application->CreateForm(__classid(TfrmCrvPlan), &frmCrvPlan);
+       Application->CreateForm(__classid(TfrmVideoForm), &frmVideoForm);
+       Application->CreateForm(__classid(TSaveViewFrm), &SaveViewFrm);
+       Application->CreateForm(__classid(TOpenViewFrm), &OpenViewFrm);
+       Application->CreateForm(__classid(TNewViewDialog), &NewViewDialog);
+       Application->CreateForm(__classid(TSaveViewFrm), &SaveViewFrm);
+       Application->CreateForm(__classid(TOpenViewFrm), &OpenViewFrm);
+       Application->CreateForm(__classid(TNewViewDialog), &NewViewDialog);
+       Application->CreateForm(__classid(TfrmMacros), &frmMacros);
+       Application->CreateForm(__classid(TfrmConstHelp), &frmConstHelp);
+       Application->CreateForm(__classid(TfrmConstHelp), &frmConstHelp);
+       Application->CreateForm(__classid(TfrmMacros), &frmMacros);
+       Application->CreateForm(__classid(TfrmConstHelp), &frmConstHelp);
+       Application->CreateForm(__classid(TfrmBuildSlopes), &frmBuildSlopes);
+       Application->CreateForm(__classid(TfrmWidePartDialog), &frmWidePartDialog);
+       Application->CreateForm(__classid(TfrmMarkParam), &frmMarkParam);
+       Application->CreateForm(__classid(TErrorObjectDialog), &ErrorObjectDialog);
+       Application->CreateForm(__classid(TFAutoCADPrint), &FAutoCADPrint);
+       Application->CreateForm(__classid(TFAutoCADPrint), &FAutoCADPrint);
+       Application->CreateForm(__classid(TFAutoCADExport), &FAutoCADExport);
+       Application->CreateForm(__classid(TfrmSignalsInsert), &frmSignalsInsert);
+       Application->CreateForm(__classid(TfrmAttachParams), &frmAttachParams);
+       Application->CreateForm(__classid(TfrmAttachParams), &frmAttachParams);
+
+       Application->Run();
     }
     catch (Exception &exception)
     {
         Application->ShowException(&exception);
     }
+    // restore buffers
+    std::cout << "[" << Now().DateTimeString().c_str() << "] Завершение сеанса" << std::endl;
+    /*out.close();
+    std::cout.rdbuf(stdCout);
+    std::cerr.rdbuf(stdCerr); */
     return 0;
 }
 //---------------------------------------------------------------------------
