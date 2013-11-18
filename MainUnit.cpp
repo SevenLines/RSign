@@ -2,6 +2,7 @@
 #include <vcl.h>
 #include <htmlhelp.h>
 #include <systdate.h>
+#include <iostream>
 #pragma hdrstop
 
 #include "MainUnit.h"
