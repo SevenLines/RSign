@@ -23,14 +23,19 @@
 #include "BuildSlopes.h"
 #include "BuildWidePart.h"
 #include "RoadMark.h"
-//#include "acadexport.h"
+#include "acadexport.h"
 #include <Registry.hpp>
 #include <algorithm>
 
 #include "VideoForm.h"
 #include "ProgressFrm.h"
-//#include "AutoCADExportForm.h"
-//#include "AcadExportThread.h"
+
+#ifdef AutoCAD_OCXH // check is AutoCAD available
+  #include "AutoCADExportForm.h"
+  #include "AcadExportThread.h"
+#else
+  #pragma message("Program is compiled without AutoCAD!")
+#endif
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -978,8 +983,7 @@ for (;minl<maxl;minl+=plen,page++)
 }
 
 void __fastcall TRoadFrm::AcadPrint(void){
-
-/*
+#ifdef AutoCAD_OCXH  // check is AutoCAD available
    TAcadExport *aexp=new TAcadExport();
    int L1=MetricData->Road->LMin;
    int L2=MetricData->Road->LMax;
@@ -996,11 +1000,14 @@ void __fastcall TRoadFrm::AcadPrint(void){
    }
    aexp->Print();
 
-   delete aexp;*/
+   delete aexp;
+#else
+   ShowMessage("Программа компилировалась без автокада, обратитесь к Мише!");
+#endif
 }
 
 void __fastcall TRoadFrm::AcadExport(void) {
-/*
+#ifdef AutoCAD_OCXH  // check is AutoCAD available
    FAutoCADExport->SetRoadId(RoadId);
    FAutoCADExport->RoadName = FRoadName;
    if(FAutoCADExport->ShowModal()!=mrOk) return;
@@ -1027,7 +1034,9 @@ void __fastcall TRoadFrm::AcadExport(void) {
    }
 
    thread->Resume();
-  */
+#else
+   ShowMessage("Программа компилировалась без автокада, обратитесь к Мише!");
+#endif
 }
 
 void __fastcall TRoadFrm::BmpExportDialog(void)

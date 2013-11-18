@@ -27,7 +27,8 @@
 #include "DesignPattern.h"
 #include "MacrosForm.h"
 #include "ConstHelp.h"
-//#include "AutoCADPrintForm.h"
+#include <iostream>
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -874,16 +875,24 @@ if (OpenRoadDialog->ShowModal()==mrOk)
     OpenViewFrm->RoadId=OpenRoadDialog->RoadId;
     if (OpenViewFrm->ShowModal()==mrOk)
         {
-        if (!Shared)
-            {
-            Shared=new TDBSharedObjSource(Connection);
-            Shared->Load();
+            std::cout << "Открываю дорогу: "
+                  << OpenRoadDialog->RoadName.Trim().c_str()
+                  << " [id:" << OpenRoadDialog->RoadId << "]"
+                  << " источник: " << OpenViewFrm->ViewId << std::endl;
+            try {
+              if (!Shared)
+              {
+                Shared=new TDBSharedObjSource(Connection);
+                Shared->Load();
+              }
+              TDictSource *Dict=ResManager->AddDictSource(0,Connection);
+              TRoadFrm *frm;
+              Application->CreateForm(__classid(TRoadFrm), &frm);
+              frm->OpenView(OpenViewFrm->RoadId,OpenViewFrm->ViewId,Dict,Shared);
+              frm->Show();
+            }  catch(...) {
+               std::cerr << "ошибка при открытии дороги" << std::endl;
             }
-        TDictSource *Dict=ResManager->AddDictSource(0,Connection);
-        TRoadFrm *frm;
-        Application->CreateForm(__classid(TRoadFrm), &frm);
-        frm->OpenView(OpenViewFrm->RoadId,OpenViewFrm->ViewId,Dict,Shared);
-        frm->Show();
         }
     }
 }
