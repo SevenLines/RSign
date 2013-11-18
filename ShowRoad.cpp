@@ -23,14 +23,14 @@
 #include "BuildSlopes.h"
 #include "BuildWidePart.h"
 #include "RoadMark.h"
-#include "acadexport.h"
+//#include "acadexport.h"
 #include <Registry.hpp>
 #include <algorithm>
 
 #include "VideoForm.h"
 #include "ProgressFrm.h"
-#include "AutoCADExportForm.h"
-#include "AcadExportThread.h"
+//#include "AutoCADExportForm.h"
+//#include "AcadExportThread.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -979,6 +979,7 @@ for (;minl<maxl;minl+=plen,page++)
 
 void __fastcall TRoadFrm::AcadPrint(void){
 
+/*
    TAcadExport *aexp=new TAcadExport();
    int L1=MetricData->Road->LMin;
    int L2=MetricData->Road->LMax;
@@ -995,11 +996,11 @@ void __fastcall TRoadFrm::AcadPrint(void){
    }
    aexp->Print();
 
-   delete aexp;
+   delete aexp;*/
 }
 
 void __fastcall TRoadFrm::AcadExport(void) {
-
+/*
    FAutoCADExport->SetRoadId(RoadId);
    FAutoCADExport->RoadName = FRoadName;
    if(FAutoCADExport->ShowModal()!=mrOk) return;
@@ -1026,7 +1027,7 @@ void __fastcall TRoadFrm::AcadExport(void) {
    }
 
    thread->Resume();
-
+  */
 }
 
 void __fastcall TRoadFrm::BmpExportDialog(void)

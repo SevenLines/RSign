@@ -133,10 +133,16 @@ void __fastcall AcadExportThread::addProgressFormLogLine()
 }
 
 
-#define SET_PROGRESS_FORM_CAPTION(caption) ProgressFormCaption = caption; ProgressFormLogLine = caption; Synchronize(setProgressFormCaption); Synchronize(addProgressFormLogLine);
+    
+#define SET_PROGRESS_FORM_CAPTION(caption) \
+        ProgressFormCaption = caption; \
+        ProgressFormLogLine = caption; \
+        Synchronize(setProgressFormCaption); \
+        Synchronize(addProgressFormLogLine);
+
+
 #define SET_PROGRESS_FORM_POSITION(position) ProgressFormPosition = position; Synchronize(setProgressFormPosition);
 #define SET_PROGRESS_FORM_MINMAX(min, max) ProgressFormMin = min; ProgressFormMax = max; Synchronize(setProgressFormMinMax);
-#define ADD_PROGRESS_FORM_LINE(line) ProgressFormLogLine = line; Synchronize(addProgressFormLogLine);
 
 
 void AcadExportThread::OutInfoLog(AnsiString &str)
@@ -147,16 +153,26 @@ void AcadExportThread::OutInfoLog(AnsiString &str)
 
 void __fastcall AcadExportThread::Execute()
 {
+    int countOfExportItems;
+    int currentItem = 0;
+
+#define SET_PROGRESS_FORM_CAPTION_EX(caption) \
+        SET_PROGRESS_FORM_CAPTION("[" + IntToStr(currentItem) +"/" +  IntToStr(countOfExportItems) + "] " + caption)
+        
+#define ADD_PROGRESS_FORM_LINE(line) \
+        ProgressFormLogLine = line; \
+        Synchronize(addProgressFormLogLine);
+
     if(!MetricData) return;
 
-    aexp=new TAcadExport();
+    aexp = new TAcadExport();
     aexp->RoadName = RoadName;
     int L1=MetricData->Road->LMin;
     int L2=MetricData->Road->LMax;
     int DX=1200;
     bool fDeleteLayerObjects = false;
 
-    R=new TRoad(MetricData->Road,L1,L2);
+    R = new TRoad(MetricData->Road,L1,L2);
     R->SetBound(L1,L2,-DX,DX);
     R->SetFrame(L1,L2,-DX,DX,pkGorizontal,pdDirect);
     R->SetOutBound(L1,L2,-DX,DX);
@@ -171,14 +187,14 @@ void __fastcall AcadExportThread::Execute()
       ProgressForm->clearLog();
       ProgressForm->Thread = this;
       ProgressForm->Show();
-
-
-
       try{
           TDtaSource *CurData=(TDtaSource*)FAutoCADExport->cbCurList->Items->Objects[FAutoCADExport->cbCurList->ItemIndex];
           TDtaSource *PrjData=(TDtaSource*)FAutoCADExport->cbPrjList->Items->Objects[FAutoCADExport->cbPrjList->ItemIndex];
           TDtaSource *DataPrj = PrjData==0?CurData:PrjData; // для обектов выводимых приоритено из проектного источника
           TDtaSource *DataCur = CurData==0?PrjData:CurData; // для обектов выводимых приоритено из текущего источника
+
+          countOfExportItems = FAutoCADExport->CountOfExports();
+
           switch(FAutoCADExport->ExportTo){
              case 0:
                    ADD_PROGRESS_FORM_LINE("Подключение к активному документу");
@@ -302,7 +318,8 @@ void __fastcall AcadExportThread::Execute()
            SET_PROGRESS_FORM_MINMAX(0,DataCur->Objects->Count-1);
 
            if (FAutoCADExport->ExportTown) {
-             SET_PROGRESS_FORM_CAPTION("Выводим населенные пункты...")
+             currentItem++;
+             SET_PROGRESS_FORM_CAPTION_EX("Выводим населенные пункты...")
              SET_PROGRESS_FORM_POSITION(0;)
              aexp->AddLayer("RoadTown");
              for (int i=0;i<DataCur->Objects->Count;i++) {
@@ -320,7 +337,8 @@ void __fastcall AcadExportThread::Execute()
            }
 
            if (FAutoCADExport->ExportPlan) {
-             SET_PROGRESS_FORM_CAPTION("Выводим план...")
+             currentItem++;
+             SET_PROGRESS_FORM_CAPTION_EX("Выводим план...")
              SET_PROGRESS_FORM_POSITION(0;)
              aexp->AddLayer("RoadPlan");
              for (int i=0;i<DataCur->Objects->Count;i++) {
@@ -340,7 +358,8 @@ void __fastcall AcadExportThread::Execute()
            }
 
            if (FAutoCADExport->ExportSurface) {
-             SET_PROGRESS_FORM_CAPTION("Выводим участки по покрытиям...")
+             currentItem++;
+             SET_PROGRESS_FORM_CAPTION_EX("Выводим участки по покрытиям...")
              SET_PROGRESS_FORM_POSITION(0;)
              aexp->AddLayer("RoadSurface");
              for (int i=0;i<DataCur->Objects->Count;i++) {
@@ -362,7 +381,8 @@ void __fastcall AcadExportThread::Execute()
           if (MetricData) {
              SET_PROGRESS_FORM_MINMAX(0,MetricData->Objects->Count-1);
              if(FAutoCADExport->ExportRoadMetrics){
-               SET_PROGRESS_FORM_CAPTION("Выводим метрику дороги...")
+               currentItem++; 
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим метрику дороги...")
                SET_PROGRESS_FORM_POSITION(0);
                aexp->AddLayer("RoadMetrics");
 
@@ -383,7 +403,8 @@ void __fastcall AcadExportThread::Execute()
              }
 
              if (FAutoCADExport->ExportProfile) { // Выводим профиль
-               SET_PROGRESS_FORM_CAPTION("Выводим профиль дороги...")
+               currentItem++;
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим профиль дороги...")
                SET_PROGRESS_FORM_POSITION(0);
                aexp->AddLayer("RoadProfile");
                TRect PrRect=TRect(L1,0,L2,-aexp->profileHeight); // Миша, вместо 100 поставь любое другое значение
@@ -393,7 +414,8 @@ void __fastcall AcadExportThread::Execute()
                delete p;
              }
              if(FAutoCADExport->ExportAttachments){
-               SET_PROGRESS_FORM_CAPTION("Выводим примыкания...")
+               currentItem++;
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим примыкания...")
                SET_PROGRESS_FORM_POSITION(0);
                aexp->AddLayer("RoadAttachments");
 
@@ -413,7 +435,8 @@ void __fastcall AcadExportThread::Execute()
              }
 
              if(FAutoCADExport->ExportRoadSideObjects){
-               SET_PROGRESS_FORM_CAPTION("Выводим площадки отдыха...")
+               currentItem++;
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим площадки отдыха...")
                SET_PROGRESS_FORM_POSITION(0);
                aexp->AddLayer("RoadSideObjects");
 
@@ -434,7 +457,8 @@ void __fastcall AcadExportThread::Execute()
           }
          if ((CurData||PrjData) && MetricData) {
            if(FAutoCADExport->ExportRoadSigns){
-             SET_PROGRESS_FORM_CAPTION("Выводим дорожные знаки...")
+             currentItem++;
+             SET_PROGRESS_FORM_CAPTION_EX("Выводим дорожные знаки...")
              SET_PROGRESS_FORM_POSITION(0);
              aexp->AddLayer("RoadSigns");
 
@@ -480,8 +504,9 @@ void __fastcall AcadExportThread::Execute()
            // разметку приоритетно выводим из проектируемого источника
            if(DataPrj) {
              if(FAutoCADExport->ExportMark){
+               currentItem++;
                SET_PROGRESS_FORM_MINMAX(0,DataPrj->Objects->Count-1);
-               SET_PROGRESS_FORM_CAPTION("Выводим разметку...")
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим разметку...")
                SET_PROGRESS_FORM_POSITION(0);
                aexp->AddLayer("RoadMark");
                for (int i=0;i<DataPrj->Objects->Count;i++) {
@@ -549,7 +574,8 @@ void __fastcall AcadExportThread::Execute()
 
         if (DataCur) {
            if (FAutoCADExport->ExportCommunications) {
-             SET_PROGRESS_FORM_CAPTION("Выводим коммуникации...")
+             currentItem++;
+             SET_PROGRESS_FORM_CAPTION_EX("Выводим коммуникации...")
              SET_PROGRESS_FORM_POSITION(0;)
              aexp->AddLayer("RoadCommunication");
              for (int i=0;i<DataCur->Objects->Count;i++) {
@@ -566,7 +592,8 @@ void __fastcall AcadExportThread::Execute()
              }
            }
            if(FAutoCADExport->ExportTubes){
-             SET_PROGRESS_FORM_CAPTION("Выводим трубы...")
+             currentItem++;
+             SET_PROGRESS_FORM_CAPTION_EX("Выводим трубы...")
              SET_PROGRESS_FORM_POSITION(0;)
              aexp->AddLayer("RoadTubes");
              for (int i=0;i<DataCur->Objects->Count;i++) {
@@ -584,7 +611,8 @@ void __fastcall AcadExportThread::Execute()
              aexp->ExportTube(0,0,true);
            }
            if(FAutoCADExport->ExportBridges){
-             SET_PROGRESS_FORM_CAPTION("Выводим мосты...")
+             currentItem++;
+             SET_PROGRESS_FORM_CAPTION_EX("Выводим мосты...")
              SET_PROGRESS_FORM_POSITION(0;)
              aexp->AddLayer("RoadBridges");
              for (int i=0;i<DataCur->Objects->Count;i++) {
@@ -602,7 +630,8 @@ void __fastcall AcadExportThread::Execute()
              aexp->ExportBridge(0,0,true);
            }
            if(FAutoCADExport->ExportBusstops){
-             SET_PROGRESS_FORM_CAPTION("Выводим автобусные остановки...")
+             currentItem++;
+             SET_PROGRESS_FORM_CAPTION_EX("Выводим автобусные остановки...")
              SET_PROGRESS_FORM_POSITION(0;)
              aexp->AddLayer("RoadBusStops");
              for (int i=0;i<DataCur->Objects->Count;i++) {
@@ -620,7 +649,8 @@ void __fastcall AcadExportThread::Execute()
              aexp->ExportBusStop(0,0,true);
            }
            if (FAutoCADExport->ExportMoundHeights) {
-               SET_PROGRESS_FORM_CAPTION("Выводим высоты насыпей...")
+               currentItem++;
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим высоты насыпей...")
                SET_PROGRESS_FORM_POSITION(0;)
                aexp->AddLayer("RoadMoundHeights");
 
@@ -716,8 +746,9 @@ void __fastcall AcadExportThread::Execute()
                 SET_PROGRESS_FORM_MINMAX(0,bvec.size()-1);
 
                 if(FAutoCADExport->ExportSignal){
+                  currentItem++;
                   SET_PROGRESS_FORM_POSITION(0)
-                  SET_PROGRESS_FORM_CAPTION("Выводим ограждения и сигнальные устройства...")
+                  SET_PROGRESS_FORM_CAPTION_EX("Выводим ограждения и сигнальные устройства...")
                   aexp->AddLayer("RoadSignals");
                   for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
                       if(Terminated) return;
@@ -736,8 +767,9 @@ void __fastcall AcadExportThread::Execute()
                 }
 
                 if(FAutoCADExport->ExportSidewalks){
-                  SET_PROGRESS_FORM_POSITION(0;)
-                  SET_PROGRESS_FORM_CAPTION("Выводим тротуары...")
+                  currentItem++;
+                  SET_PROGRESS_FORM_POSITION(0)
+                  SET_PROGRESS_FORM_CAPTION_EX("Выводим тротуары...")
                   aexp->AddLayer("Sidewalks");
                   for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
                       if(Terminated) return;
@@ -752,8 +784,9 @@ void __fastcall AcadExportThread::Execute()
                 }
 
                 if(FAutoCADExport->ExportLamps){
-                  SET_PROGRESS_FORM_POSITION(0;)
-                  SET_PROGRESS_FORM_CAPTION("Выводим фонари...")
+                  currentItem++;
+                  SET_PROGRESS_FORM_POSITION(0)
+                  SET_PROGRESS_FORM_CAPTION_EX("Выводим фонари...")
                   aexp->AddLayer("Lights");
                   for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
                       if(Terminated) return;
@@ -767,8 +800,9 @@ void __fastcall AcadExportThread::Execute()
                   aexp->ExportLighting(0,0,0,true);
                 }
                 if(FAutoCADExport->ExportBorders){
-                  SET_PROGRESS_FORM_POSITION(0;)
-                  SET_PROGRESS_FORM_CAPTION("Выводим бордюры...")
+                  currentItem++;
+                  SET_PROGRESS_FORM_POSITION(0)
+                  SET_PROGRESS_FORM_CAPTION_EX("Выводим бордюры...")
                   aexp->AddLayer("Borders");
                   for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
                       if(Terminated) return;
@@ -791,8 +825,9 @@ void __fastcall AcadExportThread::Execute()
            if(FAutoCADExport->ExportSlope){
              SET_PROGRESS_FORM_MINMAX(0,ProfilData->Objects->Count-1);
              // Выводим опасные участки
+             currentItem++;
              SET_PROGRESS_FORM_POSITION(0)
-             SET_PROGRESS_FORM_CAPTION("Выводим участки уклонов ...")
+             SET_PROGRESS_FORM_CAPTION_EX("Выводим участки уклонов ...")
              aexp->AddLayer("RoadSlopes");
              for (int i=0;i<ProfilData->Objects->Count;i++) {
                 if(Terminated) return;
@@ -814,7 +849,8 @@ void __fastcall AcadExportThread::Execute()
            if(FAutoCADExport->ExportCurves){
              SET_PROGRESS_FORM_MINMAX(0,CurveData->Objects->Count-1);
              // Выводим опасные участки
-             SET_PROGRESS_FORM_CAPTION("Выводим участки кривых ...")
+             currentItem++;  
+             SET_PROGRESS_FORM_CAPTION_EX("Выводим участки кривых ...")
              SET_PROGRESS_FORM_POSITION(0)
              aexp->AddLayer("RoadCurves");
              for (int i=0;i<CurveData->Objects->Count;i++) {
@@ -832,14 +868,12 @@ void __fastcall AcadExportThread::Execute()
 
         }
 
-        if(true){
-          SET_PROGRESS_FORM_CAPTION("выводим дополнительные строки из файлов в верхнюю таблицу")
-          aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows); 
-        }
-
-        if(true){
-          SET_PROGRESS_FORM_CAPTION("выводим дополнительные строки из файлов в нижнюю таблицу")
-          aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows);
+        if(FAutoCADExport->ExportAddRows){
+          currentItem++;
+          SET_PROGRESS_FORM_CAPTION_EX("выводим дополнительные строки из файлов в верхнюю таблицу")
+          aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows);
+          SET_PROGRESS_FORM_CAPTION_EX("выводим дополнительные строки из файлов в нижнюю таблицу")
+          aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows); 
         }
 
         if(FAutoCADExport->ExportGraphic){
@@ -848,6 +882,7 @@ void __fastcall AcadExportThread::Execute()
         }
 
         if(FAutoCADExport->ExportTable){
+             currentItem++; 
              aexp->AddLayer("Table");
              aexp->DrawTables(FAutoCADExport->ExportRuler);
         }

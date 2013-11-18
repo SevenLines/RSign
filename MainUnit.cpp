@@ -27,7 +27,7 @@
 #include "DesignPattern.h"
 #include "MacrosForm.h"
 #include "ConstHelp.h"
-#include "AutoCADPrintForm.h"
+//#include "AutoCADPrintForm.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -1025,7 +1025,7 @@ void __fastcall TMainForm::N72Click(TObject *Sender)
      FActiveRoad->AcadPrint();
      FActiveRoad->WindowState = state;
   }else{
-     FAutoCADPrint->ShowModal();
+     //FAutoCADPrint->ShowModal();
   }
 }
 //---------------------------------------------------------------------------
@@ -1061,12 +1061,6 @@ void __fastcall TMainForm::RMDesignButClick(TObject *Sender)
 {
 if (FActiveRoad)
     FActiveRoad->DesignAttachMark();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TMainForm::N76Click(TObject *Sender)
-{
-  // запуск приложения MoundHeights
 }
 //---------------------------------------------------------------------------
 

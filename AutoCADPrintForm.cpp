@@ -623,6 +623,7 @@ void TFAutoCADPrint::Print()
           ProgressForm->Position = j-iMin;
           Application->ProcessMessages();
           if(GetKeyState(VK_ESCAPE)&0x0100||ProgressForm->Terminated) {
+            ProgressForm->Hide();
             return;
           }
         }

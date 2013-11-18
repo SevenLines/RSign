@@ -10,16 +10,16 @@
 // ************************************************************************ //
 
 // C++ TLBWRTR : $Revision:   1.151.1.0.1.27  $
-// File generated on 13.11.2013 2:15:20 from Type Library described below.
+// File generated on 03.09.2013 16:21:44 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\_DISTR\_ASUDOR\RSign\RSign.tlb (1)
+// Type Lib: D:\Projects\RSign\RSign.tlb (1)
 // LIBID: {9585521C-1ADF-42FB-92EB-5C48218460F1}
 // LCID: 0
 // Helpfile: 
 // HelpString: RSign Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\Windows\SysWOW64\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
 // ************************************************************************ //
 #ifndef   RSign_TLBH
 #define   RSign_TLBH

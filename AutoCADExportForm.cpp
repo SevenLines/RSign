@@ -519,7 +519,8 @@ void TFAutoCADExport::locateRoadNameComboRoad()
   roadName = StringReplace(roadName, " ", "",Flags);
   roadName = StringReplace(roadName, "-", "",Flags);
   roadName = StringReplace(roadName, "_", "",Flags);
-  roadName = StringReplace(roadName, ".", "",Flags);   
+  roadName = StringReplace(roadName, ".", "",Flags);
+  roadName = StringReplace(roadName, "\"", "",Flags);   
 
   cmbRoad->ItemIndex = -1;
   for(int i=0;i<cmbRoad->Items->Count;i++) {
@@ -528,6 +529,7 @@ void TFAutoCADExport::locateRoadNameComboRoad()
      name = StringReplace(name, "-", "",Flags);
      name = StringReplace(name, "_", "",Flags);
      name = StringReplace(name, ".", "",Flags);
+     name = StringReplace(name, "\"", "",Flags);
      if(name.Pos(roadName) ) {
         cmbRoad->ItemIndex = i;
         return;
@@ -694,4 +696,35 @@ void __fastcall TFAutoCADExport::Button4Click(TObject *Sender)
    edtEnd->Text = "-1";
 }
 //---------------------------------------------------------------------------
+int __fastcall TFAutoCADExport::CountOfExports()
+{
+    int count = 0;
 
+    count += ExportAttachments;
+    count += ExportBorders;
+    count += ExportBridges;
+    count += ExportBusstops;
+    count += ExportCommunications;
+    count += ExportCurves;
+    count += ExportGraphic;
+    count += ExportLamps;
+    count += ExportMark;
+    count += ExportMoundHeights;
+    count += ExportPlan;
+    count += ExportProfile;
+    count += ExportRoadMetrics;
+    count += ExportRoadSideObjects;
+    count += ExportRoadSigns;
+    //count += ExportRuler;
+    count += ExportSidewalks;
+    count += ExportSignal;
+    count += ExportSlope;
+    count += ExportSurface;
+    //count += ExportTable;
+    count += ExportTown;
+    count += ExportTubes;
+    count += ExportAddRows;
+
+    return count;
+}
+//---------------------------------------------------------------------------

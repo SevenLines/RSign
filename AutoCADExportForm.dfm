@@ -1,11 +1,11 @@
 object FAutoCADExport: TFAutoCADExport
-  Left = 392
-  Top = 36
+  Left = 428
+  Top = 9
   AutoSize = True
   BorderStyle = bsSingle
   BorderWidth = 1
   Caption = 'AutoCAD'
-  ClientHeight = 669
+  ClientHeight = 672
   ClientWidth = 637
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,7 +24,7 @@ object FAutoCADExport: TFAutoCADExport
     Left = 0
     Top = 0
     Width = 225
-    Height = 669
+    Height = 672
     Align = alLeft
     Caption = ' '#1086#1090#1086#1073#1088#1072#1078#1077#1085#1080#1077' '
     TabOrder = 0

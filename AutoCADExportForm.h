@@ -256,6 +256,11 @@ public:		// User declarations
         MPROPERTY1(Town);
         MPROPERTY1(Surface);
         MPROPERTY1(MakeHeader);
+        __property bool ExportAddRows = {read = get_ExportAddRows};\
+        bool get_ExportAddRows(){
+             return getTopRow("дополнительные строки")!=-1 && getBottomRow("дополнительные строки")!=-1 && !edtTopAddRows->Text.IsEmpty();
+        }
+
 
         MPROPERTY1(TopAddRowsWithoutData);           
         MPROPERTY1(GridStep);
@@ -327,6 +332,7 @@ public:		// User declarations
         
         void __fastcall LoadSetupsInis();
         void __fastcall LoadTemplates();
+        int __fastcall CountOfExports(); // returns count of selected items for export
 
 };
 //---------------------------------------------------------------------------
