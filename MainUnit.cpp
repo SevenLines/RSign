@@ -30,6 +30,10 @@
 #include "ConstHelp.h"
 #include <iostream>
 
+//#ifdef AutoCAD_OCXH  // check is AutoCAD available
+  #include "AutoCADPrintForm.h"
+//#endif
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -1035,7 +1039,7 @@ void __fastcall TMainForm::N72Click(TObject *Sender)
      FActiveRoad->AcadPrint();
      FActiveRoad->WindowState = state;
   }else{
-     //FAutoCADPrint->ShowModal();
+     FAutoCADPrint->ShowModal();
   }
 }
 //---------------------------------------------------------------------------
