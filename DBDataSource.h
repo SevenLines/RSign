@@ -42,8 +42,10 @@ String __fastcall ReplaceNameVal(String Sql,TRoadObject *Obj,int Param);
 void __fastcall SaveObjMetrics(TADOCommand *command,TADODataSet *DB,TRoadObject *Obj);
 void __fastcall LoadVideoInfo(void); // Процедура для загрузки видео информации из Славиных табличек
 bool __fastcall LoadVideoInfo1(void); //Процедура для загрузки видео информации из моих табличек
+void __fastcall SaveVideoInfo1(void); //Процедура для выгрузки видео информации в мои таблички
 bool __fastcall LoadGeometry(void);
 bool __fastcall LoadGeometryBlob(void);
+void __fastcall SaveGeometryBlob(void);
 void __fastcall SaveMetrics(TDictSource *Dict);
 public:
 

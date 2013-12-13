@@ -897,6 +897,84 @@ delete DB;
 return Res;
 }
 
+
+// Сохраняет координату L
+void __fastcall TDBDataSource::SaveGeometryBlob(void) {
+TADODataSet* DB=new TADODataSet(NULL);
+DB->Connection=FConnection;
+DB->CommandText=ReplaceNameVal(BlobProfilLoad,NULL,0);
+DB->Open();
+int n=Road->Geometry.Count;
+int nd=n*sizeof(double);
+int ni=n*sizeof(int);
+if (DB->RecordCount && n>0)
+    {
+    DB->Edit();
+    TMemoryStream *L_M=new TMemoryStream;
+    L_M->SetSize(nd);
+    TMemoryStream *X_M=new TMemoryStream;
+    X_M->SetSize(nd);
+    TMemoryStream *Y_M=new TMemoryStream;
+    Y_M->SetSize(nd);
+    TMemoryStream *Z_M=new TMemoryStream;
+    Z_M->SetSize(nd);
+    TMemoryStream *LongSlope_M=new TMemoryStream;
+    LongSlope_M->SetSize(ni);
+    TMemoryStream *LeftSlope_M=new TMemoryStream;
+    LeftSlope_M->SetSize(ni);
+    TMemoryStream *RightSlope_M=new TMemoryStream;
+    RightSlope_M->SetSize(ni);
+    TMemoryStream *LeftRadius_M=new TMemoryStream;
+    LeftRadius_M->SetSize(ni);
+    TMemoryStream *RightRadius_M=new TMemoryStream;
+    RightRadius_M->SetSize(ni);
+    double* L_A=(double*)L_M->Memory;
+    double* X_A=(double*)X_M->Memory;
+    double* Y_A=(double*)Y_M->Memory;
+    double* Z_A=(double*)Z_M->Memory;
+    int* LongSlope_A=(int*)LongSlope_M->Memory;
+    int* LeftSlope_A=(int*)LeftSlope_M->Memory;
+    int* RightSlope_A=(int*)RightSlope_M->Memory;
+    int* LeftRadius_A=(int*)LeftRadius_M->Memory;
+    int* RightRadius_A=(int*)RightRadius_M->Memory;
+
+    TGeometryVal *Geom=Road->Geometry.Values;
+    __int32 *L=Road->Geometry.L;
+    for (int i=0;i<n;i++)
+        {
+        L_A[i]=L[i]/100.0;
+        X_A[i]=Geom[i].X/100.0;
+        Y_A[i]=Geom[i].Y/100.0;
+        Z_A[i]=Geom[i].Z/100.0;
+        LongSlope_A[i]=Geom[i].LongSlope;
+        LeftSlope_A[i]=Geom[i].LeftSlope;
+        RightSlope_A[i]=Geom[i].RightSlope;
+        RightRadius_A[i]=Geom[i].DirectRad;
+        LeftRadius_A[i]=Geom[i].UnDirectRad;
+        }
+    (dynamic_cast<TBlobField*>(DB->FieldByName("L")))->LoadFromStream(L_M);
+    (dynamic_cast<TBlobField*>(DB->FieldByName("X")))->LoadFromStream(X_M);
+    (dynamic_cast<TBlobField*>(DB->FieldByName("Y")))->LoadFromStream(Y_M);
+    (dynamic_cast<TBlobField*>(DB->FieldByName("Z")))->LoadFromStream(Z_M);
+    (dynamic_cast<TBlobField*>(DB->FieldByName("LongSlope")))->LoadFromStream(LongSlope_M);
+    (dynamic_cast<TBlobField*>(DB->FieldByName("LeftSlope")))->LoadFromStream(LeftSlope_M);
+    (dynamic_cast<TBlobField*>(DB->FieldByName("RightSlope")))->LoadFromStream(RightSlope_M);
+    (dynamic_cast<TBlobField*>(DB->FieldByName("LeftRadius")))->LoadFromStream(LeftRadius_M);
+    (dynamic_cast<TBlobField*>(DB->FieldByName("RightRadius")))->LoadFromStream(RightRadius_M);
+    delete L_M;
+    delete X_M;
+    delete Y_M;
+    delete Z_M;
+    delete LongSlope_M;
+    delete LeftSlope_M;
+    delete RightSlope_M;
+    delete LeftRadius_M;
+    delete RightRadius_M;
+    DB->Post();
+    }
+delete DB;
+}
+
 bool __fastcall TDBDataSource::LoadGeometry(void)
 {
 bool Res=false;
@@ -1029,66 +1107,60 @@ for (int i=0;i<FilesCount;i++)
         VH->FileName="";
     DB->Close();
     }
-/*
-
-
-DB->CommandText="select * from ELEM_VideoFiles where NumDataSource="+String(FDataClass);
-DB->Open();
-while (!DB->Eof)
-    {
-    int id=DB->FieldByName("id_")->AsInteger;
-    TVideoHigh *VH=new TVideoHigh(id,0);
-    VH->FileName=DB->FieldByName("PathToVideo")->AsString;
-//    int dir=DB->FieldByName("Direction")->AsInteger;
-    FVideoHighList->Add(VH);
-    DB->Next();
-    }
-DB->Close();
-
-DB->CommandText="select * from ELEM_VideoInfo where NumDataSource="+String(FDataClass);
-DB->Open();
-TMemoryStream *MemL=new TMemoryStream();
-TMemoryStream *MemSrv=new TMemoryStream();
-TMemoryStream *MemFrames=new TMemoryStream();
-Res=DB->RecordCount;
-while (!DB->Eof)
-    {
-    int n=DB->FieldByName("Frames_Count")->AsInteger;
-    int dir=DB->FieldByName("Direction")->AsInteger;
-    TVideoTime *VT=NULL;
-    switch (dir)
-        {
-        case 1: VT=FDirVideoTime;break;
-        case 2: VT=FUnDirVideoTime;break;
-        }
-    if (!VT)
-        break;
-    VT->SetCount(n);
-    dynamic_cast<TBlobField*>(DB->FieldByName("L_Array"))->SaveToStream(MemL);
-    dynamic_cast<TBlobField*>(DB->FieldByName("FileId_Array"))->SaveToStream(MemSrv);
-    dynamic_cast<TBlobField*>(DB->FieldByName("Frames_Array"))->SaveToStream(MemFrames);
-    int *L=(int*)MemL->Memory;
-    int *Srv=(int*)MemSrv->Memory;
-    int *Frames=(int*)MemFrames->Memory;
-    int *A_L=VT->L;
-    TVideoTimeVal *Val=VT->Values;
-    for (int i=0;i<n;i++)
-        {
-        A_L[i]=L[i];
-        Val[i].Time=Frames[i];
-        for (int j=0;j<FVideoHighList->Count;j++)
-            if (Srv[i]==FVideoHighList->Items[j]->Id)
-                {Val[i].HighIndex=j;break;}
-        }
-    DB->Next();
-    MemL->Clear();
-    MemSrv->Clear();
-    MemFrames->Clear();
-    }
-*/
 delete DB;
 return Res;
 }
+
+// Функция изменяет только привязку видео
+void __fastcall TDBDataSource::SaveVideoInfo1(void)
+{
+
+TADODataSet* DB=new TADODataSet(NULL);
+DB->Connection=FConnection;
+
+TMemoryStream *MemL=new TMemoryStream();
+
+for (int i=0;i<FDirVideoTime->Count;i++) {
+   TVideoTime *VT=FDirVideoTime->Items[i];
+   DB->CommandText="select * from ELEM_VideoInfo where NumDataSource="+String(FDataClass)+
+   " and Description like '%"+VT->Description+"%' and Direction=1";
+   DB->Open();
+   if (DB->RecordCount) {
+      int n=VT->Count;
+      MemL->SetSize(int(n*sizeof(int)));
+      int *L=(int*)MemL->Memory;
+      int *A_L=VT->L;
+      for (int i=0;i<n;i++)
+           L[i]=A_L[i];
+      DB->Edit();
+      dynamic_cast<TBlobField*>(DB->FieldByName("L_Array"))->LoadFromStream(MemL);
+      DB->Post();
+   }
+   DB->Close();
+}
+
+for (int i=0;i<FUnDirVideoTime->Count;i++) {
+   TVideoTime *VT=FUnDirVideoTime->Items[i];
+   DB->CommandText="select * from ELEM_VideoInfo where NumDataSource="+String(FDataClass)+
+   " and Description like '%"+VT->Description+"%, and Direction=2";
+   DB->Open();
+   if (DB->RecordCount) {
+      int n=VT->Count;
+      MemL->SetSize(int(n*sizeof(int)));
+      int *L=(int*)MemL->Memory;
+      int *A_L=VT->L;
+      for (int i=0;i<n;i++)
+        L[i]=A_L[i];
+      DB->Edit();
+      dynamic_cast<TBlobField*>(DB->FieldByName("L_Array"))->LoadFromStream(MemL);
+      DB->Post();
+   }
+   DB->Close();
+}
+delete MemL;
+delete DB;
+}
+
 
 void __fastcall TDBDataSource::LoadVideoInfo(void)
 {
@@ -1482,6 +1554,14 @@ void __fastcall TDBDataSource::Apply(TDictSource *Dict)
 {
 if (ReadOnly)
     return;
+if (Road->GeometryMoved) {
+   Road->GeometryMoved=false;
+   SaveGeometryBlob();
+}
+if (VideoMoved) {
+   VideoMoved=false;
+   SaveVideoInfo1();
+}
 TADODataSet* dataset=new TADODataSet(NULL);
 dataset->Connection=Connection;
 TADOCommand* command=new TADOCommand(NULL);

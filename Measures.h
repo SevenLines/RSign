@@ -202,6 +202,10 @@ public:
 __fastcall TRoadMeasure(void);
 __fastcall TRoadMeasure(__int32 NCount);
 __fastcall ~TRoadMeasure(void);
+void __fastcall Move(int len) {
+   for (int i=0;i<FCount;i++)
+      FL[i]+=len;
+}
 void __fastcall SetCount(int);
 void __fastcall Free(void);
 VAL& __fastcall operator[](int n)

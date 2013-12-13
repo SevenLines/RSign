@@ -209,6 +209,8 @@ void __fastcall CopyPoints(TPolyline*);
 void __fastcall DeletePoint(int num);
 // Вставляет точку в позицию n (после n-1)
 void __fastcall InsertPoint(TRoadPoint& pt,int n);
+// Переносит координату L полилинии
+void __fastcall Move(int len);
 void __fastcall LoadFromStream(TMemoryStream *Mem);
 void __fastcall SaveToStream(TMemoryStream *Mem);
 double __fastcall Length(void);

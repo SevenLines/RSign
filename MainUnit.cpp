@@ -160,11 +160,12 @@ if (R!=FActiveRoad)
         AddDangBut->Enabled=false;
         AddSignBut->Enabled=false;
         AttDesignBut->Enabled=false;
-        RMDesignBut->Enabled=false;        
+        RMDesignBut->Enabled=false;
         ShowDocBut->Enabled=false;
         N63->Enabled=false;
         N70->Enabled=false;
         N71->Enabled=false;
+        N76->Enabled=false;
         }
     SendBroadCastMessage(CM_ONACTIVATEROADWIN,(int)R,0);
     }
@@ -1075,6 +1076,15 @@ void __fastcall TMainForm::RMDesignButClick(TObject *Sender)
 {
 if (FActiveRoad)
     FActiveRoad->DesignAttachMark();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::N76Click(TObject *Sender)
+{
+if (FActiveRoad)
+    {
+    FActiveRoad->MoveObjects();
+    }
 }
 //---------------------------------------------------------------------------
 

@@ -969,8 +969,9 @@ TPolyline RightZem; // Правый край зем полотна
 TPolyline LeftDivPart; // Край разделительной полосы слева
 TPolyline RightDivPart; // Край разделительной полосы справа
 TRoadGeometry Geometry; // Продольный профиль дороги
+bool GeometryMoved;     // true после редактирования геометрических параметров
 __fastcall TRoad(__int32 id,__int32 code):TBandRoadObject(id,code)
-        {}
+        {GeometryMoved=false;}
 void __fastcall SetBound(__int32 minx,__int32 maxx,__int32 miny,__int32 maxy);
 void __fastcall SetFrame(__int32 lmin,__int32 lmax,__int32 xmin,__int32 xmax,TPlanKind pk,TPlanDirect dr);
 void __fastcall SetOutBound(__int32 lmin,__int32 lmax,__int32 xmin,__int32 xmax);

@@ -118,7 +118,7 @@ if (FData)
     int n=FData->Objects->Count;
     int Pos[4];
     TDangerCurve *Crv_In,*Crv_Out,*Crv_Crc;
-    TDangerCurve *PrevCrv;
+    TDangerCurve *PrevCrv=NULL;
     Crv_In=Crv_Out=Crv_Crc=NULL;
     for (int i=0;i<n;i++)
         {

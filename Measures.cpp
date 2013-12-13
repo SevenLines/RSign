@@ -21,6 +21,7 @@ __fastcall TPartTree(int ind1,int ind2)
     {LeftInd=ind1;RightInd=ind2;LeftNode=RightNode=NULL;}
 };
 
+
 int __fastcall TRoadGeometry::BuildPartTree(TPartTree* Node,int *DirVals,int *UnDirVals,__int32 MinLen,__int32 Dev)
 {
 int Res=1;

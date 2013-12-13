@@ -540,6 +540,13 @@ FPoints=NULL;
 FCount=FCapacity=0;
 }
 
+void __fastcall TPolyline::Move(int len) {
+   for (int i=0;i<FCount;i++)
+      if (FPoints[i].Code.LBase()==0)
+         FPoints[i].BasePar1+=len;
+}
+
+
 void __fastcall TPolyline::CopyPoints(TPolyline *src) {
 FreePoints();
 SetCount(src->Count);

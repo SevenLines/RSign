@@ -431,12 +431,13 @@ public:         // User declarations
     void __fastcall ContinueMarkLine(void);   // Создает новый объект разметки, продолжая текущий
     void __fastcall NewMarkLine(void);        // Создает новый объект разметки. Если выделена разметка, то ее можно дублировать
     void __fastcall MoveActiveObject(void);
+    void __fastcall MoveObjects(void);
     void __fastcall AddNewObject(void);
     void __fastcall AddNewObject(int DictId);
     void __fastcall AddNewObject(TObjMetaClass *Meta);
     void __fastcall ShowActiveObject(void);
     void __fastcall LongSlopesPartDialog(void);
-    void __fastcall BuildWidePartsDialog(void);    
+    void __fastcall BuildWidePartsDialog(void);
     void __fastcall BuildRoadLines(void);
     void __fastcall CalculateRoadMarkLength(void);
     // Ставит точки в местах пересечения кромки бровки с примыканием и помечает участки как невидимые

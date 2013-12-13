@@ -16,7 +16,7 @@ const char MetricsAppend[]="insert into ELEM_Metrics (NumRoad, NumLine, NumPoint
 const char DocumentLoad[]="select RD.doc_id as DocId,RD.doc_name as Name, RD.doc_path as Path, RS.s_path as Driver, RD.doc_object as ObjId, RD.doc_celement as DictId from RDocuments RD left join RServers RS on RD.doc_serv=RS.s_id where doc_road=$NumRoad$ and NumDataSource=$NumSource$";
 const char ProfilLoad[]="select NumRoad,cast(Displacement*100+0.5 as integer) as L,cast(X_pr*100+0.5 as integer) as X,cast(Y_pr*100+0.5 as integer) as Y,cast(Z*100+0.5 as integer) as Z,LongSlope, LeftSlope, RightSlope, RightRadius, LeftRadius from RoadGeometry where NumRoad=$NumRoad$\
     and NumDataSource=$NumSource$ order by L";
-const char BlobProfilLoad[]="select NumRoad,Displacement as L,X_pr as X,Y_pr as Y,Z,LongSlope, LeftSlope, RightSlope, RightRadius, LeftRadius from RoadGeometryBlob where NumRoad=$NumRoad$\
+const char BlobProfilLoad[]="select NumRoad,NumDataSource,Displacement as L,X_pr as X,Y_pr as Y,Z,LongSlope, LeftSlope, RightSlope, RightRadius, LeftRadius from RoadGeometryBlob where NumRoad=$NumRoad$\
     and NumDataSource=$NumSource$";    
 const char ProfilCount[]="select count(*) as c from RoadGeometry where NumRoad=$NumRoad$ and NumDataSource=$NumSource$";
 

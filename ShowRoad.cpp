@@ -24,6 +24,7 @@
 #include "BuildWidePart.h"
 #include "RoadMark.h"
 #include "acadexport.h"
+#include "MoveForm.h.h"
 #include <Registry.hpp>
 #include <algorithm>
 
@@ -2457,6 +2458,24 @@ if (FActiveObj)
         }
 }
 
+void __fastcall TRoadFrm::MoveObjects(void) {
+   if (FEditedData) {
+      if (moveDialog->ShowModal()==mrOk) {
+         if (moveDialog->moveAllObjects) {
+            FEditedData->MoveAllObjects(moveDialog->Length,FEditedData->Road);
+         } else if (moveDialog->moveSelected) {
+            FEditedData->MoveSelectedObjects(moveDialog->Length,FEditedData->Road);
+         }
+         if (moveDialog->moveGeometry) {
+            FEditedData->Road->GeometryMoved=true;
+            FEditedData->Road->Geometry.Move(moveDialog->Length*100);
+         } if (moveDialog->moveVideo)
+            FEditedData->MoveVideo(moveDialog->Length*100);
+      }
+   }
+}
+
+
 void __fastcall TRoadFrm::CalculateRoadMarkLength(void)
 {
 TDtaSource *src;
@@ -2946,6 +2965,7 @@ if (FEditedData)
     MainForm->N43->Enabled=!FEditedData->ReadOnly;
     MainForm->N45->Enabled=!FEditedData->ReadOnly;
     MainForm->N46->Enabled=!FEditedData->ReadOnly;
+    MainForm->N76->Enabled=!FEditedData->ReadOnly;
     MainForm->AddDangBut->Enabled=!FEditedData->ReadOnly;
     MainForm->AddSignBut->Enabled=!FEditedData->ReadOnly;
     }
@@ -2957,6 +2977,7 @@ else
     MainForm->N43->Enabled=false;
     MainForm->N45->Enabled=false;
     MainForm->N46->Enabled=false;
+    MainForm->N76->Enabled=false;    
     MainForm->AddDangBut->Enabled=false;
     MainForm->AddSignBut->Enabled=false;
     }

@@ -139,6 +139,7 @@ TObjList<TRoadObject> *FDelBuffer;
 TObjList<TDocument> *FDocList;
 TObjList<TVideoTime> *FUnDirVideoTime;
 TObjList<TVideoTime> *FDirVideoTime;
+bool VideoMoved;
 //TVideoTime *FDirVideoTime; // Привязка видео по времени и заездам
 //TVideoTime *FUnDirVideoTime; // Привязка видео по времени и заездам
 TObjList<TVideoHigh> *FVideoHighList; //Видео файлы
@@ -233,6 +234,9 @@ void __fastcall DeleteObjectEx(TRoadObject* robj);
 void __fastcall DeleteObject(TRoadObject* robj);
 void __fastcall DeleteChildObjects(TRoadObject *robj);
 void __fastcall DeleteObject(int index);
+void __fastcall MoveAllObjects(int len,TRoad *RefRoad);
+void __fastcall MoveSelectedObjects(int len,TRoad *RefRoad);
+void __fastcall MoveVideo(int len);
 // Функция добавляет объект в отсортированный список
 void __fastcall AddRoadObject(TRoadObject *obj);
 void __fastcall AddRoadLine(TDictSource *Dict,TPolyline *Poly,int plc,int knd);

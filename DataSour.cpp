@@ -532,6 +532,7 @@ FProfilVal1=20;
 FProfilVal2=50;
 FDirVideoId=-1;
 FUnDirVideoId=-1;
+VideoMoved=false;
 CreateClasses();
 }
 
@@ -588,10 +589,13 @@ bool __fastcall TDtaSource::TestNeedSave(void)
 bool NeedSave=false;
 if (FDelBuffer->Count)
     NeedSave=true;
-else
+else {
+    if (Road->GeometryMoved||VideoMoved)
+      NeedSave=true;
     for (int i=0;i<Objects->Count;i++)
         if (Objects->Items[i]->Modified)
             {NeedSave=true;break;}
+}
 return NeedSave;
 }
 
@@ -1716,6 +1720,55 @@ for (i=n-1;i>=0;i--)
   FList[i+1]=FList[i];
   }
 FList[i+1]=obj;
+}
+
+void __fastcall TDtaSource::MoveSelectedObjects(int len,TRoad *RefRoad) {
+   int n=FObjects->Count;
+   TRoadObject **FList=(TRoadObject**)FObjects->List;
+   for (int i=0;i<n;i++) {
+      TRoadObject *ob=dynamic_cast<TRoadObject*>(FList[i]);
+      if (ob && ob->Selected) {
+         ob->Selected=false;
+         ob->L+=len*100;
+         TContRoadObject *cob=dynamic_cast<TContRoadObject*>(ob);
+         if (cob)
+            cob->SetLMax(cob->LMax+len*100);
+         if (ob->Poly) {
+            ob->Poly->Move(len*100);
+            ob->PostEditPoly();
+         }
+      }
+   }
+   SortByPlacement();
+   CalcMetrics(RefRoad);
+}
+
+void __fastcall TDtaSource::MoveAllObjects(int len,TRoad *RefRoad) {
+   int n=FObjects->Count;
+   TRoadObject **FList=(TRoadObject**)FObjects->List;
+   for (int i=0;i<n;i++) {
+      TRoadObject *ob=dynamic_cast<TRoadObject*>(FList[i]);
+      if (ob) {
+         ob->L+=len*100;
+         TContRoadObject *cob=dynamic_cast<TContRoadObject*>(ob);
+         if (cob)
+            cob->SetLMax(cob->LMax+len*100);
+         if (ob->Poly) {
+            ob->Poly->Move(len*100);
+            ob->PostEditPoly();
+         }
+      }
+   }
+   SortByPlacement();
+   CalcMetrics(RefRoad);
+}
+
+void __fastcall TDtaSource::MoveVideo(int len) {
+   VideoMoved=true;
+   for (int i=0;i<FDirVideoTime->Count;i++)
+      FDirVideoTime->Items[i]->Move(len);
+   for (int i=0;i<FUnDirVideoTime->Count;i++)
+      FUnDirVideoTime->Items[i]->Move(len);
 }
 
 TPolyline* __fastcall TDtaSource::FindPolyline(__int32 id)
