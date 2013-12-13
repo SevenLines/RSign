@@ -71,12 +71,6 @@ __published:	// IDE-managed Components
         TLabel *Label14;
         TButton *Button9;
         TGroupBox *GroupBox1;
-        TEdit *edtXRef;
-        TEdit *edtTemplate;
-        TButton *Button10;
-        TButton *Button11;
-        TLabel *Label12;
-        TLabel *Label15;
         TOpenDialog *OpenDialog1;
         TPanel *Panel2;
         TButton *Button2;
@@ -110,8 +104,6 @@ __published:	// IDE-managed Components
         void __fastcall Button8Click(TObject *Sender);
         void __fastcall FormShow(TObject *Sender);
         void __fastcall Button9Click(TObject *Sender);
-        void __fastcall Button10Click(TObject *Sender);
-        void __fastcall Button11Click(TObject *Sender);
         void __fastcall Button12Click(TObject *Sender);
 private:
         AutoCADHelper AutoCAD;
@@ -142,10 +134,11 @@ public:		// User declarations
        AcadPViewportPtr vpCenter;
        AcadPViewportPtr vpBottom;
        int iTop,iCenter,iBottom,iSelected;
-       void Print();
-       void Print2();
 
+       enum PrintType {ptDWG, ptPDF};
 
+       void Print(PrintType printType = ptPDF);
+       
        bool BeginPrint();
        bool PauseLastFramePrint(std::list<AnsiString> &fileNames);
        bool SetFrame(int position, int width);

@@ -348,7 +348,7 @@ AcadBlockPtr AutoCADHelper::getBlocks(int i)
      try{
          block = cadActiveDocument->Blocks->Item(Variant(i));
      }catch(...){
-         cerr << "Ошибка при попытке получить доступ к " << i << "-му блоку"  << std::endl;
+         BUILDER_ERROR( "Ошибка при попытке получить доступ к " << i << "-му блоку" );
      }
    }
    return block;
@@ -361,7 +361,7 @@ AcadBlockPtr AutoCADHelper::getBlocksByName(AnsiString BlockName)
      try{
          block = cadActiveDocument->Blocks->Item(Variant(BlockName));
      }catch(...){
-         cerr << "Ошибка при попытке получить доступ к '" << BlockName.c_str() << "' блоку"  << std::endl;
+         BUILDER_ERROR( "Ошибка при попытке получить доступ к '" << BlockName.c_str() << "' блоку" );
      }
    }
    return block;
@@ -415,8 +415,13 @@ AcadBlockReferencePtr AutoCADHelper::DrawBlock(WideString BlockName,
                                         double rotation, double scale)
 {
    WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument, AcadBlockReferencePtr());
-   AcadBlockReferencePtr refer = cadActiveDocument->ModelSpace->InsertBlock(cadPoint(x,y),
+   AcadBlockReferencePtr refer;
+   try {
+       refer = cadActiveDocument->ModelSpace->InsertBlock(cadPoint(x,y),
                   BlockName,scale,scale,scale,rotation);
+   } catch(...) {
+       BUILDER_ERROR("Блок '" + AnsiString(BlockName) + "' не найден");
+   }
    return refer;
 }
 
@@ -2349,7 +2354,7 @@ void AutoCADTable::DrawTextInBordersRoadMark(int row, float offBeg,
   }
 }
 
-void AutoCADTable::DrawRepeatTextIntervalRoadMark(int iRow, AnsiString str,
+ void AutoCADTable::DrawRepeatTextIntervalRoadMark(int iRow, AnsiString str,
                                 float sPos, float ePos,
                                 AnsiString (*func)(float, float),
                                 float step, bool fWithBorders, float kProp)
@@ -2420,7 +2425,7 @@ void AutoCADTable::DrawRepeatTextIntervalRoadMark(int iRow, AnsiString str,
      if(fWithBorders) DrawSnakeBorder(iRow,pos,counter);
    }else{
      DRAWTEXT(sPos, ePos);
-     if(gFillGaps[iRow]&&fWithBorders)DrawSnakeBorder(iRow,sPos,ePos);
+     if(/*gFillGaps[iRow]&&*/fWithBorders)DrawSnakeBorder(iRow,sPos,ePos);
    }
    delete[] pos;
    RowslEnd[iRow] = ePos;

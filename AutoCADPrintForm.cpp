@@ -199,9 +199,6 @@ void TFAutoCADPrint::SaveIni(TIniFile *ini)
    ini->WriteBool("AutoCAD","ShowMetricsInfo",chkInfo->Checked);
    ini->WriteString("AutoCAD","PatternString",edtPattern->Text);
    ini->WriteString("AutoCAD", "PDFBinder",edtPDFBinder->Text );
-
-   ini->WriteString("AutoCAD", "PrintDwgTemplate", edtTemplate->Text);
-   ini->WriteString("AutoCAD", "PrintDwgXRef", edtXRef->Text);
 }
 
 void TFAutoCADPrint::LoadIni(TIniFile *ini)
@@ -212,8 +209,7 @@ void TFAutoCADPrint::LoadIni(TIniFile *ini)
    edtStart->Text = sPos = ini->ReadInteger("AutoCAD","PBegin",0);
    edtStep->Text = vStep = ini->ReadFloat("AutoCAD","PScaleStep",100000);
    edtEnd->Text = ePos = ini->ReadInteger("AutoCAD","PEnd",vStep);
-   edtTemplate->Text = ini->ReadString("AutoCAD", "PrintDwgTemplate", "");
-   edtXRef->Text = ini->ReadString("AutoCAD", "PrintDwgXRef", "");
+
    edtPattern->Text = ini->ReadString("AutoCAD","PatternString","%i-%i км.");
    chkInfo->Checked = ini->ReadBool("AutoCAD","ShowMetricsInfo",true);
    chkOnly->Checked = ini->ReadBool("AutoCAD","POnlySelectedInterval",false);
@@ -521,7 +517,7 @@ bool TFAutoCADPrint::EndPrint()
      return false;
 }
 
-void TFAutoCADPrint::Print()
+void TFAutoCADPrint::Print(PrintType printType)
 {
       ProgressForm->showCancel = 1;
       AnsiString str;
@@ -593,17 +589,31 @@ void TFAutoCADPrint::Print()
                   AnsiString temp = FileName+" ["+IntToStr(km)+"+"+IntToStr(meters)+"]";
                   // save fileNmae for PauseLastFramePrint function, which is used to concat pdfs to one
                   fileNames.push_back(temp);
-                  // print file to pdf;
-                  helper->ActiveDocument->Plot->PlotToFile(WideString(temp));
-                  PauseLastFramePrint(fileNames);
+                  // save result
+                  switch(printType) {
+                    case ptDWG:
+                      helper->ActiveDocument->SaveAs(WideString(temp));
+                      break;
+                    case ptPDF:
+                      helper->ActiveDocument->Plot->PlotToFile(WideString(temp));
+                      PauseLastFramePrint(fileNames);
+                      break;
+                  }
                   break;
                }
             }
             AnsiString temp = FileName+" ["+IntToStr(km)+"+"+IntToStr(meters)+"]";
             // save fileNmae for PauseLastFramePrint function, which is used to concat pdfs to one
             fileNames.push_back(temp);
-            // print file to pdf;
-            helper->ActiveDocument->Plot->PlotToFile(WideString(temp));
+            // save result
+            switch(printType) {
+              case ptDWG:
+                helper->ActiveDocument->SaveAs(WideString(temp));
+                break;
+              case ptPDF:
+                helper->ActiveDocument->Plot->PlotToFile(WideString(temp));
+                break;
+            }
           }catch(...){
              TMsgDlgButtons buttons;
                  buttons << mbRetry << mbYes << mbAbort;
@@ -628,148 +638,6 @@ void TFAutoCADPrint::Print()
           }
         }
         ProgressForm->Hide();
-}
-
-void TFAutoCADPrint::Print2()
-{
-      ProgressForm->showCancel = 1;
-
-      try {
-        helper->AddDocument(edtTemplate->Text);
-        helper->ActiveDocument->PurgeAll();
-        helper->ActiveDocument->ModelSpace->AttachExternalReference(WideString(edtXRef->Text), WideString("xRef1"), AutoCAD.cadPoint(),1,1,1,0,FALSE,Null());
-      } catch(...) {
-        ShowMessage("Ошибка! Проверьте правильность путей шаблона и xRef");
-      }
-
-      AnsiString str;
-      AnsiString pattern = edtPattern->Text;
-      bool fOnly = chkOnly->Checked;;
-      bool finfo = chkInfo->Checked;
-
-      float iMax,iMin;
-      int km, meters;
-      float step =(vStep/100000);
-      if(!fOnly){
-        iMin = int(sPos/100000);
-        iMax = ePos/100000;
-      }else{
-        iMin = (sPos+tbPos->Position*vStep)/100000;
-        iMax = iMin+step;
-      }      
-
-      float kBottom = vStep/vpBottom->Width;
-      vcBottom = -iOffset-(vpBottom->Height*kBottom)/2;
-      float kTop = vStep/vpTop->Width;
-      vcTop = iOffset+(vpTop->Height*kTop)/2;
-
-      ProgressForm->Show();
-      ProgressForm->SetMinMax(0,iMax-iMin-1);
-      try{
-        try{
-          str.sprintf(pattern.c_str(),0,1);
-        }catch(...){return;}
-
-        if(!BindViewports()) return; 
-
-        AnsiString temp;
-        int iiPage=0;
-
-        AutoCADPrintOutputStyle osPrint = FAutoCADPrint->OutputStyle;
-        if(osPrint==0){
-          helper->ActiveDocument->SetVariable(WideString("BACKGROUNDPLOT"),Variant(0));
-        }
-        helper->Application->ZoomAll();
-        helper->SelectPaperSpace();
-        helper->ActiveDocument->ActivePViewport->Display(true);
-        helper->ActiveDocument->MSpace = true;
-
-        //SET_PROGRESS_FORM_MINMAX2(0, iMax-iMin-1)
-
-        if(roadName.IsBound()) {
-              roadName->set_TextString(WideString(strRoadName));
-        }
-
-        for(float j=iMin;j<iMax;j+=step){
-          AnsiString str;
-
-          km = int(j);
-          meters = (j-km)*1000;
-
-          ProgressForm->Note = str.sprintf("%f/%f", j-iMin, float(iMax-iMin-1));
-
-          //SET_PROGRESS_FORM_CAPTION2();
-          try{
-            if(text.IsBound()){
-                 str.sprintf(pattern.c_str(),km,meters);
-                 text->set_TextString(WideString(str));
-            }
-            if(page.IsBound()){
-              page->set_TextString(WideString(iPage+(iiPage++)));
-            }
-
-            for(int i=0;i<3;i++){
-               switch(i){
-                  case 0:
-                    if(!vpBottom.IsBound()) continue;
-                    helper->ActiveDocument->ActivePViewport = vpBottom;
-                    helper->ActiveDocument->MSpace = true;
-                    helper->ActiveDocument->MSpace = true;
-                    helper->Application->ZoomWindow(helper->cadPoint(j*100000,vcBottom),
-                                                     helper->cadPoint((j+step)*100000,vcBottom));
-                  break;
-
-                  case 1:
-                    if(!vpCenter.IsBound()) continue;
-                    helper->ActiveDocument->ActivePViewport = vpCenter;
-                    helper->ActiveDocument->MSpace = true;
-                    helper->ActiveDocument->MSpace = true;
-                    helper->Application->ZoomWindow(helper->cadPoint(j*100000,vcCenter),
-                                                     helper->cadPoint((j+step)*100000,vcCenter));
-                  break;
-
-                  case 2:
-                    if(!vpTop.IsBound()) continue;
-                    helper->ActiveDocument->ActivePViewport = vpTop;
-                    helper->ActiveDocument->MSpace = true;
-                    helper->ActiveDocument->MSpace = true;
-                    helper->Application->ZoomWindow(helper->cadPoint(j*100000,vcTop),
-                                                     helper->cadPoint((j+step)*100000,vcTop));
-                  break;
-               }
-               Application->ProcessMessages();
-            }
-            helper->ActiveDocument->ActivePViewport = 0;
-            temp = FileName+"["+IntToStr(km)+"+"+IntToStr(meters)+"].dwg";
-            helper->ActiveDocument->SaveAs(WideString(temp));
-          }catch(...){
-             TMsgDlgButtons buttons;
-             buttons << mbRetry << mbYes << mbAbort;
-             int value = MessageDlg("Произошел сбой при печати!\nПопробывать перепечатать текущий лист и продолжить печать(Retry).\nПродолжить печать(Ignore).\nПрекратить печать(Abort).",mtWarning,buttons,0);
-             switch(value){
-                case mrRetry:
-                  j--;
-                break;
-                case mrIgnore:
-                  //continue;
-                break;
-                case mrAbort:
-                  j = iMax;
-                break;
-             }
-          }
-          ProgressForm->Position = j-iMin;
-          Application->ProcessMessages();
-          if(GetKeyState(VK_ESCAPE)&0x0100||ProgressForm->Terminated) {
-            helper->ActiveDocument->MSpace = false;
-            return;
-          }
-        }
-        helper->ActiveDocument->MSpace = false;
-      }__finally {
-        ProgressForm->Hide();
-        
-      }
 }
 
 
@@ -974,13 +842,50 @@ void __fastcall TFAutoCADPrint::Button9Click(TObject *Sender)
 
     ReadValues();
 
+    SaveDialog1->FileName = AutoCAD.ActiveDocument->SummaryInfo->Title;
     if(!SaveDialog1->Execute()){
       return;
     }else{
-      FileName = SaveDialog1->FileName;
+      FileName = ChangeFileExt(SaveDialog1->FileName,"");
     }
 
-    Print2();
+    AnsiString path = ExtractFilePath(FileName) + ChangeFileExt(ExtractFileName(FileName), "");
+    AnsiString baseName = path + "_base";
+    AnsiString tempName = path + "_temp";
+
+    // создаем базовый файл
+    AutoCAD.ActiveDocument->SaveAs( WideString(baseName) );
+    baseName = AutoCAD.ActiveDocument->FullName;
+    
+    // save a copy
+    AutoCAD.ActiveDocument->SaveAs( WideString(tempName) );
+    tempName = AutoCAD.ActiveDocument->FullName;
+
+    AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
+    // удаляем все объекты из текущего файла
+    AutoCAD.ActiveDocument->SendCommand(WideString("_ai_selall\n").c_bstr());
+    Sleep(100);
+    AutoCAD.ActiveDocument->SendCommand(WideString("_.erase\n").c_bstr());
+    Sleep(100);
+    AutoCAD.ActiveDocument->PurgeAll();
+
+    // добавляем ссылку на базовый файл
+    AutoCAD.ActiveDocument->ModelSpace->AttachExternalReference(
+          WideString(baseName),
+          WideString("xRef1"),
+          AutoCAD.cadPoint(),
+          1,1,1,0, VARIANT_FALSE
+    );
+    // исправялем ошибки файлов (необходимо) + уменшаем размер файла
+    helper->ActiveDocument->SendCommand(WideString("_.audit _y\n"));
+
+    // печатаем
+    Print(ptDWG);
+
+    // удаляем временный файл
+    remove(tempName.c_str());
+
+    helper->ActiveDocument->Close();
 
     TIniFile *ini = new TIniFile(strIniFileName);
     SaveIni(ini);
@@ -988,21 +893,7 @@ void __fastcall TFAutoCADPrint::Button9Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TFAutoCADPrint::Button10Click(TObject *Sender)
-{
-  OpenDialog1->FileName = edtXRef->Text;
-  if(OpenDialog1->Execute())
-  edtXRef->Text = OpenDialog1->FileName;
-}
-//---------------------------------------------------------------------------
 
-void __fastcall TFAutoCADPrint::Button11Click(TObject *Sender)
-{
-  OpenDialog1->FileName = edtTemplate->Text;
-  if(OpenDialog1->Execute())
-  edtTemplate->Text = OpenDialog1->FileName;
-}
-//---------------------------------------------------------------------------
 
 void __fastcall TFAutoCADPrint::Button12Click(TObject *Sender)
 {

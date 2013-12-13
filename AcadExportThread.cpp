@@ -872,11 +872,13 @@ void __fastcall AcadExportThread::Execute()
           currentItem++;
           SET_PROGRESS_FORM_CAPTION_EX("выводим дополнительные строки из файлов в верхнюю таблицу")
           aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows);
+          currentItem++;
           SET_PROGRESS_FORM_CAPTION_EX("выводим дополнительные строки из файлов в нижнюю таблицу")
           aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows); 
         }
 
         if(FAutoCADExport->ExportGraphic){
+          currentItem++;
           SET_PROGRESS_FORM_CAPTION("выводим дополнительные строки графика")
           aexp->ExportGraphic(FAutoCADExport->EditTopAddRows,false); 
         }

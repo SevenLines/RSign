@@ -9,6 +9,8 @@
 #pragma link "CGAUGES"
 #pragma resource "*.dfm"
 #include "AcadExportThread.h"
+#include "MickMacros.h"
+
 TProgressForm *ProgressForm;
 //---------------------------------------------------------------------------
 __fastcall TProgressForm::TProgressForm(TComponent* Owner)
@@ -39,7 +41,7 @@ void __fastcall TProgressForm::addLogLine(AnsiString &line)
    edtLog->Lines->Add(line);
    edtLog->SelStart = edtLog->GetTextLen();
    edtLog->Perform(EM_SCROLLCARET, 0, 0);
-   std::cout << "[" << Now().TimeString().c_str() << "]" << line.c_str() << std::endl;
+   BUILDER_INFO(line.c_str());
 }
 
 void __fastcall TProgressForm::cmdAbortClick(TObject *Sender)
@@ -49,7 +51,7 @@ void __fastcall TProgressForm::cmdAbortClick(TObject *Sender)
       ModalResult = mrOk;
   }
   Terminated = true;
-  std::cout << "[" << Now().TimeString().c_str() << "]" << "Отмена" << std::endl;
+  BUILDER_INFO("Отмена");
 }
 //---------------------------------------------------------------------------
 void __fastcall TProgressForm::setShowLog(bool value) {

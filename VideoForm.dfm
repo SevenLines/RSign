@@ -2,7 +2,7 @@ object frmVideoForm: TfrmVideoForm
   Left = 590
   Top = 164
   Width = 390
-  Height = 384
+  Height = 364
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object frmVideoForm: TfrmVideoForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 320
-    Width = 382
+    Top = 296
+    Width = 374
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
@@ -27,14 +27,14 @@ object frmVideoForm: TfrmVideoForm
     object Panel2: TPanel
       Left = 0
       Top = 0
-      Width = 382
+      Width = 374
       Height = 22
       Align = alTop
       TabOrder = 0
       object ScrollBar: TScrollBar
         Left = 61
         Top = 1
-        Width = 320
+        Width = 312
         Height = 20
         Align = alClient
         PageSize = 0
@@ -166,24 +166,13 @@ object frmVideoForm: TfrmVideoForm
   object MPlayer: TSMediaPlayer
     Left = 0
     Top = 0
-    Width = 382
-    Height = 320
+    Width = 374
+    Height = 296
     Align = alClient
     PopupMenu = PopMenu
     TabOrder = 1
     OnPlayStateChange = MPlayerPlayStateChange
-    ControlData = {
-      010000007B270000132100000300FFFFFFFF0B0000000B0000000B00FFFF0B00
-      FFFF0B00FFFF00000200000000000B0000000300000000000800020000000000
-      0500000000000000144008000200000000000B00FFFF03000000000005000000
-      00000000F0BF03000000000008000200000000001300000000001300FFFFFF00
-      0300000000000300040000000B00FFFF0B00FFFF0B00FFFF0B0000000B00FFFF
-      08000200000000000B00FFFF0300FFFFFFFF0B0000000300010000000B000000
-      0500000000000000F03F08000200000000000800020000000000080002000000
-      00000500000000000000F0BF0500000000000000F0BF0B00FFFF0B00FFFF0B00
-      FFFF0B0000000B0000000B0000000B00FFFF0B0000000B0000000B00FFFF0B00
-      00000B0000000B00FFFF0B0000000B00FFFF0B00000003000000000013000000
-      00000B0000000300ECFFFFFF0B000000}
+    ControlData = {}
   end
   object Timer: TTimer
     OnTimer = TimerTimer
@@ -191,8 +180,8 @@ object frmVideoForm: TfrmVideoForm
     Top = 16
   end
   object PopMenu: TPopupMenu
-    Left = 12
-    Top = 340
+    Left = 164
+    Top = 20
     object N1: TMenuItem
       Caption = #1056#1072#1089#1089#1090#1086#1103#1085#1080#1077' '#1086#1090' '#1085#1072#1095#1072#1083#1072' '#1076#1086#1088#1086#1075#1080
       OnClick = N1Click

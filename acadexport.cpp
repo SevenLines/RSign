@@ -696,19 +696,19 @@ bool _fastcall TAcadExport::ExportProfil(TExtPolyline *Poly) {
    points = new double[size*2+4];
    for(i=0, it=pts.begin();it!=pts.end();++it,++i) {
        points[2*i] = it->x;
-       points[2*i+1] = it->y;       
+       points[2*i+1] = it->y;
    }
    points[size*2] = points[size*2-2];
    points[size*2+1] = tableTop.LeftTop.y - tableTop.RowOffsetY(iProfileTop) - tableTop.RowHeight;
    points[size*2+2] = points[0];
    points[size*2+3] = points[size*2+1];
 
-   IAcadPolyline *plines[1];
+   AcadPolylinePtr plines[1];
 
    plines[0] = AutoCAD.DrawPolyLine(&points[0],size+2,2);
-   
+
    if(fFillProfile) {
-     IAcadHatch *hatch;
+     AcadHatchPtr hatch;
      hatch = AutoCAD.FillArea((IDispatch**)plines,1,0,strProfileHatch);
      hatch->PatternScale = iProfileHatchScale;
    }
@@ -2438,6 +2438,32 @@ void TAcadExport::ExportAddRowLine( AutoCADTable *table, int iRow,
    }
 }
 
+struct ExportAddRowsOptions {
+   ExportAddRowsOptions()
+     : offset(0)
+   {}
+
+   /**
+    * try to update options with the values from line
+    * values form (assigning value without spaces):
+    * offset=value1 option2=value2 ...
+    */
+   static void FromLine(AnsiString line, ExportAddRowsOptions &options) {
+      int pos;
+      int result;
+      AnsiString subString;
+      // trying to find offset option
+      #define INSTRUCTION "offset"
+      if ( pos = line.Pos(INSTRUCTION) ) {
+         subString = line.SubString(pos, line.Length() - pos + 1);
+         result = sscanf(subString.c_str(), INSTRUCTION"=%d", &options.offset);
+      }
+      #undef INSTRUCTION
+   }
+     
+   int offset; // offset of output rows
+};
+
 int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, bool check)
 {
     int iRow = -1;
@@ -2448,14 +2474,14 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
     char str[512] = {0};
     char value2[128] = {0};
 
-    AnsiString str2;
-    str2 = ChangeFileExt(ExtractFileName(path),"");
+    ExportAddRowsOptions exportAddRowOptions;
 
+    AnsiString str2;
     AnsiString value;
+    str2 = ChangeFileExt(ExtractFileName(path),"");
 
     int startCount = table==&tableTop?iTopAddRow:iBottomAddRow;
     AnsiString LayerName = table==&tableTop?"Top":"Bottom";
-
 
     if(!sscanf(str2.c_str(),"%i_%s",&iRow, &str)) return -1;
     sIRow = IntToStr(iRow);
@@ -2464,6 +2490,7 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
     if(iRow<0) iRow = -iRow;
     if(!check) {
       ifstream file(path.c_str());
+      AnsiString line;
       string s;
       int count;
 
@@ -2473,18 +2500,27 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
           table->DrawHeaderText(startCount+iRow-1, str, HeaderTextHeight);
         }
         if(OutInfoLog) OutInfoLog("Вывожу \"" + AnsiString(str) + "\"");
+        
         while(getline(file,s))  {
-
-           if(s.length()>0&&(count=sscanf(s.c_str(), "%s %s",&sSPos, &sEPos))){
+           line = s.c_str();
+           if(line[1] == '#') { // if comment
+              // remove comment symbol, and trim string
+              line[1] = ' ';
+              line.Trim();
+              // try to options
+              ExportAddRowsOptions::FromLine(line, exportAddRowOptions);
+           } else if(s.length()>0&&(count=sscanf(line.c_str(), "%s %s",&sSPos, &sEPos))){
               try{
                 count = strlen(sSPos)+1 + strlen(sEPos)+1;
-                ePos = AnsiString(sEPos).ToInt();
-                sPos = AnsiString(sSPos).ToInt();
-                s = s.substr(count, s.length() - count);
+                sPos = AnsiString(sSPos).ToInt() + exportAddRowOptions.offset;
+                ePos = AnsiString(sEPos).ToInt() + exportAddRowOptions.offset;
+                line = line.SubString(count, line.Length() - count + 1);
 
-                ExportAddRowLine(table, startCount+iRow-1, sPos, ePos, AnsiString(s.c_str()).Trim());
+                ExportAddRowLine(table, startCount+iRow-1, sPos, ePos, line.Trim());
                 //table->DrawRepeatTextIntervalSpec(startCount+iRow-1, AnsiString(s.c_str()).Trim(), sPos, ePos,0,iStep,true);
-              }catch(...){}
+              }catch(...){
+                OutInfoLog("Ошибка вывода: " + str2 + " - " + line);
+              }
            }
         }
         file.close();

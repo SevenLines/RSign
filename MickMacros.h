@@ -34,6 +34,7 @@
 
 #ifdef  BUILDER
 #define BUILDER_ERROR(msg) std::cerr << "[ERROR]" << "[" << Now().TimeString().c_str() << "]" << msg << std::endl
+#define BUILDER_INFO(msg)  std::cout << "[" << Now().TimeString().c_str() << "]" << msg << std::endl
 #endif
 
 #define RETURN_ON_EQUALS(var1, var2) if (var1 == var2) return;

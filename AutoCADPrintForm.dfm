@@ -320,61 +320,15 @@ object FAutoCADPrint: TFAutoCADPrint
         Left = 8
         Top = 0
         Width = 257
-        Height = 137
+        Height = 57
         TabOrder = 3
-        object Label12: TLabel
-          Left = 8
-          Top = 8
-          Width = 67
-          Height = 13
-          Caption = #1086#1089#1085#1086#1074#1072' (xRef)'
-        end
-        object Label15: TLabel
-          Left = 8
-          Top = 56
-          Width = 168
-          Height = 13
-          Caption = #1096#1072#1073#1083#1086#1085' ('#1074' '#1101#1090#1086#1090' '#1092#1072#1081#1083' '#1080#1076#1077#1090' '#1074#1099#1074#1086#1076')'
-        end
-        object edtXRef: TEdit
-          Left = 8
-          Top = 24
-          Width = 209
-          Height = 21
-          TabOrder = 0
-        end
-        object edtTemplate: TEdit
-          Left = 8
-          Top = 72
-          Width = 209
-          Height = 21
-          TabOrder = 1
-        end
-        object Button10: TButton
-          Left = 224
-          Top = 22
-          Width = 27
-          Height = 25
-          Caption = '...'
-          TabOrder = 2
-          OnClick = Button10Click
-        end
-        object Button11: TButton
-          Left = 222
-          Top = 70
-          Width = 27
-          Height = 25
-          Caption = '...'
-          TabOrder = 3
-          OnClick = Button11Click
-        end
         object Button9: TButton
           Left = 8
-          Top = 104
+          Top = 16
           Width = 97
           Height = 25
           Caption = #1074#1099#1074#1086#1076' '#1074' DWG'
-          TabOrder = 4
+          TabOrder = 0
           OnClick = Button9Click
         end
       end
