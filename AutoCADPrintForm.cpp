@@ -348,10 +348,29 @@ void __fastcall TFAutoCADPrint::cmdPrintClick(TObject *Sender)
 //---------------------------------------------------------------------------
 
 
-void __fastcall TFAutoCADPrint::Button1Click(TObject *Sender)
-{
-      if(!helper) return;
 
+void __fastcall TFAutoCADPrint::Button7Click(TObject *Sender)
+{
+    tbPos->Position--;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFAutoCADPrint::Button3Click(TObject *Sender)
+{
+      tbPos->Position++;        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFAutoCADPrint::tbPosChange(TObject *Sender)
+{
+  static last = -1;
+  int v;
+
+  if(TryStrToInt(edtStep->Text,v)){
+    edtPos->Text = tbPos->Position*v;
+    v = tbPos->Position;
+    if(last!=v){
+      if(!helper) return;
       AnsiString str;
       int iMin = tbPos->Position;
       
@@ -378,31 +397,6 @@ void __fastcall TFAutoCADPrint::Button1Click(TObject *Sender)
          page->set_TextString(WideString(iPage+j-minPos));
 
       SetFrame(j*vStep, vStep);
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TFAutoCADPrint::Button7Click(TObject *Sender)
-{
-    tbPos->Position--;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TFAutoCADPrint::Button3Click(TObject *Sender)
-{
-      tbPos->Position++;        
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TFAutoCADPrint::tbPosChange(TObject *Sender)
-{
-  static last = -1;
-  int v;
-
-  if(TryStrToInt(edtStep->Text,v)){
-    edtPos->Text = tbPos->Position*v;
-    v = tbPos->Position;
-    if(last!=v){
-       Button1->Click();
     }
     last = v;
   }
@@ -535,7 +529,7 @@ void TFAutoCADPrint::Print(PrintType printType)
 
       ProgressForm->Caption = "Печать из AutoCAD";
       ProgressForm->Position = 0;
-      ProgressForm->Note = "Пробую подключиться к AutoCAD, десу.";
+      ProgressForm->Note = "Пробую подключиться к AutoCAD";
       ProgressForm->Show();
       ProgressForm->SetMinMax(0,iMax-iMin-1);
 
@@ -578,7 +572,7 @@ void TFAutoCADPrint::Print(PrintType printType)
               page->set_TextString(WideString(iPage+(iiPage++)));
             }
 
-            SetFrame(j*vStep, vStep);
+            SetFrame(j*100000, step*100000);
             
             // last frame printing:
             if ( j + step >= iMax) {

@@ -4,7 +4,7 @@ object FAutoCADPrint: TFAutoCADPrint
   AutoSize = True
   BorderStyle = bsDialog
   Caption = #1055#1077#1095#1072#1090#1100' '#1080#1079' AutoCAD '
-  ClientHeight = 339
+  ClientHeight = 319
   ClientWidth = 570
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -126,7 +126,7 @@ object FAutoCADPrint: TFAutoCADPrint
       Caption = #1089#1090#1088#1072#1085#1080#1094#1099' ('#1089#1083#1086#1081' @page)'
     end
     object Label16: TLabel
-      Left = 14
+      Left = 22
       Top = 292
       Width = 54
       Height = 13
@@ -251,16 +251,16 @@ object FAutoCADPrint: TFAutoCADPrint
       Text = '%i-%i '#1082#1084'.'
     end
     object edtPage: TEdit
-      Left = 85
+      Left = 88
       Top = 262
       Width = 49
       Height = 21
       TabOrder = 12
     end
     object edtPDFBinder: TEdit
-      Left = 72
+      Left = 88
       Top = 288
-      Width = 177
+      Width = 161
       Height = 21
       TabOrder = 13
     end
@@ -278,7 +278,7 @@ object FAutoCADPrint: TFAutoCADPrint
     Left = 0
     Top = 0
     Width = 281
-    Height = 339
+    Height = 319
     Align = alLeft
     Caption = 'Panel3'
     TabOrder = 1
@@ -292,45 +292,41 @@ object FAutoCADPrint: TFAutoCADPrint
       TabOrder = 0
       object chkOnly: TCheckBox
         Left = 8
-        Top = 143
+        Top = 3
         Width = 177
         Height = 17
         Caption = #1090#1086#1083#1100#1082#1086' '#1091#1082#1072#1079#1072#1085#1085#1099#1081' '#1087#1088#1086#1084#1077#1078#1091#1090#1086#1082
         TabOrder = 0
       end
       object cmdPrint: TButton
-        Left = 8
-        Top = 167
-        Width = 75
-        Height = 25
-        Caption = #1087#1077#1095#1072#1090#1100
+        Left = 7
+        Top = 40
+        Width = 265
+        Height = 65
+        Caption = #1087#1077#1095#1072#1090#1100' '#1074' PDF'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -19
+        Font.Name = 'Verdana'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
         OnClick = cmdPrintClick
       end
-      object Button1: TButton
-        Left = 176
-        Top = 167
-        Width = 91
-        Height = 25
-        Caption = #1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1069
+      object Button9: TButton
+        Left = 7
+        Top = 112
+        Width = 265
+        Height = 65
+        Caption = #1074#1099#1074#1086#1076' '#1074' DWG'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -19
+        Font.Name = 'Verdana'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 2
-        OnClick = Button1Click
-      end
-      object GroupBox1: TGroupBox
-        Left = 8
-        Top = 0
-        Width = 257
-        Height = 57
-        TabOrder = 3
-        object Button9: TButton
-          Left = 8
-          Top = 16
-          Width = 97
-          Height = 25
-          Caption = #1074#1099#1074#1086#1076' '#1074' DWG'
-          TabOrder = 0
-          OnClick = Button9Click
-        end
+        OnClick = Button9Click
       end
     end
     object GroupBox2: TGroupBox
@@ -443,7 +439,7 @@ object FAutoCADPrint: TFAutoCADPrint
     Top = 40
   end
   object OpenDialog2: TOpenDialog
-    Left = 504
-    Top = 296
+    Left = 208
+    Top = 8
   end
 end

@@ -738,8 +738,11 @@ bool __fastcall TAcadExport::ExportRoadMetric(TExtPolyline *Poly,TMetricsKind ki
          DrawPolyPoints(Poly);
       break;
       case mkKromka:
-         DrawPolyPoints(Poly);        
+         DrawPolyPoints(Poly);
       break;
+      default:
+         BUILDER_INFO("Неизвестный тип метрики: " << kind);
+         DrawPolyPoints(Poly);
    }
 
    return true;

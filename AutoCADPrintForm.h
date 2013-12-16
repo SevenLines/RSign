@@ -43,7 +43,6 @@ __published:	// IDE-managed Components
         TLabel *Label4;
         TEdit *edtEnd;
         TLabel *Label5;
-        TButton *Button1;
         TButton *Button3;
         TEdit *edtPos;
         TButton *Button4;
@@ -69,8 +68,6 @@ __published:	// IDE-managed Components
         TEdit *edtPage;
         TLabel *Label13;
         TLabel *Label14;
-        TButton *Button9;
-        TGroupBox *GroupBox1;
         TOpenDialog *OpenDialog1;
         TPanel *Panel2;
         TButton *Button2;
@@ -81,10 +78,10 @@ __published:	// IDE-managed Components
         TLabel *Label16;
         TOpenDialog *OpenDialog2;
         TButton *Button8;
+    TButton *Button9;
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
         void __fastcall cmdPrintClick(TObject *Sender);
-        void __fastcall Button1Click(TObject *Sender);
         void __fastcall Button7Click(TObject *Sender);
         void __fastcall Button3Click(TObject *Sender);
         void __fastcall tbPosChange(TObject *Sender);

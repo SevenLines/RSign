@@ -181,7 +181,7 @@ void __fastcall AcadExportThread::Execute()
 
     if(aexp->BeginDocument(R)) {
       ProgressForm->Caption = "Идет экспорт в AutoCAD";
-      SET_PROGRESS_FORM_CAPTION("Пробую подключиться к AutoCAD, десу")
+      SET_PROGRESS_FORM_CAPTION("Пробую подключиться к AutoCAD")
       SET_PROGRESS_FORM_POSITION(0);
       ProgressForm->ShowLog = true;
       ProgressForm->clearLog();

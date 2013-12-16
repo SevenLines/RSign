@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <iomanip>
 #include <iostream>
 #include <algorithm>
 
@@ -420,7 +421,7 @@ AcadBlockReferencePtr AutoCADHelper::DrawBlock(WideString BlockName,
        refer = cadActiveDocument->ModelSpace->InsertBlock(cadPoint(x,y),
                   BlockName,scale,scale,scale,rotation);
    } catch(...) {
-       BUILDER_ERROR("Блок '" + AnsiString(BlockName) + "' не найден");
+       BUILDER_ERROR( "ошибка вывода блока: '" + AnsiString(BlockName) + "' (" << fixed << std::setprecision(2) << x << ";" << y << ")");
    }
    return refer;
 }
