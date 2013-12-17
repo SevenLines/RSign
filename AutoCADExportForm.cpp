@@ -516,6 +516,9 @@ void TFAutoCADExport::locateRoadNameComboRoad()
   Flags << rfReplaceAll;
   AnsiString name;
   AnsiString roadName = RoadName;
+  AnsiString districtName = RoadDistrict;
+
+  // пытаемся найти папку с именем как у дороги
   roadName = StringReplace(roadName, " ", "",Flags);
   roadName = StringReplace(roadName, "-", "",Flags);
   roadName = StringReplace(roadName, "_", "",Flags);
@@ -535,6 +538,27 @@ void TFAutoCADExport::locateRoadNameComboRoad()
         return;
      }
   }
+
+  // пытаемся найти папку с именем как у района
+  districtName = StringReplace(districtName, " ", "",Flags);
+  districtName = StringReplace(districtName, "-", "",Flags);
+  districtName = StringReplace(districtName, "_", "",Flags);
+  districtName = StringReplace(districtName, ".", "",Flags);
+  districtName = StringReplace(districtName, "\"", "",Flags);
+
+  for(int i=0;i<cmbRoad->Items->Count;i++) {
+     name = cmbRoad->Items->Strings[i];
+     name = StringReplace(name, " ", "",Flags);
+     name = StringReplace(name, "-", "",Flags);
+     name = StringReplace(name, "_", "",Flags);
+     name = StringReplace(name, ".", "",Flags);
+     name = StringReplace(name, "\"", "",Flags);
+     if(name.Pos(districtName) ) {
+        cmbRoad->ItemIndex = i;
+        return;
+     }
+  }
+
 }
 
 
@@ -728,5 +752,7 @@ int __fastcall TFAutoCADExport::CountOfExports()
     return count;
 }
 //---------------------------------------------------------------------------
+
+
 
 

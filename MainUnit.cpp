@@ -5,6 +5,7 @@
 #include <iostream>
 #pragma hdrstop
 
+#include "MickMacros.h"
 #include "MainUnit.h"
 #include "OpenRoad.h"
 #include "OpenSource.h"
@@ -313,6 +314,10 @@ if (OpenRoadDialog->ShowModal()==mrOk)
     OpenSourceDialog->RoadId=OpenRoadDialog->RoadId;
     if (OpenSourceDialog->ShowModal()==mrOk)
         {
+        BUILDER_INFO( "Открываю источник: "
+        << OpenRoadDialog->RoadName.Trim().c_str()
+        << " [id:" << OpenRoadDialog->RoadId << "]"
+        << " источник: " << OpenSourceDialog->DataSource );
         OpenRoadById(OpenRoadDialog->RoadId,OpenSourceDialog->DataSource,true);
         }
     }
@@ -881,10 +886,10 @@ if (OpenRoadDialog->ShowModal()==mrOk)
     OpenViewFrm->RoadId=OpenRoadDialog->RoadId;
     if (OpenViewFrm->ShowModal()==mrOk)
         {
-            std::cout << "Открываю дорогу: "
+            BUILDER_INFO( "Открываю вид: "
                   << OpenRoadDialog->RoadName.Trim().c_str()
                   << " [id:" << OpenRoadDialog->RoadId << "]"
-                  << " источник: " << OpenViewFrm->ViewId << std::endl;
+                  << " вид: " << OpenViewFrm->ViewId );
             try {
               if (!Shared)
               {
@@ -1085,6 +1090,12 @@ if (FActiveRoad)
     {
     FActiveRoad->MoveObjects();
     }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::N80Click(TObject *Sender)
+{
+   ShellExecute(0, 0, "RSign.log", 0, 0 , SW_SHOW );   
 }
 //---------------------------------------------------------------------------
 

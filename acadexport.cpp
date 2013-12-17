@@ -494,7 +494,7 @@ bool __fastcall TAcadExport::ExportTables(TFAutoCADExport *form)
 
   NotExistColor = form->NotExistsColor;
 
-  iTopAddRowsCount =  ExportTopAddRows(form->EditTopAddRows,true);
+  iTopAddRowsCount = ExportTopAddRows(form->EditTopAddRows,true);
   form->setTopAddRowsCount(iTopAddRowsCount);
 
   count+=(~(iTopSidewalks = form->getTopRow("тротуары")))?1:0;

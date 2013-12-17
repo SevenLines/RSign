@@ -1,10 +1,13 @@
 //---------------------------------------------------------------------------
 
 #include <vcl.h>
+
 #pragma hdrstop
 
 #include "AcadExportThread.h"
 #pragma package(smart_init)
+
+#include "MickMacros.h"
 //---------------------------------------------------------------------------
 
 //   Important: Methods and properties of objects in VCL can only be
@@ -163,7 +166,15 @@ void __fastcall AcadExportThread::Execute()
         ProgressFormLogLine = line; \
         Synchronize(addProgressFormLogLine);
 
+#define ACAD_EXPORT_ERROR  SET_PROGRESS_FORM_CAPTION_EX("возникли непредвиденные ошибки"); \
+                           BUILDER_ERROR("возникли непредвиденные ошибки");  \
+                           fWickedErrorWas = true;
+
     if(!MetricData) return;
+
+    bool fWickedErrorWas = false; // проверка на наличие неопределенных ошибок
+    
+    RESET_ERROR_FLAG; // сброс глобального флага ошибок
 
     aexp = new TAcadExport();
     aexp->RoadName = RoadName;
@@ -179,6 +190,20 @@ void __fastcall AcadExportThread::Execute()
 
     aexp->OutInfoLog = OutInfoLog;
 
+    if (FAutoCADExport->ExportAddRows) {
+      if ( !(aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows,true) || aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows,true)) ) {
+          int result = Application->MessageBox("По пути указаному для дополнительных строк не было найденно не одного файла."
+          "Желаете ли вернуться и указать другой путь(Yes) или оставить все как есть и продолжить(No)?", "Предупреждение", MB_YESNO );
+          switch ( result ) {
+            case IDYES:
+              delete aexp;
+              delete R;
+              return;
+            break;
+          }
+      }
+    }
+
     if(aexp->BeginDocument(R)) {
       ProgressForm->Caption = "Идет экспорт в AutoCAD";
       SET_PROGRESS_FORM_CAPTION("Пробую подключиться к AutoCAD")
@@ -187,6 +212,7 @@ void __fastcall AcadExportThread::Execute()
       ProgressForm->clearLog();
       ProgressForm->Thread = this;
       ProgressForm->Show();
+
       try{
           TDtaSource *CurData=(TDtaSource*)FAutoCADExport->cbCurList->Items->Objects[FAutoCADExport->cbCurList->ItemIndex];
           TDtaSource *PrjData=(TDtaSource*)FAutoCADExport->cbPrjList->Items->Objects[FAutoCADExport->cbPrjList->ItemIndex];
@@ -316,26 +342,30 @@ void __fastcall AcadExportThread::Execute()
 
          if(DataCur) {
            SET_PROGRESS_FORM_MINMAX(0,DataCur->Objects->Count-1);
-
-           if (FAutoCADExport->ExportTown) {
-             currentItem++;
-             SET_PROGRESS_FORM_CAPTION_EX("Выводим населенные пункты...")
-             SET_PROGRESS_FORM_POSITION(0;)
-             aexp->AddLayer("RoadTown");
-             for (int i=0;i<DataCur->Objects->Count;i++) {
-                if(Terminated) return;
-                if (DataCur->Objects->Items[i]->DictId==TOWNCODE) {
-                   SET_PROGRESS_FORM_POSITION(i;)
-                   TTown *t=dynamic_cast<TTown*>(DataCur->Objects->Items[i]);
-                   if (t) {
-                      TExtPolyline *p=t->PrepareMetric(R);
-                      aexp->ExportTown(p, t);
-                      delete p;
-                   }
-                }
+           try {
+             if (FAutoCADExport->ExportTown) {
+               currentItem++;
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим населенные пункты...")
+               SET_PROGRESS_FORM_POSITION(0;)
+               aexp->AddLayer("RoadTown");
+               for (int i=0;i<DataCur->Objects->Count;i++) {
+                  if(Terminated) return;
+                  if (DataCur->Objects->Items[i]->DictId==TOWNCODE) {
+                     SET_PROGRESS_FORM_POSITION(i;)
+                     TTown *t=dynamic_cast<TTown*>(DataCur->Objects->Items[i]);
+                     if (t) {
+                        TExtPolyline *p=t->PrepareMetric(R);
+                        aexp->ExportTown(p, t);
+                        delete p;
+                     }
+                  }
+               }
              }
+           } catch (...) {
+              ACAD_EXPORT_ERROR;
            }
 
+           try {
            if (FAutoCADExport->ExportPlan) {
              currentItem++;
              SET_PROGRESS_FORM_CAPTION_EX("Выводим план...")
@@ -355,6 +385,9 @@ void __fastcall AcadExportThread::Execute()
                 }
              }
              aexp->ExportPlan(0,0,0,true);
+           }
+           } catch (...) {
+              ACAD_EXPORT_ERROR;
            }
 
            if (FAutoCADExport->ExportSurface) {
@@ -380,293 +413,344 @@ void __fastcall AcadExportThread::Execute()
 
           if (MetricData) {
              SET_PROGRESS_FORM_MINMAX(0,MetricData->Objects->Count-1);
-             if(FAutoCADExport->ExportRoadMetrics){
-               currentItem++; 
-               SET_PROGRESS_FORM_CAPTION_EX("Выводим метрику дороги...")
-               SET_PROGRESS_FORM_POSITION(0);
-               aexp->AddLayer("RoadMetrics");
+             try {
+               if(FAutoCADExport->ExportRoadMetrics){
+                 currentItem++;
+                 SET_PROGRESS_FORM_CAPTION_EX("Выводим метрику дороги...")
+                 SET_PROGRESS_FORM_POSITION(0);
+                 aexp->AddLayer("RoadMetrics");
 
-               if(Terminated) return;
-               
-               for (int i=0;i<MetricData->Objects->Count;i++) {
-                  if (MetricData->Objects->Items[i]->DictId==ROADMETRIC) {
-                     SET_PROGRESS_FORM_POSITION(i);
-                     TLinearRoadSideObject *t=dynamic_cast<TLinearRoadSideObject*>(MetricData->Objects->Items[i]);
-                     if (t) {
-                        TExtPolyline *p=t->PrepareMetric(R);
-                        aexp->ExportRoadMetric(p,t->MetricsKind);
-                        delete p;
-                     }
-                  }
+                 if(Terminated) return;
+
+                 for (int i=0;i<MetricData->Objects->Count;i++) {
+                    if (MetricData->Objects->Items[i]->DictId==ROADMETRIC) {
+                       SET_PROGRESS_FORM_POSITION(i);
+                       TLinearRoadSideObject *t=dynamic_cast<TLinearRoadSideObject*>(MetricData->Objects->Items[i]);
+                       if (t) {
+                          TExtPolyline *p=t->PrepareMetric(R);
+                          aexp->ExportRoadMetric(p,t->MetricsKind);
+                          delete p;
+                       }
+                    }
+                 }
+                 aexp->ExportRoadMetric(0,0,true);
                }
-               aexp->ExportRoadMetric(0,0,true);
+             } catch (...) {
+                ACAD_EXPORT_ERROR;
              }
 
-             if (FAutoCADExport->ExportProfile) { // Выводим профиль
-               currentItem++;
-               SET_PROGRESS_FORM_CAPTION_EX("Выводим профиль дороги...")
-               SET_PROGRESS_FORM_POSITION(0);
-               aexp->AddLayer("RoadProfile");
-               TRect PrRect=TRect(L1,0,L2,-aexp->profileHeight); // Миша, вместо 100 поставь любое другое значение
-                                                // Это условная высота бокса
-               TExtPolyline *p=R->GetProfilMetric(PrRect);
-               aexp->ExportProfil(p);
-               delete p;
-             }
-             if(FAutoCADExport->ExportAttachments){
-               currentItem++;
-               SET_PROGRESS_FORM_CAPTION_EX("Выводим примыкания...")
-               SET_PROGRESS_FORM_POSITION(0);
-               aexp->AddLayer("RoadAttachments");
-
-               for (int i=0;i<MetricData->Objects->Count;i++) {
-                  if(Terminated) return;
-                  if (MetricData->Objects->Items[i]->DictId==ROADATTACH) {
-                     SET_PROGRESS_FORM_POSITION(i);
-                     TRoadAttach *t=dynamic_cast<TRoadAttach*>(MetricData->Objects->Items[i]);
-                     if (t) {
-                        TExtPolyline *p=t->PrepareMetric(R);
-                        aexp->ExportAttach(p,t);
-                        delete p;
-                     }
-                  }
+             try {
+               if (FAutoCADExport->ExportProfile) { // Выводим профиль
+                 currentItem++;
+                 SET_PROGRESS_FORM_CAPTION_EX("Выводим профиль дороги...")
+                 SET_PROGRESS_FORM_POSITION(0);
+                 aexp->AddLayer("RoadProfile");
+                 TRect PrRect=TRect(L1,0,L2,-aexp->profileHeight); // Миша, вместо 100 поставь любое другое значение
+                                                  // Это условная высота бокса
+                 TExtPolyline *p=R->GetProfilMetric(PrRect);
+                 aexp->ExportProfil(p);
+                 delete p;
                }
-               aexp->ExportAttach(0,0,true);
+             } catch (...) {
+                ACAD_EXPORT_ERROR;
              }
 
-             if(FAutoCADExport->ExportRoadSideObjects){
-               currentItem++;
-               SET_PROGRESS_FORM_CAPTION_EX("Выводим площадки отдыха...")
-               SET_PROGRESS_FORM_POSITION(0);
-               aexp->AddLayer("RoadSideObjects");
+             try {
+               if(FAutoCADExport->ExportAttachments){
+                 currentItem++;
+                 SET_PROGRESS_FORM_CAPTION_EX("Выводим примыкания...")
+                 SET_PROGRESS_FORM_POSITION(0);
+                 aexp->AddLayer("RoadAttachments");
 
-               for (int i=0;i<MetricData->Objects->Count;i++) {
-                  if(Terminated) return;
-                  SET_PROGRESS_FORM_POSITION(i);
-                  if (MetricData->Objects->Items[i]->DictId==RESTZONECODE){
-                     TSquareRoadSideObject_Kromka *t=dynamic_cast<TSquareRoadSideObject_Kromka*>(MetricData->Objects->Items[i]);
-                     if (t) {
-                        TExtPolyline *p=t->PrepareMetric(R);
-                        aexp->ExportRestZone(p,t);
-                        delete p;
-                     }
-                  }
+                 for (int i=0;i<MetricData->Objects->Count;i++) {
+                    if(Terminated) return;
+                    if (MetricData->Objects->Items[i]->DictId==ROADATTACH) {
+                       SET_PROGRESS_FORM_POSITION(i);
+                       TRoadAttach *t=dynamic_cast<TRoadAttach*>(MetricData->Objects->Items[i]);
+                       if (t) {
+                          TExtPolyline *p=t->PrepareMetric(R);
+                          aexp->ExportAttach(p,t);
+                          delete p;
+                       }
+                    }
+                 }
+                 aexp->ExportAttach(0,0,true);
                }
-               aexp->ExportRestZone(0,0,true);
+             } catch(...) {
+                ACAD_EXPORT_ERROR;
+             }
+
+             try {
+               if(FAutoCADExport->ExportRoadSideObjects){
+                 currentItem++;
+                 SET_PROGRESS_FORM_CAPTION_EX("Выводим площадки отдыха...")
+                 SET_PROGRESS_FORM_POSITION(0);
+                 aexp->AddLayer("RoadSideObjects");
+
+                 for (int i=0;i<MetricData->Objects->Count;i++) {
+                    if(Terminated) return;
+                    SET_PROGRESS_FORM_POSITION(i);
+                    if (MetricData->Objects->Items[i]->DictId==RESTZONECODE){
+                       TSquareRoadSideObject_Kromka *t=dynamic_cast<TSquareRoadSideObject_Kromka*>(MetricData->Objects->Items[i]);
+                       if (t) {
+                          TExtPolyline *p=t->PrepareMetric(R);
+                          aexp->ExportRestZone(p,t);
+                          delete p;
+                       }
+                    }
+                 }
+                 aexp->ExportRestZone(0,0,true);
+               }
+             } catch (...) {
+                ACAD_EXPORT_ERROR;
              }
           }
          if ((CurData||PrjData) && MetricData) {
-           if(FAutoCADExport->ExportRoadSigns){
-             currentItem++;
-             SET_PROGRESS_FORM_CAPTION_EX("Выводим дорожные знаки...")
-             SET_PROGRESS_FORM_POSITION(0);
-             aexp->AddLayer("RoadSigns");
 
-             std::vector<wpsign> A;
+           try {
+             if(FAutoCADExport->ExportRoadSigns){
+               currentItem++;
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим дорожные знаки...")
+               SET_PROGRESS_FORM_POSITION(0);
+               aexp->AddLayer("RoadSigns");
+
+               std::vector<wpsign> A;
              
-             /*Знаки, по умолчанию выводим только проектируемые знаки*/ 
-             if(DataPrj) {
-               for (int i=0;i<DataPrj->Objects->Count;i++) {
-                  if(Terminated) return;
-                  if (DataPrj->Objects->Items[i]->DictId>=SGNCODE && DataPrj->Objects->Items[i]->DictId<SGNCODE+10) {
-                     TRoadSign *t=dynamic_cast<TRoadSign*>(DataPrj->Objects->Items[i]);
-                     if (t) {
-                        TExtPolyline *p=t->PrepareMetric(R);
-                        A.push_back(wpsign(t,p));
-                     }
-                  }
+               /*Знаки, по умолчанию выводим только проектируемые знаки*/ 
+               if(DataPrj) {
+                 for (int i=0;i<DataPrj->Objects->Count;i++) {
+                    if(Terminated) return;
+                    if (DataPrj->Objects->Items[i]->DictId>=SGNCODE && DataPrj->Objects->Items[i]->DictId<SGNCODE+10) {
+                       TRoadSign *t=dynamic_cast<TRoadSign*>(DataPrj->Objects->Items[i]);
+                       if (t) {
+                          TExtPolyline *p=t->PrepareMetric(R);
+                          A.push_back(wpsign(t,p));
+                       }
+                    }
+                 }
                }
-             }
 
-             sort(A.begin(),A.end());
-             vector<TRoadSign*> sgrp;
-             SET_PROGRESS_FORM_MINMAX(0,A.size());
-             for (vector<wpsign>::iterator i=A.begin();i!=A.end();) {
-                if(Terminated){
-                   for (vector<wpsign>::iterator j=A.begin();j!=A.end();j++)
-                     delete j->p;
-                   return;
-                }
-                sgrp.clear();
-                sgrp.push_back(i->s);
-                vector<wpsign>::iterator j;
-                for (j=i+1;j!=A.end() && signgroup(*i,*j);j++)
-                   sgrp.push_back(j->s);
-                aexp->ExportSigns(i->p,sgrp.begin(),sgrp.size());
-                i=j;
-                SET_PROGRESS_FORM_POSITION(i-A.begin());
+               sort(A.begin(),A.end());
+               vector<TRoadSign*> sgrp;
+               SET_PROGRESS_FORM_MINMAX(0,A.size());
+               for (vector<wpsign>::iterator i=A.begin();i!=A.end();) {
+                  if(Terminated){
+                     for (vector<wpsign>::iterator j=A.begin();j!=A.end();j++)
+                       delete j->p;
+                     return;
+                  }
+                  sgrp.clear();
+                  sgrp.push_back(i->s);
+                  vector<wpsign>::iterator j;
+                  for (j=i+1;j!=A.end() && signgroup(*i,*j);j++)
+                     sgrp.push_back(j->s);
+                  aexp->ExportSigns(i->p,sgrp.begin(),sgrp.size());
+                  i=j;
+                  SET_PROGRESS_FORM_POSITION(i-A.begin());
+               }
+               for (vector<wpsign>::iterator i=A.begin();i!=A.end();i++)
+                  delete i->p;
+               aexp->ExportSigns(0,0,0,true);
              }
-             for (vector<wpsign>::iterator i=A.begin();i!=A.end();i++)
-                delete i->p;
-             aexp->ExportSigns(0,0,0,true);
+           } catch (...) {
+              ACAD_EXPORT_ERROR;
            }
 
            // разметку приоритетно выводим из проектируемого источника
            if(DataPrj) {
-             if(FAutoCADExport->ExportMark){
-               currentItem++;
-               SET_PROGRESS_FORM_MINMAX(0,DataPrj->Objects->Count-1);
-               SET_PROGRESS_FORM_CAPTION_EX("Выводим разметку...")
-               SET_PROGRESS_FORM_POSITION(0);
-               aexp->AddLayer("RoadMark");
-               for (int i=0;i<DataPrj->Objects->Count;i++) {
-                  if(Terminated) return;
-                  if (DataPrj->Objects->Items[i]->DictId==ROADMARKCODE) {
-                     SET_PROGRESS_FORM_POSITION(i);
-                     TRoadMark *t=dynamic_cast<TRoadMark*>(DataPrj->Objects->Items[i]);
-                     if (t) {
-                        TExtPolyline *p=t->PrepareMetric(R);
-                        TPlanLabel *l=t->GetText(0,R,Dict);
-                        String s=l->Caption.c_str();
-                        delete l;
-                        int line=100;
-                        char *ps=s.c_str();
-                        int code=0;
-                        for (;*ps!='.' && *ps;ps++) {}
-                        if (*ps)
-                           ps++;
-                        for (;*ps!='.' && *ps;ps++)
-                           code=code*10+*ps-'0';
-                        if (code>0 && code<=11 && p->Count>1) {
-                           int minx=p->Points[0].y;
-                           int maxx=p->Points[0].y;
-                           long long midx=0;
-                           long long dl=0;
-                           for (int i=1;i<p->Count;i++) {
-                              if (minx>p->Points[i].y)
-                                 minx=p->Points[i].y;
-                              if (maxx<p->Points[i].y)
-                                 maxx=p->Points[i].y;
-                              midx+=(p->Points[i].y+p->Points[i-1].y)*abs(p->Points[i].x-p->Points[i-1].x);
-                              dl+=abs(p->Points[i].x-p->Points[i-1].x);
-                           }
-                           if (dl>100) {
-                              int defwidth=300;
-                              float t1;
-                              TRoadObject *tobj=MetricData->FindRoadPart(ROADCATEGORY,(t->LMin+t->LMax)/2);
-                              TRoadCategory *tcat=dynamic_cast<TRoadCategory*>(tobj);
-                              if (tcat) {
-                                 if (tcat->Value==rc1a || tcat->Value==rc1 || tcat->Value==rc1b || tcat->Value==rc2 || tcat->Value==rc3)
-                                    defwidth=350;
-                                 else if (tcat->Value==rc5)
-                                    defwidth=250;
-                               }
-                               midx/=(2*dl);
-                               if (abs(minx)<50 && abs(maxx)<50)  {
-                                  line=0;
-                               } else {
-                                 if (midx-minx<50 || maxx-midx<50)
-                                    line=RoundTo((float)(midx+(midx>0 ? defwidth/2:-defwidth/2))/defwidth-(Sign(midx)*0.1),0);
+             try {
+               if(FAutoCADExport->ExportMark){
+                 currentItem++;
+                 SET_PROGRESS_FORM_MINMAX(0,DataPrj->Objects->Count-1);
+                 SET_PROGRESS_FORM_CAPTION_EX("Выводим разметку...")
+                 SET_PROGRESS_FORM_POSITION(0);
+                 aexp->AddLayer("RoadMark");
+                 for (int i=0;i<DataPrj->Objects->Count;i++) {
+                    if(Terminated) return;
+                    if (DataPrj->Objects->Items[i]->DictId==ROADMARKCODE) {
+                       SET_PROGRESS_FORM_POSITION(i);
+                       TRoadMark *t=dynamic_cast<TRoadMark*>(DataPrj->Objects->Items[i]);
+                       if (t) {
+                          TExtPolyline *p=t->PrepareMetric(R);
+                          TPlanLabel *l=t->GetText(0,R,Dict);
+                          String s=l->Caption.c_str();
+                          delete l;
+                          int line=100;
+                          char *ps=s.c_str();
+                          int code=0;
+                          for (;*ps!='.' && *ps;ps++) {}
+                          if (*ps)
+                             ps++;
+                          for (;*ps!='.' && *ps;ps++)
+                             code=code*10+*ps-'0';
+                          if (code>0 && code<=11 && p->Count>1) {
+                             int minx=p->Points[0].y;
+                             int maxx=p->Points[0].y;
+                             long long midx=0;
+                             long long dl=0;
+                             for (int i=1;i<p->Count;i++) {
+                                if (minx>p->Points[i].y)
+                                   minx=p->Points[i].y;
+                                if (maxx<p->Points[i].y)
+                                   maxx=p->Points[i].y;
+                                midx+=(p->Points[i].y+p->Points[i-1].y)*abs(p->Points[i].x-p->Points[i-1].x);
+                                dl+=abs(p->Points[i].x-p->Points[i-1].x);
+                             }
+                             if (dl>100) {
+                                int defwidth=300;
+                                float t1;
+                                TRoadObject *tobj=MetricData->FindRoadPart(ROADCATEGORY,(t->LMin+t->LMax)/2);
+                                TRoadCategory *tcat=dynamic_cast<TRoadCategory*>(tobj);
+                                if (tcat) {
+                                   if (tcat->Value==rc1a || tcat->Value==rc1 || tcat->Value==rc1b || tcat->Value==rc2 || tcat->Value==rc3)
+                                      defwidth=350;
+                                   else if (tcat->Value==rc5)
+                                      defwidth=250;
                                  }
-                               }
-                        }
-                        aexp->ExportRoadMark(p,t,line,s);
-                        delete p;
-                     }
-                  }
+                                 midx/=(2*dl);
+                                 if (abs(minx)<50 && abs(maxx)<50)  {
+                                    line=0;
+                                 } else {
+                                   if (midx-minx<50 || maxx-midx<50)
+                                      line=RoundTo((float)(midx+(midx>0 ? defwidth/2:-defwidth/2))/defwidth-(Sign(midx)*0.1),0);
+                                   }
+                                 }
+                          }
+                          aexp->ExportRoadMark(p,t,line,s);
+                          delete p;
+                       }
+                    }
+                 }
+                 aexp->ExportRoadMark(0,0,0,0,true);
                }
-               aexp->ExportRoadMark(0,0,0,0,true);
+             } catch (...) {
+                ACAD_EXPORT_ERROR;
              }
            }
+
 
         /* Трубы, мосты ,автобусные остановки и высоты насыпей
            выводим приоритетно из существующих данных  */
 
         if (DataCur) {
-           if (FAutoCADExport->ExportCommunications) {
-             currentItem++;
-             SET_PROGRESS_FORM_CAPTION_EX("Выводим коммуникации...")
-             SET_PROGRESS_FORM_POSITION(0;)
-             aexp->AddLayer("RoadCommunication");
-             for (int i=0;i<DataCur->Objects->Count;i++) {
-                if(Terminated) return;
-                if (DataCur->Objects->Items[i]->DictId==COMMUNICATIONCODE) {
-                   SET_PROGRESS_FORM_POSITION(i;)
-                   TCommunication *t=dynamic_cast<TCommunication*>(DataCur->Objects->Items[i]);
-                   if (t) {
-                      TExtPolyline *p=t->PrepareMetric(R);
-                      aexp->ExportCommunication(p,t);
-                      delete p;
-                   }
-                }
-             }
-           }
-           if(FAutoCADExport->ExportTubes){
-             currentItem++;
-             SET_PROGRESS_FORM_CAPTION_EX("Выводим трубы...")
-             SET_PROGRESS_FORM_POSITION(0;)
-             aexp->AddLayer("RoadTubes");
-             for (int i=0;i<DataCur->Objects->Count;i++) {
-                if(Terminated) return;
-                if (DataCur->Objects->Items[i]->DictId==ROADTUBECODE) {
-                   SET_PROGRESS_FORM_POSITION(i;)
-                   TRoadTube *t=dynamic_cast<TRoadTube*>(DataCur->Objects->Items[i]);
-                   if (t) {
-                      TExtPolyline *p=t->PrepareMetric(R);
-                      aexp->ExportTube(p,t);
-                      delete p;
-                   }
-                }
-             }
-             aexp->ExportTube(0,0,true);
-           }
-           if(FAutoCADExport->ExportBridges){
-             currentItem++;
-             SET_PROGRESS_FORM_CAPTION_EX("Выводим мосты...")
-             SET_PROGRESS_FORM_POSITION(0;)
-             aexp->AddLayer("RoadBridges");
-             for (int i=0;i<DataCur->Objects->Count;i++) {
-                if(Terminated) return;
-                if (DataCur->Objects->Items[i]->DictId==ROADBRIDGECODE) {
-                   SET_PROGRESS_FORM_POSITION(i;)
-                   TRoadBridge *t=dynamic_cast<TRoadBridge*>(DataCur->Objects->Items[i]);
-                   if (t) {
-                      TExtPolyline *p=t->PrepareMetric(R);
-                      aexp->ExportBridge(p,t);
-                      delete p;
-                   }
-                }
-             }
-             aexp->ExportBridge(0,0,true);
-           }
-           if(FAutoCADExport->ExportBusstops){
-             currentItem++;
-             SET_PROGRESS_FORM_CAPTION_EX("Выводим автобусные остановки...")
-             SET_PROGRESS_FORM_POSITION(0;)
-             aexp->AddLayer("RoadBusStops");
-             for (int i=0;i<DataCur->Objects->Count;i++) {
-                if(Terminated) return;
-                if (DataCur->Objects->Items[i]->DictId==BUSSTOPCODE) {
-                   SET_PROGRESS_FORM_POSITION(i;)
-                   TBusStop *t=dynamic_cast<TBusStop*>(DataCur->Objects->Items[i]);
-                   if (t) {
-                      TExtPolyline *p=t->PrepareMetric(R);
-                      aexp->ExportBusStop(p,t);
-                      delete p;
-                   }
-                }
-             }
-             aexp->ExportBusStop(0,0,true);
-           }
-           if (FAutoCADExport->ExportMoundHeights) {
+           try {
+             if (FAutoCADExport->ExportCommunications) {
                currentItem++;
-               SET_PROGRESS_FORM_CAPTION_EX("Выводим высоты насыпей...")
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим коммуникации...")
                SET_PROGRESS_FORM_POSITION(0;)
-               aexp->AddLayer("RoadMoundHeights");
-
-               for(int fase =0;fase <2;fase++){
-                 for (int i=0;i<DataCur->Objects->Count;i++) {
-                     if(Terminated) return;
-                     if (DataCur->Objects->Items[i]->DictId==MOUNDHEIGHTCODE) {
-                        if(fase) SET_PROGRESS_FORM_POSITION(i);
-                        TMoundHeight *m=dynamic_cast<TMoundHeight*>(DataCur->Objects->Items[i]);
-                        if (m) {
-                           aexp->ExportMoundHeight(m,fase);
-                        }
+               aexp->AddLayer("RoadCommunication");
+               for (int i=0;i<DataCur->Objects->Count;i++) {
+                  if(Terminated) return;
+                  if (DataCur->Objects->Items[i]->DictId==COMMUNICATIONCODE) {
+                     SET_PROGRESS_FORM_POSITION(i;)
+                     TCommunication *t=dynamic_cast<TCommunication*>(DataCur->Objects->Items[i]);
+                     if (t) {
+                        TExtPolyline *p=t->PrepareMetric(R);
+                        aexp->ExportCommunication(p,t);
+                        delete p;
                      }
-                 }
+                  }
                }
-               aexp->ExportMoundHeight(0,0,true);
+             }
+           } catch (...) {
+              ACAD_EXPORT_ERROR;
+           }
+
+           try {
+             if(FAutoCADExport->ExportTubes){
+               currentItem++;
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим трубы...")
+               SET_PROGRESS_FORM_POSITION(0;)
+               aexp->AddLayer("RoadTubes");
+               for (int i=0;i<DataCur->Objects->Count;i++) {
+                  if(Terminated) return;
+                  if (DataCur->Objects->Items[i]->DictId==ROADTUBECODE) {
+                     SET_PROGRESS_FORM_POSITION(i;)
+                     TRoadTube *t=dynamic_cast<TRoadTube*>(DataCur->Objects->Items[i]);
+                     if (t) {
+                        TExtPolyline *p=t->PrepareMetric(R);
+                        aexp->ExportTube(p,t);
+                        delete p;
+                     }
+                  }
+               }
+               aexp->ExportTube(0,0,true);
+             }
+           } catch (...) {
+              ACAD_EXPORT_ERROR;
+           }
+
+           try {
+             if(FAutoCADExport->ExportBridges){
+               currentItem++;
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим мосты...")
+               SET_PROGRESS_FORM_POSITION(0;)
+               aexp->AddLayer("RoadBridges");
+               for (int i=0;i<DataCur->Objects->Count;i++) {
+                  if(Terminated) return;
+                  if (DataCur->Objects->Items[i]->DictId==ROADBRIDGECODE) {
+                     SET_PROGRESS_FORM_POSITION(i;)
+                     TRoadBridge *t=dynamic_cast<TRoadBridge*>(DataCur->Objects->Items[i]);
+                     if (t) {
+                        TExtPolyline *p=t->PrepareMetric(R);
+                        aexp->ExportBridge(p,t);
+                        delete p;
+                     }
+                  }
+               }
+               aexp->ExportBridge(0,0,true);
+             }
+           } catch (...) {
+              ACAD_EXPORT_ERROR;
+           }
+
+           try {
+             if(FAutoCADExport->ExportBusstops){
+               currentItem++;
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим автобусные остановки...")
+               SET_PROGRESS_FORM_POSITION(0;)
+               aexp->AddLayer("RoadBusStops");
+               for (int i=0;i<DataCur->Objects->Count;i++) {
+                  if(Terminated) return;
+                  if (DataCur->Objects->Items[i]->DictId==BUSSTOPCODE) {
+                     SET_PROGRESS_FORM_POSITION(i;)
+                     TBusStop *t=dynamic_cast<TBusStop*>(DataCur->Objects->Items[i]);
+                     if (t) {
+                        TExtPolyline *p=t->PrepareMetric(R);
+                        aexp->ExportBusStop(p,t);
+                        delete p;
+                     }
+                  }
+               }
+               aexp->ExportBusStop(0,0,true);
+             }
+           } catch (...) {
+              ACAD_EXPORT_ERROR;
+           }
+
+           try {
+             if (FAutoCADExport->ExportMoundHeights) {
+                 currentItem++;
+                 SET_PROGRESS_FORM_CAPTION_EX("Выводим высоты насыпей...")
+                 SET_PROGRESS_FORM_POSITION(0;)
+                 aexp->AddLayer("RoadMoundHeights");
+
+                 for(int fase =0;fase <2;fase++){
+                   for (int i=0;i<DataCur->Objects->Count;i++) {
+                       if(Terminated) return;
+                       if (DataCur->Objects->Items[i]->DictId==MOUNDHEIGHTCODE) {
+                          if(fase) SET_PROGRESS_FORM_POSITION(i);
+                          TMoundHeight *m=dynamic_cast<TMoundHeight*>(DataCur->Objects->Items[i]);
+                          if (m) {
+                             aexp->ExportMoundHeight(m,fase);
+                          }
+                       }
+                   }
+                 }
+                 aexp->ExportMoundHeight(0,0,true);
+             }
+           } catch (...) {
+              ACAD_EXPORT_ERROR;
            }
           }
 
@@ -744,76 +828,92 @@ void __fastcall AcadExportThread::Execute()
                 sort(bvec.begin(),bvec.end());
 
                 SET_PROGRESS_FORM_MINMAX(0,bvec.size()-1);
-
-                if(FAutoCADExport->ExportSignal){
-                  currentItem++;
-                  SET_PROGRESS_FORM_POSITION(0)
-                  SET_PROGRESS_FORM_CAPTION_EX("Выводим ограждения и сигнальные устройства...")
-                  aexp->AddLayer("RoadSignals");
-                  for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
-                      if(Terminated) return;
-                      SET_PROGRESS_FORM_POSITION((ProgressFormPosition+1));
-                      if (i->second.s) {
-                           TExtPolyline *p=i->second.s->PrepareMetric(R);
-                           aexp->ExportSignal(p,i->second.s,i->second.exist);
-                           delete p;
-                      } else if (i->second.b) {
-                           TExtPolyline *p=i->second.b->PrepareMetric(R);
-                           aexp->ExportBarrier(p,i->second.b,i->second.exist);
-                           delete p;
-                      }
+                try {
+                  if(FAutoCADExport->ExportSignal){
+                    currentItem++;
+                    SET_PROGRESS_FORM_POSITION(0)
+                    SET_PROGRESS_FORM_CAPTION_EX("Выводим ограждения и сигнальные устройства...")
+                    aexp->AddLayer("RoadSignals");
+                    for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
+                        if(Terminated) return;
+                        SET_PROGRESS_FORM_POSITION((ProgressFormPosition+1));
+                        if (i->second.s) {
+                             TExtPolyline *p=i->second.s->PrepareMetric(R);
+                             aexp->ExportSignal(p,i->second.s,i->second.exist);
+                             delete p;
+                        } else if (i->second.b) {
+                             TExtPolyline *p=i->second.b->PrepareMetric(R);
+                             aexp->ExportBarrier(p,i->second.b,i->second.exist);
+                             delete p;
+                        }
+                    }
+                    aexp->ExportBarrier(0,0,0,true);
                   }
-                  aexp->ExportBarrier(0,0,0,true);
+                } catch (...) {
+                   ACAD_EXPORT_ERROR;
                 }
 
-                if(FAutoCADExport->ExportSidewalks){
-                  currentItem++;
-                  SET_PROGRESS_FORM_POSITION(0)
-                  SET_PROGRESS_FORM_CAPTION_EX("Выводим тротуары...")
-                  aexp->AddLayer("Sidewalks");
-                  for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
-                      if(Terminated) return;
-                      SET_PROGRESS_FORM_POSITION((ProgressFormPosition+1));
-                      if (i->second.w) {
-                           TExtPolyline *p=i->second.w->PrepareMetric(R);
-                           aexp->ExportSidewalk(p,i->second.w,i->second.exist);
-                           delete p;
-                      }
+                try {
+                  if(FAutoCADExport->ExportSidewalks){
+                    currentItem++;
+                    SET_PROGRESS_FORM_POSITION(0)
+                    SET_PROGRESS_FORM_CAPTION_EX("Выводим тротуары...")
+                    aexp->AddLayer("Sidewalks");
+                    for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
+                        if(Terminated) return;
+                        SET_PROGRESS_FORM_POSITION((ProgressFormPosition+1));
+                        if (i->second.w) {
+                             TExtPolyline *p=i->second.w->PrepareMetric(R);
+                             aexp->ExportSidewalk(p,i->second.w,i->second.exist);
+                             delete p;
+                        }
+                    }
+                    aexp->ExportSidewalk(0,0,0,true);
                   }
-                  aexp->ExportSidewalk(0,0,0,true);
+                } catch (...) {
+                   ACAD_EXPORT_ERROR;
                 }
 
-                if(FAutoCADExport->ExportLamps){
-                  currentItem++;
-                  SET_PROGRESS_FORM_POSITION(0)
-                  SET_PROGRESS_FORM_CAPTION_EX("Выводим фонари...")
-                  aexp->AddLayer("Lights");
-                  for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
-                      if(Terminated) return;
-                      SET_PROGRESS_FORM_POSITION((ProgressFormPosition+1));
-                      if (i->second.l) {
-                           TExtPolyline *p=i->second.l->PrepareMetric(R);
-                           aexp->ExportLighting(p,i->second.l,i->second.exist);
-                           delete p;
-                      }
+                try {
+                  if(FAutoCADExport->ExportLamps){
+                    currentItem++;
+                    SET_PROGRESS_FORM_POSITION(0)
+                    SET_PROGRESS_FORM_CAPTION_EX("Выводим фонари...")
+                    aexp->AddLayer("Lights");
+                    for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
+                        if(Terminated) return;
+                        SET_PROGRESS_FORM_POSITION((ProgressFormPosition+1));
+                        if (i->second.l) {
+                             TExtPolyline *p=i->second.l->PrepareMetric(R);
+                             aexp->ExportLighting(p,i->second.l,i->second.exist);
+                             delete p;
+                        }
+                    }
+                    aexp->ExportLighting(0,0,0,true);
                   }
-                  aexp->ExportLighting(0,0,0,true);
+                } catch (...) {
+                  ACAD_EXPORT_ERROR;
                 }
-                if(FAutoCADExport->ExportBorders){
-                  currentItem++;
-                  SET_PROGRESS_FORM_POSITION(0)
-                  SET_PROGRESS_FORM_CAPTION_EX("Выводим бордюры...")
-                  aexp->AddLayer("Borders");
-                  for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
-                      if(Terminated) return;
-                      SET_PROGRESS_FORM_POSITION((ProgressFormPosition+1));
-                      if (i->second.a) {
-                           TExtPolyline *p=i->second.a->PrepareMetric(R);
-                           aexp->ExportBorder(p,i->second.a,i->second.exist);
-                           delete p;
-                      }
+
+                try {
+                  if(FAutoCADExport->ExportBorders){
+                    currentItem++;
+                    SET_PROGRESS_FORM_POSITION(0)
+                    SET_PROGRESS_FORM_CAPTION_EX("Выводим бордюры...")
+                    aexp->AddLayer("Borders");
+                    for (vector<pair<int,wpbar> >::iterator i=bvec.begin();i!=bvec.end();i++) {
+                        if(Terminated) return;
+                        SET_PROGRESS_FORM_POSITION((ProgressFormPosition+1));
+                        if (i->second.a) {
+                             TExtPolyline *p=i->second.a->PrepareMetric(R);
+                             aexp->ExportBorder(p,i->second.a,i->second.exist);
+                             delete p;
+                        }
+                    }
+                    aexp->ExportBorder(0,0,0,true);
                   }
-                  aexp->ExportBorder(0,0,0,true);
+                } catch (...) {
+                   ACAD_EXPORT_ERROR;
                 }
               }
              }
@@ -822,30 +922,35 @@ void __fastcall AcadExportThread::Execute()
         /* Участки уклонов выводим из слоя с профилем */
 
         if (ProfilData) {
-           if(FAutoCADExport->ExportSlope){
-             SET_PROGRESS_FORM_MINMAX(0,ProfilData->Objects->Count-1);
-             // Выводим опасные участки
-             currentItem++;
-             SET_PROGRESS_FORM_POSITION(0)
-             SET_PROGRESS_FORM_CAPTION_EX("Выводим участки уклонов ...")
-             aexp->AddLayer("RoadSlopes");
-             for (int i=0;i<ProfilData->Objects->Count;i++) {
-                if(Terminated) return;
-                SET_PROGRESS_FORM_POSITION(i)
-                if (ProfilData->Objects->Items[i]->DictId==DANGERSLOPECODE) {
-                   TDangerSlope *t=dynamic_cast<TDangerSlope*>(ProfilData->Objects->Items[i]);
-                   if (t) {
-                      aexp->ExportSlope(t);
-                   }
-                }
+           try {
+             if(FAutoCADExport->ExportSlope){
+               SET_PROGRESS_FORM_MINMAX(0,ProfilData->Objects->Count-1);
+               // Выводим опасные участки
+               currentItem++;
+               SET_PROGRESS_FORM_POSITION(0)
+               SET_PROGRESS_FORM_CAPTION_EX("Выводим участки уклонов ...")
+               aexp->AddLayer("RoadSlopes");
+               for (int i=0;i<ProfilData->Objects->Count;i++) {
+                  if(Terminated) return;
+                  SET_PROGRESS_FORM_POSITION(i)
+                  if (ProfilData->Objects->Items[i]->DictId==DANGERSLOPECODE) {
+                     TDangerSlope *t=dynamic_cast<TDangerSlope*>(ProfilData->Objects->Items[i]);
+                     if (t) {
+                        aexp->ExportSlope(t);
+                     }
+                  }
+               }
+               aexp->ExportSlope(0,0,true);
              }
-             aexp->ExportSlope(0,0,true);
+           } catch (...) {
+              ACAD_EXPORT_ERROR;
            }
 
         }
         /* Схематический план выводим из слоя с планом */
 
         if (CurveData) {
+           try {
            if(FAutoCADExport->ExportCurves){
              SET_PROGRESS_FORM_MINMAX(0,CurveData->Objects->Count-1);
              // Выводим опасные участки
@@ -865,33 +970,56 @@ void __fastcall AcadExportThread::Execute()
              }
              aexp->ExportCurve(0,true);
            }
+           } catch (...) {
+              ACAD_EXPORT_ERROR;
+           }
 
         }
 
-        if(FAutoCADExport->ExportAddRows){
-          currentItem++;
-          SET_PROGRESS_FORM_CAPTION_EX("выводим дополнительные строки из файлов в верхнюю таблицу")
-          aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows);
-          currentItem++;
-          SET_PROGRESS_FORM_CAPTION_EX("выводим дополнительные строки из файлов в нижнюю таблицу")
-          aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows); 
+        try {
+          if(FAutoCADExport->ExportAddRows){
+            currentItem++;
+            SET_PROGRESS_FORM_CAPTION_EX("выводим дополнительные строки из файлов в верхнюю таблицу")
+            aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows);
+            currentItem++;
+            SET_PROGRESS_FORM_CAPTION_EX("выводим дополнительные строки из файлов в нижнюю таблицу")
+            aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows); 
+          }
+        } catch (...) {
+           ACAD_EXPORT_ERROR;
         }
 
-        if(FAutoCADExport->ExportGraphic){
-          currentItem++;
-          SET_PROGRESS_FORM_CAPTION("выводим дополнительные строки графика")
-          aexp->ExportGraphic(FAutoCADExport->EditTopAddRows,false); 
+        try {
+          if(FAutoCADExport->ExportGraphic){
+            currentItem++;
+            SET_PROGRESS_FORM_CAPTION("выводим дополнительные строки графика")
+            aexp->ExportGraphic(FAutoCADExport->EditTopAddRows,false); 
+          }
+        } catch(...) {
+           ACAD_EXPORT_ERROR;
         }
 
+        try {
         if(FAutoCADExport->ExportTable){
              currentItem++; 
              aexp->AddLayer("Table");
              aexp->DrawTables(FAutoCADExport->ExportRuler);
         }
+        } catch (...) {
+           ACAD_EXPORT_ERROR;
+        }
 
-        SET_PROGRESS_FORM_CAPTION("Завершение процесса...");
+        try {
+           SET_PROGRESS_FORM_CAPTION("Завершение процесса...");
+        } catch (...) {
+           BUILDER_ERROR("Ошибка, на последнем этапе O_O, да не может быть!");
+        }
       } __finally {
           ProgressForm->Hide();
+          if ( ERROR_WAS || fWickedErrorWas) {
+             ShowMessage("Во время исполнения были обнаруженны небольшие ошибки. Рекомендуется ознакомиться с журналом.");
+          }
+          
           aexp->EndDocument();
           FlashWindow(Application->Handle, true);
           delete aexp;
@@ -899,10 +1027,10 @@ void __fastcall AcadExportThread::Execute()
           return;
       }
     }else {
+        BUILDER_ERROR("Невозможно начать работу с AutoCad");
         ShowMessage("Невозможно начать работу с AutoCad");
     }
     delete aexp;
     delete R;
-    //Synchronize(Clear);
 }
 //---------------------------------------------------------------------------

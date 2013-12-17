@@ -33,8 +33,16 @@
 }
 
 #ifdef  BUILDER
-#define BUILDER_ERROR(msg) std::cerr << "[ERROR]" << "[" << Now().TimeString().c_str() << "]" << msg << std::endl
+class BuilderErrorChecker {
+public:
+  static bool fErrorFlag; // флаг  сигнализирующий об наличии ошибок при выполнении
+};
+bool BuilderErrorChecker::fErrorFlag = false;
+
+#define BUILDER_ERROR(msg) std::cerr << "[ERROR]" << "[" << Now().TimeString().c_str() << "]" << msg << std::endl; BuilderErrorChecker::fErrorFlag = true;
 #define BUILDER_INFO(msg)  std::cout << "[" << Now().TimeString().c_str() << "]" << msg << std::endl
+#define RESET_ERROR_FLAG  BuilderErrorChecker::fErrorFlag = false
+#define ERROR_WAS BuilderErrorChecker::fErrorFlag
 #endif
 
 #define RETURN_ON_EQUALS(var1, var2) if (var1 == var2) return;

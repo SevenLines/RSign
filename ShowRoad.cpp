@@ -248,6 +248,7 @@ void __fastcall TRoadFrm::OpenRoad(__int32 RoadId,TDictSource *dict,TSharedObjSo
 {
 FRoadId=RoadId;
 FRoadName=DBDataModule->GetRoadName(FRoadId);
+FDistrictName = DBDataModule->GetDistrName(FRoadId);
 Caption=FRoadName;
 Initialize(dict,shared);
 Application->CreateForm(__classid(TVisSetFrm), &VisSet);
@@ -279,6 +280,7 @@ void __fastcall TRoadFrm::OpenRoad(String Capt,TDtaSource* data,TDictSource* dic
 {
 FRoadName=data->RoadName;
 FRoadId=data->Id;
+FDistrictName = DBDataModule->GetDistrName(FRoadId);
 Caption=Capt;
 Initialize(dict,shared);
 if (data->Ready)
@@ -1011,6 +1013,7 @@ void __fastcall TRoadFrm::AcadExport(void) {
 #ifdef AutoCAD_OCXH  // check is AutoCAD available
    FAutoCADExport->SetRoadId(RoadId);
    FAutoCADExport->RoadName = FRoadName;
+   FAutoCADExport->RoadDistrict = FDistrictName;
    if(FAutoCADExport->ShowModal()!=mrOk) return;
 
    if(!fBreakedLines && MessageDlg("Разорвать кромку бровки по примыканиям?", mtConfirmation,
