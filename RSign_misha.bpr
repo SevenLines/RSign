@@ -18,7 +18,7 @@
       ConstHelp.obj BuildSlopes.obj BuildWidePart.obj RoadMark.obj 
       ErrorObjectDlg.obj acadexport.obj AutoCADHelper.obj AutoCADPrintForm.obj 
       AutoCADExportForm.obj unSignalsInsert.obj AcadExportThread.obj 
-      AttachForm.obj MoveForm.obj"/>
+      AttachForm.obj MoveForm.obj AddRowsDescription.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -31,7 +31,8 @@
       ProgressFrm.dfm CrvPlanForm.dfm VisSetForm.dfm SaveViewForm.dfm 
       OpenViewForm.dfm NewView.dfm MacrosForm.dfm ConstHelp.dfm BuildSlopes.dfm 
       BuildWidePart.dfm RoadMark.dfm ErrorObjectDlg.dfm AutoCADPrintForm.dfm 
-      AutoCADExportForm.dfm unSignalsInsert.dfm AttachForm.dfm MoveForm.dfm"/>
+      AutoCADExportForm.dfm unSignalsInsert.dfm AttachForm.dfm MoveForm.dfm 
+      AddRowsDescription.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="vclnp.lib AutoCAD.lib bcbsmp.lib MyActiveX.lib vclx.lib vcldb.lib 
       adortl.lib dbrtl.lib vcl.lib rtl.lib"/>
@@ -50,17 +51,18 @@
     <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS;_BCB_ATL_DEBUG"/>
     <MAINSOURCE value="RSign.cpp"/>
-    <INCLUDEPATH value="..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
-    <LIBPATH value="..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
+    <INCLUDEPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
+    <LIBPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
     <WARNINGS value="-w-par -w-8027 -w-8026"/>
     <WARNOPTSTR value=""/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-src_suffix cpp -DNO_PROMPT_ON_ASSERTE_FAILURE 
-      -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -I..\..\Borland\CBuilder6\Projects 
-      -IActiveX -I$(BCB)\include -I$(BCB)\include\vcl -I$(BCB)\include\atl 
-      -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot; -boa"/>
+    <IDLCFLAGS value="-I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; 
+      -I..\..\Borland\CBuilder6\Projects -IActiveX -I$(BCB)\include 
+      -I$(BCB)\include\vcl -I$(BCB)\include\atl 
+      -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot; -src_suffix cpp 
+      -DNO_PROMPT_ON_ASSERTE_FAILURE -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -boa"/>
     <CFLAG1 value="-Od -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; -Hc -Vx -Ve 
       -Tkh30000 -X- -r- -a8 -b -k -y -v -vi- -c -tW -tWM"/>
     <CFLAG2 value=""/>
@@ -149,6 +151,7 @@
       <FILE FILENAME="AcadExportThread.cpp" FORMNAME="" UNITNAME="AcadExportThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AttachForm.cpp" FORMNAME="frmAttachParams" UNITNAME="AttachForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="MoveForm.cpp" FORMNAME="moveDialog" UNITNAME="MoveForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="AddRowsDescription.cpp" FORMNAME="Form1" UNITNAME="AddRowsDescription" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

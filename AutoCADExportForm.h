@@ -187,6 +187,7 @@ __published:	// IDE-managed Components
     TLabel *Label26;
     TEdit *edtUseVerticalTextIfLess;
     TLabel *Label24;
+    TButton *btnShowInfo;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
@@ -208,6 +209,7 @@ __published:	// IDE-managed Components
         void __fastcall edtTopAddRowsChange(TObject *Sender);
         void __fastcall edtStartChange(TObject *Sender);
         void __fastcall Button4Click(TObject *Sender);
+    void __fastcall btnShowInfoClick(TObject *Sender);
 private:	// User declarations
         AnsiString strIniFileName;
         void SaveIni(TIniFile *ini);

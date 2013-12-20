@@ -48,6 +48,7 @@ USEFORM("AutoCADExportForm.cpp", FAutoCADExport);
 USEFORM("unSignalsInsert.cpp", frmSignalsInsert);
 USEFORM("AttachForm.cpp", frmAttachParams);
 USEFORM("MoveForm.cpp", moveDialog);
+USEFORM("AddRowsDescription.cpp", Form1);
 //---------------------------------------------------------------------------
 TComModule _ProjectModule(0 /*InitATLServer*/);
 TComModule &_Module = _ProjectModule;
@@ -127,6 +128,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
          Application->CreateForm(__classid(TfrmAttachParams), &frmAttachParams);
          Application->CreateForm(__classid(TmoveDialog), &moveDialog);
          Application->CreateForm(__classid(TmoveDialog), &moveDialog);
+         Application->CreateForm(__classid(TForm1), &Form1);
          Application->Run();
     }
     catch (Exception &exception)

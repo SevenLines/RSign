@@ -81,15 +81,15 @@ object FAutoCADExport: TFAutoCADExport
       TabOrder = 1
       object Label33: TLabel
         Left = 160
-        Top = 44
+        Top = 48
         Width = 50
         Height = 13
         Caption = '<< '#1076#1086#1088#1086#1075#1072
       end
       object edtTopAddRows: TEdit
-        Left = 8
+        Left = 40
         Top = 16
-        Width = 169
+        Width = 137
         Height = 21
         TabOrder = 0
         OnChange = edtTopAddRowsChange
@@ -107,12 +107,21 @@ object FAutoCADExport: TFAutoCADExport
       end
       object cmbRoad: TComboBox
         Left = 8
-        Top = 40
+        Top = 44
         Width = 145
         Height = 21
         Style = csDropDownList
         ItemHeight = 13
         TabOrder = 2
+      end
+      object btnShowInfo: TButton
+        Left = 8
+        Top = 16
+        Width = 25
+        Height = 25
+        Caption = '?'
+        TabOrder = 3
+        OnClick = btnShowInfoClick
       end
     end
     object GroupBox5: TGroupBox

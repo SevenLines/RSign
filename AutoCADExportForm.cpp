@@ -4,6 +4,7 @@
 #pragma hdrstop
 
 #include "AutoCADExportForm.h"
+#include "AddRowsDescription.h"
 #include <SysUtils.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -755,4 +756,10 @@ int __fastcall TFAutoCADExport::CountOfExports()
 
 
 
+
+void __fastcall TFAutoCADExport::btnShowInfoClick(TObject *Sender)
+{
+    FAddRowDescription->Show();    
+}
+//---------------------------------------------------------------------------
 

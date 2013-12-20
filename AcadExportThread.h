@@ -31,6 +31,8 @@ public:
         void __fastcall Clear();
         void OutInfoLog(AnsiString &str);
 
+        __property bool IsTerminated = {read = Terminated};
+
         int ExportTo;
         int ExportTable;
         AnsiString FileName;
