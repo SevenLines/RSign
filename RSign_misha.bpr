@@ -151,7 +151,7 @@
       <FILE FILENAME="AcadExportThread.cpp" FORMNAME="" UNITNAME="AcadExportThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AttachForm.cpp" FORMNAME="frmAttachParams" UNITNAME="AttachForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="MoveForm.cpp" FORMNAME="moveDialog" UNITNAME="MoveForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="AddRowsDescription.cpp" FORMNAME="Form1" UNITNAME="AddRowsDescription" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="AddRowsDescription.cpp" FORMNAME="FAddRowDescription" UNITNAME="AddRowsDescription" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
