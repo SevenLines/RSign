@@ -18,7 +18,8 @@
       ConstHelp.obj BuildSlopes.obj BuildWidePart.obj RoadMark.obj 
       ErrorObjectDlg.obj acadexport.obj AutoCADHelper.obj AutoCADPrintForm.obj 
       AutoCADExportForm.obj unSignalsInsert.obj unAutoPoints.obj 
-      AcadExportThread.obj AutoCADPrintThread.obj AttachForm.obj MoveForm.obj"/>
+      AcadExportThread.obj AutoCADPrintThread.obj AttachForm.obj MoveForm.obj 
+      AddRowsDescription.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -32,7 +33,7 @@
       OpenViewForm.dfm NewView.dfm MacrosForm.dfm ConstHelp.dfm BuildSlopes.dfm 
       BuildWidePart.dfm RoadMark.dfm ErrorObjectDlg.dfm AutoCADPrintForm.dfm 
       AutoCADExportForm.dfm unSignalsInsert.dfm unAutoPoints.dfm AttachForm.dfm 
-      MoveForm.dfm"/>
+      MoveForm.dfm AddRowsDescription.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="vclnp.lib bcbsmp.lib acad.lib MyActiveX.lib vclx.lib vcldb.lib adortl.lib 
       dbrtl.lib vcl.lib rtl.lib"/>
@@ -155,6 +156,7 @@
       <FILE FILENAME="AutoCADPrintThread.cpp" FORMNAME="" UNITNAME="AutoCADPrintThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AttachForm.cpp" FORMNAME="frmAttachParams" UNITNAME="AttachForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="MoveForm.cpp" FORMNAME="moveDialog" UNITNAME="MoveForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="AddRowsDescription.cpp" FORMNAME="FAddRowDescription" UNITNAME="AddRowsDescription" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
