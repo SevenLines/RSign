@@ -21,39 +21,53 @@ void __fastcall TOpenRoadDialog::Button1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-
-void __fastcall TOpenRoadDialog::txtFilterChange(TObject *Sender)
-{
-  ListRoads_DataSet->Filtered=false;
-  if(txtFilter->Text.IsEmpty())
-  {
-    return;
-  }
-  AnsiString f;
-  f.sprintf("FullTitle like '%%%s%%'",txtFilter->Text.c_str());
-  ListRoads_DataSet->Filter=f;
-  ListRoads_DataSet->Filtered=true;
+void __fastcall TOpenRoadDialog::SetFilter(TObject *Sender) {
+   String f;
+   f="NumGroup="+IntToStr((int)cbGroup->Items->Objects[cbGroup->ItemIndex]);
+   if (!txtIDFilter->Text.IsEmpty()) {
+      f+=" and id_="+txtIDFilter->Text;
+   } else {
+      if ((int)cbDist->Items->Objects[cbDist->ItemIndex]!=0)
+         f=f+" and did="+IntToStr((int)cbDist->Items->Objects[cbDist->ItemIndex]);
+      if (!txtFilter->Text.IsEmpty())
+         f+=" and FullTitle like '%"+txtFilter->Text+"%'";
+   }
+   ListRoads_DataSet->Filter=f;
 }
-//---------------------------------------------------------------------------
-void __fastcall TOpenRoadDialog::txtIDFilterChange(TObject *Sender)
-{
-  ListRoads_DataSet->Filtered=false;
-  if(txtIDFilter->Text.IsEmpty())
-  {
-    return;
-  }
-  AnsiString f;
-  f.sprintf("id_=%s",txtIDFilter->Text.c_str());
-  ListRoads_DataSet->Filter=f;
-  ListRoads_DataSet->Filtered=true;
 
-}
-//---------------------------------------------------------------------------
 
 void __fastcall TOpenRoadDialog::FormShow(TObject *Sender)
 {
-  if(!ListRoads_DataSet->Active)ListRoads_DataSet->Active=true;
-  txtIDFilter->SetFocus();
+ TADODataSet *ds=new TADODataSet(this);
+ ds->Connection=MainForm->Connection;
+ ds->CommandText="select * from ListTitleGroups";
+ ds->Open();
+ cbGroup->Items->Clear();
+ int all=0;
+ for (int i=0;i<ds->RecordCount;i++) {
+   int id=ds->FieldByName("id_")->AsInteger;
+   if (id==0) all=i;
+   cbGroup->Items->AddObject(ds->FieldByName("FullTitle")->AsString,(TObject*)id);
+   ds->Next();
+ }
+ ds->Close();
+ cbGroup->ItemIndex=all;
+ cbDist->Items->Clear();
+ ds->CommandText="select * from ListDistricts order by FullTitle";
+ ds->Open();
+ all=0;
+ for (int i=0;i<ds->RecordCount;i++) {
+   int id=ds->FieldByName("id_")->AsInteger;
+   if (id==0) all=i;
+   cbDist->Items->AddObject(ds->FieldByName("FullTitle")->AsString,(TObject*)id);
+   ds->Next();
+ }
+ cbDist->ItemIndex=all;
+ ds->Close();
+ delete ds;
+ if(!ListRoads_DataSet->Active)ListRoads_DataSet->Active=true;
+  txtIDFilter->SetFocus();  //TDBListBox
+ SetFilter(0); 
 }
 //---------------------------------------------------------------------------
 

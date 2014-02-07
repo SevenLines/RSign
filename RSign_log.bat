@@ -1,1 +1,0 @@
-RSign.exe >>C:\RSign.log 2>&1

@@ -29,16 +29,18 @@ __published:	// IDE-managed Components
     TDBText *DBText1;
     TButton *Button1;
     TButton *Button2;
+   TComboBox *cbDist;
+   TComboBox *cbGroup;
    void __fastcall Button1Click(TObject *Sender);
-        void __fastcall txtFilterChange(TObject *Sender);
-  void __fastcall txtIDFilterChange(TObject *Sender);
   void __fastcall FormShow(TObject *Sender);
    void __fastcall DBGrid1DblClick(TObject *Sender);
    void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
+    void __fastcall SetFilter(TObject *Sender);
 private:	// User declarations
     String FRoadName;
     __int32 FRoadId;
+    void __fastcall SetFilter(void);
 public:		// User declarations
     __fastcall TOpenRoadDialog(TComponent* Owner);
     __property __int32 RoadId={read=FRoadId};
