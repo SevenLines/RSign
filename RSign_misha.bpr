@@ -34,13 +34,13 @@
       AutoCADExportForm.dfm unSignalsInsert.dfm AttachForm.dfm MoveForm.dfm 
       AddRowsDescription.dfm"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="vclnp.lib AutoCAD.lib bcbsmp.lib MyActiveX.lib vclx.lib vcldb.lib 
-      adortl.lib dbrtl.lib vcl.lib rtl.lib"/>
-    <SPARELIBS value="rtl.lib vcl.lib dbrtl.lib adortl.lib vcldb.lib vclx.lib MyActiveX.lib 
-      bcbsmp.lib AutoCAD.lib"/>
+    <LIBRARIES value="vclnp.lib bcbsmp.lib dclusr.lib vclx.lib vcldb.lib adortl.lib dbrtl.lib 
+      vcl.lib rtl.lib"/>
+    <SPARELIBS value="rtl.lib vcl.lib dbrtl.lib adortl.lib vcldb.lib vclx.lib dclusr.lib 
+      bcbsmp.lib"/>
     <PACKAGES value="vclx.bpi rtl.bpi vcl.bpi dbrtl.bpi vcldb.bpi bcbsmp.bpi dclocx.bpi 
-      qrpt.bpi teeui.bpi vclsmp.bpi teedb.bpi tee.bpi ibsmp.bpi dss.bpi 
-      nmfast.bpi inetdb.bpi inet.bpi adortl.bpi"/>
+      dclusr.bpi qrpt.bpi teeui.bpi vclsmp.bpi teedb.bpi tee.bpi ibsmp.bpi 
+      dss.bpi nmfast.bpi inetdb.bpi inet.bpi adortl.bpi"/>
     <PATHCPP value=".;"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>

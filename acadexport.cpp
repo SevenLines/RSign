@@ -2522,6 +2522,14 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
             }
 
             if(OutInfoLog) OutInfoLog("Вывожу \"" + AnsiString(str) + "\"");
+
+            int linesCount = 0;
+            int currentLine = 0;
+            while(getline(file,s)) {
+                linesCount++;
+            }
+            file.clear();
+            file.seekg(0, ios::beg);
             
             while(getline(file,s))  {
                 // выходим если нажали отмену
@@ -2551,6 +2559,10 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
                     }catch(...){
                         OutInfoLog("Ошибка вывода: " + str2 + " - " + line);
                     }
+                }
+                currentLine++;
+                if (ProgressChanged) {
+                   ProgressChanged((float) currentLine / linesCount * 100, "");
                 }
             }
             file.close();
@@ -2590,6 +2602,15 @@ int __fastcall TAcadExport::ExportGraphicPath(AnsiString path, bool check)
             lValue = curValue = 0;
             vector<double> pointsArray;
             bool fWas = false;
+
+            int linesCount = 0;
+            int currentLine = 0;
+            while(getline(file,s)) {
+                linesCount++;
+            }
+            file.clear();
+            file.seekg(0, ios::beg);
+
             while(getline(file,s))  {
                 lValue = curValue;
 
@@ -2602,6 +2623,11 @@ int __fastcall TAcadExport::ExportGraphicPath(AnsiString path, bool check)
                     fWas = true;
                 }
                 lValue = curValue;
+                
+                currentLine++;
+                if (ProgressChanged) {
+                   ProgressChanged((float) currentLine / linesCount * 100, "");
+                }
             }
             if(fWas) {
                 pointsArray.push_back(ePos);

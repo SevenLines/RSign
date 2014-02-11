@@ -30,6 +30,7 @@ public:
         __fastcall AcadExportThread(bool CreateSuspended);
         void __fastcall Clear();
         void OutInfoLog(AnsiString &str);
+        void ProgressChanged(int progress, AnsiString &message);
 
         __property bool IsTerminated = {read = Terminated};
 
