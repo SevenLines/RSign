@@ -101,6 +101,8 @@ else if (ClassName==ClassesNames[44])
         return new TDivRoadPart(id,code);
 else if (ClassName==ClassesNames[45])
         return new TDangerVisMode(id,code);
+else if (ClassName==ClassesNames[46])
+        return new TDressLayer(id,code);
 return NULL;
 }
 
@@ -198,6 +200,8 @@ else if (ClassName==ClassesNames[44])
         return DivRoadPartInfo;
 else if (ClassName==ClassesNames[45])
         return DangerVisModeInfo;
+else if (ClassName==ClassesNames[46])
+        return DressLayerInfo;
 return "";
 }
 

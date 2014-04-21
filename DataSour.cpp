@@ -10,7 +10,7 @@
 #include <vector>
 #include <algorithm>
 
-#ifdef GDIEDIT
+#ifdef GDIEDIT // << Костя, я отключил GDEDIT в common.h, а то не компилиться (МИША) 
     #include "GdiEForm.h"
 #else
     #include "SettingFrm.h"
