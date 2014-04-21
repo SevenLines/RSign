@@ -187,6 +187,9 @@ enum TRoadSignalKind {skStolb=181,skTumba1=182,skTumba2=183,skOstrov=184};
 
 enum TBarrierConstruction {br112=112,br113=113,br114=114,br115=115,br116=116,br117=117,br118=118,brm=1959537};
 
+enum TLayer {lab=2385237,lcb=2385238};
+
+
 // характеристика имени примыкания (текстовое)
 //#define ATNAMECODE 9
 

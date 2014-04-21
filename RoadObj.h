@@ -46,7 +46,7 @@ typedef __int32 (__fastcall *GetIntValueProc)(TObject*);
                                void __fastcall Class::Set##Name(Type val)\
                                 {F##Name=val;FModified=true;}\
 
-#define CLASSESCOUNT 46
+#define CLASSESCOUNT 47
 const char ClassesNames[CLASSESCOUNT][32]={"TRoadObject","TDescreetRoadObject",\
         "TDescreetDirRoadObject","TDescreetSideRoadObject",\
         "TContRoadObject","TBusStop",
@@ -67,7 +67,7 @@ const char ClassesNames[CLASSESCOUNT][32]={"TRoadObject","TDescreetRoadObject",\
         "TRoadDescription","TRoadWidthMeasure",
         "TSquareRoadSideObject_Kromka","TLinearCenterRoadObject",
         "TRoadCategory","TRoadLighting","TMoundHeight","TDivRoadPart",
-        "TDangerVisMode"};
+        "TDangerVisMode","TDressLayer"};
 
 class TRoad;
 class TObjFrm;
@@ -417,6 +417,18 @@ virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 };
 
 
+const char DressLayerInfo[]="";
+class TDressLayer : public TContRoadObject {
+protected:
+DEFPROPERTY(TLayer,Layer)
+DEFPROPERTY(__int32,UpperDeep)
+DEFPROPERTY(__int32,LowerDeep)
+public:
+__fastcall TDressLayer(): TContRoadObject() {}
+__fastcall TDressLayer(__int32 id,__int32 code): TContRoadObject(id,code) {}
+} ;
+
+
 // Дорожный объект привязанный к кромке дороги
 const char RoadSideObjectInfo[]="Дорожный объект, привязанный к кромке или бровке дороги. Произведен от\
 TContRoadObject. Вводятся три новых свойства DX - расстояние от кромки дороги.\
@@ -627,6 +639,7 @@ class TBandRoadPart : public TRoadPart
 {
 protected:
 DEFPROPERTY(__int32,Width)
+DEFPROPERTY(__int32,EWidth)
 public:
 __fastcall TBandRoadPart(): TRoadPart() {}
 __fastcall TBandRoadPart(__int32 id,__int32 code): TRoadPart(id,code) {}

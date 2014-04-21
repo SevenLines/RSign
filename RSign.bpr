@@ -17,9 +17,8 @@
       SaveViewForm.obj OpenViewForm.obj NewView.obj Macroses.obj MacrosForm.obj 
       ConstHelp.obj BuildSlopes.obj BuildWidePart.obj RoadMark.obj 
       ErrorObjectDlg.obj acadexport.obj AutoCADHelper.obj AutoCADPrintForm.obj 
-      AutoCADExportForm.obj unSignalsInsert.obj unAutoPoints.obj 
-      AcadExportThread.obj AutoCADPrintThread.obj AttachForm.obj MoveForm.obj 
-      AddRowsDescription.obj"/>
+      AutoCADExportForm.obj unSignalsInsert.obj AcadExportThread.obj 
+      AttachForm.obj MoveForm.obj AddRowsDescription.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -32,13 +31,13 @@
       ProgressFrm.dfm CrvPlanForm.dfm VisSetForm.dfm SaveViewForm.dfm 
       OpenViewForm.dfm NewView.dfm MacrosForm.dfm ConstHelp.dfm BuildSlopes.dfm 
       BuildWidePart.dfm RoadMark.dfm ErrorObjectDlg.dfm AutoCADPrintForm.dfm 
-      AutoCADExportForm.dfm unSignalsInsert.dfm unAutoPoints.dfm AttachForm.dfm 
-      MoveForm.dfm AddRowsDescription.dfm"/>
+      AutoCADExportForm.dfm unSignalsInsert.dfm AttachForm.dfm MoveForm.dfm 
+      AddRowsDescription.dfm"/>
     <LIBFILES value=""/>
-    <LIBRARIES value="vclnp.lib bcbsmp.lib acad.lib MyActiveX.lib vclx.lib vcldb.lib adortl.lib 
-      dbrtl.lib vcl.lib rtl.lib"/>
+    <LIBRARIES value="vclnp.lib dclusr.lib bcbsmp.lib MyActiveX.lib vclx.lib vcldb.lib 
+      adortl.lib dbrtl.lib vcl.lib rtl.lib"/>
     <SPARELIBS value="rtl.lib vcl.lib dbrtl.lib adortl.lib vcldb.lib vclx.lib MyActiveX.lib 
-      acad.lib bcbsmp.lib"/>
+      bcbsmp.lib dclusr.lib"/>
     <PACKAGES value="vclx.bpi rtl.bpi vcl.bpi dbrtl.bpi vcldb.bpi bcbsmp.bpi dclocx.bpi 
       qrpt.bpi teeui.bpi vclsmp.bpi teedb.bpi tee.bpi ibsmp.bpi dss.bpi 
       nmfast.bpi inetdb.bpi inet.bpi adortl.bpi"/>
@@ -49,23 +48,21 @@
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
-    <USERDEFINES value="NO_PROMPT_ON_HRCHECK_FAILURE;NO_PROMPT_ON_ASSERTE_FAILURE;_DEBUG"/>
+    <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS;_BCB_ATL_DEBUG"/>
     <MAINSOURCE value="RSign.cpp"/>
-    <INCLUDEPATH value="&quot;C:\Program Files\Borland\CBuilder6\Imports&quot;;SaveCursor;C:\CBPRJ\asudor;&quot;E:\Program Files\borland\CBuilder6\Projects&quot;;&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;&quot;..\..\program files\borland\cbuilder3\projects&quot;;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib"/>
-    <LIBPATH value="&quot;C:\Program Files\Borland\CBuilder6\Imports&quot;;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;&quot;E:\Program Files\borland\CBuilder6\Projects&quot;;&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;&quot;..\..\program files\borland\cbuilder3\projects&quot;;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib"/>
+    <INCLUDEPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
+    <LIBPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
     <WARNINGS value="-w-par -w-8027 -w-8026"/>
     <WARNOPTSTR value=""/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I&quot;C:\Program Files\Borland\CBuilder6\Imports&quot; -ISaveCursor 
-      -IC:\CBPRJ\asudor -I&quot;E:\Program Files\borland\CBuilder6\Projects&quot; 
-      -I&quot;C:\Program Files\Borland\CBuilder6\Projects&quot; 
-      -I&quot;..\..\program files\borland\cbuilder3\projects&quot; -I..\..\projects 
-      -I$(BCB)\include -I$(BCB)\include\vcl -I$(BCB)\include\atl 
-      -IC:\CBPRJ\asudor\EhLib -src_suffix cpp -DNO_PROMPT_ON_HRCHECK_FAILURE 
-      -DNO_PROMPT_ON_ASSERTE_FAILURE -D_DEBUG -boa"/>
+    <IDLCFLAGS value="-I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; 
+      -I..\..\Borland\CBuilder6\Projects -IActiveX -I$(BCB)\include 
+      -I$(BCB)\include\vcl -I$(BCB)\include\atl 
+      -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot; -src_suffix cpp 
+      -DNO_PROMPT_ON_ASSERTE_FAILURE -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -boa"/>
     <CFLAG1 value="-Od -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; -Hc -Vx -Ve 
       -Tkh30000 -X- -r- -a8 -b -k -y -v -vi- -c -tW -tWM"/>
     <CFLAG2 value=""/>
@@ -151,9 +148,7 @@
       <FILE FILENAME="AutoCADPrintForm.cpp" FORMNAME="FAutoCADPrint" UNITNAME="AutoCADPrintForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AutoCADExportForm.cpp" FORMNAME="FAutoCADExport" UNITNAME="AutoCADExportForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="unSignalsInsert.cpp" FORMNAME="frmSignalsInsert" UNITNAME="unSignalsInsert" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="unAutoPoints.cpp" FORMNAME="FAutoPoints" UNITNAME="unAutoPoints" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AcadExportThread.cpp" FORMNAME="" UNITNAME="AcadExportThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="AutoCADPrintThread.cpp" FORMNAME="" UNITNAME="AutoCADPrintThread" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AttachForm.cpp" FORMNAME="frmAttachParams" UNITNAME="AttachForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="MoveForm.cpp" FORMNAME="moveDialog" UNITNAME="MoveForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AddRowsDescription.cpp" FORMNAME="FAddRowDescription" UNITNAME="AddRowsDescription" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -190,20 +185,25 @@ ProductVersion=1.0.0.0
 Comments=
 
 [Excluded Packages]
-c:\program files\borland\cbuilder6\Bin\dclite60.bpl=Borland Integrated Translation Environment
-c:\program files\borland\cbuilder6\Projects\Bpl\DclEhLibB60.bpl=EhLib 3.4 Components
+c:\program files (x86)\borland\cbuilder6\Bin\dclite60.bpl=Borland Integrated Translation Environment
 
 [HistoryLists\hlIncludePath]
-Count=3
-Item0=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
-Item1=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
-Item2=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl
+Count=6
+Item0=..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item1=ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item2=ActiveX;C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
+Item3=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
+Item4=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
+Item5=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl
 
 [HistoryLists\hlLibraryPath]
-Count=3
-Item0=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
-Item1=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
-Item2=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib
+Count=6
+Item0=..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item1=ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item2=ActiveX;C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
+Item3=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
+Item4=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
+Item5=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib
 
 [HistoryLists\hlDebugSourcePath]
 Count=1
@@ -211,17 +211,17 @@ Item0=$(BCB)\source\vcl
 
 [HistoryLists\hlConditionals]
 Count=5
-Item0=NO_PROMPT_ON_HRCHECK_FAILURE;NO_PROMPT_ON_ASSERTE_FAILURE;_DEBUG
-Item1=NO_PROMPT_ON_HRCHECK_FAILURE;NO_PROMPT_ON_ASSERTE_FAILURE
-Item2=_DEBUG;NO_PROMPT_ON_HRCHECK_FAILURE;NO_PROMPT_ON_ASSERTE_FAILURE
-Item3=_DEBUG;NO_PROMPT_ON_HRCHECK_FAILURE
+Item0=NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG
+Item1=NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE
+Item2=_DEBUG;NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE
+Item3=_DEBUG;NO_PROMPT_ON_ASSERTE_FAILURE
 Item4=_DEBUG
 
 [Debugging]
 DebugSourceDirs=$(BCB)\source\vcl
 
 [Parameters]
-RunParams=
+RunParams=&gt; log.txt
 Launcher=
 UseLauncher=0
 DebugCWD=

@@ -63,6 +63,12 @@ IMPPROPERTY(TRoadOut,TRoadSurface,Surface)
 IMPPROPERTY(TRoadOut,int,Length)
 IMPPROPERTY(TRoadOut,TAttachWildness,Wildness)
 
+IMPPROPERTY(TDressLayer,TLayer,Layer)
+IMPPROPERTY(TDressLayer,__int32,UpperDeep)
+IMPPROPERTY(TDressLayer,__int32,LowerDeep)
+
+
+
 IMPPROPERTY(TRoadMark,int, Area)
 IMPPROPERTY(TRoadMark,int, Length)
 IMPPROPERTY(TRoadMark,int, Offset)
@@ -108,6 +114,7 @@ IMPPROPERTY(TRoadObstacle,__int32,Width)                    // Ширина моста в са
 IMPPROPERTY(TDTP, __int32, CarCount)                       // Количество машин в ДТП
 
 IMPPROPERTY(TBandRoadPart,__int32, Width)                // Ширина участка дороги
+IMPPROPERTY(TBandRoadPart,__int32, EWidth)               // Окончательная Ширина участка дороги
 IMPPROPERTY(TZemPolotno,__int32,TopWidth)                // Ширина зем полотна по верху
 
 IMPPROPERTY(TRoadDress,TDressMaterial,Material)
