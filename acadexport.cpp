@@ -1630,9 +1630,11 @@ AcadBlockReferencePtr TAcadExport::DrawBarrier(vector<TPoint> &points, AnsiStrin
         if(xoffset<0)angle+=M_PI;
         length = sqrt(yoffset*yoffset + xoffset*xoffset);
 
+        block.Unbind();
         block = AutoCAD.DrawBlock(blockname,pMin.x,pMin.y, angle);
-        if(!fExist) block->color = NotExistColor;
+
         if(block.IsBound()) {
+            if(!fExist) block->color = NotExistColor;        
             AutoCAD.SetPropertyDouble(block,"Length",length);
             AutoCAD.SetPropertyList(block,"Flip",fFlip);
             if(i>0){

@@ -51,17 +51,17 @@
     <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS;_BCB_ATL_DEBUG"/>
     <MAINSOURCE value="RSign.cpp"/>
-    <INCLUDEPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
-    <LIBPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
+    <INCLUDEPATH value="&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
+    <LIBPATH value="&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
     <WARNINGS value="-w-par -w-8027 -w-8026"/>
     <WARNOPTSTR value=""/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; 
+    <IDLCFLAGS value="-I&quot;D:\Program Files (x86)\Borland\CBuilder6\Projects&quot; 
       -I..\..\Borland\CBuilder6\Projects -IActiveX -I$(BCB)\include 
       -I$(BCB)\include\vcl -I$(BCB)\include\atl 
-      -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot; -src_suffix cpp 
+      -I&quot;D:\Program Files (x86)\Borland\CBuilder6\Imports&quot; -src_suffix cpp 
       -DNO_PROMPT_ON_ASSERTE_FAILURE -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -boa"/>
     <CFLAG1 value="-Od -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; -Hc -Vx -Ve 
       -Tkh30000 -X- -r- -a8 -b -k -y -v -vi- -c -tW -tWM"/>
@@ -184,26 +184,27 @@ ProductName=
 ProductVersion=1.0.0.0
 Comments=
 
-[Excluded Packages]
-c:\program files (x86)\borland\cbuilder6\Bin\dclite60.bpl=Borland Integrated Translation Environment
-
 [HistoryLists\hlIncludePath]
-Count=6
-Item0=..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
-Item1=ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
-Item2=ActiveX;C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
-Item3=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
-Item4=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
-Item5=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl
+Count=8
+Item0=D:\Program Files (x86)\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;D:\Program Files (x86)\Borland\CBuilder6\Imports
+Item1=C:\Program Files (x86)\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item2=..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item3=ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item4=ActiveX;C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
+Item5=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
+Item6=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
+Item7=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl
 
 [HistoryLists\hlLibraryPath]
-Count=6
-Item0=..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
-Item1=ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
-Item2=ActiveX;C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
-Item3=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
-Item4=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
-Item5=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib
+Count=8
+Item0=D:\Program Files (x86)\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;D:\Program Files (x86)\Borland\CBuilder6\Imports
+Item1=C:\Program Files (x86)\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item2=..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item3=ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item4=ActiveX;C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
+Item5=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
+Item6=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
+Item7=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib
 
 [HistoryLists\hlDebugSourcePath]
 Count=1
@@ -241,5 +242,10 @@ LinkCGLIB=0
 AddServerUnit=1
 AddClientUnit=1
 PrecompiledHeaders=1
+
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
   </IDEOPTIONS>
 </PROJECT>
