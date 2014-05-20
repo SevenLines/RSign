@@ -154,6 +154,13 @@ void AcadExportThread::OutInfoLog(AnsiString &str)
 }
 
 
+void AcadExportThread::ProgressChanged(int progress, AnsiString &message)
+{
+    SET_PROGRESS_FORM_POSITION(progress);
+}
+
+
+
 void __fastcall AcadExportThread::Execute()
 {
     int countOfExportItems;
@@ -189,6 +196,7 @@ void __fastcall AcadExportThread::Execute()
     R->SetOutBound(L1,L2,-DX,DX);
 
     aexp->OutInfoLog = OutInfoLog;
+    aexp->ProgressChanged = ProgressChanged;
 
     if (FAutoCADExport->ExportAddRows) {
         if ( !(aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows,true) || aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows,true)) ) {
@@ -977,10 +985,14 @@ void __fastcall AcadExportThread::Execute()
             
                 currentItem++;
                 SET_PROGRESS_FORM_CAPTION_EX("выводим дополнительные строки из файлов в верхнюю таблицу")
+                SET_PROGRESS_FORM_MINMAX(0,100);
+                SET_PROGRESS_FORM_POSITION(0)
                 if (aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows)==-1) {
                    goto export_end;
                 }
 
+                SET_PROGRESS_FORM_MINMAX(0,100);
+                SET_PROGRESS_FORM_POSITION(0)
                 currentItem++;
                 SET_PROGRESS_FORM_CAPTION_EX("выводим дополнительные строки из файлов в нижнюю таблицу")
                 if (aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows)==-1) {

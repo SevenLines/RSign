@@ -109,6 +109,7 @@ class TAcadExport {
 
 
       void (__closure *OutInfoLog)(AnsiString &);
+      void (__closure *ProgressChanged)(int , AnsiString &);
 
       __fastcall TAcadExport(void);
       __fastcall ~TAcadExport(void);

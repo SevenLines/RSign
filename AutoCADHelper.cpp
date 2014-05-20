@@ -467,8 +467,12 @@ bool AutoCADHelper::GetPropertyPoint(  AcadBlockReferencePtr ptrBlock,
        }
      }
   }catch(...){
-      std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
-      << " of object " << ptrBlock->Name  << std::endl;
+        AnsiString blockName = "undefined";
+        try {
+            blockName = ptrBlock->Name;
+        } catch (...) {}
+        std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                   << " of object " << blockName << std::endl;
   }
   return false;
 }
@@ -540,8 +544,12 @@ void AutoCADHelper::SetAttribute(AcadBlockReferencePtr ptrBlock,
        }
      }
    }catch(...){
-         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
-                   << " of object " << ptrBlock->Name << std::endl;
+        AnsiString blockName = "undefined";
+        try {
+            blockName = ptrBlock->Name;
+        } catch (...) {}
+        std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                   << " of object " << blockName << std::endl;
    }
 }
 
@@ -572,8 +580,12 @@ bool AutoCADHelper::GetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString
        }
      }
   }catch(...){
-       std::cerr << "Failed to get '" << PropertyName.c_str() << "'"
-                 << " of object " << ptrBlock->Name << std::endl;
+      AnsiString blockName = "undefined";
+      try {
+          blockName = ptrBlock->Name;
+      } catch (...) {}
+      std::cerr << "Failed to get '" << PropertyName.c_str() << "'"
+           << " of object " << blockName << std::endl;
   }
   return false;
 }
@@ -605,8 +617,12 @@ bool AutoCADHelper::GetPropertyVariant(AcadBlockReferencePtr ptrBlock, AnsiStrin
        }
      }
   }catch(...){
+      AnsiString blockName = "undefined";
+      try {
+          blockName = ptrBlock->Name;
+      } catch (...) {}
       std::cerr << "Failed to get '" << PropertyName.c_str() << "'"
-           << " of object " << ptrBlock->Name << std::endl;
+           << " of object " << blockName << std::endl;
   }
   return false;
 }
@@ -649,8 +665,12 @@ bool AutoCADHelper::SetPropertyPoint(AcadBlockReferencePtr ptrBlock, AnsiString 
        }
      }
   }catch(...){
-         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
-                   << " of object " << ptrBlock->Name << std::endl;
+        AnsiString blockName = "undefined";
+        try {
+            blockName = ptrBlock->Name;
+        } catch (...) {}
+        std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                   << " of object " << blockName << std::endl;
   }
   return false;
 }
@@ -682,8 +702,12 @@ bool AutoCADHelper::SetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString
        }
      }
   }catch(...){
-         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
-                   << " of object " << ptrBlock->Name << std::endl;
+        AnsiString blockName = "undefined";
+        try {
+            blockName = ptrBlock->Name;
+        } catch (...) {}
+        std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                   << " of object " << blockName << std::endl;
   }
   return false;
 }
@@ -715,8 +739,12 @@ bool AutoCADHelper::SetPropertyListVariant(AcadBlockReferencePtr ptrBlock, AnsiS
        }
      }
   }catch(...){
-         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
-                   << " of object " << ptrBlock->Name << std::endl;
+      AnsiString blockName = "undefined";
+      try {
+          blockName = ptrBlock->Name;
+      } catch (...) {}
+      std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                 << " of object " << blockName << std::endl;
   }
   return false;
 }
@@ -748,8 +776,12 @@ bool AutoCADHelper::SetPropertyList(AcadBlockReferencePtr ptrBlock, AnsiString P
        }
      }
   }catch(...){
-         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
-                   << " of object " << ptrBlock->Name << std::endl;
+        AnsiString blockName = "undefined";
+        try {
+            blockName = ptrBlock->Name;
+        } catch (...) {}
+        std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
+                   << " of object " << blockName << std::endl;
   }
   return false;
 }
