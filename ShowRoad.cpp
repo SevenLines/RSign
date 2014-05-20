@@ -55,6 +55,7 @@ FPan1Vis=false;
 FPan2Vis=false;
 FPan3Vis=false;
 FPan4Vis=false;
+FPan5Vis=false;
 FEditedData=NULL;
 FMetricData=NULL;
 FVideoData=NULL;
@@ -67,6 +68,7 @@ FOutMan=NULL;
 FSlopesCont=NULL;
 FVisCont=NULL;
 FDressCont=NULL;
+FLayersCont=NULL;
 FVector=NULL;
 HRuler=new TRuler(RulPanel);
 HRuler->Parent=RulPanel;
@@ -116,6 +118,8 @@ delete FSlopesCont;
 FSlopesCont=NULL;
 delete FVisCont;
 FVisCont=NULL;
+delete FLayersCont;
+FLayersCont=NULL;
 delete FDressCont;
 FDressCont=NULL;
 delete SelectRect;
@@ -194,6 +198,7 @@ FOutMan->SetDefaults(FDrawMan);
 FSlopesCont=new TDrawBitmap;
 FDressCont=new TDrawBitmap;
 FVisCont=new TDrawBitmap;
+FLayersCont=new TDrawBitmap;
 SelectRect=new TSelectRect(PBox->Canvas);
 SelectObj=new TSelectObj(PBox->Canvas,FDrawMan);
 ShowPanels();
@@ -1128,22 +1133,26 @@ Splitter5->Parent=NULL;
 VisPan->Align=al;
 ProPan->Align=al;
 VisModePan->Align=al;
+LayerPan->Align=al;
 
 Splitter2->Align=al;
 Splitter3->Align=al;
 Splitter5->Align=al;
+Splitter6->Align=al;
 
 if (FPlanKind==pkGorizontal)
     {
     Splitter2->Height=6;
     Splitter3->Height=6;
     Splitter5->Height=6;
+    Splitter6->Height=6;
     }
 else
     {
     Splitter2->Width=6;
     Splitter3->Width=6;
     Splitter5->Width=6;
+    Splitter6->Width=6;
     }
 ShowPanels();
 InvalidateBoxes();
@@ -1154,19 +1163,20 @@ void __fastcall TRoadFrm::ShowPanels(void)
 TWinControl *VParent=VisPan->Parent;
 TWinControl *PParent=ProPan->Parent;
 TWinControl *QParent=VisModePan->Parent;
+TWinControl *LParent=LayerPan->Parent;
 
 ProPan->Parent=NULL;
 VisPan->Parent=NULL;
 VisModePan->Parent=NULL;
+LayerPan->Parent=NULL;
 Splitter2->Parent=NULL;
 Splitter3->Parent=NULL;
 Splitter5->Parent=NULL;
-
+Splitter6->Parent=NULL;
 
 if (FPan1Vis)
     Splitter2->Parent=VParent;
 Splitter2->Visible=FPan1Vis;
-
 VisPan->Parent=VParent;
 VisPan->Visible=FPan1Vis;
 
@@ -1182,12 +1192,22 @@ Splitter5->Visible=FPan4Vis;
 VisModePan->Parent=QParent;
 VisModePan->Visible=FPan4Vis;
 
+if (FPan5Vis)
+   Splitter6->Parent=LParent;
+Splitter6->Visible=FPan5Vis;
+LayerPan->Parent=LParent;
+LayerPan->Visible=FPan5Vis;
+
+
+
 N11->Checked=FPan1Vis;
 N21->Checked=FPan2Vis;
 N10->Checked=FPan4Vis;
+N12->Checked=FPan5Vis;
 MainForm->N50->Checked=FPan2Vis;
 MainForm->N74->Checked=FPan1Vis;
 MainForm->N75->Checked=FPan4Vis;
+MainForm->N81->Checked=FPan5Vis;
 }
 
 //---------------------------------------------------------------------------
@@ -1583,17 +1603,19 @@ void __fastcall TRoadFrm::InvalidateBoxes(void)
 {
 FVMinL=FPMinL+(double)HIDEBOUND*FSclL/FDpsm;
 FVMaxL=FPMaxL-(double)HIDEBOUND*FSclL/FDpsm;
-NeedRepDraw=NeedRepDress=NeedRepSlopes=NeedRepVis=true;
+NeedRepDraw=NeedRepDress=NeedRepSlopes=NeedRepVis=NeedRepLayers=true;
 if ((FVMinL<FVMaxL)&&(FMinX<FMaxX))
     {
     PrepareDrawCont();
     PrepareSlopesCont();
     PrepareVisCont();
+    PrepareLayersCont();
     }
 PBox->Invalidate();
 PrBox->Invalidate();
 PvBox->Invalidate();
 PvisBox->Invalidate();
+PlayerBox->Invalidate();
 }
 
 void __fastcall TRoadFrm::DrawFocusRect(void)
@@ -1922,6 +1944,34 @@ if (NeedRepVis&&FReadyForDrawing) {
     FDrawMan->DrawVisibleMode(FVisCont,&r,FPlanKind,FPlanDirect);
     FVisCont->FinishUpdating();
     NeedRepVis=false;
+}
+}
+
+void __fastcall TRoadFrm::PrepareLayersCont(void) {
+if (NeedRepLayers&&FReadyForDrawing) {
+    int w,h;
+    if (FPlanKind==pkGorizontal)
+      w=PBox->Width,h=PlayerBox->Height;
+    else
+      w=PlayerBox->Width,h=PBox->Height;
+    FLayersCont->SetSize(w,h);
+    FLayersCont->SetParam(FVMinL,FVMaxL,FPMinX,FPMaxX);
+    FLayersCont->PrepareUpdating();
+    FDrawMan->FillCont(FLayersCont);
+    TRect r(0,0,w,h);
+    if (FPlanKind==pkGorizontal)
+        {
+        r.left+=HIDEBOUND;
+        r.right-=HIDEBOUND;
+        }
+    else
+        {
+        r.top+=HIDEBOUND;
+        r.bottom-=HIDEBOUND;
+        }
+    FDrawMan->DrawDressLayers(FLayersCont,&r,FPlanKind,FPlanDirect);
+    FLayersCont->FinishUpdating();
+    NeedRepLayers=false;
 }
 }
 
@@ -3030,6 +3080,8 @@ MainForm->N74->Enabled=true;
 MainForm->N74->Checked=FPan1Vis;
 MainForm->N75->Enabled=true;
 MainForm->N75->Checked=FPan4Vis;
+MainForm->N81->Enabled=true;
+MainForm->N81->Checked=FPan5Vis;
 MainForm->N21->Enabled=true;
 MainForm->N22->Enabled=true;
 MainForm->N24->Enabled=true;
@@ -3170,6 +3222,12 @@ InvalidateBoxes();
 void __fastcall TRoadFrm::ShowVisPlan(void)
 {
 FPan4Vis=!FPan4Vis;
+ShowPanels();
+InvalidateBoxes();
+}
+void __fastcall TRoadFrm::ShowDressLayers(void)
+{
+FPan5Vis=!FPan5Vis;
 ShowPanels();
 InvalidateBoxes();
 }
@@ -4272,6 +4330,27 @@ void __fastcall TRoadFrm::PvisBoxMouseUp(TObject *Sender,
 
 
     
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TRoadFrm::N12Click(TObject *Sender)
+{
+ShowDressLayers();        
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TRoadFrm::PlayerBoxPaint(TObject *Sender)
+{
+PrepareLayersCont();
+int dl;
+if (FPlanKind==pkGorizontal) {
+        FLayersCont->DrawTo(PlayerBox->Canvas,PBox->Left,0);
+        dl=PBox->Left;
+} else {
+        FLayersCont->DrawTo(PlayerBox->Canvas,0,PBox->Top);
+        dl=PBox->Top;
+}
+DrawMarker(PlayerBox,dl);
 }
 //---------------------------------------------------------------------------
 

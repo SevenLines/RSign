@@ -154,6 +154,8 @@ if (R!=FActiveRoad)
         N74->Checked=false;
         N75->Enabled=false;
         N75->Checked=false;
+        N81->Enabled=false;
+        N81->Checked=false;
         N59->Enabled=false;
         PrevObjBut->Enabled=false;
         NextObjBut->Enabled=false;
@@ -1096,6 +1098,13 @@ if (FActiveRoad)
 void __fastcall TMainForm::N80Click(TObject *Sender)
 {
    ShellExecute(0, 0, "RSign.log", 0, 0 , SW_SHOW );   
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::N81Click(TObject *Sender)
+{
+if (FActiveRoad)
+    FActiveRoad->ShowDressLayers();
 }
 //---------------------------------------------------------------------------
 

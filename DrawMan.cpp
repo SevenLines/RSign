@@ -2774,6 +2774,60 @@ int dh,dz,dl;
    }
 }
 
+void __fastcall TDrawManager::DrawDressLayers(TDrawContents *Cont,TRect *OutRect,TPlanKind pk,TPlanDirect pd) {
+   int dh;
+   int maxdeep=500;
+   if (FPlanKind==pkGorizontal)
+      dh=OutRect->bottom-OutRect->top;
+   else
+      dh=OutRect->right-OutRect->left;
+   if (FVisSet->MetricSource) {
+      TObjList<TRoadObject> *Src=FVisSet->MetricSource->Objects;
+      int Count=Src->Count;
+      TExtPolyline *Poly=new TExtPolyline(4,1);
+      POINT *P=Poly->Points;
+      TRect R;
+      TObjList<TDrwParamRec> *DrPar=Dict->DrwParams;
+      TObjList<TDrwClassesRec> *DrCl=Dict->DrwClasses;
+      for (int i=0;i<Count;i++) {
+         TDressLayer *Dl=dynamic_cast<TDressLayer*>(Src->Items[i]);
+         if (Dl && Dl->LMax>Cont->L1 && Dl->LMin<Cont->L2) {
+            int X1,X2,Y1,Y2,H1,H2;
+            int L1=max(Dl->LMin,Cont->L1);
+            int L2=min(Dl->LMax,Cont->L2);
+            Road->ConvertPoint(L1,0,X1,Y1);
+            Road->ConvertPoint(L2,0,X2,Y2);
+            H1=(Dl->UpperDeep*dh)/maxdeep;
+            H2=(Dl->LowerDeep*dh)/maxdeep;
+
+//            B=Dvm->Direction==roUnDirect? dz+border :0;
+
+            if (FPlanKind==pkGorizontal) {
+               P[0].x=X1;   P[0].y=H1;
+               P[1].x=X1;   P[1].y=H2;
+               P[2].x=X2;   P[2].y=H2;
+               P[3].x=X2;   P[3].y=H1;
+            } else  {
+               P[0].x=H1;   P[0].y=Y1;
+               P[1].x=H2;   P[1].y=Y1;
+               P[2].x=H2;   P[2].y=Y2;
+               P[3].x=H1;   P[3].y=Y2;
+            }
+            int drclass=Dl->DrwClassId;
+            TDrwClassesRec *ClRec=DrCl->Items[drclass];
+            if (ClRec!=0) {
+               for (int k=0;k<MAXDRWPARAM;k++) {
+                  TDrwParamRec *Rec=NULL;
+                  try{Rec=DrPar->Items[ClRec->DrwParamId[k]];}
+                  catch (...) {}
+                  if (!Rec)  continue;
+                  CallDrawFunc(Cont,Poly,Rec,&R,false);
+               }
+            }
+         }
+      }
+   }
+}
 
 void __fastcall TDrawManager::DrawVisibleMode(TDrawContents *Cont,TRect *OutRect,TPlanKind pk,TPlanDirect pd) {
    int border=FVisModeBorder;

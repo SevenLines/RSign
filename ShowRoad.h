@@ -123,15 +123,9 @@ __published:    // IDE-managed Components
     TSplitter *Splitter1;
     TPanel *ARulPan;
     TPanel *VisPan;
-    TSplitter *Splitter2;
     TPanel *AVisPan;
     TSplitter *Splitter3;
     TPanel *ProPan;
-    TPanel *PlanPan;
-    TPaintBox *PBox;
-    TPanel *VRulPanel;
-    TSplitter *Splitter4;
-    TScrollBar *VScroll;
     TSpeedButton *SpeedButton5;
     TSpeedButton *SpeedButton6;
     TSpeedButton *SpeedButton7;
@@ -175,6 +169,17 @@ __published:    // IDE-managed Components
    TSplitter *Splitter5;
    TMenuItem *N10;
    TPaintBox *PvisBox;
+        TPanel *ALayerPan;
+        TPanel *LayerPan;
+        TSplitter *Splitter6;
+        TPanel *PlanPan;
+        TPaintBox *PBox;
+        TSplitter *Splitter4;
+        TPanel *VRulPanel;
+        TScrollBar *VScroll;
+        TMenuItem *N12;
+        TPaintBox *PlayerBox;
+        TSplitter *Splitter2;
     void __fastcall FormActivate(TObject *Sender);
     void __fastcall PaintRoad(TObject *Sender);
     void __fastcall SpeedButton1Click(TObject *Sender);
@@ -237,6 +242,8 @@ __published:    // IDE-managed Components
    void __fastcall PvisBoxPaint(TObject *Sender);
    void __fastcall PvisBoxMouseUp(TObject *Sender, TMouseButton Button,
           TShiftState Shift, int X, int Y);
+        void __fastcall N12Click(TObject *Sender);
+        void __fastcall PlayerBoxPaint(TObject *Sender);
 private:        // User declarations
        /* МИША */
        TObjPlacement lPlace;
@@ -317,7 +324,7 @@ private:        // User declarations
     __int32 FSclL;  // Знаменатель масштаба по длине
     __int32 FKmInPage; //Количество километров на отображамой части
     double FDpsm;   // Пикселей в сантиметре
-    bool NeedRepDraw,NeedRepDress,NeedRepSlopes,NeedRepVis;
+    bool NeedRepDraw,NeedRepDress,NeedRepSlopes,NeedRepVis,NeedRepLayers;
     TDrawManager *FDrawMan;
     __int32 __fastcall GetBaseScaleL(void)
         {return FDrawMan->BaseScaleL;}
@@ -339,6 +346,7 @@ private:        // User declarations
     TDrawContents *FSlopesCont;
     TDrawContents *FDressCont;
     TDrawContents *FVisCont;
+    TDrawContents *FLayersCont;    
 
 //    TDtaSource *FDataSour;
 // Источник данных для операций редактирования
@@ -354,7 +362,7 @@ private:        // User declarations
     TDictSource *FDictSour;
     TSharedObjSource *FShared;
     // Переменые для проверки видимости панелей
-    bool FPan1Vis,FPan2Vis,FPan3Vis,FPan4Vis;
+    bool FPan1Vis,FPan2Vis,FPan3Vis,FPan4Vis,FPan5Vis;
     void __fastcall AlignPanels(void);
     void __fastcall ShowPanels(void);
     void __fastcall ShowScale(void);
@@ -383,6 +391,7 @@ private:        // User declarations
     void __fastcall PrepareSlopesCont(void);
     void __fastcall PrepareDressCont(void);
     void __fastcall PrepareVisCont(void);
+    void __fastcall PrepareLayersCont(void);
 // Функция для обновления локальной информации по объектам
 // Пока локальной информации нет пересчитывает параметры отображения
     void __fastcall UpdateLocalInfo(void);
@@ -460,8 +469,9 @@ public:         // User declarations
 
     void __fastcall ShowProfil(void);
     void __fastcall ShowDress(void);
+    void __fastcall ShowDressLayers(void);    
     void __fastcall ShowVisPlan(void);
-    void __fastcall ShowMapPlan(void);    
+    void __fastcall ShowMapPlan(void);
 
 // показывает кадр на видео
     void __fastcall SynchronizeVideo(void);
