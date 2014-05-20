@@ -906,8 +906,10 @@ void __fastcall TRoadFrm::Print(int minl,int maxl,int plen,int scll,int sclx,int
 if (Printer()==NULL)
     return;
 TPrintContents *prncont=new TPrintContents;
+
 for (;minl<maxl;minl+=plen)
     {
+    Printer()->Title = IntToStr(page);
     void *dc=Printer()->Handle;
     int hsize=GetDeviceCaps(dc,HORZRES);
     int vsize=GetDeviceCaps(dc,VERTRES);
@@ -942,7 +944,9 @@ for (;minl<maxl;minl+=plen)
     DrawMainPlan(FOutMan,prncont,scll,sclx,(double)pdpi/2.54,&OutRect);
     DrawFrames(FOutMan,prncont,pdpi);
     prncont->FinishUpdating();
+
     }
+  
 delete prncont;
 }
 
