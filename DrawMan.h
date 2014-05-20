@@ -254,6 +254,7 @@ void __fastcall SetDefaults(TDrawManager *Source);
 void __fastcall FillCont(TDrawContents *Cont);
 RECT* __fastcall GetRect(int n);
 virtual void __fastcall DrawVisibleMode(TDrawContents *Cont,TRect *OutRect,TPlanKind pk,TPlanDirect pd);
+virtual void __fastcall DrawDressLayers(TDrawContents *Cont,TRect *OutRect,TPlanKind pk,TPlanDirect pd);
 virtual void __fastcall GetVisModeParam(TRect *OutRect,TPlanKind pk,TPlanDirect pd,int X,int Y,int &dir,int &len);
 virtual void __fastcall DrawCurvesPlan(TDrawContents *Cont,TRect *OutRect,TPlanKind pk,TPlanDirect pd);
 virtual void __fastcall DrawProfil(TDrawContents *Cont,TRect *OutRect,TPlanKind pk,TPlanDirect pd);

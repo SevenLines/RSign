@@ -1733,6 +1733,23 @@ delete PR;
 return Res;
 }
 
+/*
+TExtPolyline* __fastcall TDressLayer::GetDefMetric(TRoad *Road) {
+    TRoadPoint Rp[4];
+    int dh=Road->FrameXMax-Road->FrameXMin;
+    Rp[0].L=LMin;
+    Rp[0].X=Road->FrameXMin;
+    Rp[1].L=LMin;
+    Rp[1].X=Road->FrameXMax;
+    Rp[2].L=LMax;
+    Rp[2].X=Road->FrameXMax;
+    Rp[3].L=LMax;
+    Rp[3].X=Road->FrameXMin;
+    TExtPolyline *Res=new TExtPolyline(4,1);
+    Road->ConvertPoly(4,Rp,Res->Points);
+    return Res;
+} */
+
 TPlanLabel* __fastcall TCarePart::GetText(int n,TRoad *Road,TDictSource *Dict)
 {
 String Str="";

@@ -120,6 +120,7 @@ __published:	// IDE-managed Components
    TMenuItem *N78;
    TMenuItem *N79;
     TMenuItem *N80;
+        TMenuItem *N81;
   void __fastcall OpenRoad(TObject *Sender);
   void __fastcall FormCreate(TObject *Sender);
   void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
@@ -187,6 +188,7 @@ __published:	// IDE-managed Components
    void __fastcall RMDesignButClick(TObject *Sender);
    void __fastcall N76Click(TObject *Sender);
     void __fastcall N80Click(TObject *Sender);
+        void __fastcall N81Click(TObject *Sender);
 
 private:	// User declarations
     void __fastcall AppShortCut(TWMKey &Key, bool &Handled);

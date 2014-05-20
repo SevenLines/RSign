@@ -426,6 +426,8 @@ DEFPROPERTY(__int32,LowerDeep)
 public:
 __fastcall TDressLayer(): TContRoadObject() {}
 __fastcall TDressLayer(__int32 id,__int32 code): TContRoadObject(id,code) {}
+//virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
+virtual TLocalisation GetLocal(void) {return locSquare;}
 } ;
 
 
