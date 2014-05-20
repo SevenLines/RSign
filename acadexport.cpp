@@ -664,8 +664,8 @@ bool _fastcall TAcadExport::ExportProfil(TExtPolyline *Poly) {
     TPoint p1, p2, p3;
 
     list<TPoint> pts;
-
-    for(i=0;i<count;i++){
+    int step = 50;
+    for(i=0;i<count;i+=step){
         points[2*i] = Poly->Points[i].x;
         points[2*i+1] = Poly->Points[i].y + tableTop.LeftTop.y - tableTop.RowOffsetY(iProfileTop);// - tableTop.RowHeight;
         pts.push_back(TPoint(points[2*i], points[2*i+1]));
@@ -677,8 +677,14 @@ bool _fastcall TAcadExport::ExportProfil(TExtPolyline *Poly) {
     float angle;
     int size = pts.size();
 
-    list<TPoint>::iterator it1, it2, it3, it;
+    /*list<TPoint> ptsApp;
 
+    for (int i=0;i<pts.size();i+=step) {
+       ptsApp.push_back(pts[i]);
+    }   */
+
+    list<TPoint>::iterator it1, it2, it3, it;
+     /*
     for(it=pts.begin();it!=pts.end();++it) {
         it1 = --it;
         ++it;
@@ -691,7 +697,7 @@ bool _fastcall TAcadExport::ExportProfil(TExtPolyline *Poly) {
             --it;
             pts.erase(it2);
         }
-    }
+    }    */
     delete[] points;
 
     size = pts.size();
