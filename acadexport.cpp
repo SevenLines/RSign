@@ -347,11 +347,11 @@ bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
     return true;
 }
 
-bool __fastcall TAcadExport::AddLayer(AnsiString name)
+bool __fastcall TAcadExport::AddLayer(AnsiString l_name)
 {
     try{
-        AutoCAD.waitForIdle();
-        BSTR name = WideString(name).c_bstr();
+//        AutoCAD.waitForIdle();
+        WideString layer_name = WideString(l_name);
         IAcadLayers *layers = AutoCAD.ActiveDocument->get_Layers();
         if (!layers)
            return false;
@@ -359,13 +359,13 @@ bool __fastcall TAcadExport::AddLayer(AnsiString name)
         layers->get_Count(&count);
         for(int i=0;i<count;++i) {
            IAcadLayer *layer = layers->Item(Variant(i));
-           if (layer && AnsiString(layer->Name) == name) {
+           if (layer && WideString(layer->Name) == layer_name) {
               AutoCAD.ActiveDocument->ActiveLayer = layer;
               return true;
            }
         }
-        AutoCAD.waitForIdle();
-        IAcadLayer * layer_ptr = layers->Add(name);
+//        AutoCAD.waitForIdle();
+        IAcadLayer * layer_ptr = layers->Add(layer_name.c_bstr());
         AutoCAD.ActiveDocument->ActiveLayer = layer_ptr;
     }catch(...){
         return false;
@@ -2549,7 +2549,7 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
         int count;
 
         if(file.is_open()){
-            AddLayer((table==&tableBottom?"BottomAddRows":"TopAddRows")+IntToStr(iRow));
+            AddLayer(str);
             if(table->IsHeaderInclude) {
                 table->DrawHeaderText(startCount+iRow-1, str, HeaderTextHeight);
             }
