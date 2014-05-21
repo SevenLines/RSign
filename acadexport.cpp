@@ -308,6 +308,16 @@ bool __fastcall TAcadExport::BindActiveDocument()
     return false;
 }
 
+void __fastcall TAcadExport::hideApplication()
+{
+    AutoCAD.Application->Visible = 0;
+}
+
+void __fastcall TAcadExport::showApplication()
+{
+    AutoCAD.Application->Visible = -1;
+}
+
 bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
     try{
         curRoad = road;
@@ -340,8 +350,23 @@ bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
 bool __fastcall TAcadExport::AddLayer(AnsiString name)
 {
     try{
-        AcadLayerPtr layer = AutoCAD.ActiveDocument->Layers->Add(Variant(name));
-        AutoCAD.ActiveDocument->ActiveLayer = layer;
+        AutoCAD.waitForIdle();
+        BSTR name = WideString(name).c_bstr();
+        IAcadLayers *layers = AutoCAD.ActiveDocument->get_Layers();
+        if (!layers)
+           return false;
+        long count;
+        layers->get_Count(&count);
+        for(int i=0;i<count;++i) {
+           IAcadLayer *layer = layers->Item(Variant(i));
+           if (layer && AnsiString(layer->Name) == name) {
+              AutoCAD.ActiveDocument->ActiveLayer = layer;
+              return true;
+           }
+        }
+        AutoCAD.waitForIdle();
+        IAcadLayer * layer_ptr = layers->Add(name);
+        AutoCAD.ActiveDocument->ActiveLayer = layer_ptr;
     }catch(...){
         return false;
     }
@@ -2489,7 +2514,7 @@ struct ExportAddRowsOptions {
         }
         #undef INSTRUCTION
     }
-    
+
     int offset; // offset of output rows
 };
 
@@ -2553,14 +2578,26 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
                     // remove comment symbol, and trim string
                     line[1] = ' ';
                     line.Trim();
-                    // try to options
+                    // try to execute special option commands
                     ExportAddRowsOptions::FromLine(line, exportAddRowOptions);
-                } else if(s.length()>0&&(count=sscanf(line.c_str(), "%s %s",&sSPos, &sEPos))){
+                } else if(s.length()>0){
                     try{
+                        vector<AnsiString> words;
+                        Utils::split(line, " \t", words, 3);
+
                         count = strlen(sSPos)+1 + strlen(sEPos)+1;
-                        sPos = AnsiString(sSPos).ToInt() + exportAddRowOptions.offset;
-                        ePos = AnsiString(sEPos).ToInt() + exportAddRowOptions.offset;
-                        line = line.SubString(count, line.Length() - count + 1);
+                        if (!TryStrToInt(words[0], sPos)) {
+                           OutInfoLog("Неправильный формат данных: " + str2 + " - " + line);
+                           continue;
+                        }
+                        if (!TryStrToInt(words[1], ePos)) {
+                           OutInfoLog("Ошибка вывода: " + str2 + " - " + line);
+                           continue;
+                        }
+                        sPos += exportAddRowOptions.offset;
+                        ePos += exportAddRowOptions.offset;
+                        
+                        line = words[2];
 
                         ExportAddRowLine(table, startCount+iRow-1, sPos, ePos, line.Trim());
                         //table->DrawRepeatTextIntervalSpec(startCount+iRow-1, AnsiString(s.c_str()).Trim(), sPos, ePos,0,iStep,true);

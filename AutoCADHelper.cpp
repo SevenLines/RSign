@@ -48,7 +48,7 @@ void SignsCollection::Clear()
 
 void SignsCollection::CheckExistingBlocks()
 {
-   static count,i;
+   /*static count,i;
    AnsiString str;
    if(Owner){
       Clear();
@@ -56,10 +56,10 @@ void SignsCollection::CheckExistingBlocks()
         if(Owner->ActiveDocument.IsBound()){
            count = Owner->BlocksCount;
            for(i=0;i<count;i++){
-              str = Owner->Blocks[Variant(i)]->Name;
-              /*if(str =="5.19.1_5.19.2"){
+              str = Owner->Blocks[i]->Name;
+              if(str =="5.19.1_5.19.2"){
                  str = str;
-              }*/
+              }*
               signs.push_back(AutoCADSignBlockInfo(str,i));
 
            }
@@ -67,7 +67,7 @@ void SignsCollection::CheckExistingBlocks()
       }catch(...){
         return;
       }
-   }
+   } */
 }
 
 void SignsCollection::AddBlock(AnsiString name, int i)
@@ -199,14 +199,13 @@ AcadLineTypePtr AutoCADHelper::getLineType(WideString name)
    }
 }
 
-AcadDocumentPtr AutoCADHelper::getActiveDocument()
+AcadDocumentPtr &AutoCADHelper::getActiveDocument()
 {
    if(cadActiveDocument){
-     AcadDocumentPtr doc =  cadActiveDocument->GetDefaultInterface();
-     //return cadApplication->ActiveDocument;
-     return doc;
-   }else
-     return AcadDocumentPtr();
+     return cadActiveDocument->GetDefaultInterface();
+   } else {
+       throw "Can't create ptr to document, as it's not exist";
+   }
 }
 
 AutoCADHelper::AutoCADHelper():fInvertYAxe(0),fInvertXAxe(0)
@@ -1182,6 +1181,11 @@ void AutoCADHelper::SetSignLabels(AcadBlockReferencePtr block, WideString str)
 void AutoCADHelper::ResetBlocksCollection()
 {
    SignsCollection.Clear();
+}
+
+void AutoCADHelper::waitForIdle()
+{
+    while(!Application->GetAcadState()->IsQuiescent);
 }
 
 bool AutoCADHelper::IsLarger(AnsiString name)

@@ -12,6 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "Utils.h"
 
 #define M_ROWPOS(t) iTop##t, iBottom##t
 
@@ -122,6 +123,8 @@ class TAcadExport {
       bool __fastcall AddLayer(AnsiString name);
       bool __fastcall OpenDocument(AnsiString name);
       bool __fastcall BindActiveDocument();
+      void __fastcall hideApplication();
+      void __fastcall showApplication();      
 
       AnsiString RoadName;
 

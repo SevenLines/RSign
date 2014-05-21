@@ -303,7 +303,7 @@ private:
         AcadBlockPtr getBlocks(int i);
         AcadBlockPtr getBlocksByName(AnsiString BlockName);
         AcadLineTypePtr getLineType(WideString name);
-        AcadDocumentPtr getActiveDocument();
+        AcadDocumentPtr &getActiveDocument();
 
 
         WideString GetSignName(AnsiString signName);
@@ -334,6 +334,7 @@ public:
         AcadApplication *RunAutoCAD(bool fVisible=true);
         AcadApplication *BindAutoCAD();
         void ResetBlocksCollection();
+        void waitForIdle();
         bool IsLarger(AnsiString name);
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
