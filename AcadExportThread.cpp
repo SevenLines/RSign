@@ -2,6 +2,9 @@
 
 #include <vcl.h>
 
+#include "without_autocad.h"
+#ifndef WITHOUT_AUTOCAD
+
 #pragma hdrstop
 
 #include "AcadExportThread.h"
@@ -227,7 +230,7 @@ void __fastcall AcadExportThread::Execute()
         TDtaSource *DataCur = CurData==0?PrjData:CurData; // для обектов выводимых приоритено из текущего источника
 
         countOfExportItems = FAutoCADExport->CountOfExports();
-        aexp->hideApplication();
+//        aexp->hideApplication();
         switch(FAutoCADExport->ExportTo){
         case 0:
             ADD_PROGRESS_FORM_LINE("Подключение к активному документу");
@@ -1036,7 +1039,7 @@ void __fastcall AcadExportThread::Execute()
 
 // МЕТКА :D
 export_end:
-    aexp->showApplication();
+//    aexp->showApplication();
     ProgressForm->Hide();
     if ( ERROR_WAS ) {
         if (!fWickedErrorWas) {
@@ -1052,3 +1055,6 @@ export_end:
     delete R;
 }
 //---------------------------------------------------------------------------
+
+
+#endif // WITHOUT_AUTOCAD

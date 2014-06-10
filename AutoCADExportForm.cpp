@@ -1,14 +1,14 @@
 //---------------------------------------------------------------------------
-
 #include <vcl.h>
+
 #pragma hdrstop
+
 
 #include "AutoCADExportForm.h"
 #include "AddRowsDescription.h"
 #include <SysUtils.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
-#pragma link "CSPIN"
 #pragma link "CSPIN"
 #pragma resource "*.dfm"
 TFAutoCADExport *FAutoCADExport;
@@ -117,6 +117,7 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
    ini->WriteInteger("AutoCAD","RCenter",RCenter);
    ini->WriteInteger("AutoCAD","RowHeight",RowHeight);
    ini->WriteInteger("AutoCAD","GrphRowHeight",GrphRowHeight);
+   ini->WriteInteger("AutoCAD", "MinBarrierSegmentLength", MinBarrierSegmentLength);
 
    ini->WriteInteger("AutoCAD","UnderTextYOffset",UnderTextYOffset);
    ini->WriteInteger("AutoCAD","UnderTextHeight",UnderTextHeight);
@@ -144,9 +145,9 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
    ini->WriteInteger("AutoCAD", "HeaderTextHeight", HeaderTextHeight);
    ini->WriteInteger("AutoCAD","ScaleY",ScaleY);
 
-   try{ini->WriteInteger("AutoCAD", "SidewalksHatchScale", StrToInt(edtSidewalksHatchScale->Text));}catch(...){}
-   try{ini->WriteInteger("AutoCAD", "ProfileHatchScale", StrToInt(edtProfileHatchScale->Text));}catch(...){}
-   try{ini->WriteInteger("AutoCAD", "TableHatchScale", StrToInt(edtTableHatchScale->Text));}catch(...){}
+   try{ini->WriteInteger("AutoCAD", "SidewalksHatchScale", StrToInt(edtSidewalksHatchScale->Text.c_str()));}catch(...){}
+   try{ini->WriteInteger("AutoCAD", "ProfileHatchScale", StrToInt(edtProfileHatchScale->Text.c_str()));}catch(...){}
+   try{ini->WriteInteger("AutoCAD", "TableHatchScale", StrToInt(edtTableHatchScale->Text.c_str()));}catch(...){}
 
    ini->WriteBool("AutoCAD","chkGraphic",ExportGraphic);
    ini->WriteBool("AutoCAD","chkRuler",chkRuler->Checked);
@@ -210,6 +211,7 @@ void TFAutoCADExport::LoadIni(TIniFile *ini)
    edtAutoShrinkOneLetterWidth->Text = ini->ReadInteger("AutoCAD","AutoShrinkOneLetterWidth",2300);
    edtUseVerticalTextIfLess->Text = ini->ReadInteger("AutoCAD","UseVerticalTextIfLess",50);
    edtGridStep->Text = ini->ReadInteger("AutoCAD", "GridStep", 10000);
+   edtMinBarrierSegmentLength->Text = ini->ReadInteger("AutoCAD", "MinBarrierSegmentLength", 2000);
    edtSmallGridMarkHeight->Text = ini->ReadInteger("AutoCAD","SmallGridMarkHeight",0);
 
    edtGrphRowHeight->Text = ini->ReadInteger("AutoCAD","GrphRowHeight",4000);
@@ -230,10 +232,11 @@ void TFAutoCADExport::LoadIni(TIniFile *ini)
    iCur = ini->ReadInteger("AutoCAD","iCurrentDataSet",-1);
    iPrj = ini->ReadInteger("AutoCAD","iProjectDataSet",-1);
 
-   edtHeaderTextHeight->Text = ini->ReadInteger("AutoCAD", "HeaderTextHeight", 450);   
+   edtHeaderTextHeight->Text = ini->ReadInteger("AutoCAD", "HeaderTextHeight", 450);
 
    edtPath->ItemIndex = edtPath->Items->IndexOf(ini->ReadString("AutoCAD","ExportFile",""));
-   
+
+
    LoadRowsInfoFromIni(listTopRows, ini);
    LoadRowsInfoFromIni(listBottomRows, ini);
    fIniLoading = false;
@@ -762,4 +765,3 @@ void __fastcall TFAutoCADExport::btnShowInfoClick(TObject *Sender)
     FAddRowDescription->Show();    
 }
 //---------------------------------------------------------------------------
-

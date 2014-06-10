@@ -1,6 +1,8 @@
 #ifndef AutoCADHelperH
-#define AutoCADHelperH 
+#define AutoCADHelperH
 
+#include "without_autocad.h"
+#ifndef WITHOUT_AUTOCAD
 
 #include "AutoCAD_OCX.h"
 #include <string.h>
@@ -475,5 +477,8 @@ public:
                                                 write = set_OnActiveDocumentBeginClose};
 };
 
+#endif // WITHOUT_AUTOCAD
 
 #endif
+
+

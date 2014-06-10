@@ -2,6 +2,10 @@
 
 #ifndef acadexportH
 #define acadexportH
+
+#include "without_autocad.h"
+#ifndef WITHOUT_AUTOCAD
+
 #include "Metrics.h"
 #include "Const.h"
 #include "RoadObj.h"
@@ -59,6 +63,7 @@ class TAcadExport {
       int iProfileHatchScale;
       int iSidewalsHatchScale;
       int iFillHatchScale;
+      int iMinBarrierSegmentLength;
 
 
       int iStep;   //шаг в сантиметрах   
@@ -78,7 +83,7 @@ class TAcadExport {
       int M_ROWPOS(0),M_ROWPOS(Slopes),M_ROWPOS(Barriers),M_ROWPOS(MoundH),M_ROWPOS(Curves),
           M_ROWPOS(AxeCount),M_ROWPOS(Sidewalks),M_ROWPOS(RoadCover), M_ROWPOS(AddRow);
 
-      int iProfileTop, iBottomArtifacts, iGraphic, iBottomSurface;
+      int iProfileTop, iBottomArtifacts, iGraphic, iBottomSurface, iRulerHeight;
       int iStart, iEnd;
 
       int tabOffsetRoadMark;
@@ -186,4 +191,8 @@ class TAcadExport {
       void __fastcall EndDocument();
 };
 //---------------------------------------------------------------------------
+
+#endif // WITHOUT_AUTOCAD
+
 #endif
+

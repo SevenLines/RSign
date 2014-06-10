@@ -1,6 +1,11 @@
 //---------------------------------------------------------------------------
 
+
+
 #pragma hdrstop
+
+#include "without_autocad.h"
+#ifndef WITHOUT_AUTOCAD
 
 #include "acadexport.h"
 #include "AcadExportThread.h"
@@ -376,7 +381,7 @@ bool __fastcall TAcadExport::AddLayer(AnsiString l_name)
 
 bool __fastcall TAcadExport::DrawTables(bool fWithRuler)
 {
-    int i, iRulerHeight=fWithRuler?5000:0;
+    int i;
 
     if(tableTop.RowsCount)tableTop.DrawTable();
     if(tableTop.drawHeaders) {
@@ -441,10 +446,10 @@ bool __fastcall TAcadExport::ExportTables(TFAutoCADExport *form)
     fLeftValueOnly6_13 = form->ExportLeftValueOnly6_13;
 
     RCenter = form->RCenter;
-    int iRulerHeight=form->ExportRuler?5000:0;
     int iTopAddRowsCount = 0;
     int iBottomAddRowsCount = 0;
     iTopAxeCount = iBottomAxeCount = 0;
+    iRulerHeight=form->ExportRuler?form->RowHeight:0;
 
     M_RESETROWPOS(AxeCount)=0;
 
@@ -481,6 +486,7 @@ bool __fastcall TAcadExport::ExportTables(TFAutoCADExport *form)
 
     fBottomAddRowsWithoutData = fTopAddRowsWithoutData = form->ExportTopAddRowsWithoutData;
 
+    iMinBarrierSegmentLength = form->MinBarrierSegmentLength;
     iProfileHatchScale = form->ProfileHatchScale;
     iSidewalsHatchScale = form->SidewalksHatchScale;
     iFillHatchScale = form->TableHatchScale;
@@ -1644,10 +1650,13 @@ bool __fastcall TAcadExport::ExportBridge(TExtPolyline *Poly,TRoadBridge *b, boo
 
 AcadBlockReferencePtr TAcadExport::DrawBarrier(vector<TPoint> &points, AnsiString blockname, bool fFlip, bool fExist, bool fOpenLeft,int *fLastVisible)
 {
-    int count = points.size();
+
     float yoffset, xoffset, angle, length;
     TPoint pMax,pMin;
     AcadBlockReferencePtr block;
+
+    int count = points.size();
+
     for(int i = 0;i<count-1;i++) {
         pMin  = points[i];
         pMin.y*=-ScaleY;
@@ -1699,7 +1708,7 @@ AcadBlockReferencePtr TAcadExport::DrawBarrier(vector<TPoint> &points, AnsiStrin
 
 
 bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, bool exist, bool fEnd) {
-    static count , dir, counter = 0;
+    static dir, counter = 0;
     static AnsiString str;
 
     static AcadBlockReferencePtr lBlockLeft, lBlockRight, block;
@@ -1716,14 +1725,13 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
 
     dir = b->Placement==opLeft?1:-1;
 
-    count = Poly->Count;
-
-    lPointBarrier.x = Poly->Points[count-1].x;
+    lPointBarrier.x = Poly->Points[Poly->Count-1].x;
 
     vector<TPoint> points;
-    for(int i=0;i<count;i++) {
+    for(int i=0;i<Poly->Count;i++) {
         points.push_back(Poly->Points[i]);
     }
+    Utils::optimize(points, iMinBarrierSegmentLength);
 
     sort(points.begin(),points.end(),barrierPointAsc());
 
@@ -1731,16 +1739,16 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
 
     float Min, Max, yoffset, xoffset, angle, length;
     TPoint pMin, pMax;
-    if(Poly->Points[0].x>Poly->Points[count-1].x){
-        Min = Poly->Points[count-1].x;
-        pMin = Poly->Points[count-1];
-        pMax = Poly->Points[0];
-        Max = Poly->Points[0].x;
+    if(points.front().x>points.back().x){
+        Min = points.back().x;
+        pMin = points.back();
+        pMax = points.front();
+        Max = points.front().x;
     }else{
-        Max = Poly->Points[count-1].x;
-        pMax = Poly->Points[count-1];
-        pMin = Poly->Points[0];
-        Min = Poly->Points[0].x;
+        Max = points.back().x;
+        pMax = points.back();
+        pMin = points.front();
+        Min = points.front().x;
     }
 
     if(~iStart) {
@@ -1811,38 +1819,47 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
         break;
     }
 
+    AnsiString barrierName = "";
     switch(b->Construction){
     case br112:
         str="ДО (У3)";//str = "Барьерное одностороннее"
-        block = DrawBarrier(points ,"barBarrierMetal" ,dir<0?0:1, exist,fOpenLeft, &curProp);
+        barrierName = "barBarrierMetal";
+        block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         break;
     case br113:
         str="ДО (У3)";//str = "Барьерное двухстороннее";
-        block = DrawBarrier(points ,"barBarrierMetalDuo" ,dir<0?0:1, exist,fOpenLeft, &curProp);
+        barrierName = "barBarrierMetalDuo";
+        block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         break;
     case br114:
         str = "Тросовое";
         break;
     case br115:
         str="ДО (У3)";//str = "Парапеты";
-        block = DrawBarrier(points ,"barNewJersey" ,dir<0?0:1, exist,fOpenLeft, &curProp);
+        barrierName = "barNewJersey";
+        block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         break;
     case br116:
         str = "Сетки";
         break;
     case br117:
         str = "Перила";
-        block = DrawBarrier(points ,"barCivil" ,dir<0?0:1, exist,fOpenLeft, &curProp);
+        barrierName = "barCivil";
+        block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         break;
     case br118:
         str="ДО (У3)";//str = "По типу Нью-Джерси";
-        block = DrawBarrier(points ,"barNewJersey" ,dir<0?0:1, exist,fOpenLeft, &curProp);
+        barrierName = "barNewJersey";
+        block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         break;
     case brm:
         str="ДО (У3)";//str = "Металлическое";
-        block = DrawBarrier(points ,"barBarrierMetal" ,dir<0?0:1, exist,fOpenLeft, &curProp);
+        barrierName = "barBarrierMetal";
+        block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         break;
     }
+
+
 
     if(block.IsBound()){
         /*AutoCAD.SetPropertyDouble(block,"Length",length);
@@ -2477,6 +2494,8 @@ int iPos, int iEnd, AnsiString str)
                         }
                     } else if (suffixPos = param.Pos('<')){
                         int iValue;
+                        name = param.SubString(1, suffixPos-1);
+                        value = param.SubString(suffixPos+1,  param.Length() - suffixPos);
                         if (TryStrToInt(value, iValue)) {
                             AutoCAD.SetPropertyList(block, name, iValue);
                         } else {
@@ -2957,3 +2976,5 @@ bool __fastcall TAcadExport::ExportCommunication(TExtPolyline *p, TCommunication
 
     return true;
 }
+
+#endif // WITHOUT_AUTOCAD

@@ -3,6 +3,16 @@
 #ifndef AutoCADPrintFormH
 #define AutoCADPrintFormH
 //---------------------------------------------------------------------------
+
+#include "without_autocad.h"
+#include <Classes.hpp>
+#include <ComCtrls.hpp>
+#include <Controls.hpp>
+#include <Dialogs.hpp>
+#include <ExtCtrls.hpp>
+#include <StdCtrls.hpp>
+#ifndef WITHOUT_AUTOCAD
+
 #include <Classes.hpp>
 #include <Controls.hpp>
 #include <StdCtrls.hpp>
@@ -152,4 +162,7 @@ public:		// User declarations
 //---------------------------------------------------------------------------
 extern PACKAGE TFAutoCADPrint *FAutoCADPrint;
 //---------------------------------------------------------------------------
+
+#endif // WITHOUT_AUTOCAD
+
 #endif

@@ -17,12 +17,13 @@ pushd "bottom"
 	if not exist "3_Ширина обочин слева.txt" copy NUL "3_Ширина обочин слева.txt" 
 	if not exist "4_Ширина обочин справа.txt" copy NUL "4_Ширина обочин справа.txt" 
 	if not exist "5_Конструкция дорожной одежды.txt" copy NUL "5_Конструкция дорожной одежды.txt" 
-	if not exist "9_Исскуственный сооружения слева.txt" copy NUL "9_Исскуственный сооружения слева.txt" 
-	if not exist "10_Исскуственный сооружения справа.txt" copy NUL "10_Исскуственный сооружения справа.txt" 
+	if not exist "9_Исскуственный сооружения слева.txt" copy NUL "9_Исскуственные сооружения слева.txt" 
+	if not exist "10_Исскуственный сооружения справа.txt" copy NUL "10_Исскуственные сооружения справа.txt" 
 	if not exist "11_Снегозаносимые участки слева.txt" copy NUL "11_Снегозаносимые участки слева.txt" 
 	if not exist "12_Снегозаносимые участки справа.txt" copy NUL "12_Снегозаносимые участки справа.txt" 
 	if not exist "13_Грунт земляного полотна.txt" copy NUL "13_Грунт земляного полотна.txt" 
 	if not exist "18_Состояние прокрытия проезжей части.txt" copy NUL "18_Состояние прокрытия проезжей части.txt" 
+	if not exist "21_.txt" copy NUL "21_.txt" 
 popd
 
 popd
@@ -38,3 +39,5 @@ SET sqlcmd=sqlcmd -h-1 -d RoadsDB_Direct -v NumDataSource=%NumDataSource% -v Org
 %sqlcmd% -i "%scripts_dir%Обочины слева.sql" -o "bottom\3_Ширина обочин слева.txt"
 %sqlcmd% -i "%scripts_dir%Обочины справа.sql" -o "bottom\4_Ширина обочин справа.txt"
 %sqlcmd% -i "%scripts_dir%Дорожная одежда.sql" -o "bottom\5_Конструкция дорожной одежды.txt"
+%sqlcmd% -i "%scripts_dir%Искусственные сооружения.sql" -o "bottom\9_Исскуственные сооружения слева.txt"
+%sqlcmd% -i "%scripts_dir%Состояние проезжей части.sql" -o "bottom\18_Состояние прокрытия проезжей части.txt"

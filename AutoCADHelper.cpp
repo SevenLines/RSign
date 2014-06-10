@@ -1,3 +1,6 @@
+#include "without_autocad.h"
+#ifndef WITHOUT_AUTOCAD
+
 #include <cstdio>
 #include <iomanip>
 #include <iostream>
@@ -2571,3 +2574,5 @@ float AutoCADTable::DrawTextInBordersMoundHeight(int iRow, AnsiString text,
    return fwas?scale:0;
 }
 
+
+#endif // WITHOUT_AUTOCAD

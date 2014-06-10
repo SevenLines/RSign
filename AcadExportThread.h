@@ -3,6 +3,9 @@
 #ifndef AcadExportThreadH
 #define AcadExportThreadH
 
+#include "without_autocad.h"
+#ifndef WITHOUT_AUTOCAD
+
 #include "acadexport.h"
 #include "ProgressFrm.h"
 
@@ -47,4 +50,8 @@ public:
         TDtaSource* CurveData; 
 };
 //---------------------------------------------------------------------------
+
+#endif // WITHOUT_AUTOCAD
+
 #endif
+

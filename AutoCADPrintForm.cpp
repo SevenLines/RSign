@@ -1,7 +1,12 @@
 //---------------------------------------------------------------------------
 
+
+#include "without_autocad.h"
+#ifndef WITHOUT_AUTOCAD
+
 #include <vcl.h>
 #pragma hdrstop
+
 
 #include "AutoCADPrintForm.h"
 #include "AutoCADPrintThread.h"
@@ -530,8 +535,8 @@ void TFAutoCADPrint::Print(PrintType printType)
       ProgressForm->Caption = "Печать из AutoCAD";
       ProgressForm->Position = 0;
       ProgressForm->Note = "Пробую подключиться к AutoCAD";
-      ProgressForm->Show();
-      ProgressForm->SetMinMax(0,iMax-iMin-1);
+      ProgressForm->SetMinMax(tbPos->Min, tbPos->Max);
+
 
       if(!BindViewports())
         return; 
@@ -554,34 +559,24 @@ void TFAutoCADPrint::Print(PrintType printType)
         if(roadName.IsBound()) {
            roadName->set_TextString(WideString(strRoadName));
         }
+        ProgressForm->Show();
 
-        for(float j=iMin;j<iMax;j+=step){
-
-          int km = int(j);
-          int meters = (j-km)*1000;
-          ProgressForm->Note = str.sprintf("%.1f/%.1f", j-iMin, float(iMax-iMin-1));
+        for(int j=tbPos->Min;j<=tbPos->Max;j++){
+          int km = int(tbPos->Min + j);
+          int meters = vStep;
+          ProgressForm->Note = str.sprintf("%.d/%.d", tbPos->Position - tbPos->Min, tbPos->Max-tbPos->Min-1);
+          ProgressForm->Position = j;
 
           try{
-          
-            if(text.IsBound()){
-                 str.sprintf(pattern.c_str(),km,meters);
-                 text->set_TextString(WideString(str));
-            }
-            
-            if(page.IsBound()){
-              page->set_TextString(WideString(iPage+(iiPage++)));
-            }
-
-            SetFrame(j*100000, step*100000);
-            
+            tbPos->Position = j;
             // last frame printing:
-            if ( j + step >= iMax) {
+            if ( j == tbPos->Max) {
                if (!chkOnly->Checked) {
                   ShowMessage("Это пауза в течении которой вы можете успеть\n"
                            "отредактировать текущую страницу в AutoCAD");
                            
                   AnsiString temp = FileName+" ["+IntToStr(km)+"+"+IntToStr(meters)+"]";
-                  // save fileNmae for PauseLastFramePrint function, which is used to concat pdfs to one
+                  // save fileName for PauseLastFramePrint function, which is used to concat pdfs to one
                   fileNames.push_back(temp);
                   // save result
                   switch(printType) {
@@ -596,8 +591,12 @@ void TFAutoCADPrint::Print(PrintType printType)
                   break;
                }
             }
-            AnsiString temp = FileName+" ["+IntToStr(km)+"+"+IntToStr(meters)+"]";
-            // save fileNmae for PauseLastFramePrint function, which is used to concat pdfs to one
+            AnsiString temp;// = FileName+" ["+IntToStr(j/)+"+"+IntToStr(meters)+"]";
+            temp.sprintf("%s[%0.4i+%0.3i]",
+                     FileName.c_str(),
+                     int(j * vStep) / 100000,
+                     int(j * vStep) % 100000 / 100 );
+            // save fileName for PauseLastFramePrint function, which is used to concat pdfs to one
             fileNames.push_back(temp);
             // save result
             switch(printType) {
@@ -896,3 +895,4 @@ void __fastcall TFAutoCADPrint::Button12Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+#endif // WITHOUT_AUTOCAD

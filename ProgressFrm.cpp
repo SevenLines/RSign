@@ -70,3 +70,34 @@ void __fastcall TProgressForm::clearLog()
 {
    edtLog->Lines->Clear();
 }
+
+void __fastcall TProgressForm::SetMinMax(int mn,int mx)
+{
+    ProgressBar->MaxValue=mx;
+    ProgressBar->MinValue=mn;
+}
+
+void __fastcall TProgressForm::SetPosition(int p)
+{
+    ProgressBar->Progress=p;
+    if(windowBelow) {
+      SetWindowPos(Handle, HWND_TOP,0,0,0,0,SWP_NOMOVE|SWP_NOSIZE|SWP_NOACTIVATE);
+    }
+}
+
+int __fastcall TProgressForm::GetPosition(void)
+{
+    return ProgressBar->Progress;
+}
+
+void __fastcall TProgressForm::SetNote(String s)
+{
+   Label->Caption=s;
+   Repaint();
+   Realign();
+}
+
+String __fastcall TProgressForm::GetNote(void)
+{
+    return Label->Caption;
+}

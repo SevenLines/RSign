@@ -31,9 +31,8 @@
 #include "ConstHelp.h"
 #include <iostream>
 
-//#ifdef AutoCAD_OCXH  // check is AutoCAD available
-  #include "AutoCADPrintForm.h"
-//#endif
+#include "without_autocad.h"
+#include "AutoCADPrintForm.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -1027,8 +1026,10 @@ if (FActiveRoad)
 
 void __fastcall TMainForm::N70Click(TObject *Sender)
 {
+#ifndef WITHOUT_AUTOCAD
 if (FActiveRoad)
     FActiveRoad->AcadExport();
+#endif    
 }
 //---------------------------------------------------------------------------
 
@@ -1041,6 +1042,7 @@ if (FActiveRoad)
 
 void __fastcall TMainForm::N72Click(TObject *Sender)
 {
+#ifndef WITHOUT_AUTOCAD
   if (FActiveRoad){
      TWindowState state = FActiveRoad->WindowState;
      FActiveRoad->WindowState = wsMinimized;
@@ -1049,6 +1051,7 @@ void __fastcall TMainForm::N72Click(TObject *Sender)
   }else{
      FAutoCADPrint->ShowModal();
   }
+#endif
 }
 //---------------------------------------------------------------------------
 

@@ -2,7 +2,8 @@
 
 #ifndef AutoCADExportFormH
 #define AutoCADExportFormH
-//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------s
 #include <Classes.hpp>
 #include <Controls.hpp>
 #include <StdCtrls.hpp>
@@ -19,6 +20,7 @@
 
 #undef StrToInt
 
+//#ifndef WITHOUT_AUTOCAD
 
 #define MPROPERTY1(name)  __property bool Export##name = {read = get_Export##name};\
                           bool get_Export##name(){return chk##name->Checked;}
@@ -31,7 +33,7 @@
                           {                                     \
                               static int last = 0;                 \
                               static cur;                            \
-                              if(TryStrToInt(edt##name->Text,cur)){  \
+                              if(TryStrToInt(edt##name->Text.c_str(),cur)){  \
                                  last = cur;                          \
                                  return cur;                         \
                               }else{                                 \
@@ -52,7 +54,7 @@
                           int get_##name()              \
                           {                                     \
                               static cur;                            \
-                              if(TryStrToInt(edt##name->Text,cur)){  \
+                              if(TryStrToInt(edt##name->Text.c_str(),cur)){  \
                                  return cur;                         \
                               }else{                                 \
                                   return -1;                       \
@@ -188,6 +190,8 @@ __published:	// IDE-managed Components
     TEdit *edtUseVerticalTextIfLess;
     TLabel *Label24;
     TButton *btnShowInfo;
+    TEdit *edtMinBarrierSegmentLength;
+    TLabel *Label16;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
@@ -271,6 +275,7 @@ public:		// User declarations
         MPROPERTY3(AutoShrinkOneLetterWidth);
         MPROPERTY3(UnderTextHeight);
         MPROPERTY3(RowHeight);
+        MPROPERTY3(MinBarrierSegmentLength)
         MPROPERTY3(GrphRowHeight);
         MPROPERTY3(HeaderWidth);
         MPROPERTY3(HeaderTextHeight);
@@ -337,4 +342,7 @@ public:		// User declarations
 //---------------------------------------------------------------------------
 extern PACKAGE TFAutoCADExport *FAutoCADExport;
 //---------------------------------------------------------------------------
+//#endif  // WITHOUT_AUTOCAD
+
 #endif
+
