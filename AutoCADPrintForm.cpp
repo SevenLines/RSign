@@ -574,8 +574,11 @@ void TFAutoCADPrint::Print(PrintType printType)
                if (!chkOnly->Checked) {
                   ShowMessage("Это пауза в течении которой вы можете успеть\n"
                            "отредактировать текущую страницу в AutoCAD");
-                           
-                  AnsiString temp = FileName+" ["+IntToStr(km)+"+"+IntToStr(meters)+"]";
+                  AnsiString temp;// = FileName+" ["+IntToStr(j/)+"+"+IntToStr(meters)+"]";
+                  temp.sprintf("%s[%0.4i+%0.3i]",
+                                FileName.c_str(),
+                                int(j * vStep) / 100000,
+                                int(j * vStep) % 100000 / 100 );
                   // save fileName for PauseLastFramePrint function, which is used to concat pdfs to one
                   fileNames.push_back(temp);
                   // save result
