@@ -12,6 +12,7 @@ TOpenRoadDialog *OpenRoadDialog;
 __fastcall TOpenRoadDialog::TOpenRoadDialog(TComponent* Owner)
     : TForm(Owner)
 {
+    lastGroupId = -1;
 }
 //---------------------------------------------------------------------------
 void __fastcall TOpenRoadDialog::Button1Click(TObject *Sender)
@@ -24,16 +25,17 @@ void __fastcall TOpenRoadDialog::Button1Click(TObject *Sender)
 void __fastcall TOpenRoadDialog::SetFilter(TObject *Sender) {
    String f;
    bool fWas = false;
-   int groupID = (int)cbGroup->Items->Objects[cbGroup->ItemIndex];
-   //if (groupID) {
-        f="NumGroup="+IntToStr(groupID);
-        fWas = true;
-   //}
+   int groupID = -1;
+   if (lastGroupId != -1 && lastGroupId < cbGroup->Items->Count) {
+      groupID = (int)cbGroup->Items->Objects[lastGroupId];
+      f="NumGroup="+IntToStr(groupID);
+      fWas = true;
+   }
    if (!txtIDFilter->Text.IsEmpty()) {
       if (fWas) f+=" and ";
       f+="id_="+txtIDFilter->Text;
    } else {
-      if ((int)cbDist->Items->Objects[cbDist->ItemIndex]!=0) {
+      if (groupID > 0) {
          if (fWas) f+=" and ";
          fWas = true;
          f +="did="+IntToStr((int)cbDist->Items->Objects[cbDist->ItemIndex]);
@@ -64,7 +66,7 @@ void __fastcall TOpenRoadDialog::FormShow(TObject *Sender)
    ds->Next();
  }
  ds->Close();
- cbGroup->ItemIndex=all;
+ cbGroup->ItemIndex=lastGroupId;
  cbDist->Items->Clear();
  ds->CommandText="select * from ListDistricts order by FullTitle";
  ds->Open();
@@ -101,6 +103,26 @@ void __fastcall TOpenRoadDialog::FormKeyDown(TObject *Sender, WORD &Key,
        Button2->Click();
      break;
   }   
+}
+//---------------------------------------------------------------------------
+void TOpenRoadDialog::LoadIni(TIniFile *ini)
+{
+    txtFilter->Text = ini->ReadString("OpenRoadDialog", "txtFilter", "");
+    txtIDFilter->Text = ini->ReadString("OpenRoadDialog", "txtIDFilter", "");
+    lastGroupId = ini->ReadInteger("OpenRoadDialog", "lastGroupId", -1);
+}
+//---------------------------------------------------------------------------
+void TOpenRoadDialog::SaveIni(TIniFile *ini)
+{
+    ini->WriteString("OpenRoadDialog", "txtFilter", txtFilter->Text);
+    ini->WriteString("OpenRoadDialog", "txtIDFilter", txtIDFilter->Text);
+    ini->WriteInteger("OpenRoadDialog", "lastGroupId", lastGroupId);
+}
+//---------------------------------------------------------------------------
+void __fastcall TOpenRoadDialog::cbGroupChange(TObject *Sender)
+{
+   lastGroupId = cbGroup->ItemIndex;
+   SetFilter(Sender);
 }
 //---------------------------------------------------------------------------
 

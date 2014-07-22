@@ -173,6 +173,7 @@ class TAcadExport {
       void __fastcall DrawGrid(int step);
 
       AcadPolylinePtr DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes = true, bool fLockGaps = false);
+      AcadPolylinePtr DrawPolyLine(vector<double> &points);
       AcadPolylinePtr DrawRoadMark(TExtPolyline *Poly, AnsiString name,
                                  int iRow, int line, AutoCADTable *table);
       float GetAngle(TPoint &p1, TPoint &p2, float *length = 0);

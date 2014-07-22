@@ -359,6 +359,7 @@ public:
            для выбора активного листа использовать SetAsActiveLayout*/
 
         AcadPolylinePtr DrawPolyLine(double *array, int count, int coordCount = 2);
+        AcadPolylinePtr DrawPolyLine(vector<double> &array, int coordCount);
         AcadPolylinePtr DrawPolyLinePS(double *array, int count, int coordCount = 2);
 
         AcadPolylinePtr DrawRect(double centerX, double centerY, double width, double height);

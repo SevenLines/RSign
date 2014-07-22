@@ -1025,6 +1025,11 @@ AcadPolylinePtr AutoCADHelper::DrawPolyLine(double *array, int count, int coordC
    return cadActiveDocument->ModelSpace->AddPolyline(cadPointArray(array,count, coordCount));
 }
 
+AcadPolylinePtr AutoCADHelper::DrawPolyLine(vector<double> &array, int coordCount)
+{
+   return DrawPolyLine(array.begin(), array.size()/coordCount, coordCount);
+}
+
 AcadPolylinePtr AutoCADHelper::DrawPolyLinePS(double *array, int count, int coordCount)
 {
 //   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument.IsBound(), AcadPolylinePtr());

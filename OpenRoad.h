@@ -12,6 +12,7 @@
 #include <DB.hpp>
 #include <DBCtrls.hpp>
 #include <ExtCtrls.hpp>
+#include <IniFiles.hpp>
 //---------------------------------------------------------------------------
 // Класс для отображения списка дорог. Открывается как модальное окно
 // В случае успеха должен устанавливать имя и идентификатор дороги
@@ -38,11 +39,15 @@ __published:	// IDE-managed Components
    void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
     void __fastcall SetFilter(TObject *Sender);
+    void __fastcall cbGroupChange(TObject *Sender);
 private:	// User declarations
     String FRoadName;
+    int lastGroupId;
     __int32 FRoadId;
     void __fastcall SetFilter(void);
 public:		// User declarations
+    void LoadIni(TIniFile *ini);
+    void SaveIni(TIniFile *ini);    
     __fastcall TOpenRoadDialog(TComponent* Owner);
     __property __int32 RoadId={read=FRoadId};
     __property String RoadName={read=FRoadName};

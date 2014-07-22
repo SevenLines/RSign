@@ -183,64 +183,57 @@ void TAcadExport::ResetLastPoints()
 __fastcall TAcadExport::~TAcadExport(void) {
 }
 
+AcadPolylinePtr TAcadExport::DrawPolyLine(vector<double> &points)
+{
+   AcadPolylinePtr pl;
+   if (points.size() >= 4) {
+     pl = AutoCAD.DrawPolyLine(points, 2);
+   }
+   return pl;
+}
+
 AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes, bool fLockGaps)
 {
-    int i,iLast,count,length,*codes;
-    //bool iCodeLast;
-    double *points = 0;
-
+    vector<double> points, range;
+    vector<int> codes;
     AcadPolylinePtr pl;
 
-    //iCodeLast = true;
-
-    count = Poly->Count;
-    points = new double[(Poly->Count+1)*2];
-    codes = new int[(Poly->Count+1)];
-
-    for(i=0;i<count;i++){
-        codes[i] = Poly->Codes[i].Visible();
-        points[2*i] = Poly->Points[i].x;
-        points[2*i+1] = -ScaleY*Poly->Points[i].y;
+    if (Poly->Count < 2) {
+        return pl;
     }
-    points[2*count] = Poly->Points[0].x;
-    points[2*count+1] = -ScaleY*Poly->Points[0].y;   
+    
+    for (int i=0;i<Poly->Count;++i) {
+        points.push_back(Poly->Points[i].x);
+        points.push_back(-ScaleY*Poly->Points[i].y);
+        codes.push_back(Poly->Codes[i].Visible());
+    }
 
-    iLast = 0;
+    int iLast = 0;
     if(fUseCodes){
-        for(i=1;i<count;i++){
-            length = i-iLast;
+        for(int i=1;i<codes.size();i++){
             if(!codes[i]){
-                if(length>1){
-                    pl = AutoCAD.DrawPolyLine(&points[2*iLast],length,2);
+                if( i - iLast >= 2 ) {
+                    range = vector<double>(
+                        points.begin() + 2*iLast,
+                        points.begin() + 2*i);
+                    pl = DrawPolyLine(range);
                 }
                 iLast = i;
             }
-            //iCodeLast = codes[i];
         }
-        if((codes[i-1]&&fUseCodes)||!fUseCodes){
-            length = count-iLast;
-            if(codes[0]){
-                length++;
-            }
-            pl = AutoCAD.DrawPolyLine(&points[2*iLast],length,2);
+        if((codes[codes.size()-1]&&fUseCodes)||!fUseCodes){
+            range = vector<double>(
+                        points.begin() + 2*iLast,
+                        points.end());
+            pl = DrawPolyLine(range);
         }
     } else {
-        if(fLockGaps) {
-            points[2*count] = points[0];
-            points[2*count+1] = points[1];
-            pl = AutoCAD.DrawPolyLine(&points[0],count+1,2);
-        } else {
-            pl = AutoCAD.DrawPolyLine(&points[0],count,2);
+        if(fLockGaps && Poly->Count > 2) {
+            points.push_back(Poly->Points[0].x);
+            points.push_back(-ScaleY*Poly->Points[0].y);
         }
+        pl = DrawPolyLine(points);
     }
-
-    /* if(codes[0]&&count>2){
-    points[2] = Poly->Points[count-1].x;
-    points[3] = -ScaleY*Poly->Points[count-1].y;
-    AutoCAD.DrawPolyLine(points,2,2);
-} */
-    delete[] points;
-    delete[] codes;
     return pl;
 }
 
@@ -2376,20 +2369,25 @@ for(int i=0;i<count;i++) {
 }
 DrawBorder(points, "borderblock", exist);
 */
-    AcadPolylinePtr line = DrawPolyPoints(Poly, false);
-    line->set_Lineweight(acLnWt050);
-
-    if(!exist) {
-        line->color = NotExistColor;
+    AcadPolylinePtr line;
+    
+    line = DrawPolyPoints(Poly, false);
+    if (line.IsBound()) {
+      line->set_Lineweight(50);
+      if(!exist) {
+          line->color = NotExistColor;
+      }
     }
 
     line = DrawPolyPoints(Poly, false);
-    line->set_Lineweight(acLnWt030);
-    line->set_Linetype(WideString("linedash_1"));
-    AcadAcCmColorPtr color;
-    color = line->TrueColor;
-    color->SetRGB(255,255,255);
-    line->TrueColor = color;
+    if (line.IsBound()) {
+      line->set_Lineweight(30);
+      line->set_Linetype(WideString("linedash_1"));
+      AcadAcCmColorPtr color;
+      color = line->TrueColor;
+      color->SetRGB(255,255,255);
+      line->TrueColor = color;
+    }
 
     return true;
 }

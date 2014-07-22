@@ -85,29 +85,30 @@ if (PatName!="")
 
 void __fastcall TMainForm::WriteIni(TIniFile *ini)
 {
-ini->WriteString("Connection","ConnectionString",Connection->ConnectionString);
-ini->WriteInteger("MainForm","Left",Left);
-ini->WriteInteger("MainForm","Top",Top);
-ini->WriteString("PrintPattern","Name",VPatFrm->FileName);
-ini->WriteString("Video","Servers",VideoServers->CommaText);
+  ini->WriteString("Connection","ConnectionString",Connection->ConnectionString);
+  ini->WriteInteger("MainForm","Left",Left);
+  ini->WriteInteger("MainForm","Top",Top);
+  ini->WriteString("PrintPattern","Name",VPatFrm->FileName);
+  ini->WriteString("Video","Servers",VideoServers->CommaText);
 }
 
 void __fastcall TMainForm::LoadIni(void)
 {
-TIniFile *ini=new TIniFile(ChangeFileExt(Application->ExeName,".ini"));
-ReadIni(ini);
-delete ini;
+  TIniFile *ini=new TIniFile(ChangeFileExt(Application->ExeName,".ini"));
+  ReadIni(ini);
+  OpenRoadDialog->LoadIni(ini);
+  delete ini;
 }
 
 void __fastcall TMainForm::SaveIni(void)
 {
-String FName=ChangeFileExt(Application->ExeName,".ini");
-if ((!FileIsReadOnly(FName))||(!FileExists(FName)))
-    {
-    TIniFile *ini=new TIniFile(FName);
-    WriteIni(ini);
-    delete ini;
-    }
+  String FName=ChangeFileExt(Application->ExeName,".ini");
+  if ((!FileIsReadOnly(FName))||(!FileExists(FName))) {
+      TIniFile *ini=new TIniFile(FName);
+      WriteIni(ini);
+      OpenRoadDialog->SaveIni(ini);
+      delete ini;
+  }
 }
 
 void __fastcall TMainForm::SetActiveRoad(TRoadFrm *R)
