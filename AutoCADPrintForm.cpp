@@ -114,6 +114,7 @@ bool TFAutoCADPrint::BindViewports()
   vpBottom.Unbind();
   text.Unbind();
   page.Unbind();
+  page_max.Unbind();
   roadName.Unbind();
 
   if(!helper->ActiveDocument.IsBound()) return false;
@@ -151,6 +152,9 @@ bool TFAutoCADPrint::BindViewports()
          }
          if(!wcscmp(e->Layer,L"@page")){
            page = e;
+         }
+         if(!wcscmp(e->Layer,L"@page_max")){
+           page_max = e;
          }
          if(!wcscmp(e->Layer,L"@roadName")){
            roadName = e;
@@ -397,9 +401,12 @@ void __fastcall TFAutoCADPrint::tbPosChange(TObject *Sender)
 
       int j = tbPos->Position;
       int minPos = tbPos->Min;
+      int diff = tbPos->Max - tbPos->Min;
 
       if(page.IsBound())
          page->set_TextString(WideString(iPage+j-minPos));
+      if(page_max.IsBound())
+         page_max->set_TextString(WideString(iPage+diff));
 
       SetFrame(j*vStep, vStep);
     }
@@ -525,11 +532,11 @@ void TFAutoCADPrint::Print(PrintType printType)
       float step = (vStep/100000);
 
       if(!chkOnly->Checked){
-        iMin = int(sPos/100000);
-        iMax = ePos/100000;
+        iMin = tbPos->Min;
+        iMax = tbPos->Max;
       }else{
-        iMin = (tbPos->Position*vStep)/100000;
-        iMax = iMin+step;
+        iMin = tbPos->Position;
+        iMax = tbPos->Position;
       }
 
       ProgressForm->Caption = "Печать из AutoCAD";
@@ -561,7 +568,7 @@ void TFAutoCADPrint::Print(PrintType printType)
         }
         ProgressForm->Show();
 
-        for(int j=tbPos->Min;j<=tbPos->Max;j++){
+        for(int j=iMin;j<=iMax;j++){
           int km = int(tbPos->Min + j);
           int meters = vStep;
           ProgressForm->Note = str.sprintf("%.d/%.d", tbPos->Position - tbPos->Min, tbPos->Max-tbPos->Min-1);

@@ -354,28 +354,15 @@ bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
 
 bool __fastcall TAcadExport::AddLayer(AnsiString l_name)
 {
-    try{
-//        AutoCAD.waitForIdle();
-        WideString layer_name = WideString(l_name);
-        IAcadLayers *layers = AutoCAD.ActiveDocument->get_Layers();
-        if (!layers)
-           return false;
-        long count;
-        layers->get_Count(&count);
-        for(int i=0;i<count;++i) {
-           IAcadLayer *layer = layers->Item(Variant(i));
-           if (layer && WideString(layer->Name) == layer_name) {
-              AutoCAD.ActiveDocument->ActiveLayer = layer;
-              return true;
-           }
-        }
-//        AutoCAD.waitForIdle();
-        IAcadLayer * layer_ptr = layers->Add(layer_name.c_bstr());
-        AutoCAD.ActiveDocument->ActiveLayer = layer_ptr;
-    }catch(...){
-        return false;
-    }
-    return true;
+      IAcadLayers *layers = AutoCAD.ActiveDocument->get_Layers();
+      if (!layers)
+         return false;
+      try {
+        IAcadLayer * layer_ptr = layers->Add(WideString(l_name).c_bstr());
+      } catch(...) {}
+      AutoCAD.SendCommand(WideString("CLAYER " + l_name + "\n"));
+
+      return true;
 }
 
 
@@ -2592,7 +2579,12 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
                     }
                 }
 
+                s.erase(s.find_last_not_of(" \n\r\t")+1);
+
                 line = s.c_str();
+                if (s.length() <= 0)
+                    continue;
+
                 if(line[1] == '#') { // if comment
                     // remove comment symbol, and trim string
                     line[1] = ' ';

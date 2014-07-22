@@ -118,6 +118,7 @@ private:
         AcadTextPtr text;
         AcadTextPtr roadName;
         AcadTextPtr page;
+        AcadTextPtr page_max;
 
         AnsiString strRoadName;
         AnsiString strIniFileName;
