@@ -51,11 +51,11 @@ void SignsCollection::Clear()
 
 void SignsCollection::CheckExistingBlocks()
 {
-   /*Clear();
+   Clear();
    if(Owner){
       if(Owner->ActiveDocument.IsBound()){
          IAcadBlocksPtr blocks = Owner->cadActiveDocument->Blocks;
-         int count = blocks->BlocksCount;
+         int count = blocks->Count;
          for(int i=0;i<count;i++){
             try {
                 IAcadBlock *block = blocks->Item(Variant(i));
@@ -66,7 +66,7 @@ void SignsCollection::CheckExistingBlocks()
             } catch (...) {}
          }
       }
-   }*/
+   }
 }
 
 void SignsCollection::AddBlock(AnsiString name, int i)
@@ -814,7 +814,19 @@ bool AutoCADHelper::SetupViewport(AcadLayoutPtr layout, double x, double y,
 
 void AutoCADHelper::CheckExistingBlocks()
 {
-   SignsCollection.CheckExistingBlocks();
+    existingBlocks.clear();
+	IAcadBlock * tempBlock;
+    IAcadBlocksPtr blocks = cadActiveDocument->Blocks;
+    int count = blocks->Count;
+
+    for(int i=0;i<count;++i) {
+		try {
+			tempBlock = blocks->Item(Variant(i));
+			existingBlocks.push_back(tempBlock->Name);
+		} catch(...) {
+			continue;
+		}
+	}
 }
 
 bool AutoCADHelper::BindToActiveDocument()
@@ -1229,7 +1241,7 @@ AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, ve
 	}
 	
 	// пробуем возвратить ново-созданный блок, вдруг он уже существует
-	if (SignsCollection.GetIndexByName(newBlockName) != -1) {
+	if (std::find(existingBlocks.begin(), existingBlocks.end(), newBlockName) != existingBlocks.end()) {
 		return cadActiveDocument->Blocks->Item(Variant(newBlockName));
 	}
 	
@@ -1278,7 +1290,8 @@ AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, ve
     // добавляем блок в коллекцию блоков,
     // чтобы в дальнейшем сразу находить нужный блок
     // если он уже существует
-	SignsCollection.AddBlock(newBlock->Name,cadActiveDocument->Blocks->Count-1);
+	existingBlocks.push_back(newBlock->Name);
+	//SignsCollection.AddBlock(newBlock->Name,cadActiveDocument->Blocks->Count-1);
 	
 	return newBlock;
 }

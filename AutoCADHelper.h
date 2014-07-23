@@ -285,6 +285,7 @@ private:
         TAcadDocument *cadActiveDocument;
         bool fApplicationRun, fInvertYAxe, fInvertXAxe;
         TNotifyEvent gOnActiveDocumentBeginClose;
+        vector<WideString> existingBlocks;
 
         Graphics::TBitmap *BMP;
         

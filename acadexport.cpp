@@ -260,8 +260,9 @@ bool __fastcall TAcadExport::AddDocument()
     try{
         AutoCAD.ResetBlocksCollection();
         AutoCAD.AddDocument(strAutoCADDir + "SignsDef.dwt");
+        AutoCAD.SendCommand(WideString("CLAYER 0\n"));
+        AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
         AutoCAD.CheckExistingBlocks();
-        AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;          
     }catch(...){
         return false;
     }
@@ -286,8 +287,9 @@ bool __fastcall TAcadExport::OpenDocument(AnsiString name)
         }else{
             AutoCAD.OpenDocument(name);
         }
+        AutoCAD.SendCommand(WideString("CLAYER 0\n"));
+        AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
         AutoCAD.CheckExistingBlocks();
-        AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;  
     }catch(...){
         return false;
     }
@@ -299,8 +301,9 @@ bool __fastcall TAcadExport::BindActiveDocument()
 {
     AutoCAD.ResetBlocksCollection();
     if ( AutoCAD.BindToActiveDocument() ) { // function return false on error
-        AutoCAD.CheckExistingBlocks();
+        AutoCAD.SendCommand(WideString("CLAYER 0\n"));
         AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
+        AutoCAD.CheckExistingBlocks();
         return true;
     }
     return false;
@@ -324,6 +327,8 @@ bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
         rectmap.clear();
 
         AutoCAD.RunAutoCAD();
+        iAutoSaveInterval = AutoCAD.Application->Preferences->OpenSave->AutoSaveInterval;
+        AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME 0\n"));
 
         strSignsAbsent = "";
         strMarkAbsent = "";
@@ -640,7 +645,7 @@ bool __fastcall TAcadExport::FindPlacement(drect &r,char dir,bool store,TRoadObj
 
 void __fastcall TAcadExport::EndDocument() {
     rectmap.clear();
-
+    AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME " + IntToStr(iAutoSaveInterval) + "\n"));
     AutoCAD.Application->ZoomAll();
 
     AnsiString strMessage="";
@@ -898,56 +903,12 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 				labels.push_back(signs[i]->Label);
 			}
 			block = AutoCAD.MakeCombineBlock(blockNames, labels);
-			//block = AutoCAD.MakeCombineBlock(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
-            //signs[1]->OldTitle+(signs[1]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[1]->ViewKind))),signs[1]->Label);
-			
             if(block.IsBound()){
                 DrawSign(block->Name,"",
                 AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
                 yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
             }
 		}
-        /*switch(count){
-        case 1:
-            
-            break;
-
-        case 2:
-            //block = AutoCAD.MakeCombineBlock(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
-            //signs[1]->OldTitle+(signs[1]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[1]->ViewKind))),signs[1]->Label);
-			
-            if(block.IsBound()){
-                DrawSign(block->Name,"",
-                AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
-                yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
-            }
-            break;
-
-        case 3:
-            block = AutoCAD.MakeCombineBlock(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
-            signs[1]->OldTitle+(signs[1]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[1]->ViewKind))),signs[1]->Label,
-            signs[2]->OldTitle+(signs[2]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[2]->ViewKind))),signs[2]->Label);
-            if(block.IsBound()){
-                DrawSign(block->Name,"",
-                AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
-                yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
-            }
-            break;
-
-        case 4:
-            block = AutoCAD.MakeCombineBlock(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
-            signs[1]->OldTitle+(signs[1]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[1]->ViewKind))),signs[1]->Label,
-            signs[2]->OldTitle+(signs[2]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[2]->ViewKind))),signs[2]->Label,
-            signs[3]->OldTitle+(signs[3]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[3]->ViewKind))),signs[3]->Label);
-            if(block.IsBound()){
-                DrawSign(block->Name,"",
-                AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
-                yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
-            }
-            break;
-
-        default:;
-        }*/
     }catch(...){
         AnsiString message = "Ошибка вывода знака: " + signs[0]->OldTitle + " на позиции " + IntToStr(Poly->Points[0].x);
         BUILDER_ERROR( message.c_str() );

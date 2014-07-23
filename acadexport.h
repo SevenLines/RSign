@@ -42,6 +42,7 @@ class TAcadExport {
       AnsiString strMarkAbsent;
       AnsiString strAutoCADDir;
       AnsiString strInfoTemplate;
+      int iAutoSaveInterval;
 
       vector<TPoint> SignsPositions; // будем заносить сюда позиции знаков,
                                      // чтобы не было наложений
