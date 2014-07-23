@@ -51,26 +51,22 @@ void SignsCollection::Clear()
 
 void SignsCollection::CheckExistingBlocks()
 {
-   /*static count,i;
-   AnsiString str;
+   /*Clear();
    if(Owner){
-      Clear();
-      try{
-        if(Owner->ActiveDocument.IsBound()){
-           count = Owner->BlocksCount;
-           for(i=0;i<count;i++){
-              str = Owner->Blocks[i]->Name;
-              if(str =="5.19.1_5.19.2"){
-                 str = str;
-              }*
-              signs.push_back(AutoCADSignBlockInfo(str,i));
-
-           }
-        }
-      }catch(...){
-        return;
+      if(Owner->ActiveDocument.IsBound()){
+         IAcadBlocksPtr blocks = Owner->cadActiveDocument->Blocks;
+         int count = blocks->BlocksCount;
+         for(int i=0;i<count;i++){
+            try {
+                IAcadBlock *block = blocks->Item(Variant(i));
+                if (block!=0) {
+                  AnsiString str = block->Name;
+                  signs.push_back(AutoCADSignBlockInfo(str,i));
+                }
+            } catch (...) {}
+         }
       }
-   } */
+   }*/
 }
 
 void SignsCollection::AddBlock(AnsiString name, int i)
@@ -1201,6 +1197,91 @@ bool AutoCADHelper::IsLarger(AnsiString name)
   return false;
 }
 
+
+AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, vector<WideString> &labels)
+{
+	AnsiString newBlockName;
+	AcadBlockPtr newBlock;
+	IAcadBlock* tempBlock;
+	vector<IAcadBlock*> blocks;
+    vector<WideString> labelsNew;
+
+	// ищем существующие блоки и формируем имя комбинированного
+	for(int i=0;i<blocksNames.size();++i) {
+		try {
+			tempBlock = cadActiveDocument->Blocks->Item(Variant(blocksNames[i]));
+		} catch(...) {
+			continue;
+		}
+		if (newBlockName!="") newBlockName+="_";
+		newBlockName += blocksNames[i];
+		
+		AnsiString label = labels[i];
+		label = StringReplace(label, " ", "", TReplaceFlags() << rfReplaceAll);
+		label = StringReplace(label, "\t", "", TReplaceFlags() << rfReplaceAll);
+		label = StringReplace(label, "\n", "", TReplaceFlags() << rfReplaceAll);
+		if (!labels[i].IsEmpty()) {
+			newBlockName += "[" + label + "]";
+		}
+		
+		labelsNew.push_back(labels[i]);
+		blocks.push_back(tempBlock);
+	}
+	
+	// пробуем возвратить ново-созданный блок, вдруг он уже существует
+	if (SignsCollection.GetIndexByName(newBlockName) != -1) {
+		return cadActiveDocument->Blocks->Item(Variant(newBlockName));
+	}
+	
+	// ищем размеры блоков
+    double subBlockHeight;
+    double blockGap = gMakeBlockGap;
+	vector<double> blockHeights(blocks.size());
+	for(int i=0;i<blocks.size();++i) {
+		int subBlocksCount = blocks[i]->Count;
+        subBlockHeight = -1;
+		for(int j=0;j<subBlocksCount;j++){
+		   AcadEntityPtr entity = blocks[i]->Item(Variant(j));
+		   if(entity->EntityType == 7){
+			  AcadBlockReferencePtr subBlock = entity;
+			  if(GetPropertyDouble(subBlock, "Height", subBlockHeight)){
+				  //if(GetPropertyDouble(subBlock,"Width",width)){
+					float scale = subBlock->XScaleFactor;
+					subBlockHeight *= scale;
+					break;
+				  //}
+			  }
+		   }
+		}
+		blockHeights[i] = subBlockHeight + blockGap;
+	}
+	
+	// формируем суммарную высоту блоков
+	double fullHeight = 0;
+	for (int i=0;i<blocks.size();++i)
+		if (blockHeights[i] != -1) fullHeight += blockHeights[i];
+	
+	//	формируем новый блок
+	int yOffset = 0;
+	newBlock = cadActiveDocument->Blocks->Add(cadPoint(0, 0), WideString(newBlockName));
+	for(int i=0;i<blocks.size();++i) {
+		if(blockHeights[i] != -1) {
+            WideString subBlockName = blocks[i]->Name;
+			IAcadBlockReference *subBlock =
+            newBlock->InsertBlock(cadPoint(0, fullHeight/2 - yOffset - blockHeights[i] / 2), 
+						subBlockName,1, 1, 1, 0, TNoParam());
+            SetSignLabels(subBlock, SignLabelParser(subBlockName, labelsNew[i]));
+            yOffset += blockHeights[i];
+		}		
+	}
+
+    // добавляем блок в коллекцию блоков,
+    // чтобы в дальнейшем сразу находить нужный блок
+    // если он уже существует
+	SignsCollection.AddBlock(newBlock->Name,cadActiveDocument->Blocks->Count-1);
+	
+	return newBlock;
+}
 
 AcadBlockPtr AutoCADHelper::MakeCombineBlock(WideString block1, WideString label1,
                                              WideString block2, WideString label2,

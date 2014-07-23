@@ -881,20 +881,41 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     AnsiString sEmpty = "";
 
     try{
-        switch(count){
-        case 1:
-            try {
+		
+		if (count==1) {
+			try {
                 DrawSign(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
                 AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
                 yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
             }catch(...) {
                 if(!strSignsAbsent.Pos(signs[0]->OldTitle))strSignsAbsent+="\n"+signs[0]->OldTitle;
             }
+		} else {
+			vector<WideString> blockNames;
+			vector<WideString> labels;
+			for(int i=0;i<count;++i) {
+				blockNames.push_back(signs[i]->OldTitle+(signs[i]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[i]->ViewKind))));
+				labels.push_back(signs[i]->Label);
+			}
+			block = AutoCAD.MakeCombineBlock(blockNames, labels);
+			//block = AutoCAD.MakeCombineBlock(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
+            //signs[1]->OldTitle+(signs[1]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[1]->ViewKind))),signs[1]->Label);
+			
+            if(block.IsBound()){
+                DrawSign(block->Name,"",
+                AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
+                yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
+            }
+		}
+        /*switch(count){
+        case 1:
+            
             break;
 
         case 2:
-            block = AutoCAD.MakeCombineBlock(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
-            signs[1]->OldTitle+(signs[1]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[1]->ViewKind))),signs[1]->Label);
+            //block = AutoCAD.MakeCombineBlock(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
+            //signs[1]->OldTitle+(signs[1]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[1]->ViewKind))),signs[1]->Label);
+			
             if(block.IsBound()){
                 DrawSign(block->Name,"",
                 AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
@@ -926,7 +947,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
             break;
 
         default:;
-        }
+        }*/
     }catch(...){
         AnsiString message = "Ошибка вывода знака: " + signs[0]->OldTitle + " на позиции " + IntToStr(Poly->Points[0].x);
         BUILDER_ERROR( message.c_str() );
