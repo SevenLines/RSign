@@ -24,17 +24,6 @@ class AutoCADTable;
 enum AutoCADTabelTextPosition {actpLeft = 0,actpMiddle = 1,
       actpRight = 2,actpTop = 4,actpCenter = 8,actpBottom=16};
 
-
-
-
-
-struct AutoCADSignBlockInfo
-{
-  AnsiString name;
-  int index;
-  AutoCADSignBlockInfo(AnsiString _name,int index);
-};
-
 struct AutoCADPoint
 {
    float x,y;
@@ -57,19 +46,6 @@ struct AutoCADPointGapGreater:binary_function<AutoCADPoint,AutoCADPoint,bool>{
    }
 };
 
-class SignsCollection
-{
-private:   
-   vector<AutoCADSignBlockInfo> signs;
-public:
-   AutoCADHelper *Owner;
-
-   int GetIndexByName(AnsiString name);
-   AnsiString GetNameByIndex(int index);
-   void AddBlock(AnsiString name, int i);
-   void Clear();
-   void CheckExistingBlocks();
-};
 
 class AutoCADTable
 {
@@ -279,7 +255,6 @@ public:
 
 class AutoCADHelper
 {
-friend class SignsCollection;
 private:
         IAcadApplicationDisp cadApplication;
         TAcadDocument *cadActiveDocument;
@@ -299,8 +274,6 @@ private:
 
         int comboSignCount;
 
-        SignsCollection SignsCollection;
-        
         AcadApplicationPtr getApplication();
 
         AcadBlockPtr getBlocks(int i);
@@ -418,11 +391,7 @@ public:
         AcadBlockReferencePtr DrawBlock(WideString BlockName,
                               double x = 0, double y = 0,
                               double rotation = 0, double scale = 1);
-        AcadBlockPtr MakeCombineBlock(vector<WideString> &blocksNames, vector<WideString> &labels);                      
-        AcadBlockPtr MakeCombineBlock(WideString block1, WideString label1,
-                                      WideString block2, WideString label2="",
-                                      WideString block3="", WideString label3="",
-                                      WideString block4="", WideString label4="");
+        AcadBlockPtr MakeCombineBlock(vector<WideString> &blocksNames, vector<WideString> &labels);
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /*PAPERSPACE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
