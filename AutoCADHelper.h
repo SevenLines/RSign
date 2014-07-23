@@ -279,12 +279,13 @@ public:
 
 class AutoCADHelper
 {
-
+friend class SignsCollection;
 private:
         IAcadApplicationDisp cadApplication;
         TAcadDocument *cadActiveDocument;
         bool fApplicationRun, fInvertYAxe, fInvertXAxe;
         TNotifyEvent gOnActiveDocumentBeginClose;
+        vector<WideString> existingBlocks;
 
         Graphics::TBitmap *BMP;
         
@@ -417,6 +418,7 @@ public:
         AcadBlockReferencePtr DrawBlock(WideString BlockName,
                               double x = 0, double y = 0,
                               double rotation = 0, double scale = 1);
+        AcadBlockPtr MakeCombineBlock(vector<WideString> &blocksNames, vector<WideString> &labels);                      
         AcadBlockPtr MakeCombineBlock(WideString block1, WideString label1,
                                       WideString block2, WideString label2="",
                                       WideString block3="", WideString label3="",
