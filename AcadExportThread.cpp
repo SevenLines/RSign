@@ -202,7 +202,8 @@ void __fastcall AcadExportThread::Execute()
     aexp->ProgressChanged = ProgressChanged;
 
     if (FAutoCADExport->ExportAddRows) {
-        if ( !(aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows,true) || aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows,true)) ) {
+        if ( !(aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows,true)
+            || aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows,true)) ) {
             int result = Application->MessageBox("По пути указаному для дополнительных строк не было найденно не одного файла."
             "Желаете ли вернуться и указать другой путь(No) или оставить все как есть и продолжить(Yes)?", "Предупреждение", MB_YESNO );
             switch ( result ) {
@@ -230,7 +231,6 @@ void __fastcall AcadExportThread::Execute()
         TDtaSource *DataCur = CurData==0?PrjData:CurData; // для обектов выводимых приоритено из текущего источника
 
         countOfExportItems = FAutoCADExport->CountOfExports();
-//        aexp->hideApplication();
         switch(FAutoCADExport->ExportTo){
         case 0:
             ADD_PROGRESS_FORM_LINE("Подключение к активному документу");
@@ -248,7 +248,11 @@ void __fastcall AcadExportThread::Execute()
             goto export_end;
         }
 
-
+        if (FAutoCADExport->ExportHideAutoCAD) {
+            aexp->hideApplication();
+        } else {
+            aexp->showApplication();
+        }
 
         /* -- Подсчет разметки от осевой -- */
         int iLeftMax = 0, iRightMax = 0;
@@ -1039,7 +1043,9 @@ void __fastcall AcadExportThread::Execute()
 
 // МЕТКА :D
 export_end:
-    //aexp->showApplication();
+    //if (FAutoCADExport->ExportHideAutoCAD) {
+        aexp->showApplication();
+    //}
     ProgressForm->Hide();
     if ( ERROR_WAS ) {
         if (!fWickedErrorWas) {

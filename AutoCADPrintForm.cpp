@@ -566,6 +566,7 @@ void TFAutoCADPrint::Print(PrintType printType)
         if(roadName.IsBound()) {
            roadName->set_TextString(WideString(strRoadName));
         }
+        helper->DisableAutoSave();
         ProgressForm->Show();
 
         for(int j=iMin;j<=iMax;j++){
@@ -636,10 +637,11 @@ void TFAutoCADPrint::Print(PrintType printType)
           ProgressForm->Position = j-iMin;
           Application->ProcessMessages();
           if(GetKeyState(VK_ESCAPE)&0x0100||ProgressForm->Terminated) {
-            ProgressForm->Hide();
-            return;
+            goto print_end;
           }
         }
+print_end:
+        helper->EnableAutoSave();
         ProgressForm->Hide();
 }
 

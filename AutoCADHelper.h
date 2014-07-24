@@ -268,6 +268,7 @@ private:
         float gMakeBlockGap;
         double gMakeBlockTextHeight;
         double gMakeBlockTextOffsetX;
+        int iAutoSaveInterval;
 
         AcadText *gCopyTextObject;
         bool gCopyText;
@@ -311,6 +312,8 @@ public:
         AcadApplication *BindAutoCAD();
         void ResetBlocksCollection();
         void waitForIdle();
+        void DisableAutoSave();
+        void EnableAutoSave();        
         bool IsLarger(AnsiString name);
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 

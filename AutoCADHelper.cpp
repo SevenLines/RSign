@@ -155,6 +155,7 @@ AutoCADHelper::AutoCADHelper():fInvertYAxe(0),fInvertXAxe(0)
    fApplicationRun = false;
    gCopyTextObject = 0;
    gCopyText = 0;
+   iAutoSaveInterval = -1;
    BMP = new Graphics::TBitmap();
 }
 
@@ -1137,6 +1138,20 @@ void AutoCADHelper::ResetBlocksCollection()
 void AutoCADHelper::waitForIdle()
 {
     while(!Application->GetAcadState()->IsQuiescent);
+}
+
+void AutoCADHelper::DisableAutoSave()
+{
+    iAutoSaveInterval = Application->Preferences->OpenSave->AutoSaveInterval;
+    ActiveDocument->SendCommand(WideString("SAVETIME 0\n"));
+}
+
+void AutoCADHelper::EnableAutoSave()
+{
+    if (iAutoSaveInterval != -1) {
+        ActiveDocument->SendCommand(WideString("SAVETIME " + IntToStr(iAutoSaveInterval) + "\n"));
+        iAutoSaveInterval = -1;
+    }
 }
 
 bool AutoCADHelper::IsLarger(AnsiString name)
