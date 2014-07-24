@@ -192,6 +192,7 @@ __published:	// IDE-managed Components
     TButton *btnShowInfo;
     TEdit *edtMinBarrierSegmentLength;
     TLabel *Label16;
+    TCheckBox *chkHideAutoCAD;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
@@ -259,15 +260,18 @@ public:		// User declarations
         MPROPERTY1(Town);
         MPROPERTY1(Surface);
         MPROPERTY1(MakeHeader);
+        MPROPERTY1(HideAutoCAD);
         __property bool ExportAddRows = {read = get_ExportAddRows};\
         bool get_ExportAddRows(){
              return getTopRow("дополнительные строки")!=-1 && getBottomRow("дополнительные строки")!=-1 && !edtTopAddRows->Text.IsEmpty();
         }
 
 
-        MPROPERTY1(TopAddRowsWithoutData);           
+        MPROPERTY1(TopAddRowsWithoutData);
         MPROPERTY1(GridStep);
         MPROPERTY1(Ruler);
+        MPROPERTY1(Section);
+        MPROPERTY1(Graphic);
 
         MPROPERTY3(RCenter);
         MPROPERTY3(NotExistsColor);
@@ -290,9 +294,7 @@ public:		// User declarations
         MPROPERTY6(Step);
         MPROPERTY6(GridStep);
 
-        MPROPERTY1(Section);
-  
-        MPROPERTY1(Graphic);
+
 
         MPROPERTY4(LinesTop);
         MPROPERTY4(LinesBottom);

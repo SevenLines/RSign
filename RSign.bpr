@@ -18,7 +18,7 @@
       ConstHelp.obj BuildSlopes.obj BuildWidePart.obj RoadMark.obj 
       ErrorObjectDlg.obj acadexport.obj AutoCADHelper.obj AutoCADPrintForm.obj 
       AutoCADExportForm.obj unSignalsInsert.obj AcadExportThread.obj 
-      AttachForm.obj MoveForm.obj AddRowsDescription.obj"/>
+      AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -153,6 +153,7 @@
       <FILE FILENAME="AttachForm.cpp" FORMNAME="frmAttachParams" UNITNAME="AttachForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="MoveForm.cpp" FORMNAME="moveDialog" UNITNAME="MoveForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AddRowsDescription.cpp" FORMNAME="FAddRowDescription" UNITNAME="AddRowsDescription" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Utils.cpp" FORMNAME="" UNITNAME="Utils" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

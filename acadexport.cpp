@@ -327,8 +327,9 @@ bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
         rectmap.clear();
 
         AutoCAD.RunAutoCAD();
-        iAutoSaveInterval = AutoCAD.Application->Preferences->OpenSave->AutoSaveInterval;
-        AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME 0\n"));
+        AutoCAD.DisableAutoSave();
+        /*iAutoSaveInterval = AutoCAD.Application->Preferences->OpenSave->AutoSaveInterval;
+        AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME 0\n")); */
 
         strSignsAbsent = "";
         strMarkAbsent = "";
@@ -645,7 +646,7 @@ bool __fastcall TAcadExport::FindPlacement(drect &r,char dir,bool store,TRoadObj
 
 void __fastcall TAcadExport::EndDocument() {
     rectmap.clear();
-    AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME " + IntToStr(iAutoSaveInterval) + "\n"));
+    //AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME " + IntToStr(iAutoSaveInterval) + "\n"));
     AutoCAD.Application->ZoomAll();
 
     AnsiString strMessage="";
@@ -667,6 +668,7 @@ void __fastcall TAcadExport::EndDocument() {
     if(fAlreadyDrawTube){
         Tube->Delete(); 
     }
+    AutoCAD.EnableAutoSave();
 }
 
 bool _fastcall TAcadExport::ExportProfil(TExtPolyline *Poly) {
