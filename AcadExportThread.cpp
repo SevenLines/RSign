@@ -204,9 +204,9 @@ void __fastcall AcadExportThread::Execute()
     if (FAutoCADExport->ExportAddRows) {
         if ( !(aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows,true) || aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows,true)) ) {
             int result = Application->MessageBox("По пути указаному для дополнительных строк не было найденно не одного файла."
-            "Желаете ли вернуться и указать другой путь(Yes) или оставить все как есть и продолжить(No)?", "Предупреждение", MB_YESNO );
+            "Желаете ли вернуться и указать другой путь(No) или оставить все как есть и продолжить(Yes)?", "Предупреждение", MB_YESNO );
             switch ( result ) {
-            case IDYES:
+            case IDNO:
                 delete aexp;
                 delete R;
                 goto export_end;
@@ -1039,7 +1039,7 @@ void __fastcall AcadExportThread::Execute()
 
 // МЕТКА :D
 export_end:
-//    aexp->showApplication();
+    //aexp->showApplication();
     ProgressForm->Hide();
     if ( ERROR_WAS ) {
         if (!fWickedErrorWas) {

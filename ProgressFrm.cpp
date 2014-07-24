@@ -73,6 +73,8 @@ void __fastcall TProgressForm::clearLog()
 
 void __fastcall TProgressForm::SetMinMax(int mn,int mx)
 {
+    ProgressBar->MinValue = -999999;
+    ProgressBar->MaxValue = 0;
     ProgressBar->MaxValue=mx;
     ProgressBar->MinValue=mn;
 }

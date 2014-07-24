@@ -13,6 +13,7 @@ __fastcall TOpenRoadDialog::TOpenRoadDialog(TComponent* Owner)
     : TForm(Owner)
 {
    Mode=0;
+   lastGroupId = -1;
 }
 //---------------------------------------------------------------------------
 void __fastcall TOpenRoadDialog::Button1Click(TObject *Sender)
@@ -28,21 +29,33 @@ void __fastcall TOpenRoadDialog::SetFilter(TObject *Sender) {
         Button3->Caption="Титулы";
     } else if (Mode==0) {
        String f;
+
        bool fWas = false;
-       int groupID = (int)cbGroup->Items->Objects[cbGroup->ItemIndex];
-       //if (groupID) {
+
+       // фильтр перечня
+       // lastGroupId меняется при выборе перечня из выпадающего списка
+       if (lastGroupId != -1 && lastGroupId < cbGroup->Items->Count) {
+          if ((int)cbGroup->Items->Objects[lastGroupId]!=0) {
+            int groupID = (int)cbGroup->Items->Objects[lastGroupId];
             f="NumGroup="+IntToStr(groupID);
             fWas = true;
-       //}
+          }
+       }
+
+       // фильтр по ID-ишнику
        if (!txtIDFilter->Text.IsEmpty()) {
           if (fWas) f+=" and ";
           f+="id_="+txtIDFilter->Text;
        } else {
-          if ((int)cbDist->Items->Objects[cbDist->ItemIndex]!=0) {
-             if (fWas) f+=" and ";
-             fWas = true;
-             f +="did="+IntToStr((int)cbDist->Items->Objects[cbDist->ItemIndex]);
+          // фильтр района
+          if (cbDist->ItemIndex > -1 && cbDist->ItemIndex < cbDist->Items->Count) {
+             if ((int)cbDist->Items->Objects[cbDist->ItemIndex]!=0) {
+               if (fWas) f+=" and ";
+               fWas = true;
+               f +="did="+IntToStr((int)cbDist->Items->Objects[cbDist->ItemIndex]);
+             }
           }
+          // фильтр по названию
           if (!txtFilter->Text.IsEmpty()) {
              if (fWas) f+=" and ";
              fWas = true;
@@ -52,7 +65,6 @@ void __fastcall TOpenRoadDialog::SetFilter(TObject *Sender) {
        ListRoads_DataSet->Filter=f;
        Button3->Caption="Подтитулы";
     }
-
 }
 
 
@@ -77,7 +89,8 @@ void __fastcall TOpenRoadDialog::FormShow(TObject *Sender)
    ds->Next();
  }
  ds->Close();
- cbGroup->ItemIndex=all;
+ // востанавливаем индекс перечня
+ cbGroup->ItemIndex=lastGroupId;
  oldid=-1;
  if (cbDist->ItemIndex>=0)
     oldid=(int)cbDist->Items->Objects[cbDist->ItemIndex];
@@ -118,6 +131,26 @@ void __fastcall TOpenRoadDialog::FormKeyDown(TObject *Sender, WORD &Key,
        Button2->Click();
      break;
   }   
+}
+//---------------------------------------------------------------------------
+void TOpenRoadDialog::LoadIni(TIniFile *ini)
+{
+    txtFilter->Text = ini->ReadString("OpenRoadDialog", "txtFilter", "");
+    txtIDFilter->Text = ini->ReadString("OpenRoadDialog", "txtIDFilter", "");
+    lastGroupId = ini->ReadInteger("OpenRoadDialog", "lastGroupId", -1);
+}
+//---------------------------------------------------------------------------
+void TOpenRoadDialog::SaveIni(TIniFile *ini)
+{
+    ini->WriteString("OpenRoadDialog", "txtFilter", txtFilter->Text);
+    ini->WriteString("OpenRoadDialog", "txtIDFilter", txtIDFilter->Text);
+    ini->WriteInteger("OpenRoadDialog", "lastGroupId", lastGroupId);
+}
+//---------------------------------------------------------------------------
+void __fastcall TOpenRoadDialog::cbGroupChange(TObject *Sender)
+{
+   lastGroupId = cbGroup->ItemIndex; // меняем lastGroupId
+   SetFilter(Sender); // обновляем фильтр
 }
 //---------------------------------------------------------------------------
 

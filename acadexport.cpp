@@ -183,64 +183,57 @@ void TAcadExport::ResetLastPoints()
 __fastcall TAcadExport::~TAcadExport(void) {
 }
 
+AcadPolylinePtr TAcadExport::DrawPolyLine(vector<double> &points)
+{
+   AcadPolylinePtr pl;
+   if (points.size() >= 4) {
+     pl = AutoCAD.DrawPolyLine(points, 2);
+   }
+   return pl;
+}
+
 AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes, bool fLockGaps)
 {
-    int i,iLast,count,length,*codes;
-    //bool iCodeLast;
-    double *points = 0;
-
+    vector<double> points, range;
+    vector<int> codes;
     AcadPolylinePtr pl;
 
-    //iCodeLast = true;
-
-    count = Poly->Count;
-    points = new double[(Poly->Count+1)*2];
-    codes = new int[(Poly->Count+1)];
-
-    for(i=0;i<count;i++){
-        codes[i] = Poly->Codes[i].Visible();
-        points[2*i] = Poly->Points[i].x;
-        points[2*i+1] = -ScaleY*Poly->Points[i].y;
+    if (Poly->Count < 2) {
+        return pl;
     }
-    points[2*count] = Poly->Points[0].x;
-    points[2*count+1] = -ScaleY*Poly->Points[0].y;   
+    
+    for (int i=0;i<Poly->Count;++i) {
+        points.push_back(Poly->Points[i].x);
+        points.push_back(-ScaleY*Poly->Points[i].y);
+        codes.push_back(Poly->Codes[i].Visible());
+    }
 
-    iLast = 0;
+    int iLast = 0;
     if(fUseCodes){
-        for(i=1;i<count;i++){
-            length = i-iLast;
+        for(int i=1;i<codes.size();i++){
             if(!codes[i]){
-                if(length>1){
-                    pl = AutoCAD.DrawPolyLine(&points[2*iLast],length,2);
+                if( i - iLast >= 2 ) {
+                    range = vector<double>(
+                        points.begin() + 2*iLast,
+                        points.begin() + 2*i);
+                    pl = DrawPolyLine(range);
                 }
                 iLast = i;
             }
-            //iCodeLast = codes[i];
         }
-        if((codes[i-1]&&fUseCodes)||!fUseCodes){
-            length = count-iLast;
-            if(codes[0]){
-                length++;
-            }
-            pl = AutoCAD.DrawPolyLine(&points[2*iLast],length,2);
+        if((codes[codes.size()-1]&&fUseCodes)||!fUseCodes){
+            range = vector<double>(
+                        points.begin() + 2*iLast,
+                        points.end());
+            pl = DrawPolyLine(range);
         }
     } else {
-        if(fLockGaps) {
-            points[2*count] = points[0];
-            points[2*count+1] = points[1];
-            pl = AutoCAD.DrawPolyLine(&points[0],count+1,2);
-        } else {
-            pl = AutoCAD.DrawPolyLine(&points[0],count,2);
+        if(fLockGaps && Poly->Count > 2) {
+            points.push_back(Poly->Points[0].x);
+            points.push_back(-ScaleY*Poly->Points[0].y);
         }
+        pl = DrawPolyLine(points);
     }
-
-    /* if(codes[0]&&count>2){
-    points[2] = Poly->Points[count-1].x;
-    points[3] = -ScaleY*Poly->Points[count-1].y;
-    AutoCAD.DrawPolyLine(points,2,2);
-} */
-    delete[] points;
-    delete[] codes;
     return pl;
 }
 
@@ -267,8 +260,9 @@ bool __fastcall TAcadExport::AddDocument()
     try{
         AutoCAD.ResetBlocksCollection();
         AutoCAD.AddDocument(strAutoCADDir + "SignsDef.dwt");
+        AutoCAD.SendCommand(WideString("CLAYER 0\n"));
+        AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
         AutoCAD.CheckExistingBlocks();
-        AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;          
     }catch(...){
         return false;
     }
@@ -293,8 +287,9 @@ bool __fastcall TAcadExport::OpenDocument(AnsiString name)
         }else{
             AutoCAD.OpenDocument(name);
         }
+        AutoCAD.SendCommand(WideString("CLAYER 0\n"));
+        AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
         AutoCAD.CheckExistingBlocks();
-        AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;  
     }catch(...){
         return false;
     }
@@ -306,8 +301,9 @@ bool __fastcall TAcadExport::BindActiveDocument()
 {
     AutoCAD.ResetBlocksCollection();
     if ( AutoCAD.BindToActiveDocument() ) { // function return false on error
-        AutoCAD.CheckExistingBlocks();
+        AutoCAD.SendCommand(WideString("CLAYER 0\n"));
         AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
+        AutoCAD.CheckExistingBlocks();
         return true;
     }
     return false;
@@ -331,6 +327,8 @@ bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
         rectmap.clear();
 
         AutoCAD.RunAutoCAD();
+        iAutoSaveInterval = AutoCAD.Application->Preferences->OpenSave->AutoSaveInterval;
+        AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME 0\n"));
 
         strSignsAbsent = "";
         strMarkAbsent = "";
@@ -354,28 +352,15 @@ bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
 
 bool __fastcall TAcadExport::AddLayer(AnsiString l_name)
 {
-    try{
-//        AutoCAD.waitForIdle();
-        WideString layer_name = WideString(l_name);
-        IAcadLayers *layers = AutoCAD.ActiveDocument->get_Layers();
-        if (!layers)
-           return false;
-        long count;
-        layers->get_Count(&count);
-        for(int i=0;i<count;++i) {
-           IAcadLayer *layer = layers->Item(Variant(i));
-           if (layer && WideString(layer->Name) == layer_name) {
-              AutoCAD.ActiveDocument->ActiveLayer = layer;
-              return true;
-           }
-        }
-//        AutoCAD.waitForIdle();
-        IAcadLayer * layer_ptr = layers->Add(layer_name.c_bstr());
-        AutoCAD.ActiveDocument->ActiveLayer = layer_ptr;
-    }catch(...){
-        return false;
-    }
-    return true;
+      IAcadLayers *layers = AutoCAD.ActiveDocument->get_Layers();
+      if (!layers)
+         return false;
+      try {
+        IAcadLayer * layer_ptr = layers->Add(WideString(l_name).c_bstr());
+      } catch(...) {}
+      AutoCAD.SendCommand(WideString("CLAYER " + l_name + "\n"));
+
+      return true;
 }
 
 
@@ -660,7 +645,7 @@ bool __fastcall TAcadExport::FindPlacement(drect &r,char dir,bool store,TRoadObj
 
 void __fastcall TAcadExport::EndDocument() {
     rectmap.clear();
-
+    AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME " + IntToStr(iAutoSaveInterval) + "\n"));
     AutoCAD.Application->ZoomAll();
 
     AnsiString strMessage="";
@@ -901,52 +886,29 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     AnsiString sEmpty = "";
 
     try{
-        switch(count){
-        case 1:
-            try {
+		
+		if (count==1) {
+			try {
                 DrawSign(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
                 AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
                 yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
             }catch(...) {
                 if(!strSignsAbsent.Pos(signs[0]->OldTitle))strSignsAbsent+="\n"+signs[0]->OldTitle;
             }
-            break;
-
-        case 2:
-            block = AutoCAD.MakeCombineBlock(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
-            signs[1]->OldTitle+(signs[1]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[1]->ViewKind))),signs[1]->Label);
+		} else {
+			vector<WideString> blockNames;
+			vector<WideString> labels;
+			for(int i=0;i<count;++i) {
+				blockNames.push_back(signs[i]->OldTitle+(signs[i]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[i]->ViewKind))));
+				labels.push_back(signs[i]->Label);
+			}
+			block = AutoCAD.MakeCombineBlock(blockNames, labels);
             if(block.IsBound()){
                 DrawSign(block->Name,"",
                 AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
                 yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
             }
-            break;
-
-        case 3:
-            block = AutoCAD.MakeCombineBlock(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
-            signs[1]->OldTitle+(signs[1]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[1]->ViewKind))),signs[1]->Label,
-            signs[2]->OldTitle+(signs[2]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[2]->ViewKind))),signs[2]->Label);
-            if(block.IsBound()){
-                DrawSign(block->Name,"",
-                AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
-                yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
-            }
-            break;
-
-        case 4:
-            block = AutoCAD.MakeCombineBlock(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
-            signs[1]->OldTitle+(signs[1]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[1]->ViewKind))),signs[1]->Label,
-            signs[2]->OldTitle+(signs[2]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[2]->ViewKind))),signs[2]->Label,
-            signs[3]->OldTitle+(signs[3]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[3]->ViewKind))),signs[3]->Label);
-            if(block.IsBound()){
-                DrawSign(block->Name,"",
-                AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
-                yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
-            }
-            break;
-
-        default:;
-        }
+		}
     }catch(...){
         AnsiString message = "Ошибка вывода знака: " + signs[0]->OldTitle + " на позиции " + IntToStr(Poly->Points[0].x);
         BUILDER_ERROR( message.c_str() );
@@ -2389,20 +2351,25 @@ for(int i=0;i<count;i++) {
 }
 DrawBorder(points, "borderblock", exist);
 */
-    AcadPolylinePtr line = DrawPolyPoints(Poly, false);
-    line->set_Lineweight(acLnWt050);
-
-    if(!exist) {
-        line->color = NotExistColor;
+    AcadPolylinePtr line;
+    
+    line = DrawPolyPoints(Poly, false);
+    if (line.IsBound()) {
+      line->set_Lineweight(50);
+      if(!exist) {
+          line->color = NotExistColor;
+      }
     }
 
     line = DrawPolyPoints(Poly, false);
-    line->set_Lineweight(acLnWt030);
-    line->set_Linetype(WideString("linedash_1"));
-    AcadAcCmColorPtr color;
-    color = line->TrueColor;
-    color->SetRGB(255,255,255);
-    line->TrueColor = color;
+    if (line.IsBound()) {
+      line->set_Lineweight(30);
+      line->set_Linetype(WideString("linedash_1"));
+      AcadAcCmColorPtr color;
+      color = line->TrueColor;
+      color->SetRGB(255,255,255);
+      line->TrueColor = color;
+    }
 
     return true;
 }
@@ -2592,7 +2559,12 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
                     }
                 }
 
+                s.erase(s.find_last_not_of(" \n\r\t")+1);
+
                 line = s.c_str();
+                if (s.length() <= 0)
+                    continue;
+
                 if(line[1] == '#') { // if comment
                     // remove comment symbol, and trim string
                     line[1] = ' ';

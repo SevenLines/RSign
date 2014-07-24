@@ -11,74 +11,6 @@
 
 #pragma package(smart_init)
 
-
-AutoCADSignBlockInfo::AutoCADSignBlockInfo(AnsiString _name,int _index)
-{
-   name = _name;
-   index = _index;
-}
-
-int SignsCollection::GetIndexByName(AnsiString name)
-{
-   vector<AutoCADSignBlockInfo>::iterator i1 = signs.begin();
-   while(i1!=signs.end()){
-      if(i1->name == name){
-         return i1->index;
-      }
-      i1++;
-   }
-   return -1;
-}
-
-AnsiString SignsCollection::GetNameByIndex(int index)
-{
-   vector<AutoCADSignBlockInfo>::iterator i1 = signs.begin();
-   while(i1!=signs.end()){
-      if(i1->index == index){
-         return i1->name;
-      }
-      i1++;
-   }
-   return "";
-}
-
-
-void SignsCollection::Clear()
-{
-  signs.clear();
-}
-
-
-void SignsCollection::CheckExistingBlocks()
-{
-   /*static count,i;
-   AnsiString str;
-   if(Owner){
-      Clear();
-      try{
-        if(Owner->ActiveDocument.IsBound()){
-           count = Owner->BlocksCount;
-           for(i=0;i<count;i++){
-              str = Owner->Blocks[i]->Name;
-              if(str =="5.19.1_5.19.2"){
-                 str = str;
-              }*
-              signs.push_back(AutoCADSignBlockInfo(str,i));
-
-           }
-        }
-      }catch(...){
-        return;
-      }
-   } */
-}
-
-void SignsCollection::AddBlock(AnsiString name, int i)
-{
-   signs.push_back(AutoCADSignBlockInfo(name,i));
-}
-
-
 int AutoCADHelper::GetTextWidth(AnsiString text, int Height)
 {
     /*if(!cadActiveDocument) return -1;
@@ -221,7 +153,6 @@ AutoCADHelper::AutoCADHelper():fInvertYAxe(0),fInvertXAxe(0)
    cadActiveDocument = new TAcadDocument(0);
    cadApplication = 0;
    fApplicationRun = false;
-   SignsCollection.Owner = this;
    gCopyTextObject = 0;
    gCopyText = 0;
    BMP = new Graphics::TBitmap();
@@ -818,7 +749,19 @@ bool AutoCADHelper::SetupViewport(AcadLayoutPtr layout, double x, double y,
 
 void AutoCADHelper::CheckExistingBlocks()
 {
-   SignsCollection.CheckExistingBlocks();
+    existingBlocks.clear();
+	IAcadBlock * tempBlock;
+    IAcadBlocksPtr blocks = cadActiveDocument->Blocks;
+    int count = blocks->Count;
+
+    for(int i=0;i<count;++i) {
+		try {
+			tempBlock = blocks->Item(Variant(i));
+			existingBlocks.push_back(tempBlock->Name);
+		} catch(...) {
+			continue;
+		}
+	}
 }
 
 bool AutoCADHelper::BindToActiveDocument()
@@ -1025,6 +968,11 @@ AcadPolylinePtr AutoCADHelper::DrawPolyLine(double *array, int count, int coordC
    return cadActiveDocument->ModelSpace->AddPolyline(cadPointArray(array,count, coordCount));
 }
 
+AcadPolylinePtr AutoCADHelper::DrawPolyLine(vector<double> &array, int coordCount)
+{
+   return DrawPolyLine(array.begin(), array.size()/coordCount, coordCount);
+}
+
 AcadPolylinePtr AutoCADHelper::DrawPolyLinePS(double *array, int count, int coordCount)
 {
 //   WARNING_AND_RETURN_VALUE_ON_0(cadActiveDocument.IsBound(), AcadPolylinePtr());
@@ -1183,7 +1131,7 @@ void AutoCADHelper::SetSignLabels(AcadBlockReferencePtr block, WideString str)
 
 void AutoCADHelper::ResetBlocksCollection()
 {
-   SignsCollection.Clear();
+   existingBlocks.clear();
 }
 
 void AutoCADHelper::waitForIdle()
@@ -1197,250 +1145,88 @@ bool AutoCADHelper::IsLarger(AnsiString name)
 }
 
 
-AcadBlockPtr AutoCADHelper::MakeCombineBlock(WideString block1, WideString label1,
-                                             WideString block2, WideString label2,
-                                             WideString block3, WideString label3,
-                                             WideString block4, WideString label4)
+AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, vector<WideString> &labels)
 {
-    int subBlocksCount;
-    int i, blockIndex;
-    bool ffind, fHaveNoLabels;
-    int count;
-    double maxWidth,maxWidth2,width, block3Width, height,height2, fullHeight, TopOffset;
-    float offset,scale;
-    const float GlobalScale = 1.5; 
-    Variant tVar;
+	AnsiString newBlockName;
+	AcadBlockPtr newBlock;
+	IAcadBlock* tempBlock;
+	vector<IAcadBlock*> blocks;
+    vector<WideString> labelsNew;
 
-    AutoCADPoint p1(0,0), p2(0,0), pTop;
+	// ищем существующие блоки и формируем имя комбинированного
+	for(int i=0;i<blocksNames.size();++i) {
+		try {
+			tempBlock = cadActiveDocument->Blocks->Item(Variant(blocksNames[i]));
+		} catch(...) {
+			continue;
+		}
+		if (newBlockName!="") newBlockName+="_";
+		newBlockName += blocksNames[i];
+		
+		AnsiString label = labels[i];
+		label = StringReplace(label, " ", "", TReplaceFlags() << rfReplaceAll);
+		label = StringReplace(label, "\t", "", TReplaceFlags() << rfReplaceAll);
+		label = StringReplace(label, "\n", "", TReplaceFlags() << rfReplaceAll);
+		if (!labels[i].IsEmpty()) {
+			newBlockName += "[" + label + "]";
+		}
+		
+		labelsNew.push_back(labels[i]);
+		blocks.push_back(tempBlock);
+	}
+	
+	// пробуем возвратить ново-созданный блок, вдруг он уже существует
+	if (std::find(existingBlocks.begin(), existingBlocks.end(), newBlockName) != existingBlocks.end()) {
+		return cadActiveDocument->Blocks->Item(Variant(newBlockName));
+	}
+	
+	// ищем размеры блоков
+    double subBlockHeight;
+    double blockGap = gMakeBlockGap;
+	vector<double> blockHeights(blocks.size());
+	for(int i=0;i<blocks.size();++i) {
+		int subBlocksCount = blocks[i]->Count;
+        subBlockHeight = -1;
+		for(int j=0;j<subBlocksCount;j++){
+		   AcadEntityPtr entity = blocks[i]->Item(Variant(j));
+		   if(entity->EntityType == 7){
+			  AcadBlockReferencePtr subBlock = entity;
+			  if(GetPropertyDouble(subBlock, "Height", subBlockHeight)){
+				  //if(GetPropertyDouble(subBlock,"Width",width)){
+					float scale = subBlock->XScaleFactor;
+					subBlockHeight *= scale;
+					break;
+				  //}
+			  }
+		   }
+		}
+		blockHeights[i] = subBlockHeight + blockGap;
+	}
+	
+	// формируем суммарную высоту блоков
+	double fullHeight = 0;
+	for (int i=0;i<blocks.size();++i)
+		if (blockHeights[i] != -1) fullHeight += blockHeights[i];
+	
+	//	формируем новый блок
+	int yOffset = 0;
+	newBlock = cadActiveDocument->Blocks->Add(cadPoint(0, 0), WideString(newBlockName));
+	for(int i=0;i<blocks.size();++i) {
+		if(blockHeights[i] != -1) {
+            WideString subBlockName = blocks[i]->Name;
+			IAcadBlockReference *subBlock =
+            newBlock->InsertBlock(cadPoint(0, fullHeight/2 - yOffset - blockHeights[i] / 2), 
+						subBlockName,1, 1, 1, 0, TNoParam());
+            SetSignLabels(subBlock, SignLabelParser(subBlockName, labelsNew[i]));
+            yOffset += blockHeights[i];
+		}		
+	}
 
-    p1.x = p1.y = 0;
-    p2.x = p2.y = 0;
-    pTop.x = 0;
-    fullHeight = 0;
-    AcadBlock * newBlock = 0;
-
-    count = (block1.IsEmpty()?0:1) + (block2.IsEmpty()?0:1)
-             + (block3.IsEmpty()?0:1) + (block4.IsEmpty()?0:1);
-    if(count<2) return newBlock;
-
-    maxWidth = maxWidth2 = 0;
-
-    AcadBlockPtr *block = new AcadBlockPtr[count];
-    AutoCADPoint *blockspos = new AutoCADPoint[count];
-
-    AcadBlockReferencePtr subBlock;
-    AcadEntityPtr entity;
-    WideString newBlockName;
-
-    bool fCheckLostBlock = false;
-
-    for(int i=0;i<count;i++){
-       switch(i){
-          case 0:
-            try{
-                block[0] = cadActiveDocument->Blocks->Item(Variant(block1));
-            }catch(...){
-                fCheckLostBlock = true;
-                if(!strLostBlocks.Pos(block1)){
-                  strLostBlocks+="\n"+block1;
-                }
-            }
-            newBlockName+=block1+ ((i==count-1)?"":"_");
-          break;
-          case 1:
-          
-            try{
-                block[1] = cadActiveDocument->Blocks->Item(Variant(block2));
-            }catch(...){
-                fCheckLostBlock = true;
-                if(!strLostBlocks.Pos(block2)){
-                  strLostBlocks+="\n"+block2;
-                }
-            }
-
-            newBlockName+=block2 + ((i==count-1)?"":"_");
-          break;
-          case 2:
-          
-            try{
-             block[2] = cadActiveDocument->Blocks->Item(Variant(block3));
-            }catch(...){
-                fCheckLostBlock = true;
-                if(!strLostBlocks.Pos(block3)){
-                  strLostBlocks+="\n"+block3;
-                }
-            }
-
-            newBlockName+=block3 + ((i==count-1)?"":"_");
-          break;
-          case 3:
-            try{
-                block[3] = cadActiveDocument->Blocks->Item(Variant(block4));
-            }catch(...){
-                fCheckLostBlock = true;
-                if(!strLostBlocks.Pos(block4)){
-                  strLostBlocks+="\n"+block4;
-                }
-            }
-            newBlockName+=block4 + ((i==count-1)?"":"_");
-          break;
-       }
-    }
-
-    if(fCheckLostBlock) return newBlock;
-
-    fHaveNoLabels = label1.IsEmpty()&&label2.IsEmpty()&&label3.IsEmpty()&&label4.IsEmpty();
-
-    if((blockIndex=SignsCollection.GetIndexByName(newBlockName))!=-1&&fHaveNoLabels){
-       return BlocksByName[newBlockName];
-    }
-
-    if(!fHaveNoLabels){
-      newBlockName+="#"+IntToStr(comboSignCount++);
-    }
-    
-
-    blockspos[0] = p1;
-    subBlocksCount = block[0]->Count;
-    ffind = false;
-    for(i=0;i<subBlocksCount;i++){
-       entity = block[0]->Item(Variant(i));
-       if(entity->EntityType == 7){
-          subBlock=entity;
-          if(GetPropertyDouble(subBlock,"Height",height)){
-              if(GetPropertyDouble(subBlock,"Width",width)){
-                scale = subBlock->XScaleFactor;
-                height*=scale;
-                width*=scale;                
-                maxWidth = width>maxWidth?width:maxWidth;
-                ffind = true;
-                break;
-              }
-          }
-       }
-    }
-
-    if(!ffind) return newBlock;
-
-    TopOffset = height/2;
-    fullHeight+=height;
-
-    ffind = false;
-    subBlocksCount = block[1]->Count;
-    for(i=0;i<subBlocksCount;i++){
-       entity = block[1]->Item(Variant(i));
-       if(entity->EntityType == 7){
-          subBlock = entity;
-          if(GetPropertyDouble(entity,"Height",height2)){
-            if(GetPropertyDouble(entity,"Width",width)){
-                scale = subBlock->XScaleFactor;
-                height2*=scale;
-                width*=scale;
-                maxWidth = width>maxWidth?width:maxWidth;               
-                ffind = true;
-                break;
-            }
-          }
-       }
-    }
-    if(!ffind) return newBlock;
-
-    fullHeight+=height2;
-
-    p2.y = (p1.y - height/2 - height2/2-gMakeBlockGap);
-    p1 = p2;
-    height = height2;
-    blockspos[1] = p2;
-
-    if(count>2){
-        ffind = false;
-        subBlocksCount = block[2]->Count;
-        for(i=0;i<subBlocksCount;i++){
-           entity = block[2]->Item(Variant(i));
-           if(entity->EntityType == 7){
-              subBlock = entity;
-              if(GetPropertyDouble(entity,"Height",height2)){
-                if(GetPropertyDouble(entity,"Width",block3Width)){
-                    scale = subBlock->XScaleFactor;
-                    height2*=scale;
-                    block3Width*=scale;
-                    maxWidth = block3Width>maxWidth?block3Width:maxWidth;
-                    ffind = true;
-                    break;
-                }
-              }
-           }
-        }
-        if(!ffind) return newBlock;
-        fullHeight+=height2;
-
-        p2.y = (p1.y - height/2 - height2/2-gMakeBlockGap);
-        p1 = p2;
-        height = height2;
-        blockspos[2] = p2;
-
-        if(count > 3){
-          ffind = false;
-          subBlocksCount = block[3]->Count;
-          for(i=0;i<subBlocksCount;i++){
-             entity = block[3]->Item(Variant(i));
-             if(entity->EntityType == acBlockReference){
-                subBlock = entity;
-                if(GetPropertyDouble(entity,"Height",height2)){
-                  if(GetPropertyDouble(entity,"Width",block3Width)){
-                      scale = subBlock->XScaleFactor;
-                      height2*=scale;
-                      block3Width*=scale;
-                      maxWidth = block3Width>maxWidth?block3Width:maxWidth;
-                      ffind = true;
-                      break;
-                  }
-                }
-             }
-          }
-          if(!ffind) return newBlock;
-          fullHeight+=height2;
-
-          p2.y = (p1.y - height/2 - height2/2-gMakeBlockGap);
-          p1 = p2;
-          height = height2;
-          blockspos[3] = p2;
-        }
-    }
-
-    offset =  TopOffset - (fullHeight)/2;
-
-    newBlock = cadActiveDocument->Blocks->Add(cadPoint(0,offset),WideString(newBlockName));
-    subBlock = newBlock->InsertBlock(cadPoint(blockspos[0].x,blockspos[0].y),
-        WideString(block1),1,1,1,0,TNoParam());
-    if(!label1.IsEmpty())
-       SetSignLabels(subBlock,SignLabelParser(block1, label1));
-    subBlock = newBlock->InsertBlock(cadPoint(blockspos[1].x,blockspos[1].y),
-        WideString(block2),1,1,1,0,TNoParam());
-    if(!label2.IsEmpty())
-       SetSignLabels(subBlock,SignLabelParser(block1,label2));
-    if(count>2){
-        subBlock = newBlock->InsertBlock(cadPoint(blockspos[2].x,blockspos[2].y),
-                WideString(block3),1,1,1,0,TNoParam());
-        if(!label3.IsEmpty())
-           SetSignLabels(subBlock,SignLabelParser(block1,label3));
-        if(count>3){
-          subBlock = newBlock->InsertBlock(cadPoint(blockspos[3].x,blockspos[3].y),
-                WideString(block4),1,1,1,0,TNoParam());
-          if(!label4.IsEmpty())
-             SetSignLabels(subBlock,SignLabelParser(block1,label4));
-        }
-    }
-    
-    delete[] block;
-    delete[] blockspos;
-
-    try{
-       SignsCollection.AddBlock(newBlock->Name,cadActiveDocument->Blocks->Count-1);
-    }catch(...){
-       ShowMessage("Error ON:\nSignsCollection.AddBlock(newBlock);");
-    }
-    return newBlock;
+    // добавляем блок в коллекцию блоков,
+    // чтобы в дальнейшем сразу находить нужный блок
+    // если он уже существует
+	existingBlocks.push_back(newBlock->Name);
+	return newBlock;
 }
 
 void AutoCADHelper::DrawRepeatTextInterval(WideString str, float sPosX, float ePosX,
