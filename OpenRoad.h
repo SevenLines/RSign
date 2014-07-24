@@ -32,15 +32,20 @@ __published:	// IDE-managed Components
     TComboBox *cbDist;
     TEdit *txtIDFilter;
     TEdit *txtFilter;
+    TButton *Button3;
+    TADODataSet *SubTitul_DataSet;
    void __fastcall Button1Click(TObject *Sender);
   void __fastcall FormShow(TObject *Sender);
    void __fastcall DBGrid1DblClick(TObject *Sender);
    void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
     void __fastcall SetFilter(TObject *Sender);
+    void __fastcall ListRoads_DataSetAfterScroll(TDataSet *DataSet);
+    void __fastcall Button3Click(TObject *Sender);
 private:	// User declarations
     String FRoadName;
     __int32 FRoadId;
+    __int32 Mode;   // Режимы 0 - все титулы, 1 - подтитулы 
     void __fastcall SetFilter(void);
 public:		// User declarations
     __fastcall TOpenRoadDialog(TComponent* Owner);
