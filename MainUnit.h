@@ -121,6 +121,7 @@ __published:	// IDE-managed Components
    TMenuItem *N79;
     TMenuItem *N80;
         TMenuItem *N81;
+    TMenuItem *ItemMiniReports;
   void __fastcall OpenRoad(TObject *Sender);
   void __fastcall FormCreate(TObject *Sender);
   void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
@@ -189,6 +190,7 @@ __published:	// IDE-managed Components
    void __fastcall N76Click(TObject *Sender);
     void __fastcall N80Click(TObject *Sender);
         void __fastcall N81Click(TObject *Sender);
+    void __fastcall ItemMiniReportsClick(TObject *Sender);
 
 private:	// User declarations
     void __fastcall AppShortCut(TWMKey &Key, bool &Handled);
@@ -229,6 +231,9 @@ public:		// User declarations
     void __fastcall SaveIni(void);
     void __fastcall SendBroadCastMessage(int Command,int Wpar,int Lpar);
     void __fastcall PostBroadCastMessage(int Command,int Wpar,int Lpar);
+
+    void __fastcall PrepareMinireports();
+
     __property bool PropertyByClick={read=GetPropertyByClick};
     __property bool SelectByClick={read=GetSelectByClick};
     __property int CurAttachDesigner={read=FCurAttachDesigner};
