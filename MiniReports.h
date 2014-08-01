@@ -13,6 +13,14 @@ using namespace std;
 
 class MiniReports
 {
+public:
+  struct Credentials {
+    AnsiString UserId;
+    AnsiString Password;
+    AnsiString DataSource;
+    AnsiString InitialCatalog;
+  };
+
 private:
     AnsiString _directory;
     AnsiString _sqltotxt;
@@ -26,7 +34,8 @@ public:
     AnsiString ScriptsDirectory();
     void setApplicationDir(AnsiString ApplicationDir);
     vector<AnsiString> GetReports();
-    void GenReport(AnsiString reportName, map<AnsiString, AnsiString> params);
+    void GenReport(AnsiString reportName, map<AnsiString, AnsiString> params, Credentials &credentials);
+    void ExecuteScript(AnsiString appPath, AnsiString script, Credentials &credentials);
 
     void LoadIni(TIniFile* ini);
     void SaveIni(TIniFile* ini);

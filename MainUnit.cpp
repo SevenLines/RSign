@@ -34,6 +34,7 @@
 
 #include "without_autocad.h"
 #include "AutoCADPrintForm.h"
+#include "ItemSelectDialog.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -71,8 +72,31 @@ void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
 		if (!item) return;
 		std::map<AnsiString, AnsiString> params;
 		params["NumRoad"] = FActiveRoad->RoadId;
-		params["NumDataSource"] = FActiveRoad->RoadId;      
-		MiniReportsSingleton.GenReport(item->Caption, params);
+
+        map<AnsiString, AnsiString> sources;
+		for (int i=0,j=0;i<ResManager->DataCount;i++) {
+			TDtaSource *Dta=MainForm->ResManager->Data[i];
+			if (Dta && Dta->Id == FActiveRoad->RoadId) {
+                sources[Dta->SourceName] = Dta->DataClass;
+                break;
+			}	
+		}
+        if (sources.size() > 1) {
+            ItemSelectDialogForm->setOptions(sources, "Выбирете необходимый источник");
+            if (ItemSelectDialogForm->ShowModal() != mrOk) return;
+            params["NumDataSource"] = ItemSelectDialogForm->selectedItem();
+        } else if (sources.size() > 0) {
+            params["NumDataSource"] = sources.begin()->second;
+        } else {
+            ShowMessage("Не было найдено источников, честно говоря, вообще не понятно как вы дорогу открыли");
+            return;
+        }
+
+        MiniReports::Credentials credentials;
+        //credentials.UserID = Connection->
+        //MiniReportsSingleton.SetCredentials();
+
+		MiniReportsSingleton.GenReport(item->Caption, params, credentials);
 	}
 }
 
@@ -105,8 +129,8 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
 	ini->ReadSectionValues("Cheefs",CheefList);
 	VideoServers->CommaText=ini->ReadString("Video","Servers","");
 	if (PatName!="")
-	if (Pattern->LoadFromFile(PatName))
-	VPatFrm->FileName=PatName;
+	    if (Pattern->LoadFromFile(PatName))
+	        VPatFrm->FileName=PatName;
 }
 
 void __fastcall TMainForm::WriteIni(TIniFile *ini)
@@ -209,7 +233,7 @@ void __fastcall TMainForm::SendBroadCastMessage(int Command,int Wpar,int Lpar)
 	{
 		TCustomForm *Frm=dynamic_cast<TCustomForm*>(Application->Components[i]);
 		if (Frm)
-		SendMessage(Frm->Handle,Command,Wpar,Lpar);
+		    SendMessage(Frm->Handle,Command,Wpar,Lpar);
 	}
 }
 
@@ -219,7 +243,7 @@ void __fastcall TMainForm::PostBroadCastMessage(int Command,int Wpar,int Lpar)
 	{
 		TCustomForm *Frm=dynamic_cast<TCustomForm*>(Application->Components[i]);
 		if (Frm)
-		PostMessage(Frm->Handle,Command,Wpar,Lpar);
+		    PostMessage(Frm->Handle,Command,Wpar,Lpar);
 	}
 }
 
@@ -279,7 +303,7 @@ bool __fastcall TMainForm::CloseRoad(__int32 id,__int32 dataclass)
 {
 	TRoadFrm *Frm=FindRoad(id,dataclass);
 	if (Frm)
-	Frm->Close();
+	    Frm->Close();
 	return true;
 }
 
@@ -465,14 +489,14 @@ void __fastcall TMainForm::N20Click(TObject *Sender)
 void __fastcall TMainForm::N16Click(TObject *Sender)
 {
 	if  (FActiveRoad)
-	FActiveRoad->AddNewSign();
+	    FActiveRoad->AddNewSign();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::N3Click(TObject *Sender)
 {
 	if (ActiveRoad)
-	ActiveRoad->SaveData();
+	    ActiveRoad->SaveData();
 }
 //---------------------------------------------------------------------------
 
@@ -501,7 +525,7 @@ void __fastcall TMainForm::N21Click(TObject *Sender)
 void __fastcall TMainForm::N22Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->PrintDialog();
+	    FActiveRoad->PrintDialog();
 }
 //---------------------------------------------------------------------------
 
@@ -530,7 +554,7 @@ void __fastcall TMainForm::N31Click(TObject *Sender)
 void __fastcall TMainForm::N32Click(TObject *Sender)
 {
 	if  (FActiveRoad)
-	FActiveRoad->AddNewObject();
+	    FActiveRoad->AddNewObject();
 }
 //---------------------------------------------------------------------------
 
@@ -590,14 +614,14 @@ void __fastcall TMainForm::N35Click(TObject *Sender)
 void __fastcall TMainForm::N38Click(TObject *Sender)
 {
 	if (ActiveRoad)
-	ActiveRoad->ChangeOrientation();
+	    ActiveRoad->ChangeOrientation();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::N37Click(TObject *Sender)
 {
 	if (ActiveRoad)
-	ActiveRoad->ChangeDirection();
+	    ActiveRoad->ChangeDirection();
 }
 //---------------------------------------------------------------------------
 
@@ -606,14 +630,14 @@ void __fastcall TMainForm::N42Click(TObject *Sender)
 	typedef void (*HelpFunc)(void*,char*,int,void*);
 	HelpFunc HtHelp;
 	if (!HelpLib)
-	HelpLib=LoadLibrary("hhctrl.ocx");
+	    HelpLib=LoadLibrary("hhctrl.ocx");
 	if (HelpLib)
 	{
 		HtHelp=(HelpFunc)GetProcAddress(HelpLib,"HtmlHelpA");
 		if (HtHelp)
-		HtHelp(Handle,HelpFile.c_str(),HH_DISPLAY_TOPIC,NULL);
+		    HtHelp(Handle,HelpFile.c_str(),HH_DISPLAY_TOPIC,NULL);
 		else
-		ShowMessage("Не удается найти функцию отображения справки. Возможно библиотека hhctrl.ocx изменена или испорчена.");
+		    ShowMessage("Не удается найти функцию отображения справки. Возможно библиотека hhctrl.ocx изменена или испорчена.");
 	}
 	else
 	ShowMessage("Не удается найти библиотеку hhctrl.ocx.");
@@ -623,23 +647,23 @@ void __fastcall TMainForm::N42Click(TObject *Sender)
 void __fastcall TMainForm::N43Click(TObject *Sender)
 {
 	if (this->ActiveRoad)
-	frmCheckSigns->Show();
+	    frmCheckSigns->Show();
 	else
-	ShowMessage("Не выбрана дорога. Для продолжения выберите дорогу.");
+	    ShowMessage("Не выбрана дорога. Для продолжения выберите дорогу.");
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::N5Click(TObject *Sender)
 {
 	if (ActiveRoad)
-	ActiveRoad->ReLoadData();
+	    ActiveRoad->ReLoadData();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::N6Click(TObject *Sender)
 {
 	if (ActiveRoad)
-	OpenRoadById(ActiveRoad->RoadId,0,true);
+	    OpenRoadById(ActiveRoad->RoadId,0,true);
 }
 //---------------------------------------------------------------------------
 
@@ -671,15 +695,15 @@ void __fastcall TMainForm::N27Click(TObject *Sender)
 void __fastcall TMainForm::N25Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->DeleteActiveObject(true);
+	    FActiveRoad->DeleteActiveObject(true);
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::N26Click(TObject *Sender)
 {
 	if (ActiveRoad)
-	if (ActiveRoad->EditedData)
-	ActiveRoad->EditedData->CopySelectedObjects(ActiveRoad->Dict);
+	    if (ActiveRoad->EditedData)
+	        ActiveRoad->EditedData->CopySelectedObjects(ActiveRoad->Dict);
 }
 //---------------------------------------------------------------------------
 
@@ -692,40 +716,40 @@ void __fastcall TMainForm::N28Click(TObject *Sender)
 void __fastcall TMainForm::PrevObjButClick(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->PredObject();
+	    FActiveRoad->PredObject();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::NextObjButClick(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->NextObject();
+	    FActiveRoad->NextObject();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::AutoDesignButClick(TObject *Sender)
 {
 	if (FActiveRoad)
-	if (FActiveRoad->EditedData)
-	{
-		if (FActiveRoad->EditedData->ReadOnly)
-		ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
-		else
-		FActiveRoad->QuickDesign();
-	}
+      if (FActiveRoad->EditedData)
+      {
+          if (FActiveRoad->EditedData->ReadOnly)
+          ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
+          else
+          FActiveRoad->QuickDesign();
+      }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::N46Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	if (FActiveRoad->EditedData)
-	{
-		if (ActiveRoad->EditedData->ReadOnly)
-		ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
-		else
-		FActiveRoad->SetAllSigns();
-	}
+      if (FActiveRoad->EditedData)
+      {
+          if (ActiveRoad->EditedData->ReadOnly)
+            ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
+          else
+            FActiveRoad->SetAllSigns();
+      }
 }
 //---------------------------------------------------------------------------
 
@@ -742,39 +766,39 @@ void __fastcall TMainForm::FormShow(TObject *Sender)
 void __fastcall TMainForm::N45Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	if (FActiveRoad->EditedData)
-	{
-		if (ActiveRoad->EditedData->ReadOnly)
-		ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
-		else
-		FActiveRoad->SetKmSigns();
-	}
+      if (FActiveRoad->EditedData)
+      {
+          if (ActiveRoad->EditedData->ReadOnly)
+            ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
+          else
+            FActiveRoad->SetKmSigns();
+      }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::AddSignButClick(TObject *Sender)
 {
 	if (FActiveRoad)
-	if (FActiveRoad->EditedData)
-	{
-		if (ActiveRoad->EditedData->ReadOnly)
-		ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
-		else
-		FActiveRoad->AddNewSign();
-	}
+      if (FActiveRoad->EditedData)
+      {
+          if (ActiveRoad->EditedData->ReadOnly)
+              ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
+          else
+              FActiveRoad->AddNewSign();
+      }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::AddDangButClick(TObject *Sender)
 {
 	if (FActiveRoad)
-	if (FActiveRoad->EditedData)
-	{
-		if (ActiveRoad->EditedData->ReadOnly)
-		ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
-		else
-		FActiveRoad->AddNewObject(DANGERPARTCODE);
-	}
+      if (FActiveRoad->EditedData)
+      {
+          if (ActiveRoad->EditedData->ReadOnly)
+            ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
+          else
+            FActiveRoad->AddNewObject(DANGERPARTCODE);
+      }
 }
 //---------------------------------------------------------------------------
 
@@ -784,9 +808,9 @@ void __fastcall TMainForm::N18Click(TObject *Sender)
 		TMenuItem *m=dynamic_cast<TMenuItem*>(Sender);
 		if (m) {
 			if (m->Tag>=100 && m->Tag<200)
-			FActiveRoad->ShowVideo(1,m->Tag-100);
+			    FActiveRoad->ShowVideo(1,m->Tag-100);
 			else
-			FActiveRoad->ShowVideo(1,-1);
+			    FActiveRoad->ShowVideo(1,-1);
 		}
 	}
 }
@@ -798,9 +822,9 @@ void __fastcall TMainForm::N47Click(TObject *Sender)
 		TMenuItem *m=dynamic_cast<TMenuItem*>(Sender);
 		if (m) {
 			if (m->Tag>=100 && m->Tag<200)
-			FActiveRoad->ShowVideo(2,m->Tag-100);
+			    FActiveRoad->ShowVideo(2,m->Tag-100);
 			else
-			FActiveRoad->ShowVideo(2,-1);
+			    FActiveRoad->ShowVideo(2,-1);
 		}
 	}
 }
@@ -809,21 +833,21 @@ void __fastcall TMainForm::N47Click(TObject *Sender)
 void __fastcall TMainForm::N12Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->BuildRoadLines();
+	    FActiveRoad->BuildRoadLines();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::AttDesignButClick(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->DesignAttach();
+	    FActiveRoad->DesignAttach();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::N48Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->MetaExportDialog();
+	    FActiveRoad->MetaExportDialog();
 }
 //---------------------------------------------------------------------------
 
@@ -840,21 +864,21 @@ void __fastcall TMainForm::N49Click(TObject *Sender)
 void __fastcall TMainForm::N50Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->ShowProfil();
+	    FActiveRoad->ShowProfil();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::N51Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->ShowDress();
+	    FActiveRoad->ShowDress();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::N52Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->LongSlopesPartDialog();
+	    FActiveRoad->LongSlopesPartDialog();
 }
 //---------------------------------------------------------------------------
 
@@ -875,7 +899,7 @@ void __fastcall TMainForm::ListObjectClick(TObject *Sender)
 	{
 		TListFrm *Frm=ResManager->GetListFrm(It->Tag);
 		if (Frm)
-		Frm->Show();
+		    Frm->Show();
 	}
 }
 
@@ -893,7 +917,6 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
 	Factory=NULL;
 	Pattern=NULL;
 	DBDataModule=NULL;
-
 }
 //---------------------------------------------------------------------------
 
@@ -995,7 +1018,7 @@ void __fastcall TMainForm::N61Click(TObject *Sender)
 			Connection->LoginPrompt=true;
 			Connection->Open();
 			if (Connection->Connected)
-			Connection->LoginPrompt=false;
+			    Connection->LoginPrompt=false;
 		}
 		FreeLibrary(dll);
 	}
@@ -1005,7 +1028,7 @@ void __fastcall TMainForm::N61Click(TObject *Sender)
 void __fastcall TMainForm::N63Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->MoveActiveObject();
+	    FActiveRoad->MoveActiveObject();
 }
 //---------------------------------------------------------------------------
 
@@ -1058,7 +1081,7 @@ void __fastcall TMainForm::N70Click(TObject *Sender)
 {
 #ifndef WITHOUT_AUTOCAD
 	if (FActiveRoad)
-	FActiveRoad->AcadExport();
+	    FActiveRoad->AcadExport();
 #endif    
 }
 //---------------------------------------------------------------------------
@@ -1066,7 +1089,7 @@ void __fastcall TMainForm::N70Click(TObject *Sender)
 void __fastcall TMainForm::N71Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->BreakRoadLines();
+	    FActiveRoad->BreakRoadLines();
 }
 //---------------------------------------------------------------------------
 
@@ -1091,9 +1114,9 @@ void __fastcall TMainForm::N73Click(TObject *Sender)
 	if (FActiveRoad->EditedData)
 	{
 		if (ActiveRoad->EditedData->ReadOnly)
-		ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
+		    ShowMessage("Эта функция доступна только для слоя проектируемых данных.");
 		else
-		FActiveRoad->SetDirector();
+		    FActiveRoad->SetDirector();
 	}
 }
 //---------------------------------------------------------------------------
@@ -1101,21 +1124,21 @@ void __fastcall TMainForm::N73Click(TObject *Sender)
 void __fastcall TMainForm::N74Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->ShowMapPlan();
+	    FActiveRoad->ShowMapPlan();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::N75Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->ShowVisPlan();
+	    FActiveRoad->ShowVisPlan();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TMainForm::RMDesignButClick(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->DesignAttachMark();
+	    FActiveRoad->DesignAttachMark();
 }
 //---------------------------------------------------------------------------
 
@@ -1137,7 +1160,7 @@ void __fastcall TMainForm::N80Click(TObject *Sender)
 void __fastcall TMainForm::N81Click(TObject *Sender)
 {
 	if (FActiveRoad)
-	FActiveRoad->ShowDressLayers();
+	    FActiveRoad->ShowDressLayers();
 }
 //---------------------------------------------------------------------------
 

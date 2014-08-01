@@ -7,6 +7,8 @@
 #include <SysUtils.hpp>
 #include <FileCtrl.hpp>
 #include <windows.h>
+#include <stdio.h>
+#include <tchar.h>
 #include <Dialogs.hpp>
 
 
@@ -59,7 +61,7 @@ vector<AnsiString> MiniReports::GetReports()
 	return dirs;
 }
 
-void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> params)
+void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> params, Credentials &credentials)
 {
 	AnsiString exe = ScriptsDirectory() + _sqltotxt;
 	AnsiString inputDir = ScriptsDirectory() + reportName;
@@ -73,8 +75,8 @@ void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> p
 
 	_lastOutputDir = ExtractFileDir(openDialog->FileName);
 	AnsiString script;
-	script.sprintf("%s -i \"%s\" -o \"%s\"",
-	exe, inputDir, _lastOutputDir);
+	script.sprintf("\"%s\" -i \"%s\" -o \"%s\"",
+					exe, inputDir, _lastOutputDir);
 
 	if (params.size() > 0) {
 		script += " -p";
@@ -83,10 +85,57 @@ void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> p
 			script += " " + it->first + "=" + it->second;
 		}
 	}
-	
-	ShowMessage(script);
+
+    ExecuteScript(exe, script, credentials);
 	
 	delete openDialog;                
+}
+
+void MiniReports::ExecuteScript(AnsiString appPath, AnsiString script, Credentials &credentials)
+{
+	STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+	memset(&si, sizeof(si), 0);
+	si.cb = sizeof(STARTUPINFO);
+	memset(&pi, sizeof(pi), 0);
+
+    AnsiString credentialsPath = ScriptsDirectory() + ".credentials";
+    /*File credentialsFile = fopen(credentialsPath.c_str(), "w");
+    fprintf(credentialsFile, "UserID: %s\n", credentials.UserID);
+    fprintf(credentialsFile, "Password: %s\n", credentials.Password);
+    fprintf(credentialsFile, "DataSource: %s\n", credentials.DataSource);
+    fprintf(credentialsFile, "InitialCatalog: %s\n", credentials.InitialCatalog);
+    fclose(credentialsFile);*/
+
+    script += " -c \"" + credentialsPath + "\"";
+    AnsiString bat = ScriptsDirectory() + "last_mini_report.bat";
+    FILE *file = fopen( bat.c_str(), "w");
+    fprintf(file, "chcp 1251\n");
+    fprintf(file, script.c_str());
+    fclose(file);
+
+    WinExec( bat.c_str(), SW_SHOW );
+    /*
+    AnsiString batch = "/C " + bat;
+
+	if( CreateProcessA( "cmd",   // No module name (use command line)
+        batch.c_str(),        // Command line
+        NULL,           // Process handle not inheritable
+        NULL,           // Thread handle not inheritable
+        FALSE,          // Set handle inheritance to FALSE
+        0,              // No creation flags
+        NULL,           // Use parent's environment block
+        NULL,           // Use parent's starting directory 
+        &si,            // Pointer to STARTUPINFO structure
+        &pi )           // Pointer to PROCESS_INFORMATION structure
+    ) {
+        WaitForSingleObject( pi.hProcess, INFINITE );
+	    CloseHandle( pi.hProcess );
+        CloseHandle( pi.hThread );
+    } else {
+		DWORD dw = GetLastError();
+        ShowMessage(dw);
+	} */
 }
 
 void MiniReports::LoadIni(TIniFile* ini)
