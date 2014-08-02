@@ -72,6 +72,8 @@ void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
 		if (!item) return;
 		std::map<AnsiString, AnsiString> params;
 		params["NumRoad"] = FActiveRoad->RoadId;
+        params["RoadName"] = FActiveRoad->RoadName;
+        params["DistrictName"] = FActiveRoad->DistrictName;
 
         map<AnsiString, AnsiString> sources;
 		for (int i=0,j=0;i<ResManager->DataCount;i++) {

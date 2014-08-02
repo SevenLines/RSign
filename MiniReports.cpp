@@ -61,7 +61,8 @@ vector<AnsiString> MiniReports::GetReports()
 	return dirs;
 }
 
-void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> params, Credentials &credentials)
+void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> &params,
+         Credentials &credentials)
 {
 	AnsiString exe = ScriptsDirectory() + _sqltotxt;
 	AnsiString inputDir = ScriptsDirectory() + reportName;
@@ -73,16 +74,27 @@ void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> p
 	openDialog->Filter = "Folder | *.";
 	if(!openDialog->Execute()) return;
 
-	_lastOutputDir = ExtractFileDir(openDialog->FileName);
+	_lastOutputDir = ExcludeTrailingPathDelimiter(ExtractFileDir(openDialog->FileName));
+
+    AnsiString outputPath = _lastOutputDir;
+    if (params.count("RoadName")) {
+        outputPath += "\\" + params["RoadName"];
+    }
+    if (params.count("DistrictName")) {
+        outputPath += "\\" + params["DistrictName"];
+    }
+    
 	AnsiString script;
 	script.sprintf("\"%s\" -i \"%s\" -o \"%s\"",
-					exe, inputDir, _lastOutputDir);
+					exe,
+                    ExcludeTrailingPathDelimiter(inputDir),
+                    outputPath);
 
 	if (params.size() > 0) {
 		script += " -p";
 		map<AnsiString, AnsiString>::iterator it;
 		for(it = params.begin(); it!=params.end(); ++it) {
-			script += " " + it->first + "=" + it->second;
+			script += " " + it->first + "=\"" + it->second + "\"";
 		}
 	}
 

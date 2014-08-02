@@ -34,7 +34,7 @@ public:
     AnsiString ScriptsDirectory();
     void setApplicationDir(AnsiString ApplicationDir);
     vector<AnsiString> GetReports();
-    void GenReport(AnsiString reportName, map<AnsiString, AnsiString> params, Credentials &credentials);
+    void GenReport(AnsiString reportName, map<AnsiString, AnsiString> &params, Credentials &credentials);
     void ExecuteScript(AnsiString appPath, AnsiString script, Credentials &credentials);
 
     void LoadIni(TIniFile* ini);
