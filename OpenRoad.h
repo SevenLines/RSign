@@ -29,12 +29,14 @@ __published:	// IDE-managed Components
     TButton *Button1;
     TButton *Button2;
     TPanel *Panel3;
-    TComboBox *cbGroup;
-    TComboBox *cbDist;
+    TADODataSet *SubTitul_DataSet;
+    TPanel *Panel4;
     TEdit *txtIDFilter;
     TEdit *txtFilter;
+    TPanel *Panel5;
     TButton *Button3;
-    TADODataSet *SubTitul_DataSet;
+    TComboBox *cbGroup;
+    TComboBox *cbDist;
    void __fastcall Button1Click(TObject *Sender);
   void __fastcall FormShow(TObject *Sender);
    void __fastcall DBGrid1DblClick(TObject *Sender);

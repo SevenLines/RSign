@@ -527,6 +527,7 @@ public:         // User declarations
     __property TPlanDirect PlanDirect={read=FPlanDirect};
     __property __int32 MarkerL={read=FMarkerL};
     __property String RoadName={read=FRoadName};
+    __property String DistrictName={read=FDistrictName};
     __property int ActivePoint={read=FActivePoint,write=FActivePoint};
     __property int RoadId={read=FRoadId};
     __property TRoadObject *ActiveObj={read=FActiveObj};
