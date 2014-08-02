@@ -1,2 +1,2 @@
 chcp 1251
-sqltotxt.exe -i "D:\_DISTR\_ASUDOR\RSign\AutoCAD\Scripts\ÒÝÑ" -p NumDataSource=3746 NumRoad=492 -c "D:\_DISTR\_ASUDOR\RSign\AutoCAD\Scripts\.credentials" -o "D:\"
+"D:\_DISTR\_ASUDOR\RSign\AutoCAD\Scripts\sqltotxt.exe" -i "D:\_DISTR\_ASUDOR\RSign\AutoCAD\Scripts\ÒÝÑ" -o "D:\NCC" -p NumDataSource=3760 NumRoad=835 -c "D:\_DISTR\_ASUDOR\RSign\AutoCAD\Scripts\.credentials"
