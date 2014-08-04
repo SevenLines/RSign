@@ -30,6 +30,17 @@
 Указывать значение параметра не обязательно, т.е. следующая конструкция является допустимой:
 
 	SELECT '/*$DistrictName*//*$*/'
+
+Чтобы программа sqltotxt подключалсь к базе необходимо создать файл .credentials
+и загнать в него параметры подключения. Пример содержимого:
+#==== .credentials ====# << эту строку использовать не надо
+UserID: sa
+DataSource: .
+InitialCatalog: RoadsDB_Direct
+Password:
+#==== .credentials ====# << эту строку использовать не надо
 	
 Исходники sqltotxt:
 https://github.com/SevenLines/sqltotxt.git
+
+
