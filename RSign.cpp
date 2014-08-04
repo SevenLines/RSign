@@ -143,6 +143,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
          Application->CreateForm(__classid(TFAddRowDescription), &FAddRowDescription);
          Application->CreateForm(__classid(TFAddRowDescription), &FAddRowDescription);
          Application->CreateForm(__classid(TItemSelectDialogForm), &ItemSelectDialogForm);
+         Application->CreateForm(__classid(TItemSelectDialogForm), &ItemSelectDialogForm);
          Application->Run();
     }
     catch (Exception &exception)

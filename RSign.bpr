@@ -18,7 +18,8 @@
       ConstHelp.obj BuildSlopes.obj BuildWidePart.obj RoadMark.obj 
       ErrorObjectDlg.obj acadexport.obj AutoCADHelper.obj AutoCADPrintForm.obj 
       AutoCADExportForm.obj unSignalsInsert.obj AcadExportThread.obj 
-      AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj"/>
+      AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj 
+      MiniReports.obj ItemSelectDialog.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -32,7 +33,7 @@
       OpenViewForm.dfm NewView.dfm MacrosForm.dfm ConstHelp.dfm BuildSlopes.dfm 
       BuildWidePart.dfm RoadMark.dfm ErrorObjectDlg.dfm AutoCADPrintForm.dfm 
       AutoCADExportForm.dfm unSignalsInsert.dfm AttachForm.dfm MoveForm.dfm 
-      AddRowsDescription.dfm"/>
+      AddRowsDescription.dfm ItemSelectDialog.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="vclnp.lib dclusr.lib bcbsmp.lib MyActiveX.lib vclx.lib vcldb.lib 
       adortl.lib dbrtl.lib vcl.lib rtl.lib"/>
@@ -154,6 +155,8 @@
       <FILE FILENAME="MoveForm.cpp" FORMNAME="moveDialog" UNITNAME="MoveForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AddRowsDescription.cpp" FORMNAME="FAddRowDescription" UNITNAME="AddRowsDescription" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Utils.cpp" FORMNAME="" UNITNAME="Utils" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="MiniReports.cpp" FORMNAME="" UNITNAME="MiniReports" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ItemSelectDialog.cpp" FORMNAME="ItemSelectDialogForm" UNITNAME="ItemSelectDialog" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
