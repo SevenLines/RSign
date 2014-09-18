@@ -192,7 +192,7 @@ __published:	// IDE-managed Components
     void __fastcall N80Click(TObject *Sender);
         void __fastcall N81Click(TObject *Sender);
     void __fastcall ItemMiniReportsClick(TObject *Sender);
-    void __fastcall N82Click(TObject *Sender);
+
 
 private:	// User declarations
     void __fastcall AppShortCut(TWMKey &Key, bool &Handled);

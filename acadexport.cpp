@@ -781,16 +781,23 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly,TRoadAttach *a, boo
         return true;
     }
 
+    // ищем минимальную и максимальную точку по Y у примыкания
     int maxY = abs(Poly->Points[0].y);
+    int minY = abs(Poly->Points[0].y);
     int iLast,i;
-    TPoint pMax;
+    TPoint pMax = Poly->Points[0], pMin = Poly->Points[0];
     for(i=1;i<Poly->Count;++i) {
         if(abs(Poly->Points[i].y) > maxY ) {
             maxY = abs(Poly->Points[i].y);
             pMax = Poly->Points[i];
         }
+        if(abs(Poly->Points[i].y) < minY ) {
+            minY = abs(Poly->Points[i].y);
+            pMin = Poly->Points[i];
+        }
     }
 
+    // вывод комментария
     vector<AnsiString> strings;
     AnsiString str = a->Comment;
     str = StringReplace(str,"\\n","\n",TReplaceFlags() << rfReplaceAll);
@@ -819,6 +826,15 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly,TRoadAttach *a, boo
         }
     }
 
+
+    // вывод названия примыкания
+    AutoCAD.DrawText(a->Name,
+                UnderTextHeight,
+                acAlignmentMiddleLeft,
+                a->L,
+                -ScaleY*(pMax.y - pMin.y) / 2,
+                pMin.y - pMax.y > 0 ? M_PI_2 : -M_PI_2
+                );
 
     DrawPolyPoints(Poly);
 
@@ -2859,8 +2875,8 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
 {
     if(fEnd) {
         return true;
-    }
-    if(kind >= 2385228 && kind <= 2385233) {   /*рисуем площадные объекты*/
+    }   // 2385239
+    if(kind >= 2385228 && kind <= 2385239) {   /*рисуем площадные объекты*/
         AcadPolylinePtr pl[1];
         int scale = 50;
         int rotate = 0;
@@ -2916,7 +2932,13 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
             Color[0] = 208;
             Color[1] = 255;
             Color[2] = 208;
-            break;                                        
+            break;
+        case 2385239: // газон
+            fillType = "";
+            Color[0] = 64;
+            Color[1] = 255;
+            Color[2] = 0;
+            break;
         }
 
 
