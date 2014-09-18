@@ -123,8 +123,14 @@ void __fastcall TMainForm::AppShortCut(TWMKey &Key, bool &Handled)
 
 void __fastcall TMainForm::ReadIni(TIniFile *ini)
 {
-	Connection->ConnectionString=ini->ReadString("Connection","ConnectionString",
+	String Con=ini->ReadString("Connection","ConnectionString",
 	"Provider=MSDASQL.1;Persist Security Info=False;Data Source=Victory_istu");
+    if (Con!=Connection->ConnectionString)  {
+        Connection->Close();
+  	    Connection->ConnectionString=ini->ReadString("Connection","ConnectionString",
+	    "Provider=MSDASQL.1;Persist Security Info=False;Data Source=Victory_istu");
+        Connection->Open();
+    }
 	Left=ini->ReadInteger("MainForm","Left",Left);
 	Top=ini->ReadInteger("MainForm","Top",Top);
 	String PatName=ini->ReadString("PrintPattern","Name","").Trim();
@@ -168,6 +174,7 @@ void __fastcall TMainForm::SaveIni(void)
 void __fastcall TMainForm::SetActiveRoad(TRoadFrm *R)
 {
 	N61->Enabled=!(Connection->Connected);
+	N82->Enabled=Connection->Connected;    
 	if (R!=FActiveRoad)
 	{
 		FActiveRoad=R;
@@ -1155,7 +1162,7 @@ void __fastcall TMainForm::N76Click(TObject *Sender)
 
 void __fastcall TMainForm::N80Click(TObject *Sender)
 {
-	ShellExecute(0, 0, "RSign.log", 0, 0 , SW_SHOW );   
+	ShellExecute(0, 0, "RSign.log", 0, 0 , SW_SHOW );
 }
 //---------------------------------------------------------------------------
 
@@ -1166,5 +1173,12 @@ void __fastcall TMainForm::N81Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::N82Click(TObject *Sender)
+{
+Connection->Connected=false;
+SetActiveRoad(NULL);
+}
 //---------------------------------------------------------------------------
 

@@ -29,6 +29,8 @@ IMPPROPERTY(TDescreetDirRoadObject,__int32,DX)
 IMPPROPERTY(TDescreetSideRoadObject,TRoadSide,Placement)
 IMPPROPERTY(TDescreetSideRoadObject,__int32,DX)
 
+IMPPROPERTY(TDescreetCenterRoadObject,__int32,DX)
+
 IMPPROPERTY(TMoundHeight,TRoadSide,Placement)
 IMPPROPERTY(TMoundHeight,__int32,Height)
 
@@ -94,7 +96,9 @@ IMPPROPERTY(TRailCross,int,RailCount)
 IMPPROPERTY(TRailCross,bool,Light)
 IMPPROPERTY(TRailCross,bool,Guard)
 
-IMPPROPERTY(TTown,String,Title);
+IMPPROPERTY(TTown,String,Title)
+
+IMPPROPERTY(TMapObject,String,Title)
 
 IMPPROPERTY(TRoadBridge,String,Scheme)                    // Схема моста
 IMPPROPERTY(TRoadBridge,String,ObstacleName)              //Имя преграды
@@ -636,6 +640,31 @@ Road->ConvertPoly(2,Rp,Res->Points);
 return Res;
 }
 
+TPlanLabel* __fastcall TMapObject::GetText(int n,TRoad *Road,TDictSource *Dict)
+{
+TPlanLabel *l=NULL;
+if (n==0 && Title.Length()>0)
+    {
+    l=new TPlanLabel(0,Title);
+    double midX;
+    if (FPoly && FPoly->Count) {
+        for (int i=0;i<FPoly->Count;i++)
+            midX+=FPoly->Points[i].X;
+        midX/=FPoly->Count;
+    } else
+        midX=(Placement==opLeft ? Road->XMin:Road->XMax)/2;
+    TRoadPoint p;
+    p.L=(L+LMax)/2;
+    p.X=midX;
+    int x,y;
+    Road->ConvertPoint(p.L,p.X,x,y);
+    l->SetMetric(x,y,0,0);
+    l->SetSize(8);
+    l->SetAlign(aCenter,aBaseline,oOrto,skByL);
+    }
+return l;
+}
+
 TPlanLabel* __fastcall TRoadTube::GetText(int n,TRoad *Road,TDictSource *Dict)
 {
 TPlanLabel *l=NULL;
@@ -979,7 +1008,12 @@ else
     L2=Road->LMax;
 PL=new TPolyline;
 PR=new TPolyline;
-if (FLineBound==3)
+if (FLineBound==4)
+    {
+    PL->CopyAndCut(&(Road->LeftBound),L1,L2);
+    PR->CopyAndCut(&(Road->RightBound),L1,L2);
+    }
+else if (FLineBound==3)
     {
     PL->CopyAndCut(&(Road->LeftDivPart),L1,L2);
     PR->CopyAndCut(&(Road->RightDivPart),L1,L2);
@@ -1597,6 +1631,17 @@ Res->Points[0].y=y;
 return Res;
 }
 
+TExtPolyline* __fastcall TDescreetCenterRoadObject::GetDefMetric(TRoad *Road)
+{
+TExtPolyline *Res=new TExtPolyline(1,0);
+int x,y;
+Road->ConvertPoint(FL,FDX,x,y);
+Res->Points[0].x=x;
+Res->Points[0].y=y;
+return Res;
+}
+
+
 TExtPolyline* __fastcall TSquareAttachObject::GetDefMetric(TRoad *Road)
 {
 TRoadPoint Rp[4];
@@ -1886,6 +1931,8 @@ LeftZem.CopyAndCut(&(Rd->LeftZem),L1,L2);
 RightZem.CopyAndCut(&(Rd->RightZem),L1,L2);
 LeftDivPart.CopyAndCut(&(Rd->LeftDivPart),L1,L2);
 RightDivPart.CopyAndCut(&(Rd->RightDivPart),L1,L2);
+LeftBound.CopyAndCut(&(Rd->LeftBound),L1,L2);
+RightBound.CopyAndCut(&(Rd->RightBound),L1,L2);
 
 Geometry.CopyAndCut(&(Rd->Geometry),L1,L2);
 

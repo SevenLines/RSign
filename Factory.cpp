@@ -103,6 +103,10 @@ else if (ClassName==ClassesNames[45])
         return new TDangerVisMode(id,code);
 else if (ClassName==ClassesNames[46])
         return new TDressLayer(id,code);
+else if (ClassName==ClassesNames[47])
+        return new TDescreetCenterRoadObject(id,code);
+else if (ClassName==ClassesNames[48])
+        return new TMapObject(id,code);
 return NULL;
 }
 
@@ -202,6 +206,10 @@ else if (ClassName==ClassesNames[45])
         return DangerVisModeInfo;
 else if (ClassName==ClassesNames[46])
         return DressLayerInfo;
+else if (ClassName==ClassesNames[47])
+        return DescreetCenterRoadObjectInfo;
+else if (ClassName==ClassesNames[48])
+        return MapObjectInfo;
 return "";
 }
 

@@ -801,9 +801,9 @@ if (dc)
            SIZE wline[64];
            hline[0]=0;
            for (int i=0;i<n;i++)
-                if (*(s++)=='\n')
-                        hline[lcount++]=i;
-           hline[lcount]=n;
+                if (*(s++)=='\\')
+                        hline[lcount++]=i+1;
+           hline[lcount]=n+1;
            for (int i=0;i<lcount;i++)
                 GetTextExtentPoint32(dc,str+hline[i],hline[i+1]-hline[i],wline+i);
            int width=wline[0].cx;
@@ -814,8 +814,10 @@ if (dc)
            int textx,texty;
            textx=l->Pos.x;
            texty=l->Pos.y;
+           int dir;
            if (vert)
                 {
+                dir=3;
                 switch (l->VertAlign)
                         {
                         case aBaseline:textx+=height>>1;break;
@@ -829,6 +831,7 @@ if (dc)
                 }
            else
                 {
+                dir=0;
                 switch (l->VertAlign)
                         {
                         case aBaseline:texty-=height>>1;break;
@@ -841,7 +844,18 @@ if (dc)
                         }
                 }
            int oldcolor=SetTextColor(dc,l->Color);
-           TextOut(dc,textx,texty,l->Caption.c_str(),l->Caption.Length());
+           for (int i=0;i<lcount;i++)
+             {
+             TextOut(dc,textx,texty,str+hline[i],hline[i+1]-hline[i]-1);
+             switch (dir)
+                {
+                case 0:texty+=size;break;
+                case 1:textx+=size;break;
+                case 2:texty-=size;break;
+                case 3:textx-=size;break;
+                }
+             }
+           //TextOut(dc,textx,texty,l->Caption.c_str(),l->Caption.Length());
            SetTextColor(dc,oldcolor);
            DeleteObject(SelectObject(dc,GetStockObject(SYSTEM_FONT)));
            }

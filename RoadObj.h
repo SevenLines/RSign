@@ -46,7 +46,7 @@ typedef __int32 (__fastcall *GetIntValueProc)(TObject*);
                                void __fastcall Class::Set##Name(Type val)\
                                 {F##Name=val;FModified=true;}\
 
-#define CLASSESCOUNT 47
+#define CLASSESCOUNT 49
 const char ClassesNames[CLASSESCOUNT][32]={"TRoadObject","TDescreetRoadObject",\
         "TDescreetDirRoadObject","TDescreetSideRoadObject",\
         "TContRoadObject","TBusStop",
@@ -67,7 +67,8 @@ const char ClassesNames[CLASSESCOUNT][32]={"TRoadObject","TDescreetRoadObject",\
         "TRoadDescription","TRoadWidthMeasure",
         "TSquareRoadSideObject_Kromka","TLinearCenterRoadObject",
         "TRoadCategory","TRoadLighting","TMoundHeight","TDivRoadPart",
-        "TDangerVisMode","TDressLayer"};
+        "TDangerVisMode","TDressLayer",
+        "TDescreetCenterRoadObject","TMapObject"};
 
 class TRoad;
 class TObjFrm;
@@ -326,6 +327,21 @@ __fastcall TDescreetSideRoadObject(__int32 id,__int32 code):TDescreetRoadObject(
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 };
 
+const char DescreetCenterRoadObjectInfo[]="Дорожный объект с точечной локализацией, с привязкой к оси дороги\
+Произведен от TDescreetRoadObject. Вводятся два новых свойства. DX - раcстояние от кромки дороги.\
+Placement - расположение (слева, справа). Метрика содержит одну точку, лежащую с указанной стороны\
+от дороги (в прямом направлении) на расстоянии DX от оси дороги";
+
+class TDescreetCenterRoadObject : public TDescreetRoadObject
+{
+private:
+DEFPROPERTY(__int32,DX)
+public:
+__fastcall TDescreetCenterRoadObject():TDescreetRoadObject() {}
+__fastcall TDescreetCenterRoadObject(__int32 id,__int32 code):TDescreetRoadObject(id,code) {}
+virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
+};
+
 
 // Столб освещения
 const char RoadLightingInfo[]="Столб уличного освещения. Произведен от TDescreetSideRoadObject\
@@ -464,6 +480,20 @@ __fastcall TLinearRoadSideObject(__int32 id,__int32 code):TRoadSideObject(id,cod
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 virtual TLocalisation GetLocal(void) {return locLinear;}
 };
+// Объект ситуации
+
+const char MapObjectInfo[]="";
+class TMapObject : public TLinearRoadSideObject {
+private:
+DEFPROPERTY(String,Title)
+public:
+__fastcall TMapObject():TLinearRoadSideObject() {}
+__fastcall TMapObject(__int32 id,__int32 code):TLinearRoadSideObject(id,code)
+    {FDX=800;FMetricsKind=mkKromka;}
+virtual int __fastcall GetTextsCount(void)
+    {return 1;}
+virtual TPlanLabel* __fastcall GetText(int n,TRoad *Road,TDictSource *Dict);
+};
 
 // Водоотводное сооружение
 const char DrainageObjectInfo[]="";
@@ -486,7 +516,7 @@ public:
 __fastcall TRoadDefect():TContRoadObject() {}
 __fastcall TRoadDefect(__int32 id,__int32 code):TContRoadObject(id,code)
     {}
-virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);    
+virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 virtual TLocalisation GetLocal(void) {return locSquare;}
 };
 
@@ -593,7 +623,7 @@ int FLineBound;
 public:
 __fastcall TRoadPart(): TContRoadObject() {};
 __fastcall TRoadPart(__int32 id,__int32 code): TContRoadObject(id,code)
-    {FLineBound=0;};
+    {FLineBound=4;};
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 virtual TLocalisation GetLocal(void) {return locSquare;}
 };
@@ -983,6 +1013,10 @@ TPolyline LeftZem; // Левый край зем полотна
 TPolyline RightZem; // Правый край зем полотна
 TPolyline LeftDivPart; // Край разделительной полосы слева
 TPolyline RightDivPart; // Край разделительной полосы справа
+TPolyline LeftBound;    // Граница укрепленной части дороги с учетом перекрестков
+TPolyline RightBound;   // Граница укрепленной части дороги с учетом перекрестков
+
+
 TRoadGeometry Geometry; // Продольный профиль дороги
 bool GeometryMoved;     // true после редактирования геометрических параметров
 __fastcall TRoad(__int32 id,__int32 code):TBandRoadObject(id,code)

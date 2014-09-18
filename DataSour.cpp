@@ -1028,6 +1028,8 @@ if (MetSour==0)
     Road->LeftLine.MakeMiddlePart(2000);
     Road->RightSide.MakeMiddlePart(2000);
     Road->LeftSide.MakeMiddlePart(2000);
+    Road->LeftBound.CopyPoints(&(Road->LeftLine));
+    Road->RightBound.CopyPoints(&(Road->RightLine));    
     }
 else
     {
@@ -1037,6 +1039,8 @@ else
     Road->RightSide.Count=2;
     Road->LeftDivPart.Count=2;
     Road->RightDivPart.Count=2;
+    Road->LeftBound.Count=2;
+    Road->RightBound.Count=2;
     Road->LeftLine[0]=TRoadPoint(Road->LMin,0,1,Road->LMin,0,0);
     Road->LeftLine[1]=TRoadPoint(Road->LMax,0,1,Road->LMax,0,0);
     Road->RightLine[0]=TRoadPoint(Road->LMin,0,1,Road->LMin,0,0);
@@ -1049,6 +1053,10 @@ else
     Road->LeftDivPart[1]=TRoadPoint(Road->LMax,0,1,Road->LMax,0,0);
     Road->RightDivPart[0]=TRoadPoint(Road->LMin,0,1,Road->LMin,0,0);
     Road->RightDivPart[1]=TRoadPoint(Road->LMax,0,1,Road->LMax,0,0);
+    Road->LeftBound[0]=TRoadPoint(Road->LMin,0,1,Road->LMin,0,0);
+    Road->LeftBound[1]=TRoadPoint(Road->LMax,0,1,Road->LMax,0,0);
+    Road->RightBound[0]=TRoadPoint(Road->LMin,0,1,Road->LMin,0,0);
+    Road->RightBound[1]=TRoadPoint(Road->LMax,0,1,Road->LMax,0,0);
     int n=Objects->Count;
     for (int i=0;i<n;i++)
         {
@@ -1066,8 +1074,21 @@ else
                             Poly=&(FRoad->LeftLine);
                         Poly->AddPoly(pobj->Poly);
                         }
+                    else if (pobj->MetricsKind==mkBoundLine) {
+                        TPolyline *Poly;
+                        if (pobj->Placement==opRight)
+                            Poly=&(FRoad->RightBound);
+                        else
+                            Poly=&(FRoad->LeftBound);
+                        Poly->AddPoly(pobj->Poly);
+                        }
+
                     }
         }
+    if (FRoad->RightBound.Count==2)
+        FRoad->RightBound.AddPoly(&(FRoad->RightLine));
+    if (FRoad->LeftBound.Count==2)
+        FRoad->LeftBound.AddPoly(&(FRoad->LeftLine));
     for (int i=0;i<n;i++)
         {
         TLinearRoadSideObject *pobj=dynamic_cast<TLinearRoadSideObject*>(Objects->Items[i]);
