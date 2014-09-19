@@ -248,19 +248,19 @@ void __fastcall AcadExportThread::Execute()
             goto export_end;
         }
 
-        if (FAutoCADExport->ExportHideAutoCAD) {
+
+        /*if (FAutoCADExport->ExportHideAutoCAD) {
+            ADD_PROGRESS_FORM_LINE("Скрываю AutoCAD");
             aexp->hideApplication();
         } else {
             aexp->showApplication();
-        }
-
+        }*/
         /* -- Подсчет разметки от осевой -- */
         int iLeftMax = 0, iRightMax = 0;
         int iMarksLinesTop = FAutoCADExport->TableRowLinesTop;
 
         int iMarksLinesBottom = FAutoCADExport->TableRowLinesBottom;
         aexp->iMarkLinesBottom = aexp->iMarkLinesTop = 0;
-
 
         if(DataPrj&&(!FAutoCADExport->TableRowLinesBottom||!FAutoCADExport->TableRowLinesTop)){
 
@@ -335,10 +335,8 @@ void __fastcall AcadExportThread::Execute()
             FAutoCADExport->TableRowLinesTop = iLeftMax;
         }
         /* -- */
-
+        ADD_PROGRESS_FORM_LINE("Инициализация настроек таблицы");
         aexp->ExportTables(FAutoCADExport);  /*инициализация настроек таблицы*/
-
-
 
         /* -- вернем значени для разметки обратно -- */
         FAutoCADExport->TableRowLinesTop = iMarksLinesTop;
@@ -1044,7 +1042,7 @@ void __fastcall AcadExportThread::Execute()
 // МЕТКА :D
 export_end:
     //if (FAutoCADExport->ExportHideAutoCAD) {
-        aexp->showApplication();
+    // aexp->showApplication();
     //}
     ProgressForm->Hide();
     if ( ERROR_WAS ) {

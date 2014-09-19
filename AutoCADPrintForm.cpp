@@ -10,6 +10,7 @@
 
 #include "AutoCADPrintForm.h"
 #include "AutoCADPrintThread.h"
+#include "MickMacros.h"
 #include <process.h>
 
 //---------------------------------------------------------------------------
@@ -107,7 +108,8 @@ void TFAutoCADPrint::CheckViewports()
 
 bool TFAutoCADPrint::BindViewports()
 {
-	bool ffirst = true;
+    BUILDER_INFO("Подсоединяю виды");
+    bool ffirst = true;
 	AcadEntityPtr e;
 	vpTop.Unbind();
 	vpCenter.Unbind();
@@ -117,7 +119,10 @@ bool TFAutoCADPrint::BindViewports()
 	page_max.Unbind();
 	roadName.Unbind();
 
-	if(!helper->ActiveDocument.IsBound()) return false;
+	if(!helper->ActiveDocument.IsBound()) {
+        BUILDER_INFO("Активные документ недоступен, не могу подключить виды");
+        return false;
+    }
 	helper->ActiveDocument->Activate();
 
 	bool finfo = chkInfo->Checked;   
@@ -161,6 +166,7 @@ bool TFAutoCADPrint::BindViewports()
 			}
 		}
 	}
+    BUILDER_INFO("Успешно подсоединил виды");
 	return true;
 
 
@@ -394,7 +400,7 @@ void __fastcall TFAutoCADPrint::tbPosChange(TObject *Sender)
 			if(!BindViewports()) return;
 			
 			helper->SelectPaperSpace();
-			helper->Application->ZoomAll();
+			AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
 
 			if(text.IsBound()) text->set_TextString(WideString(str));
 			if(roadName.IsBound()) roadName->set_TextString(WideString(strRoadName));
@@ -497,6 +503,7 @@ bool TFAutoCADPrint::PauseLastFramePrint(std::list<AnsiString> &fileNames)
 bool TFAutoCADPrint::SetFrame(int position, int width)
 {
 	AcadPViewportPtr viewport;
+    BUILDER_INFO("Устанавливаю вид");
 	int yCenter;
 	for(int i=0;i<3;i++){
 		switch(i){
@@ -509,9 +516,11 @@ bool TFAutoCADPrint::SetFrame(int position, int width)
 			viewport->Display(-1); // -1 is true :D, that is not my idea
 			helper->ActiveDocument->MSpace = true;
 			helper->ActiveDocument->ActivePViewport = viewport;
-			helper->Application->ZoomWindow(helper->cadPoint(position,yCenter),
-			helper->cadPoint(position+width,yCenter));
-
+            /*AutoCAD.ActiveDocument->SendCommand(WideString(
+                AnsiString().sprintf("_.zoom _f %i,%i %i,%i\n", position, yCenter, position+width, yCenter)
+            ));*/
+			helper->Application->ZoomWindow(helper->cadPoint(position,yCenter), helper->cadPoint(position+width,yCenter));
+            //helper->ActiveDocument->MSpace = false;
 		}
 		Application->ProcessMessages();
 	}

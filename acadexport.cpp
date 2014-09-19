@@ -290,7 +290,9 @@ bool __fastcall TAcadExport::OpenDocument(AnsiString name)
         AutoCAD.SendCommand(WideString("CLAYER 0\n"));
         AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
         AutoCAD.CheckExistingBlocks();
+        BUILDER_INFO("”спешно открыл документ и пересчитал блоки");
     }catch(...){
+        BUILDER_ERROR("¬озникла непредвидена€ ошибка при открытии документа!");
         return false;
     }
     return true;
@@ -311,11 +313,13 @@ bool __fastcall TAcadExport::BindActiveDocument()
 
 void __fastcall TAcadExport::hideApplication()
 {
+    //AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
     AutoCAD.Application->Visible = 0;
 }
 
 void __fastcall TAcadExport::showApplication()
 {
+    //AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
     AutoCAD.Application->Visible = -1;
 }
 
@@ -328,7 +332,7 @@ bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
 
         AutoCAD.RunAutoCAD();
         AutoCAD.DisableAutoSave();
-        /*iAutoSaveInterval = AutoCAD.Application->Preferences->OpenSave->AutoSaveInterval;
+        /*iAutoSavefInterval = AutoCAD.Application->Preferences->OpenSave->AutoSaveInterval;
         AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME 0\n")); */
 
         strSignsAbsent = "";
@@ -647,7 +651,8 @@ bool __fastcall TAcadExport::FindPlacement(drect &r,char dir,bool store,TRoadObj
 void __fastcall TAcadExport::EndDocument() {
     rectmap.clear();
     //AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME " + IntToStr(iAutoSaveInterval) + "\n"));
-    AutoCAD.Application->ZoomAll();
+    //AutoCAD.Application->ZoomAll();
+    AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
 
     AnsiString strMessage="";
     if(!strSignsAbsent.IsEmpty()||!AutoCAD.strLostBlocks.IsEmpty()){
@@ -828,13 +833,15 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly,TRoadAttach *a, boo
 
 
     // вывод названи€ примыкани€
-    AutoCAD.DrawText(a->Name,
-                UnderTextHeight,
-                acAlignmentMiddleLeft,
-                a->L,
-                -ScaleY*(pMax.y - pMin.y) / 2,
-                pMin.y - pMax.y > 0 ? M_PI_2 : -M_PI_2
-                );
+    if (a->Name != "") {
+      AutoCAD.DrawText(a->Name,
+                  UnderTextHeight,
+                  acAlignmentMiddleLeft,
+                  a->L,
+                  -ScaleY*(pMax.y - pMin.y) / 2,
+                  pMin.y - pMax.y > 0 ? M_PI_2 : -M_PI_2
+                  );
+    }
 
     DrawPolyPoints(Poly);
 
