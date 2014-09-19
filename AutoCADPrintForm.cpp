@@ -515,11 +515,18 @@ bool TFAutoCADPrint::SetFrame(int position, int width)
 		if ( viewport.IsBound() ) {
 			viewport->Display(-1); // -1 is true :D, that is not my idea
 			helper->ActiveDocument->MSpace = true;
+            //AutoCAD.ActiveDocument->SendCommand(L"_.MSPACE\n");
 			helper->ActiveDocument->ActivePViewport = viewport;
             /*AutoCAD.ActiveDocument->SendCommand(WideString(
                 AnsiString().sprintf("_.zoom _f %i,%i %i,%i\n", position, yCenter, position+width, yCenter)
             ));*/
-			helper->Application->ZoomWindow(helper->cadPoint(position,yCenter), helper->cadPoint(position+width,yCenter));
+            BUILDER_INFO("Вид " << IntToStr(i).c_str());
+            Variant left = helper->cadPoint(position,yCenter);
+            Variant right = helper->cadPoint(position+width,yCenter);
+            BUILDER_INFO("Рассчитал точки");
+            helper->Application->ZoomWindow(left, right);
+            BUILDER_INFO("Сдвинул вид");
+            //AutoCAD.ActiveDocument->SendCommand(L"_.PSPACE\n");
             //helper->ActiveDocument->MSpace = false;
 		}
 		Application->ProcessMessages();

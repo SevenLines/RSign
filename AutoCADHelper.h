@@ -275,7 +275,7 @@ private:
 
         int comboSignCount;
 
-        AcadApplicationPtr getApplication();
+        AcadApplication* getApplication();
 
         AcadBlockPtr getBlocks(int i);
         AcadBlockPtr getBlocksByName(AnsiString BlockName);

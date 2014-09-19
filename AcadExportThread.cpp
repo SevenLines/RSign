@@ -249,12 +249,12 @@ void __fastcall AcadExportThread::Execute()
         }
 
 
-        /*if (FAutoCADExport->ExportHideAutoCAD) {
+        if (FAutoCADExport->ExportHideAutoCAD) {
             ADD_PROGRESS_FORM_LINE("Скрываю AutoCAD");
             aexp->hideApplication();
         } else {
             aexp->showApplication();
-        }*/
+        }
         /* -- Подсчет разметки от осевой -- */
         int iLeftMax = 0, iRightMax = 0;
         int iMarksLinesTop = FAutoCADExport->TableRowLinesTop;
@@ -1042,7 +1042,7 @@ void __fastcall AcadExportThread::Execute()
 // МЕТКА :D
 export_end:
     //if (FAutoCADExport->ExportHideAutoCAD) {
-    // aexp->showApplication();
+    aexp->showApplication();
     //}
     ProgressForm->Hide();
     if ( ERROR_WAS ) {

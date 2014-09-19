@@ -167,7 +167,7 @@ AutoCADHelper::~AutoCADHelper()
 
 AcadApplication *AutoCADHelper::BindAutoCAD()
 {
-   if(FAILED(cadApplication.BindRunning())) return 0;
+   if(FAILED(cadApplication.BindToActive(ProgIDToClassID("AutoCAD.Application")))) return 0;
 
    if(cadApplication->Documents->Count>0 && cadApplication->ActiveDocument){
        SetActive(cadApplication->ActiveDocument);
@@ -178,7 +178,8 @@ AcadApplication *AutoCADHelper::BindAutoCAD()
 
 AcadApplication * AutoCADHelper::RunAutoCAD(bool fVisible)
 {
-    if(FAILED(cadApplication.BindRunning())){
+//    if(FAILED(cadApplication.BindRunning())){
+    if(FAILED(cadApplication.BindToActive(ProgIDToClassID("AutoCAD.Application")))){
         if(FAILED(cadApplication.Bind(ProgIDToClassID("AutoCAD.Application")))){
            throw "can't run AutoCAD";
         }
@@ -192,7 +193,7 @@ AcadApplication * AutoCADHelper::RunAutoCAD(bool fVisible)
 
 }
 
-AcadApplicationPtr AutoCADHelper::getApplication()
+AcadApplication *AutoCADHelper::getApplication()
 {
    return cadApplication->Application;
 }
