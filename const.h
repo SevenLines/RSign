@@ -255,6 +255,9 @@ enum TMarkKind {ma1=2384961,ma2_1=2385125,ma2_2=2384962,ma3=2384963,ma4=2384964,
     ma19_1=2384988,ma19_2=2384989,ma20=2384990,ma21=2384991,ma22=2384992,ma23=2384993,
     ma24_1=2385127,ma24_2=2385128,ma24_3=2385129,ma25=2385130};
 
+enum TTrafficLightsPlacement {tlpOpora=2385257,tlpConsol=2385258,tlpRast=2385259};
+enum TTrafficLightsKind {tlkT=2385251,tlkTr=2385252,tlkTl=2385253,tlkTrl=2385254,tlkP=2385255,trlkTR=2385257};
+
 #define MLLongLinesCount 16
 const TMarkKind MLLongLines[MLLongLinesCount]={ma1,ma2_1,ma2_2,ma3,ma4,ma5,ma6,ma7,ma8,ma9,ma10,ma11l,ma11r,ma12,ma13,ma17};
 #define MLCrossLinesCount 5

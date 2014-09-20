@@ -222,7 +222,10 @@ void __fastcall CalcRect(TExtPolyline*,RECT *r);
 // Вычисляет координаты метафайла в экранных координатах от точки в зависимости от поворота
 // (4 параметр). Также может вычислять координаты прямоугольника данных (если 5 пар=true)
 void __fastcall CalcMetaRect(POINT *p,TDrwParamRec3 *par,RECT*,int,bool);
-/* 3 */ void __fastcall DrawMetafile(TDrawContents *Cont,TExtPolyline *Poly,TDrwParamRec3 *par,RECT*);
+/* 3 */
+void __fastcall DrawMetafile(TDrawContents *Cont,TExtPolyline *Poly,TDrwParamRec3 *par,RECT*);
+// Эта функция для рисования светофоров пока не написана и не используется
+void __fastcall DrawTrafficLight(TTrafficLight *light,TDrawContents *Cont,TExtPolyline *Poly,TDrwParamRec3 *par,RECT*);
 void __fastcall DrawSign(TDrawContents *Cont,int count,__int32 *ObjNum,int flag);
 void __fastcall DrawSignImage(TDrawContents *Cont,int ObjNum);
 void __fastcall DrawSignLines(TDrawContents *Cont,int ObjNum);

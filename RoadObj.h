@@ -46,7 +46,7 @@ typedef __int32 (__fastcall *GetIntValueProc)(TObject*);
                                void __fastcall Class::Set##Name(Type val)\
                                 {F##Name=val;FModified=true;}\
 
-#define CLASSESCOUNT 49
+#define CLASSESCOUNT 50
 const char ClassesNames[CLASSESCOUNT][32]={"TRoadObject","TDescreetRoadObject",\
         "TDescreetDirRoadObject","TDescreetSideRoadObject",\
         "TContRoadObject","TBusStop",
@@ -68,7 +68,8 @@ const char ClassesNames[CLASSESCOUNT][32]={"TRoadObject","TDescreetRoadObject",\
         "TSquareRoadSideObject_Kromka","TLinearCenterRoadObject",
         "TRoadCategory","TRoadLighting","TMoundHeight","TDivRoadPart",
         "TDangerVisMode","TDressLayer",
-        "TDescreetCenterRoadObject","TMapObject"};
+        "TDescreetCenterRoadObject","TMapObject",
+        "TTrafficLight"};
 
 class TRoad;
 class TObjFrm;
@@ -906,6 +907,20 @@ DEFPROPERTY(__int32,Width)                    // Ширина моста в сантиметрах
 public:
 __fastcall TRoadObstacle(): TCommRoadObject() {}
 __fastcall TRoadObstacle(__int32 id,__int32 code):TCommRoadObject(id,code) {}
+virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
+};
+
+// Светофоры
+const char TrafficLightInfo[]="";
+class TTrafficLight : public TDescreetRoadObject {
+protected:
+DEFPROPERTYRW(__int32,DX)
+DEFPROPERTYRW(__int32,Direction)
+DEFPROPERTYRW(TTrafficLightsPlacement,Placement)
+DEFPROPERTYRW(TTrafficLightsKind,Kind)
+public:
+__fastcall TTrafficLight():TDescreetRoadObject() {}
+__fastcall TTrafficLight(__int32 id,__int32 code):TDescreetRoadObject(id,code) {}
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 };
 

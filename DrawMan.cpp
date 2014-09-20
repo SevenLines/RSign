@@ -938,6 +938,8 @@ for (int i=0;i<ObjCount;i++)
             continue;
         if ((Objs[i]->Test!=stBad)&&(!(flag&1)))
             continue;
+        // Светофоры возможно будут рисоваться особой функцией
+        TTrafficLight *light=0;//dynamic_cast<TTrafficLight*>(Objs[i]);
         int drclass=Objs[i]->DrwClassId;
         TDrwClassesRec *ClRec=DrCl->Items[drclass];
         for (int k=0;k<MAXDRWPARAM;k++)
@@ -957,7 +959,10 @@ for (int i=0;i<ObjCount;i++)
             else
                 {
                 RECT r;
-                DrawMetafile(Cont,Polys[i],dynamic_cast<TDrwParamRec3*>(Rec),&r);
+                if (light)
+                   DrawTrafficLight(light,Cont,Polys[i],dynamic_cast<TDrwParamRec3*>(Rec),&r);
+                else
+                   DrawMetafile(Cont,Polys[i],dynamic_cast<TDrwParamRec3*>(Rec),&r);
                 RectsMan.PutRect(i,r);
                 }
             switch (Rec->ProcId)
@@ -1251,6 +1256,13 @@ if (par)
             } break;
         }
     }
+}
+
+void __fastcall TDrawManager::DrawTrafficLight(TTrafficLight *light,TDrawContents *Cont,TExtPolyline *Poly,TDrwParamRec3 *par,RECT *rct) {
+HDC dc=Cont->GetContentDC();
+if (par && dc) {
+
+}
 }
 
 void __fastcall TDrawManager::DrawMetafile(TDrawContents *Cont,TExtPolyline *Poly,TDrwParamRec3 *par,RECT *rct)

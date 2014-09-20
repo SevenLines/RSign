@@ -79,6 +79,12 @@ IMPPROPERTY(TRoadMark,TRoadDirection,Direction)
 IMPPROPERTY(TRoadMark,TMarkKind,Kind)
 
 
+IMPPROPERTY(TTrafficLight,__int32,DX)
+IMPPROPERTY(TTrafficLight,__int32,Direction)
+IMPPROPERTY(TTrafficLight,TTrafficLightsPlacement,Placement)
+IMPPROPERTY(TTrafficLight,TTrafficLightsKind,Kind)
+
+
 IMPPROPERTY(TRoadBarrier,TBarrierConstruction,Construction)
 IMPPROPERTY(TRoadSignal,int,Count)
 IMPPROPERTY(TRoadSignal,TRoadSignalKind,Kind)
@@ -527,6 +533,19 @@ int x,y;
 Road->ConvertPoint(FL,0,x,y);
 Res->Points[0].x=x;
 Res->Points[0].y=y;
+return Res;
+}
+
+TExtPolyline* __fastcall TTrafficLight::GetDefMetric(TRoad *Road)
+{
+TExtPolyline *Res=new TExtPolyline(2,0);
+int x,y;
+Road->ConvertPoint(FL,DX,x,y);
+Res->Points[0].x=x;
+Res->Points[0].y=y;
+Road->ConvertPoint(FL+100*cos(Direction*M_PI/180),DX+100*sin(Direction*M_PI/180),x,y);
+Res->Points[1].x=x;
+Res->Points[1].y=y;
 return Res;
 }
 
