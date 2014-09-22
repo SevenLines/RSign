@@ -109,6 +109,8 @@ else if (ClassName==ClassesNames[48])
         return new TMapObject(id,code);
 else if (ClassName==ClassesNames[49])
         return new TTrafficLight(id,code);
+else if (ClassName==ClassesNames[50])
+        return new TSpeedBump(id,code);
 return NULL;
 }
 
@@ -214,6 +216,8 @@ else if (ClassName==ClassesNames[48])
         return MapObjectInfo;
 else if (ClassName==ClassesNames[49])
         return TrafficLightInfo;
+else if (ClassName==ClassesNames[50])
+        return SpeedBumpInfo;
 return "";
 }
 

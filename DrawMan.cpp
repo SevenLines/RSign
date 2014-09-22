@@ -637,8 +637,9 @@ for (int i=0;i<ObjCount;i++)
         int y=pl->Points[0].y;
         delete pl;
         int dir=GetSignDirection(sign,pkGorizontal,pdDirect);
-        int plc=sign->Placement!=spRight? 1 : 0;
-          if (sign->Direction!=roDirect)
+        int plc=sign->Placement!=spLeft? 0 : 1;
+        int plc2=sign->Placement==spUp ? (sign->Direction!=roDirect ? 1 : -1) :0;
+        if (sign->Direction!=roDirect)
               plc=1-plc;
         TDrwClassesRec *ClRec=DrCl->Items[sign->DrwClassId];
         TDrwParamRec3 *DrwRec=dynamic_cast<TDrwParamRec3*>(DrPar->Items[ClRec->DrwParamId[0]]);
@@ -650,10 +651,17 @@ for (int i=0;i<ObjCount;i++)
             int DrwDY=(DrwRec->DY*FBaseScaleX)/FBaseScaleP;
             RECT r;
             int signheight=dir&1? DrwWidth : DrwHeight;
-            if (plc)
-                r.top=y-3*ELRAD-signheight;
-            else
-                r.top=y+3*ELRAD;
+            int signwidth=dir&1?  DrwHeight : DrwWidth;            
+            if (plc2) {
+                 r.top=y-signheight/2;
+                 x+=plc2*(1*ELRAD+signwidth);
+                 }
+            else {
+                if (plc)
+                    r.top=y-3*ELRAD-signheight;
+                else
+                    r.top=y+3*ELRAD;
+                }
             switch (dir)
                 {
                 case 0: {r.bottom=r.top+DrwHeight;

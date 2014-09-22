@@ -46,7 +46,7 @@ typedef __int32 (__fastcall *GetIntValueProc)(TObject*);
                                void __fastcall Class::Set##Name(Type val)\
                                 {F##Name=val;FModified=true;}\
 
-#define CLASSESCOUNT 50
+#define CLASSESCOUNT 51
 const char ClassesNames[CLASSESCOUNT][32]={"TRoadObject","TDescreetRoadObject",\
         "TDescreetDirRoadObject","TDescreetSideRoadObject",\
         "TContRoadObject","TBusStop",
@@ -69,7 +69,7 @@ const char ClassesNames[CLASSESCOUNT][32]={"TRoadObject","TDescreetRoadObject",\
         "TRoadCategory","TRoadLighting","TMoundHeight","TDivRoadPart",
         "TDangerVisMode","TDressLayer",
         "TDescreetCenterRoadObject","TMapObject",
-        "TTrafficLight"};
+        "TTrafficLight","TSpeedBump"};
 
 class TRoad;
 class TObjFrm;
@@ -369,6 +369,16 @@ DEFPROPERTY(bool,Pavilion)
 public:
 __fastcall TBusStop() : TDescreetSideRoadObject() {FDX=350;}
 __fastcall TBusStop(__int32 id,__int32 code) : TDescreetSideRoadObject(id,code) {FDX=350;}
+};
+
+const char SpeedBumpInfo[]="Лежачий полицейский";
+
+class TSpeedBump : public TDescreetRoadObject {
+public:
+    __fastcall TSpeedBump(): TDescreetRoadObject() {}
+    __fastcall TSpeedBump(__int32 id,__int32 code) : TDescreetRoadObject(id,code) {}
+    virtual TLocalisation GetLocal(void) {return locLinear;}
+    virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 };
 
 const char RoadTubeInfo[]="Труба";

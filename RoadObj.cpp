@@ -623,6 +623,19 @@ Road->ConvertPoly(2,Rp,Res->Points);
 return Res;
 }
 
+TExtPolyline* __fastcall TSpeedBump::GetDefMetric(TRoad *Road) {
+TRoadPoint Rp[2];
+int rx=Road->RightSide.FindX(FL);
+int lx=Road->LeftSide.FindX(FL);
+Rp[0].L=Rp[1].L=FL;
+Rp[0].X=lx;
+Rp[1].X=rx;
+TExtPolyline *Res=new TExtPolyline(2,1);
+Res->Codes[0]=0;
+Road->ConvertPoly(2,Rp,Res->Points);
+return Res;
+}
+
 TExtPolyline* __fastcall TRoadTube::GetDefMetric(TRoad *Road)
 {
 TRoadPoint Rp[2];
@@ -956,7 +969,7 @@ TExtPolyline* __fastcall TRoadSign::GetDefMetric(TRoad *Road)
 {
 __int32 cx;
 if ((Placement!=spLeft)&&(Placement!=spRight))
-    cx=0;
+    cx=FDX;
 else
     {
     bool b=Placement==spRight;
