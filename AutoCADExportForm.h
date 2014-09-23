@@ -81,7 +81,6 @@ __published:	// IDE-managed Components
         TComboBox *edtPath;
         TLabel *Label28;
     TGroupBox *GroupBox6;
-    TLabel *Label33;
     TEdit *edtTopAddRows;
     TButton *btnTopAddRows;
     TComboBox *cmbRoad;

@@ -9,6 +9,8 @@
 *.log
 *.dwl
 *.dwl2
+*.bak
+*.tmp
 RSign_misha.tds
 
 AutoCAD/Scripts/last_mini_report.bat

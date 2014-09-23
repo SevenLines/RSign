@@ -505,6 +505,13 @@ void TFAutoCADExport::fillComboRoad()
   TSearchRec sr;
   cmbRoad->Clear();
   cmbRoad->ItemIndex = -1;
+  if(!FindFirst(edtTopAddRows->Text + "\\" + RoadName + "\\*.*", faDirectory, sr)) {
+     do {
+        if (sr.Attr&faDirectory&& sr.Name!="." && sr.Name!="..") {
+           cmbRoad->AddItem(RoadName + "\\" + sr.Name, 0);
+        }
+     }while (!FindNext(sr));
+  }
   if(!FindFirst(edtTopAddRows->Text + "\\*.*", faDirectory, sr)) {
      do {
         if (sr.Attr&faDirectory&& sr.Name!="." && sr.Name!="..") {
