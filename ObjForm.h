@@ -23,13 +23,14 @@ __published:	// IDE-managed Components
     TGroupBox *CGroup;
     TGroupBox *ChrGroup;
     TGroupBox *PlaceGroup;
-    TButton *Button1;
-    TButton *Button2;
     TPanel *Panel2;
     TSpeedButton *AutoClose;
     TButton *Button3;
     TButton *Button4;
     TListBox *DocListBox;
+    TPanel *Panel1;
+    TButton *Button1;
+    TButton *Button2;
     void __fastcall FormDeactivate(TObject *Sender);
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall FormClose(TObject *Sender, TCloseAction &Action);

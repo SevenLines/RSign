@@ -263,18 +263,17 @@ return res;
 
 void __fastcall TObjFrm::SetAsString(int n,String val)
 {
-if (CompList->Items[n])
-    {
-    TCustomEdit *m=dynamic_cast<TCustomEdit*>((TObject*)CompList->Items[n]);
-    if (m)
-        m->Text=val;
-    else
-        {
-        try {SetAsInt(n,val.ToInt());}
-        catch (...)
-            {}
-        }
-    }
+  if (CompList->Items[n]) {
+      TCustomEdit *m=dynamic_cast<TCustomEdit*>((TObject*)CompList->Items[n]);
+      if (m) {
+          m->Text=val;
+      } else {
+          int i;
+          if (TryStrToInt(val, i)) {
+            SetAsInt(n, i);
+          }
+      }
+  }
 }
 
 void __fastcall TObjFrm::SetAsInt(int n,int val)
