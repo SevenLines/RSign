@@ -51,7 +51,7 @@ USEFORM("unSignalsInsert.cpp", frmSignalsInsert);
 USEFORM("AttachForm.cpp", frmAttachParams);
 USEFORM("MoveForm.cpp", moveDialog);
 USEFORM("AddRowsDescription.cpp", FAddRowDescription);
-USEFORM("ItemSelectDialog.cpp", ItemSelectDialogForm);
+USEFORM("ItemSelectDialog.cpp", Form1);
 //---------------------------------------------------------------------------
 #ifndef WITHOUT_AUTOCAD
 USEFORM("AutoCADPrintForm.cpp", FAutoCADPrint);
@@ -142,8 +142,6 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
          Application->CreateForm(__classid(TmoveDialog), &moveDialog);
          Application->CreateForm(__classid(TFAddRowDescription), &FAddRowDescription);
          Application->CreateForm(__classid(TFAddRowDescription), &FAddRowDescription);
-         Application->CreateForm(__classid(TItemSelectDialogForm), &ItemSelectDialogForm);
-         Application->CreateForm(__classid(TItemSelectDialogForm), &ItemSelectDialogForm);
          Application->Run();
     }
     catch (Exception &exception)

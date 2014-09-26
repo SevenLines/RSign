@@ -16,6 +16,34 @@
 
 #pragma package(smart_init)
 
+MiniReports::Credentials::Credentials(AnsiString connectionString)
+{
+    UserId = "";
+    Password = "";
+    DataSource = "";
+    InitialCatalog = "";
+    if (connectionString!="") {
+         FromConnectionString(connectionString);
+    }
+}
+
+void MiniReports::Credentials::FromConnectionString(AnsiString s)
+{
+  for(char* tok = strtok(s.c_str(), ";"); tok; tok = strtok(NULL, ";"))  {
+    AnsiString str = AnsiString(tok);
+    if (str.Pos("Initial Catalog=")) {
+        InitialCatalog = str.Delete(1, strlen("Initial Catalog="));
+    }
+    if (str.Pos("UserId=")) {
+        UserId = str.Delete(1, strlen("UserId="));
+    }
+    if (str.Pos("Data Source=")) {
+        str = str.Delete(1, strlen("Data Source="));
+        DataSource = str=="(local)" ? AnsiString(".") : str;
+    }
+  }
+}
+
 MiniReports::MiniReports() :
 _directory("AutoCAD\\Scripts\\")
 ,_sqltotxt("sqltotxt.exe")
@@ -112,12 +140,21 @@ void MiniReports::ExecuteScript(AnsiString appPath, AnsiString script, Credentia
 	memset(&pi, sizeof(pi), 0);
 
     AnsiString credentialsPath = ScriptsDirectory() + ".credentials";
-    /*File credentialsFile = fopen(credentialsPath.c_str(), "w");
-    fprintf(credentialsFile, "UserID: %s\n", credentials.UserID);
-    fprintf(credentialsFile, "Password: %s\n", credentials.Password);
-    fprintf(credentialsFile, "DataSource: %s\n", credentials.DataSource);
-    fprintf(credentialsFile, "InitialCatalog: %s\n", credentials.InitialCatalog);
-    fclose(credentialsFile);*/
+    FILE* credentialsFile = fopen(credentialsPath.c_str(), "r");
+    AnsiString output = "";
+    while(!feof(credentialsFile)) {
+        char s[256];
+        fgets(s, 256, credentialsFile);
+        if (AnsiString(s).Pos("UserID") || AnsiString(s).Pos("Password") ) {
+            output += AnsiString(s);
+        }
+    }
+    fclose(credentialsFile);
+    credentialsFile = fopen(credentialsPath.c_str(), "w");
+    output += "DataSource: " + credentials.DataSource + "\n";
+    output += "InitialCatalog: " + credentials.InitialCatalog + "\n";
+    fprintf(credentialsFile, output.c_str());
+    fclose(credentialsFile);
 
     script += " -c \"" + credentialsPath + "\"";
     AnsiString bat = ScriptsDirectory() + "last_mini_report.bat";

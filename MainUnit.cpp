@@ -94,8 +94,7 @@ void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
             return;
         }
 
-        MiniReports::Credentials credentials;
-        //credentials.UserID = Connection->
+        MiniReports::Credentials credentials(Connection->ConnectionString);
         //MiniReportsSingleton.SetCredentials();
 
 		MiniReportsSingleton.GenReport(item->Caption, params, credentials);

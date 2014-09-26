@@ -52,14 +52,14 @@
     <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS;_BCB_ATL_DEBUG"/>
     <MAINSOURCE value="RSign.cpp"/>
-    <INCLUDEPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
-    <LIBPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
+    <INCLUDEPATH value="trex;&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
+    <LIBPATH value="trex;&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot;"/>
     <WARNINGS value="-w-par -w-8027 -w-8026"/>
     <WARNOPTSTR value=""/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; 
+    <IDLCFLAGS value="-Itrex -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; 
       -I..\..\Borland\CBuilder6\Projects -IActiveX -I$(BCB)\include 
       -I$(BCB)\include\vcl -I$(BCB)\include\atl 
       -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Imports&quot; -src_suffix cpp 

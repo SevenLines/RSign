@@ -19,6 +19,9 @@ public:
     AnsiString Password;
     AnsiString DataSource;
     AnsiString InitialCatalog;
+
+    Credentials(AnsiString connectionString = "");
+    void FromConnectionString(AnsiString connectionString);
   };
 
 private:
