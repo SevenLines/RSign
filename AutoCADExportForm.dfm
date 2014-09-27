@@ -5,7 +5,7 @@ object FAutoCADExport: TFAutoCADExport
   BorderStyle = bsSingle
   BorderWidth = 1
   Caption = 'AutoCAD'
-  ClientHeight = 524
+  ClientHeight = 563
   ClientWidth = 1066
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -24,13 +24,13 @@ object FAutoCADExport: TFAutoCADExport
     Left = 0
     Top = 0
     Width = 277
-    Height = 524
+    Height = 563
     Align = alLeft
     Caption = ' '#1089#1093#1077#1084#1072' '
     TabOrder = 0
     object GroupBox4: TGroupBox
       Left = 2
-      Top = 159
+      Top = 198
       Width = 273
       Height = 129
       Align = alBottom
@@ -73,7 +73,7 @@ object FAutoCADExport: TFAutoCADExport
     end
     object GroupBox6: TGroupBox
       Left = 2
-      Top = 288
+      Top = 327
       Width = 273
       Height = 94
       Align = alBottom
@@ -83,7 +83,7 @@ object FAutoCADExport: TFAutoCADExport
         Left = 49
         Top = 20
         Width = 169
-        Height = 21
+        Height = 24
         TabOrder = 0
         OnChange = edtTopAddRowsChange
         OnClick = edtBottomAddRowsClick
@@ -119,7 +119,7 @@ object FAutoCADExport: TFAutoCADExport
     end
     object GroupBox5: TGroupBox
       Left = 2
-      Top = 382
+      Top = 421
       Width = 273
       Height = 89
       Align = alBottom
@@ -149,7 +149,7 @@ object FAutoCADExport: TFAutoCADExport
         Left = 39
         Top = 44
         Width = 71
-        Height = 21
+        Height = 24
         TabOrder = 1
         Text = '-1'
         OnChange = edtStartChange
@@ -168,7 +168,7 @@ object FAutoCADExport: TFAutoCADExport
         Left = 138
         Top = 44
         Width = 70
-        Height = 21
+        Height = 24
         TabOrder = 2
         Text = '-1'
         OnChange = edtStartChange
@@ -178,7 +178,7 @@ object FAutoCADExport: TFAutoCADExport
     end
     object Panel5: TPanel
       Left = 2
-      Top = 471
+      Top = 510
       Width = 273
       Height = 51
       Align = alBottom
@@ -209,7 +209,7 @@ object FAutoCADExport: TFAutoCADExport
       Left = 2
       Top = 18
       Width = 273
-      Height = 141
+      Height = 180
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 4
@@ -250,7 +250,7 @@ object FAutoCADExport: TFAutoCADExport
     Left = 277
     Top = 0
     Width = 789
-    Height = 524
+    Height = 553
     Caption = 'pnlLeft'
     TabOrder = 1
     Visible = False
@@ -258,7 +258,7 @@ object FAutoCADExport: TFAutoCADExport
       Left = 1
       Top = 1
       Width = 276
-      Height = 522
+      Height = 551
       Align = alLeft
       Caption = 'Panel3'
       TabOrder = 0
@@ -266,7 +266,7 @@ object FAutoCADExport: TFAutoCADExport
         Left = 4
         Top = 9
         Width = 262
-        Height = 336
+        Height = 360
         BevelInner = bvRaised
         BevelOuter = bvLowered
         Caption = 'Panel2'
@@ -421,10 +421,26 @@ object FAutoCADExport: TFAutoCADExport
           TabOrder = 17
           OnClick = chkAllClick
         end
+        object chkTrafficLights: TCheckBox
+          Left = 10
+          Top = 336
+          Width = 97
+          Height = 17
+          Caption = #1089#1074#1077#1090#1086#1092#1086#1088#1099
+          TabOrder = 18
+        end
+        object chkCityObjects: TCheckBox
+          Left = 114
+          Top = 336
+          Width = 119
+          Height = 17
+          Caption = #1075#1086#1088'. '#1086#1073#1098#1077#1082#1090#1099
+          TabOrder = 19
+        end
       end
       object Panel1: TPanel
         Left = 4
-        Top = 354
+        Top = 370
         Width = 262
         Height = 100
         BevelInner = bvRaised
@@ -482,7 +498,7 @@ object FAutoCADExport: TFAutoCADExport
       end
       object GroupBox9: TGroupBox
         Left = 4
-        Top = 453
+        Top = 477
         Width = 262
         Height = 60
         Caption = ' '#1074#1077#1088#1090#1080#1082#1072#1083#1100#1085#1072#1103' '#1089#1077#1090#1082#1072' '
@@ -498,7 +514,7 @@ object FAutoCADExport: TFAutoCADExport
           Left = 30
           Top = 25
           Width = 89
-          Height = 21
+          Height = 24
           TabOrder = 0
           OnClick = edtBottomAddRowsClick
           OnDblClick = edtTopAddRowsDblClick
@@ -516,7 +532,7 @@ object FAutoCADExport: TFAutoCADExport
       Left = 277
       Top = 1
       Width = 511
-      Height = 522
+      Height = 551
       Align = alClient
       Caption = 'Panel4'
       TabOrder = 1
@@ -558,7 +574,7 @@ object FAutoCADExport: TFAutoCADExport
         Left = 1
         Top = 60
         Width = 509
-        Height = 461
+        Height = 490
         ActivePage = TabSheet2
         Align = alClient
         MultiLine = True
@@ -620,7 +636,7 @@ object FAutoCADExport: TFAutoCADExport
             Left = 10
             Top = 10
             Width = 100
-            Height = 21
+            Height = 24
             TabOrder = 0
             OnClick = edtBottomAddRowsClick
             OnDblClick = edtTopAddRowsDblClick
@@ -629,7 +645,7 @@ object FAutoCADExport: TFAutoCADExport
             Left = 10
             Top = 39
             Width = 100
-            Height = 21
+            Height = 24
             TabOrder = 1
             OnClick = edtBottomAddRowsClick
             OnDblClick = edtTopAddRowsDblClick
@@ -658,7 +674,7 @@ object FAutoCADExport: TFAutoCADExport
             Left = 10
             Top = 118
             Width = 100
-            Height = 21
+            Height = 24
             TabOrder = 4
             OnClick = edtBottomAddRowsClick
             OnDblClick = edtTopAddRowsDblClick
@@ -667,14 +683,14 @@ object FAutoCADExport: TFAutoCADExport
             Left = 10
             Top = 187
             Width = 109
-            Height = 21
+            Height = 24
             TabOrder = 5
           end
           object edtSmallGridMarkHeight: TEdit
             Left = 10
             Top = 295
             Width = 109
-            Height = 21
+            Height = 24
             TabOrder = 6
             OnClick = edtBottomAddRowsClick
             OnDblClick = edtTopAddRowsDblClick
@@ -683,7 +699,7 @@ object FAutoCADExport: TFAutoCADExport
             Left = 10
             Top = 236
             Width = 109
-            Height = 21
+            Height = 24
             TabOrder = 7
             OnClick = edtBottomAddRowsClick
             OnDblClick = edtTopAddRowsDblClick
@@ -692,7 +708,7 @@ object FAutoCADExport: TFAutoCADExport
             Left = 10
             Top = 345
             Width = 109
-            Height = 21
+            Height = 24
             TabOrder = 8
           end
           object chkHideAutoCAD: TCheckBox
@@ -725,7 +741,7 @@ object FAutoCADExport: TFAutoCADExport
               Left = 20
               Top = 27
               Width = 70
-              Height = 22
+              Height = 26
               MaxValue = 100
               TabOrder = 0
             end
@@ -770,7 +786,7 @@ object FAutoCADExport: TFAutoCADExport
               Left = 10
               Top = 27
               Width = 70
-              Height = 22
+              Height = 26
               MaxValue = 100
               TabOrder = 0
             end
@@ -911,14 +927,14 @@ object FAutoCADExport: TFAutoCADExport
               Left = 10
               Top = 44
               Width = 70
-              Height = 21
+              Height = 24
               TabOrder = 1
             end
             object edtHeaderTextHeight: TEdit
               Left = 10
               Top = 74
               Width = 70
-              Height = 21
+              Height = 24
               TabOrder = 2
             end
           end
@@ -926,26 +942,26 @@ object FAutoCADExport: TFAutoCADExport
             Left = 414
             Top = 52
             Width = 70
-            Height = 21
+            Height = 24
             TabOrder = 1
           end
           object edtGrphRowHeight: TEdit
             Left = 414
             Top = 81
             Width = 70
-            Height = 21
+            Height = 24
             TabOrder = 2
           end
           object edtRCenter: TEdit
             Left = 414
             Top = 25
             Width = 70
-            Height = 21
+            Height = 24
             TabOrder = 3
           end
           object GroupBox13: TGroupBox
             Left = 0
-            Top = 231
+            Top = 260
             Width = 501
             Height = 199
             Align = alBottom
@@ -1042,7 +1058,7 @@ object FAutoCADExport: TFAutoCADExport
                 Left = 433
                 Top = 25
                 Width = 41
-                Height = 21
+                Height = 24
                 TabOrder = 1
               end
             end
@@ -1137,7 +1153,7 @@ object FAutoCADExport: TFAutoCADExport
                 Left = 433
                 Top = 25
                 Width = 41
-                Height = 21
+                Height = 24
                 TabOrder = 1
               end
             end
@@ -1232,7 +1248,7 @@ object FAutoCADExport: TFAutoCADExport
                 Left = 433
                 Top = 25
                 Width = 41
-                Height = 21
+                Height = 24
                 TabOrder = 1
               end
             end
@@ -1241,7 +1257,7 @@ object FAutoCADExport: TFAutoCADExport
             Left = 256
             Top = 128
             Width = 228
-            Height = 21
+            Height = 24
             TabOrder = 5
             OnClick = edtBottomAddRowsClick
             OnDblClick = edtTopAddRowsDblClick
@@ -1250,7 +1266,7 @@ object FAutoCADExport: TFAutoCADExport
             Left = 256
             Top = 167
             Width = 228
-            Height = 21
+            Height = 24
             TabOrder = 6
             OnClick = edtBottomAddRowsClick
             OnDblClick = edtTopAddRowsDblClick
@@ -1259,7 +1275,7 @@ object FAutoCADExport: TFAutoCADExport
             Left = 256
             Top = 197
             Width = 228
-            Height = 21
+            Height = 24
             TabOrder = 7
             OnClick = edtBottomAddRowsClick
             OnDblClick = edtTopAddRowsDblClick

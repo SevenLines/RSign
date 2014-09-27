@@ -519,7 +519,6 @@ void __fastcall AcadExportThread::Execute()
             }
         }
         if ((CurData||PrjData) && MetricData) {
-
             try {
                 if(FAutoCADExport->ExportRoadSigns){
                     currentItem++;
@@ -658,6 +657,29 @@ void __fastcall AcadExportThread::Execute()
                                 if (t) {
                                     TExtPolyline *p=t->PrepareMetric(R);
                                     aexp->ExportCommunication(p,t);
+                                    delete p;
+                                }
+                            }
+                        }
+                    }
+                } catch (...) {
+                    ACAD_EXPORT_ERROR;
+                }
+
+                try {
+                    if (FAutoCADExport->ExportTrafficLights) {
+                        currentItem++;
+                        SET_PROGRESS_FORM_CAPTION_EX("Выводим светофоры...")
+                        SET_PROGRESS_FORM_POSITION(0;)
+                        aexp->AddLayer("RoadTrafficLights");
+                        for (int i=0;i<DataCur->Objects->Count;i++) {
+                            if(Terminated) goto export_end;
+                            if (DataCur->Objects->Items[i]->DictId==77) {
+                                SET_PROGRESS_FORM_POSITION(i;)
+                                TTrafficLight *t=dynamic_cast<TTrafficLight*>(DataCur->Objects->Items[i]);
+                                if (t) {
+                                    TExtPolyline *p=t->PrepareMetric(R);
+                                    aexp->ExportTrafficLight(p,t);
                                     delete p;
                                 }
                             }

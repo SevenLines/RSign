@@ -859,6 +859,28 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     if(~iEnd) {
         if(Poly->Points[0].x>iEnd) return true;
     }
+    if (count == 0) {
+        return true;
+    }
+
+    bool allSignsWithTheSameRotation = true;
+    int direction = signs[0]->Direction;
+    int placement = signs[0]->Placement;
+    int onAttach = signs[0]->OnAttach;
+    for(int i=1;i<count;++i) {
+        TRoadSign *s = signs[i];
+        if (s->Direction != direction || s->Placement != placement
+                || s->OnAttach != onAttach) {
+            allSignsWithTheSameRotation = false;
+            break;
+        }
+    }
+    if (!allSignsWithTheSameRotation) {
+        for(int i=0;i<count;++i) {
+            ExportSigns(Poly, &signs[i], 1, fEnd);
+        }
+        return true;
+    }
 
     double scale = ScaleY*50;
     double yoffset = 20;
@@ -867,7 +889,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     AnsiString strings[4];
     AcadBlockPtr block;
     double rotation, rotationHandle;
-    
+
     switch (signs[0]->Direction) {
     case roDirect:
         switch (signs[0]->Placement) {
@@ -911,7 +933,6 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     AnsiString sEmpty = "";
 
     try{
-		
 		if (count==1) {
 			try {
                 DrawSign(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
@@ -1206,6 +1227,19 @@ float TAcadExport::GetAngle(TPoint &p1, TPoint &p2, float *length) {
 }
 
 
+void TAcadExport::DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName)
+{
+        int yoffset = -ScaleY*(p2.y - p1.y);
+        int xoffset = p2.x - p1.x;
+        float angle = xoffset!=0?atan(yoffset/xoffset):yoffset<0?-M_PI_2:M_PI_2;
+        if(xoffset<0)angle+=M_PI;
+        float length = sqrt(yoffset*yoffset + xoffset*xoffset);
+        AcadBlockReferencePtr block = AutoCAD.DrawBlock(blockName, p1.x, -ScaleY*p1.y,angle);
+        if(block.IsBound()) {
+            AutoCAD.SetPropertyDouble(block, lengthPropName, length);
+        }
+}
+
 bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int line,String code, bool fEnd) {
     bool ffind;
     float x,y,height,rot,length,yoffset,xoffset,angle, Min,Max;
@@ -1401,32 +1435,34 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
 
             case ma12:  /*—топ лини€*/
                 for(int i=0;i<count-1;i++){
-                    yoffset = -ScaleY*(Poly->Points[i+1].y - Poly->Points[i].y);
+                    DrawBlockOnLine("r_1.12", Poly->Points[i], Poly->Points[i+1], "Length");
+                    /*yoffset = -ScaleY*(Poly->Points[i+1].y - Poly->Points[i].y);
                     xoffset = Poly->Points[i+1].x - Poly->Points[i].x;
                     angle = xoffset!=0?atan(yoffset/xoffset):yoffset<0?-M_PI_2:M_PI_2;
                     if(xoffset<0)angle+=M_PI;
                     length = sqrt(yoffset*yoffset + xoffset*xoffset);
                     block = AutoCAD.DrawBlock("r_1.12",Poly->Points[i].x,-ScaleY*Poly->Points[i].y,angle);
-                    if(block.IsBound())AutoCAD.SetPropertyDouble(block, "Length", length);
+                    if(block.IsBound())AutoCAD.SetPropertyDouble(block, "Length", length);*/
                 }
                 break;
 
             case ma13: /*ќбозначение места, где водитель об€зан уступить дорогу*/
                 for(int i=0;i<count-1;i++){
-                    yoffset = -ScaleY*(Poly->Points[i+1].y - Poly->Points[i].y);
+                    DrawBlockOnLine("r_1.13", Poly->Points[i], Poly->Points[i+1], "Length");
+                    /*yoffset = -ScaleY*(Poly->Points[i+1].y - Poly->Points[i].y);
                     xoffset = Poly->Points[i+1].x - Poly->Points[i].x;
                     angle = xoffset!=0?atan(yoffset/xoffset):yoffset<0?-M_PI_2:M_PI_2;
                     if(xoffset<0)angle+=M_PI;
                     length = sqrt(yoffset*yoffset + xoffset*xoffset);
                     block = AutoCAD.DrawBlock("r_1.13",Poly->Points[i].x,-ScaleY*Poly->Points[i].y,angle);
-                    if(block.IsBound())AutoCAD.SetPropertyDouble(block, "Length", length);
+                    if(block.IsBound())AutoCAD.SetPropertyDouble(block, "Length", length);*/
                 }
                 break;
 
             case ma14_1:
             case ma14_2:/*пешеход*/
             case ma14_3:
-                x = Poly->Points[0].x;
+                /*x = Poly->Points[0].x;
                 y = Poly->Points[0].y;
                 height = ScaleY*(Poly->Points[count-1].y - y);
                 if(height<0){
@@ -1436,7 +1472,26 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                     rot = -M_PI/2;
                 }
                 block = AutoCAD.DrawBlock("r_1.14.1",x,-ScaleY*y,rot,1);
-                AutoCAD.SetPropertyDouble(block, "Width", height);
+                AutoCAD.SetPropertyDouble(block, "Width", height);*/
+                for(int i=0;i<count-1;i++){
+                    DrawBlockOnLine("r_1.14.1", Poly->Points[i], Poly->Points[i+1], "Width");
+                }
+                break;
+            case ma14_1e:
+                /*x = Poly->Points[0].x;
+                y = Poly->Points[0].y;
+                height = ScaleY*(Poly->Points[count-1].y - y);
+                if(height<0){
+                    rot = M_PI/2;
+                    height = -height;
+                }else{
+                    rot = -M_PI/2;
+                }
+                block = AutoCAD.DrawBlock("r_1.14.1_e",x,-ScaleY*y,rot,1);
+                AutoCAD.SetPropertyDouble(block, "Width", height);*/
+                for(int i=0;i<count-1;i++){
+                    DrawBlockOnLine("r_1.14.1_e", Poly->Points[i], Poly->Points[i+1], "Width");
+                }
                 break;
 
             case ma15: /*ќбозначение переезда дл€ велосипедистов*/
@@ -2980,4 +3035,57 @@ bool __fastcall TAcadExport::ExportCommunication(TExtPolyline *p, TCommunication
     return true;
 }
 
+bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, TTrafficLight *t, bool fEnd )
+{
+   if (fEnd) return true;
+    static float rotation;
+    if(fEnd){
+        return true;
+    }
+
+    if(~iStart) {
+        if(p->Points[0].x<iStart) return true;
+    }
+    if(~iEnd) {
+        if(p->Points[0].x>iEnd) return true;
+    }
+
+    rotation=(float)t->Direction / 180.0 * M_PI;
+    AnsiString blockKind = "";
+    switch(t->Kind) {
+    case tlkTr:
+        blockKind = "t1";
+        break;
+    case tlkTl:
+        blockKind = "t2";
+        break;
+    case tlkTrl:
+        blockKind = "t3";
+        break;
+    case tlkP:
+        blockKind = "t4";
+        break;
+    case trlkTR:
+        blockKind = "t5";
+        break;    
+    }
+
+    AcadBlockReferencePtr block
+        = AutoCAD.DrawBlock("light", p->Points[0].x, -ScaleY*p->Points[0].y,rotation);
+    if(block.IsBound()){
+        AutoCAD.SetPropertyListVariant(block, "Type", blockKind);
+        /*if(!exist) {
+            block->color = NotExistColor;
+        } */
+    }else{
+        return false;
+    }
+
+
+    return true;
+}
+
+
+
 #endif // WITHOUT_AUTOCAD
+

@@ -157,6 +157,7 @@ class TAcadExport {
       bool __fastcall ExportBorder(TExtPolyline *Poly,TLinearRoadSideObject *o,bool exist, bool fEnd = false);
       bool __fastcall ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool fEnd = false);
       bool __fastcall ExportCommunication(TExtPolyline *p, TCommunication *t, bool fEnd = false);
+      bool __fastcall ExportTrafficLight(TExtPolyline *p, TTrafficLight *t, bool fEnd = false );
 
       bool __fastcall ExportTown(TExtPolyline *p, TTown *t, bool fEnd = false);
       bool __fastcall ExportPlan(TExtPolyline *p, TLinearRoadSideObject *t, int kind, bool fEnd=false);
@@ -172,6 +173,7 @@ class TAcadExport {
 
 
       void __fastcall DrawGrid(int step);
+      void DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName);
 
       AcadPolylinePtr DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes = true, bool fLockGaps = false);
       AcadPolylinePtr DrawPolyLine(vector<double> &points);

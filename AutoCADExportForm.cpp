@@ -99,6 +99,8 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
    ini->WriteBool("AutoCAD","ExportPlan",chkPlan->Checked);
    ini->WriteBool("AutoCAD","ExportSurface",chkSurface->Checked);
    ini->WriteBool("AutoCAD","ExportTown",chkTown->Checked);
+   ini->WriteBool("AutoCAD","ExportTrafficLights",chkTrafficLights->Checked);
+   ini->WriteBool("AutoCAD","ExportCityObjects",chkCityObjects->Checked);
    ini->WriteBool("AutoCAD","ExportProfile",chkProfile->Checked);
    ini->WriteBool("AutoCAD","ExportCommunications",chkCommunications->Checked);
    ini->WriteBool("AutoCAD","MakeHeaders",chkMakeHeader->Checked);
@@ -181,6 +183,8 @@ void TFAutoCADExport::LoadIni(TIniFile *ini)
    chkLamps->Checked = ini->ReadBool("AutoCAD","ExportLamps",true);
    chkSidewalks->Checked = ini->ReadBool("AutoCAD","ExportSidewalks",true);
    chkBorders->Checked = ini->ReadBool("AutoCAD","ExportBorders",true);
+   chkTrafficLights->Checked = ini->ReadBool("AutoCAD","ExportTrafficLights", false);
+   chkCityObjects->Checked = ini->ReadBool("AutoCAD","ExportCityObjects", false);
    rgOut->ItemIndex = ini->ReadInteger("AutoCAD","ExportTo",0);
    edtNotExistsColor->Text = ini->ReadInteger("AutoCAD","NotExistsColor",1);
    chkSection->Checked = ini->ReadBool("AutoCAD","chkSection",false);
@@ -774,3 +778,4 @@ void __fastcall TFAutoCADExport::btnShowInfoClick(TObject *Sender)
     FAddRowDescription->Show();    
 }
 //---------------------------------------------------------------------------
+

@@ -192,6 +192,8 @@ __published:	// IDE-managed Components
     TEdit *edtMinBarrierSegmentLength;
     TLabel *Label16;
     TCheckBox *chkHideAutoCAD;
+    TCheckBox *chkTrafficLights;
+    TCheckBox *chkCityObjects;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
@@ -248,6 +250,8 @@ public:		// User declarations
         MPROPERTY1(Table);
         MPROPERTY1(Curves);
         MPROPERTY1(Lamps);
+        MPROPERTY1(TrafficLights);
+        MPROPERTY1(CityObjects);
         MPROPERTY1(MoundHeights);
         MPROPERTY1(Auto6_13);
         MPROPERTY1(LeftValueOnly6_13);
