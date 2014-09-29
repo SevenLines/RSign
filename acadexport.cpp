@@ -221,10 +221,14 @@ AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes,
                 iLast = i;
             }
         }
-        if((codes[codes.size()-1]&&fUseCodes)||!fUseCodes){
+        if(codes[codes.size()-1]){
             range = vector<double>(
                         points.begin() + 2*iLast,
                         points.end());
+            if (codes[0]) {
+               range.push_back(points[0]);
+               range.push_back(points[1]);               
+            }
             pl = DrawPolyLine(range);
         }
     } else {
@@ -863,23 +867,51 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         return true;
     }
 
-    bool allSignsWithTheSameRotation = true;
-    int direction = signs[0]->Direction;
-    int placement = signs[0]->Placement;
-    int onAttach = signs[0]->OnAttach;
-    for(int i=1;i<count;++i) {
-        TRoadSign *s = signs[i];
-        if (s->Direction != direction || s->Placement != placement
-                || s->OnAttach != onAttach) {
-            allSignsWithTheSameRotation = false;
-            break;
+    // проверка на то можно ли склеивать знаки
+    // если они в разных направлениях то нельзя
+    if (count >= 2) {
+      bool allSignsWithTheSameRotation = true;
+      int direction = signs[0]->Direction;
+      int placement = signs[0]->Placement;
+      int onAttach = signs[0]->OnAttach;
+      for(int i=1;i<count;++i) {
+          TRoadSign *s = signs[i];
+          if (s->Direction != direction || s->Placement != placement
+                  || s->OnAttach != onAttach) {
+              allSignsWithTheSameRotation = false;
+              break;
+          }
+      }
+      if (!allSignsWithTheSameRotation) {
+
+        if (count == 2 && ( (signs[0]->OldTitle == "5.19.1" && signs[1]->OldTitle == "5.19.2") ||
+            (signs[1]->OldTitle == "5.19.1" && signs[0]->OldTitle == "5.19.2"))) {
+        } else if (count > 2) {
+          vector<TRoadSign*> signsOthers;
+          vector<TRoadSign*> signs5_19;
+          bool add5_19_1 = false;
+          bool add5_19_2 = false;
+          for (int i=0;i<count; ++i) {
+              if ((signs[i]->OldTitle == "5.19.1") && !add5_19_1) {
+                 add5_19_1 = true;
+                 signs5_19.push_back(signs[i]);
+              } else if (signs[i]->OldTitle == "5.19.2" && !add5_19_2) {
+                 add5_19_1 = true;
+                 signs5_19.push_back(signs[i]);
+              } else {
+                  signsOthers.push_back(signs[i]);
+              }
+          }
+          ExportSigns(Poly, signs5_19.begin(), signs5_19.size(), fEnd);
+          ExportSigns(Poly, signsOthers.begin(), signsOthers.size(), fEnd);
+          return true;
+        } else {
+          for(int i=0;i<count;++i) {
+              ExportSigns(Poly, &signs[i], 1, fEnd);
+          }
+          return true;
         }
-    }
-    if (!allSignsWithTheSameRotation) {
-        for(int i=0;i<count;++i) {
-            ExportSigns(Poly, &signs[i], 1, fEnd);
-        }
-        return true;
+      }
     }
 
     double scale = ScaleY*50;
@@ -900,7 +932,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
             rotationHandle = M_PI/2;
             break;
         default:
-            rotationHandle = 0;
+            rotationHandle = -M_PI/2;
         }
         break;
     case roUnDirect:
@@ -912,7 +944,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
             rotationHandle = -M_PI/2;
             break;
         default:
-            rotationHandle = M_PI;
+            rotationHandle = M_PI/2;
         }
         break;
     }
@@ -1153,7 +1185,7 @@ int iRow, int line, AutoCADTable *table)
     int count = Poly->Count;
     
     if(count>1) { // are there any points to draw?
-        pl = DrawPolyPoints(Poly);
+        pl = DrawPolyPoints(Poly, true);
         
         if(Poly->Points[0].x>Poly->Points[count-1].x){
             Min = Poly->Points[count-1].x;
@@ -1229,8 +1261,8 @@ float TAcadExport::GetAngle(TPoint &p1, TPoint &p2, float *length) {
 
 void TAcadExport::DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName)
 {
-        int yoffset = -ScaleY*(p2.y - p1.y);
-        int xoffset = p2.x - p1.x;
+        float yoffset = -ScaleY*(p2.y - p1.y);
+        float xoffset = p2.x - p1.x;
         float angle = xoffset!=0?atan(yoffset/xoffset):yoffset<0?-M_PI_2:M_PI_2;
         if(xoffset<0)angle+=M_PI;
         float length = sqrt(yoffset*yoffset + xoffset*xoffset);
@@ -1436,59 +1468,23 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
             case ma12:  /*Стоп линия*/
                 for(int i=0;i<count-1;i++){
                     DrawBlockOnLine("r_1.12", Poly->Points[i], Poly->Points[i+1], "Length");
-                    /*yoffset = -ScaleY*(Poly->Points[i+1].y - Poly->Points[i].y);
-                    xoffset = Poly->Points[i+1].x - Poly->Points[i].x;
-                    angle = xoffset!=0?atan(yoffset/xoffset):yoffset<0?-M_PI_2:M_PI_2;
-                    if(xoffset<0)angle+=M_PI;
-                    length = sqrt(yoffset*yoffset + xoffset*xoffset);
-                    block = AutoCAD.DrawBlock("r_1.12",Poly->Points[i].x,-ScaleY*Poly->Points[i].y,angle);
-                    if(block.IsBound())AutoCAD.SetPropertyDouble(block, "Length", length);*/
                 }
                 break;
 
             case ma13: /*Обозначение места, где водитель обязан уступить дорогу*/
                 for(int i=0;i<count-1;i++){
                     DrawBlockOnLine("r_1.13", Poly->Points[i], Poly->Points[i+1], "Length");
-                    /*yoffset = -ScaleY*(Poly->Points[i+1].y - Poly->Points[i].y);
-                    xoffset = Poly->Points[i+1].x - Poly->Points[i].x;
-                    angle = xoffset!=0?atan(yoffset/xoffset):yoffset<0?-M_PI_2:M_PI_2;
-                    if(xoffset<0)angle+=M_PI;
-                    length = sqrt(yoffset*yoffset + xoffset*xoffset);
-                    block = AutoCAD.DrawBlock("r_1.13",Poly->Points[i].x,-ScaleY*Poly->Points[i].y,angle);
-                    if(block.IsBound())AutoCAD.SetPropertyDouble(block, "Length", length);*/
                 }
                 break;
 
             case ma14_1:
             case ma14_2:/*пешеход*/
             case ma14_3:
-                /*x = Poly->Points[0].x;
-                y = Poly->Points[0].y;
-                height = ScaleY*(Poly->Points[count-1].y - y);
-                if(height<0){
-                    rot = M_PI/2;
-                    height = -height;
-                }else{
-                    rot = -M_PI/2;
-                }
-                block = AutoCAD.DrawBlock("r_1.14.1",x,-ScaleY*y,rot,1);
-                AutoCAD.SetPropertyDouble(block, "Width", height);*/
                 for(int i=0;i<count-1;i++){
                     DrawBlockOnLine("r_1.14.1", Poly->Points[i], Poly->Points[i+1], "Width");
                 }
                 break;
             case ma14_1e:
-                /*x = Poly->Points[0].x;
-                y = Poly->Points[0].y;
-                height = ScaleY*(Poly->Points[count-1].y - y);
-                if(height<0){
-                    rot = M_PI/2;
-                    height = -height;
-                }else{
-                    rot = -M_PI/2;
-                }
-                block = AutoCAD.DrawBlock("r_1.14.1_e",x,-ScaleY*y,rot,1);
-                AutoCAD.SetPropertyDouble(block, "Width", height);*/
                 for(int i=0;i<count-1;i++){
                     DrawBlockOnLine("r_1.14.1_e", Poly->Points[i], Poly->Points[i+1], "Width");
                 }
@@ -1499,7 +1495,6 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma16_1: /*Обозначение островков, разделяющих потоки  противоположенных направлений*/
-
             case ma16_2: /*Обозначение островков, разделяющих потоки  одного направления*/
             case ma16_3: /*Обозначение островков в местах слияния транспортных потоков*/
 
@@ -1522,13 +1517,16 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
 
                 text = AutoCAD.DrawText(str,UnderTextHeight,acAlignmentMiddleCenter, p.x,p.y);
 
-                pl[0] = DrawPolyPoints(Poly);
+                pl[0] = DrawPolyPoints(Poly, false, true);
                 hatch = AutoCAD.FillArea((IDispatch**)pl,1,0,L"ANSI31");
                 hatch->PatternScale = 50;
                 //tableBottom.DrawRepeatTextInterval(0,"1.16",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
             case ma17: /*Обозначение остановок маршрутных транспортных средств*/
+                for(int i=0;i<count-1;i++){
+                    DrawBlockOnLine("r_1.17", Poly->Points[i], Poly->Points[i+1], "Length");
+                }
                 //tableBottom.DrawRepeatTextInterval(0,"1.17",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
@@ -1773,7 +1771,8 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
     for(int i=0;i<Poly->Count;i++) {
         points.push_back(Poly->Points[i]);
     }
-    Utils::optimize(points, iMinBarrierSegmentLength);
+    if (iMinBarrierSegmentLength!=-1)
+        Utils::optimize(points, iMinBarrierSegmentLength);
 
     sort(points.begin(),points.end(),barrierPointAsc());
 
@@ -3050,7 +3049,7 @@ bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, TTrafficLight *
         if(p->Points[0].x>iEnd) return true;
     }
 
-    rotation=(float)t->Direction / 180.0 * M_PI;
+    rotation=-(float)t->Direction / 180.0 * M_PI;
     AnsiString blockKind = "";
     switch(t->Kind) {
     case tlkTr:

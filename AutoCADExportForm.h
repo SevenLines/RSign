@@ -272,6 +272,7 @@ public:		// User declarations
 
         MPROPERTY1(TopAddRowsWithoutData);
         MPROPERTY1(GridStep);
+
         MPROPERTY1(Ruler);
         MPROPERTY1(Section);
         MPROPERTY1(Graphic);
@@ -287,17 +288,12 @@ public:		// User declarations
         MPROPERTY3(HeaderWidth);
         MPROPERTY3(HeaderTextHeight);
         MPROPERTY3(UseVerticalTextIfLess);
-
-
-
         MPROPERTY3(SmallGridMarkHeight);
 
         MPROPERTY6(Start);
         MPROPERTY6(End);
         MPROPERTY6(Step);
         MPROPERTY6(GridStep);
-
-
 
         MPROPERTY4(LinesTop);
         MPROPERTY4(LinesBottom);
