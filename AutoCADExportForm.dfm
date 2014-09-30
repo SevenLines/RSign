@@ -713,11 +713,19 @@ object FAutoCADExport: TFAutoCADExport
           end
           object chkHideAutoCAD: TCheckBox
             Left = 10
-            Top = 378
+            Top = 426
             Width = 208
             Height = 21
             Caption = #1089#1082#1088#1099#1074#1072#1090#1100' AutoCAD'
             TabOrder = 9
+          end
+          object chkShowAttachmentComments: TCheckBox
+            Left = 8
+            Top = 376
+            Width = 329
+            Height = 17
+            Caption = #1042#1099#1074#1086#1076#1080#1090#1100' '#1082#1086#1084#1077#1085#1090#1072#1088#1080#1080' '#1087#1088#1080#1084#1099#1082#1072#1085#1080#1081
+            TabOrder = 10
           end
         end
         object TabSheet1: TTabSheet

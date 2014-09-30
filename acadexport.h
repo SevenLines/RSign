@@ -78,6 +78,7 @@ class TAcadExport {
       bool fAlreadyDrawTube;
       bool fAuto6_13, fLeftValueOnly6_13;
       bool fFillProfile;
+      bool fShowAttachmentComments;
       bool fDrawTable, fTopAddRowsWithoutData, fBottomAddRowsWithoutData, fGraphicAddRowsWithoutData;
       TRoad *curRoad;
 

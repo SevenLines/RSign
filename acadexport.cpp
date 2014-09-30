@@ -479,6 +479,7 @@ bool __fastcall TAcadExport::ExportTables(TFAutoCADExport *form)
 
 
     fBottomAddRowsWithoutData = fTopAddRowsWithoutData = form->ExportTopAddRowsWithoutData;
+    fShowAttachmentComments = form->ExportShowAttachmentComments;
 
     iMinBarrierSegmentLength = form->MinBarrierSegmentLength;
     iProfileHatchScale = form->ProfileHatchScale;
@@ -807,32 +808,34 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly,TRoadAttach *a, boo
     }
 
     // вывод комментари€
-    vector<AnsiString> strings;
-    AnsiString str = a->Comment;
-    str = StringReplace(str,"\\n","\n",TReplaceFlags() << rfReplaceAll);
-    for(iLast=1,i=1;i<str.Length();++i) {
-        if(str[i]=='\n') {
-            strings.push_back(str.SubString(iLast,i-iLast));
-            iLast = i+1;
-        }
-    }
-    strings.push_back(str.SubString(iLast,i-iLast+1));
+    if (fShowAttachmentComments) {
+      vector<AnsiString> strings;
+      AnsiString str = a->Comment;
+      str = StringReplace(str,"\\n","\n",TReplaceFlags() << rfReplaceAll);
+      for(iLast=1,i=1;i<str.Length();++i) {
+          if(str[i]=='\n') {
+              strings.push_back(str.SubString(iLast,i-iLast));
+              iLast = i+1;
+          }
+      }
+      strings.push_back(str.SubString(iLast,i-iLast+1));
 
-    for(i=1;i<=strings.size();++i) {
-        if(pMax.y >0) {
-            if(!strings[i-1].IsEmpty()) {
-                AutoCAD.DrawText(strings[i-1],
-                UnderTextHeight,
-                acAlignmentTopCenter,
-                a->L,
-                -ScaleY*(pMax.y)-i*UnderTextYOffset-(i-1)*UnderTextHeight);
-            }
-        } else {
-            if(!strings[i-1].IsEmpty()) {
-                AutoCAD.DrawText(strings[i-1],UnderTextHeight,acAlignmentBottomCenter ,
-                a->L,-ScaleY*(pMax.y)+(strings.size()-i)*UnderTextYOffset+(strings.size()-i+1)*UnderTextHeight);
-            }
-        }
+      for(i=1;i<=strings.size();++i) {
+          if(pMax.y >0) {
+              if(!strings[i-1].IsEmpty()) {
+                  AutoCAD.DrawText(strings[i-1],
+                  UnderTextHeight,
+                  acAlignmentTopCenter,
+                  a->L,
+                  -ScaleY*(pMax.y)-i*UnderTextYOffset-(i-1)*UnderTextHeight);
+              }
+          } else {
+              if(!strings[i-1].IsEmpty()) {
+                  AutoCAD.DrawText(strings[i-1],UnderTextHeight,acAlignmentBottomCenter ,
+                  a->L,-ScaleY*(pMax.y)+(strings.size()-i)*UnderTextYOffset+(strings.size()-i+1)*UnderTextHeight);
+              }
+          }
+      }
     }
 
 
@@ -871,13 +874,13 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     // если они в разных направлени€х то нельз€
     if (count >= 2) {
       bool allSignsWithTheSameRotation = true;
-      int direction = signs[0]->Direction;
-      int placement = signs[0]->Placement;
+//      int direction = signs[0]->Direction;
+//      int placement = signs[0]->Placement;
       int onAttach = signs[0]->OnAttach;
       for(int i=1;i<count;++i) {
           TRoadSign *s = signs[i];
-          if (s->Direction != direction || s->Placement != placement
-                  || s->OnAttach != onAttach) {
+          if (/*s->Direction != direction || s->Placement != placement
+                  || */s->OnAttach != onAttach) {
               allSignsWithTheSameRotation = false;
               break;
           }
@@ -887,8 +890,9 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         if (count == 2 && ( (signs[0]->OldTitle == "5.19.1" && signs[1]->OldTitle == "5.19.2") ||
             (signs[1]->OldTitle == "5.19.1" && signs[0]->OldTitle == "5.19.2"))) {
         } else if (count > 2) {
-          vector<TRoadSign*> signsOthers;
           vector<TRoadSign*> signs5_19;
+          vector<TRoadSign*> signsOnAttach;
+          vector<TRoadSign*> signsOnRoad;
           bool add5_19_1 = false;
           bool add5_19_2 = false;
           for (int i=0;i<count; ++i) {
@@ -896,14 +900,19 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                  add5_19_1 = true;
                  signs5_19.push_back(signs[i]);
               } else if (signs[i]->OldTitle == "5.19.2" && !add5_19_2) {
-                 add5_19_1 = true;
+                 add5_19_2 = true;
                  signs5_19.push_back(signs[i]);
               } else {
-                  signsOthers.push_back(signs[i]);
+                  if (signs[i]->OnAttach)
+                    signsOnAttach.push_back(signs[i]);
+                  else
+                    signsOnRoad.push_back(signs[i]);
               }
           }
           ExportSigns(Poly, signs5_19.begin(), signs5_19.size(), fEnd);
-          ExportSigns(Poly, signsOthers.begin(), signsOthers.size(), fEnd);
+          // разбиваем по группам расположени€ на примыкани€х
+          ExportSigns(Poly, signsOnAttach.begin(), signsOnAttach.size(), fEnd);
+          ExportSigns(Poly, signsOnRoad.begin(), signsOnRoad.size(), fEnd);
           return true;
         } else {
           for(int i=0;i<count;++i) {
@@ -1348,6 +1357,11 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
             case ma1: /*сплошна€*/
                 DrawRoadMark(Poly, "1.1", iRow, line, table);
                 break;
+            case ma1_park: /*сплошна€ на парковке*/
+                for(int i=0;i<count-1;i++){
+                    DrawBlockOnLine("r_1.1_park", Poly->Points[i], Poly->Points[i+1], "Length");
+                }
+                break;
 
             case ma2_1:/* рай проезжей части (сплошна€) */
                 DrawRoadMark(Poly, "1.2.1", iRow, line, table);
@@ -1395,10 +1409,10 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                     tableBottom.DrawRepeatTextIntervalRoadMark(iBottom0,"1.4",Min,Max,StringConvert,iStep,0.25);
                 }
                 AutoCAD.DrawRepeatTextInterval("1.4",
-                Min,
-                Max,
-                -ScaleY*Poly->Points[0].y+UnderTextYOffset,
-                UnderTextHeight,iStep);
+                  Min,
+                  Max,
+                  -ScaleY*Poly->Points[0].y+UnderTextYOffset,
+                  UnderTextHeight,iStep);
                 break;
 
             case ma5: /*ѕрерывиста€ лини€*/
@@ -1466,9 +1480,11 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma12:  /*—топ лини€*/
-                for(int i=0;i<count-1;i++){
+                /*for(int i=0;i<count-1;i++){
                     DrawBlockOnLine("r_1.12", Poly->Points[i], Poly->Points[i+1], "Length");
-                }
+                } */
+                pl1 = DrawRoadMark(Poly, "1.12", iRow, line, table);
+                pl1->set_Lineweight(acLnWt040);
                 break;
 
             case ma13: /*ќбозначение места, где водитель об€зан уступить дорогу*/

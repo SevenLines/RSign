@@ -194,6 +194,7 @@ __published:	// IDE-managed Components
     TCheckBox *chkHideAutoCAD;
     TCheckBox *chkTrafficLights;
     TCheckBox *chkCityObjects;
+    TCheckBox *chkShowAttachmentComments;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
@@ -264,6 +265,8 @@ public:		// User declarations
         MPROPERTY1(Surface);
         MPROPERTY1(MakeHeader);
         MPROPERTY1(HideAutoCAD);
+        MPROPERTY1(ShowAttachmentComments);
+        
         __property bool ExportAddRows = {read = get_ExportAddRows};\
         bool get_ExportAddRows(){
              return getTopRow("дополнительные строки")!=-1 && getBottomRow("дополнительные строки")!=-1 && !edtTopAddRows->Text.IsEmpty();

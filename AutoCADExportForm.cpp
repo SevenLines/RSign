@@ -106,6 +106,7 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
    ini->WriteBool("AutoCAD","MakeHeaders",chkMakeHeader->Checked);
    ini->WriteBool("AutoCAD","ExportAddRowsWithoutData",chkTopAddRowsWithoutData->Checked);
    ini->WriteBool("AutoCAD","HideAutoCAD", chkHideAutoCAD->Checked);
+   ini->WriteBool("AutoCAD","ShowAttachmentComments", chkShowAttachmentComments->Checked);
    ini->WriteInteger("AutoCAD","ExportTo",rgOut->ItemIndex);
    ini->WriteInteger("AutoCAD","NotExistsColor",NotExistsColor);
 
@@ -197,7 +198,7 @@ void TFAutoCADExport::LoadIni(TIniFile *ini)
    chkMakeHeader->Checked = ini->ReadBool("AutoCAD","MakeHeaders",true);
    chkTopAddRowsWithoutData->Checked = ini->ReadBool("AutoCAD","ExportAddRowsWithoutData",false);
    chkHideAutoCAD->Checked = ini->ReadBool("AutoCAD","HideAutoCAD", true);
-
+   chkShowAttachmentComments->Checked = ini->ReadBool("AutoCAD", "ShowAttachmentComments", true);
    edtTopAddRows->Text = ini->ReadString("AutoCAD","EditTopAddRows","");
    chkGraphic->Checked = ini->ReadBool("AutoCAD","chkGraphic",false);
    chkGridStep->Checked = ini->ReadBool("AutoCAD","chkGridStep",false);
@@ -765,6 +766,8 @@ int __fastcall TFAutoCADExport::CountOfExports()
     count += ExportTown;
     count += ExportTubes;
     count += ExportAddRows;
+    count += ExportTrafficLights;
+    count += ExportCityObjects;    
 
     return count;
 }
