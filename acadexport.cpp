@@ -1359,7 +1359,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
             case ma1_park: /*сплошная на парковке*/
                 for(int i=0;i<count-1;i++){
-                    DrawBlockOnLine("r_1.1_park", Poly->Points[i], Poly->Points[i+1], "Length");
+                    DrawBlockOnLine("r_1.1_park", Poly->Points[i+1], Poly->Points[i], "Length");
                 }
                 break;
 
@@ -1541,7 +1541,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
 
             case ma17: /*Обозначение остановок маршрутных транспортных средств*/
                 for(int i=0;i<count-1;i++){
-                    DrawBlockOnLine("r_1.17", Poly->Points[i], Poly->Points[i+1], "Length");
+                    DrawBlockOnLine("r_1.17", Poly->Points[i+1], Poly->Points[i], "Length");
                 }
                 //tableBottom.DrawRepeatTextInterval(0,"1.17",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
