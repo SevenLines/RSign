@@ -3068,21 +3068,12 @@ bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, TTrafficLight *
     rotation=-(float)t->Direction / 180.0 * M_PI;
     AnsiString blockKind = "";
     switch(t->Kind) {
-    case tlkTr:
-        blockKind = "t1";
-        break;
-    case tlkTl:
-        blockKind = "t2";
-        break;
-    case tlkTrl:
-        blockKind = "t3";
-        break;
-    case tlkP:
-        blockKind = "t4";
-        break;
-    case trlkTR:
-        blockKind = "t5";
-        break;    
+    case tlkT: blockKind = "T"; break;
+    case tlkTl: blockKind = "T_l"; break;
+    case tlkTr: blockKind = "T_r"; break;
+    case tlkTrl: blockKind = "T_rl"; break;
+    case tlkP: blockKind = "TP"; break;
+    case trlkTR: blockKind = "TR"; break;
     }
 
     AcadBlockReferencePtr block

@@ -159,6 +159,7 @@ class TAcadExport {
       bool __fastcall ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool fEnd = false);
       bool __fastcall ExportCommunication(TExtPolyline *p, TCommunication *t, bool fEnd = false);
       bool __fastcall ExportTrafficLight(TExtPolyline *p, TTrafficLight *t, bool fEnd = false );
+      //bool __fastcall ExportCityObjects(TExtPolyline *p, TTrafficLight *t, bool fEnd = false );
 
       bool __fastcall ExportTown(TExtPolyline *p, TTown *t, bool fEnd = false);
       bool __fastcall ExportPlan(TExtPolyline *p, TLinearRoadSideObject *t, int kind, bool fEnd=false);
