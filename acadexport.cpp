@@ -3044,9 +3044,14 @@ bool __fastcall TAcadExport::ExportCommunication(TExtPolyline *p, TCommunication
 {
     if(fEnd) return true;
     AcadPolylinePtr pl = DrawPolyPoints(p);
-    pl->set_Linetype(WideString("linedash_1"));
-    pl->set_Lineweight(acLnWt030);
-
+    switch(t->CommKind) {
+    case 2385262: // трамвайные пути
+        pl->set_Linetype(WideString("TRAIN-LINES"));
+        break;
+    default:
+        pl->set_Linetype(WideString("linedash_1"));
+        pl->set_Lineweight(acLnWt030);
+    }
     return true;
 }
 
