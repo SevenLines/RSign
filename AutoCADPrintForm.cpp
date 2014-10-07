@@ -585,6 +585,7 @@ void TFAutoCADPrint::Print(PrintType printType)
 	helper->DisableAutoSave();
 	ProgressForm->Show();
 
+    ProgressForm->Position++;
 	for(int j=iMin;j<=iMax;j++){
 		int km = int(tbPos->Min + j);
 		int meters = vStep;
