@@ -620,21 +620,30 @@ bool AutoCADHelper::SetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString
 
   Variant vProperities;
   AcadDynamicBlockReferencePropertyPtr prop;
-
+  bool isSet = false;
   try{
      vProperities = ptrBlock->GetDynamicBlockProperties();
      if(vProperities.IsArray()){
        count = vProperities.ArrayHighBound(1)+1;
        if(count>0){
-           for(int i=0;i<count;i++){
+           for(int i=0;i<count; i++){
               prop = (IDispatch*)vProperities.GetElement(i);
               str = prop->PropertyName;
               if(str ==  PropertyName){
                  prop->set_Value(Variant(value));
-                 return true;
+                 isSet = true;
+                 break;
               }
            }
        }
+     }
+     if (!isSet) {
+         AnsiString blockName = ptrBlock->EffectiveName;
+         BUILDER_INFO("Не смог изменить свойство "
+                    << PropertyName.c_str()
+                    << " блока "
+                    << blockName.c_str()
+                    );
      }
   }catch(...){
         AnsiString blockName = "undefined";
@@ -644,7 +653,7 @@ bool AutoCADHelper::SetPropertyDouble(AcadBlockReferencePtr ptrBlock, AnsiString
         std::cerr << "Failed to set property '" << PropertyName.c_str() << "'"
                    << " of object " << blockName << std::endl;
   }
-  return false;
+  return isSet;
 }
 
 bool AutoCADHelper::SetPropertyListVariant(AcadBlockReferencePtr ptrBlock, AnsiString PropertyName,

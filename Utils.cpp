@@ -12,7 +12,7 @@ using namespace std;
 
 void Utils::split(AnsiString str, AnsiString separators, vector<AnsiString>& words_out, int max_splits)
 {
-     bool wordStart = False;
+     /*bool wordStart = False;
      int startPos = 0;
      int splits_counter = 0;
 
@@ -41,7 +41,22 @@ void Utils::split(AnsiString str, AnsiString separators, vector<AnsiString>& wor
            break;
         }
      }
-     words_out.push_back(str.SubString(startPos + words_out.back().Length(), str.Length() - startPos - words_out.back().Length() + 1));
+     words_out.push_back(str.SubString(startPos + words_out.back().Length(), str.Length() - startPos - words_out.back().Length() + 1));*/
+    char* separators_ptr = separators.c_str();
+    char* string_ptr = str.c_str();
+    char* tok = strtok(string_ptr, separators_ptr);
+    AnsiString lastWord;
+    for(int i=0; tok; ++i) {
+        if ( max_splits == -1 || i < max_splits ) {
+            words_out.push_back(tok);
+        } else {
+            lastWord += String(tok) + " ";
+        }
+        tok = strtok(NULL, separators_ptr);
+    }
+    if (lastWord!="") {
+       words_out.push_back(lastWord);
+    }
 }
 
 float Utils::r(TPoint p1, TPoint p2)
