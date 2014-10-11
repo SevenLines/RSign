@@ -1270,15 +1270,29 @@ float TAcadExport::GetAngle(TPoint &p1, TPoint &p2, float *length) {
 
 void TAcadExport::DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName)
 {
-        float yoffset = -ScaleY*(p2.y - p1.y);
-        float xoffset = p2.x - p1.x;
-        float angle = xoffset!=0?atan(yoffset/xoffset):yoffset<0?-M_PI_2:M_PI_2;
-        if(xoffset<0)angle+=M_PI;
-        float length = sqrt(yoffset*yoffset + xoffset*xoffset);
-        AcadBlockReferencePtr block = AutoCAD.DrawBlock(blockName, p1.x, -ScaleY*p1.y,angle);
-        if(block.IsBound()) {
-            AutoCAD.SetPropertyDouble(block, lengthPropName, length);
+    float yoffset = -ScaleY*(p2.y - p1.y);
+    float xoffset = p2.x - p1.x;
+    float angle = xoffset!=0?atan(yoffset/xoffset):yoffset<0?-M_PI_2:M_PI_2;
+    if(xoffset<0)angle+=M_PI;
+    float length = sqrt(yoffset*yoffset + xoffset*xoffset);
+    AcadBlockReferencePtr block = AutoCAD.DrawBlock(blockName, p1.x, -ScaleY*p1.y,angle);
+    if(block.IsBound()) {
+        vector<AnsiString> props;
+        Utils::split(lengthPropName, " ,", props);
+        for(int i=0; i<props.size(); ++i) {
+            try {
+                AutoCAD.SetPropertyDouble(block, props[i], length);
+            } catch(...) {
+                BUILDER_ERROR("Не смог изменить свойство "
+                    << props[i].c_str()
+                    << " блока "
+                    << blockName.c_str()
+                    << " на промежутке "
+                    << "[" << p1.x << "; " << p1.y << "]"
+                    << "[" << p2.x << "; " << p2.y << "]");
+            }
         }
+    }
 }
 
 bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int line,String code, bool fEnd) {
@@ -3043,10 +3057,18 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
 bool __fastcall TAcadExport::ExportCommunication(TExtPolyline *p, TCommunication *t, bool fEnd )
 {
     if(fEnd) return true;
-    AcadPolylinePtr pl = DrawPolyPoints(p);
-    pl->set_Linetype(WideString("linedash_1"));
-    pl->set_Lineweight(acLnWt030);
 
+    switch(t->CommKind) {
+    case 2385262: // трамвайные пути
+        for(int i=0;i<p->Count-1;i++){
+            DrawBlockOnLine("train-lines", p->Points[i], p->Points[i+1], "Length VerticalLineLength");
+        }
+        break;;
+    default:
+        AcadPolylinePtr pl = DrawPolyPoints(p);
+        pl->set_Linetype(WideString("linedash_1"));
+        pl->set_Lineweight(acLnWt030);
+    }
     return true;
 }
 
