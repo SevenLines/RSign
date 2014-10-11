@@ -1342,3 +1342,17 @@ if (VisObjTree->Selected!=NULL)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TMainForm::Button5Click(TObject *Sender)
+{
+if (VisPropList->ItemIndex>=1) {
+    TObject *Data1=(TTextPropRec*)VisPropList->Items->Objects[VisPropList->ItemIndex];
+    TTextPropRec *Rec1=dynamic_cast<TTextPropRec*>(Data1);
+    TObject *Data2=(TTextPropRec*)VisPropList->Items->Objects[VisPropList->ItemIndex-1];
+    TTextPropRec *Rec2=dynamic_cast<TTextPropRec*>(Data2);
+    if (Rec1 && Rec2) {
+       // Dict->
+    }
+}
+}
+//---------------------------------------------------------------------------
+

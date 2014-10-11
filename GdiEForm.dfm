@@ -121,7 +121,7 @@ object MainForm: TMainForm
           Height = 21
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
-          ItemHeight = 0
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
@@ -150,7 +150,7 @@ object MainForm: TMainForm
           Height = 21
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
-          ItemHeight = 0
+          ItemHeight = 13
           TabOrder = 3
         end
         object CharList: TCheckListBox
@@ -202,7 +202,7 @@ object MainForm: TMainForm
           Left = 2
           Top = 15
           Width = 389
-          Height = 504
+          Height = 496
           Align = alClient
           ItemHeight = 13
           TabOrder = 0
@@ -286,7 +286,7 @@ object MainForm: TMainForm
           Width = 156
           Height = 21
           Style = csDropDownList
-          ItemHeight = 0
+          ItemHeight = 13
           TabOrder = 3
         end
         object Button2: TButton
@@ -590,6 +590,15 @@ object MainForm: TMainForm
             Caption = #1055#1086#1083#1086#1078#1077#1085#1080#1077' '
             TabOrder = 11
             OnClick = ShowGridClick
+          end
+          object Button5: TButton
+            Left = 376
+            Top = 56
+            Width = 25
+            Height = 25
+            Caption = 'Up'
+            TabOrder = 12
+            OnClick = Button5Click
           end
         end
         object Panel1: TPanel
