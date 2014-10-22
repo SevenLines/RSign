@@ -145,6 +145,8 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
    ini->WriteString("AutoCAD","ProfileHatch",edtProfileHatch->Text);
    ini->WriteString("AutoCAD","InfoTemplate",edtInfoTemplate->Text);
    ini->WriteString("AutoCAD","SidewalksHatch",edtSidewalksHatch->Text);
+   ini->WriteString("AutoCAD","ProjectBarrierPrefix",edtProjectBarrierPrefix->Text);
+   
    ini->WriteString("AutoCAD","TableHatch",edtTableHatch->Text);
    ini->WriteInteger("AutoCAD", "HeaderTextHeight", HeaderTextHeight);
    ini->WriteInteger("AutoCAD","ScaleY",ScaleY);
@@ -235,6 +237,7 @@ void TFAutoCADExport::LoadIni(TIniFile *ini)
    edtSidewalksHatchScale->Text = ini->ReadInteger("AutoCAD", "SidewalksHatchScale", 75);
    edtProfileHatchScale->Text = ini->ReadInteger("AutoCAD", "ProfileHatchScale", 75);
    edtTableHatchScale->Text = ini->ReadInteger("AutoCAD", "TableHatchScale", 75);
+   edtProjectBarrierPrefix->Text = ini->ReadString("AutoCAD","ProjectBarrierPrefix","");
 
    iCur = ini->ReadInteger("AutoCAD","iCurrentDataSet",-1);
    iPrj = ini->ReadInteger("AutoCAD","iProjectDataSet",-1);
