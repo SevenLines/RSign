@@ -112,6 +112,7 @@ __published:	// IDE-managed Components
     TTreeView *VisObjTree;
     TGroupBox *GroupBox12;
     TComboBox *CurPage;
+    TButton *Button5;
         void __fastcall N2Click(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
         void __fastcall PropListDblClick(TObject *Sender);
@@ -168,6 +169,7 @@ __published:	// IDE-managed Components
           TShiftState Shift, int X, int Y);
     void __fastcall N8Click(TObject *Sender);
     void __fastcall N9Click(TObject *Sender);
+    void __fastcall Button5Click(TObject *Sender);
 private:	// User declarations
         int MovedIndex;
         int MovedTextIndex;

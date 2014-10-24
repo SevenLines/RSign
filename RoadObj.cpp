@@ -485,12 +485,15 @@ TExtPolyline *Res=NULL;
 if (FPoly)
     {
     int n=FPoly->Count;
+    int d=FPoly->Points[0].Code.VisCon();
     if (n>0)
         {
-        Res=new TExtPolyline(n);
+        Res=new TExtPolyline(n+d);
         Road->ConvertPoly(n,FPoly->Points,Res->Points);
         for (int i=0;i<n;i++)
             Res->Codes[i]=FPoly->Points[i].Code.VisCon();
+        if (d)
+            Res->Codes[n]=Res->Codes[0],Res->Points[n]=Res->Points[0];
         }
     }
 return Res;

@@ -363,8 +363,11 @@ if (Count>2)
 
         }
     C[0]=PT_MOVETO;
-    if (Codes[0].Visible())
-        C[Count-1]|=PT_CLOSEFIGURE;
+    // Эта штука вызывает непонятный баг при отрисовке поэтому для
+    // замкнутых фигур метод TRoadObject::GetPolyMetric теперь
+    // просто добавляет нулевую точку в конец вектора
+    // if (Codes[0].Visible())
+    //    C[Count-1]|=PT_CLOSEFIGURE;
     ::PolyDraw(dc,Points,C,Count);
     delete[] C;
     delete[] InRect;
@@ -1090,6 +1093,24 @@ void __fastcall TPolyline::AddX(int DX)
 {
 for (int i=0;i<FCount;i++)
     FPoints[i].X+=DX;
+}
+
+void __fastcall TPolyline::MakeSimplePart(TPolyline *P,int defln) {
+   SetCount(P->Count);
+   int *A=new int [P->Count];
+   for (int i=0;i<P->Count;++i)
+      A[i]=P->Points[i].X/defln;
+   int n=1;
+   FPoints[0].L=P->Points[0].L;
+   FPoints[0].X=A[0]*defln;
+   for (int i=n;i<P->Count;++i)
+      if (A[n-1]!=A[i] || i+1==P->Count) {
+         FPoints[n].L=P->Points[i].L;
+         FPoints[n].X=A[i]*defln;
+         A[n++]=A[i];
+      }
+   delete[] A;
+   SetCount(n);
 }
 
 void __fastcall TPolyline::MakeWidePart(TPolyline *P,int Par1,int RoundVal)

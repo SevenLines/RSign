@@ -2576,8 +2576,12 @@ void __fastcall TRoadFrm::BuildWidePartsDialog(void)
 			int sp=frmWidePartDialog->StartPos*100;
 			int ep=frmWidePartDialog->EndPos*100;
 			FMetricData->BuildRoadMetrics(1);
-			if (frmWidePartDialog->BuildParts)
-			FMetricData->BuildWidePart(sp,ep,frmWidePartDialog->PartMaxDev,frmWidePartDialog->PartRoundVal,FDictSour);
+			if (frmWidePartDialog->BuildParts) {
+                if (frmWidePartDialog->cbMethod->ItemIndex==0)
+        			FMetricData->BuildSimplePart(sp,ep,frmWidePartDialog->PartMaxDev,FDictSour);
+                else if (frmWidePartDialog->cbMethod->ItemIndex==1)
+        			FMetricData->BuildWidePart(sp,ep,frmWidePartDialog->PartMaxDev,frmWidePartDialog->PartRoundVal,FDictSour);
+            }
 			if (frmWidePartDialog->BuildLeftSides)
 			FMetricData->BuildRoadSides(sp,ep,rsLeft,frmWidePartDialog->SideMaxDev,frmWidePartDialog->SideRoundVal,frmWidePartDialog->SideKind,FDictSour);
 			if (frmWidePartDialog->BuildRightSides)

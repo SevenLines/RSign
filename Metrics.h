@@ -255,6 +255,10 @@ void __fastcall Sum(TPolyline *Fir,TPolyline *Sec,int K1,int K2);
 // копирование полилинии с обрезкой по двум направлениям.
 // предполагается, что L[i+1]>=L[i];
 void __fastcall CopyAndCut(TPolyline* Poly,__int32 L1,__int32 L2);
+
+// округляет ширину полосы в меньшую сторону с точностью defln
+void __fastcall MakeSimplePart(TPolyline *P,int defln);
+
 // Из полосы вида ___/\/\/\-  делает полосу вида  ___|-----
 void __fastcall MakeWidePart(TPolyline *Pl,int Par1,int RoundVal);
 // Из полосы вида ___|------  делает полосу вида  ___/-----

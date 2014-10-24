@@ -38,6 +38,7 @@ __published:	// IDE-managed Components
     TUpDown *updPartRoundVal;
     TUpDown *updSideMaxDev;
     TUpDown *updSideRoundVal;
+    TComboBox *cbMethod;
     void __fastcall FormShow(TObject *Sender);
 private:	// User declarations
     TDictSource *FDict;

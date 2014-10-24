@@ -763,6 +763,24 @@ delete[] Parts;
 AddFromBufer();
 }
 
+void __fastcall TDtaSource::BuildSimplePart(int spos,int epos,int step,TDictSource *Dict) {
+TPolyline T,Q,P;
+T.Sum(&(Road->RightLine),&(Road->LeftLine),1,-1);
+Q.CopyAndCut(&T,spos,epos);
+P.MakeSimplePart(&Q,step);
+  for (int i=1;i<P.Count;i++) {
+        TObjMetaClass *Rec=Dict->ObjClasses->Items[WIDTHCODE];
+        TRoadObject *RObj=Factory->CreateRoadObj(Rec->ClassName,0,WIDTHCODE);
+        RObj->PutProperty("L",String(P.Points[i-1].L));
+        RObj->PutProperty("LMax",String(P.Points[i].L));
+        RObj->PutProperty("Width",P.Points[i-1].X);
+        RObj->PutProperty("EWidth",P.Points[i].X);        
+        RObj->DrwClassId=Dict->SelectDrwParam(RObj,1);
+        FBuffer->Add(RObj);
+  }
+AddFromBufer();  
+}
+
 void __fastcall TDtaSource::BuildWidePart(int spos,int epos,int step,int roundval,TDictSource *Dict)
 {
 TPolyline T,Q,P;
