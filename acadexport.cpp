@@ -361,12 +361,20 @@ bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
 
 bool __fastcall TAcadExport::AddLayer(AnsiString l_name)
 {
-      IAcadLayers *layers = AutoCAD.ActiveDocument->get_Layers();
-      if (!layers)
-         return false;
+      IAcadLayers *layers = 0;
       try {
-        IAcadLayer * layer_ptr = layers->Add(WideString(l_name).c_bstr());
-      } catch(...) {}
+        layers = AutoCAD.ActiveDocument->get_Layers();
+      } catch (...) {
+         BUILDER_ERROR("Ќе смог получить доступ к сло€м");
+         return false;
+      }
+      if (!layers)
+           return false;
+      try {
+         IAcadLayer * layer_ptr = layers->Add(WideString(l_name).c_bstr());
+      } catch(...) {
+          BUILDER_ERROR("Ќе удалось добавить слой " << l_name.c_str());
+      }
       AutoCAD.SendCommand(WideString("CLAYER " + l_name + "\n"));
 
       return true;
@@ -1224,14 +1232,21 @@ int iRow, int line, AutoCADTable *table)
             } else {
                 yOffset = -ScaleY*(Poly->Points[(Poly->Count)/2-(Poly->Count%2?0:1)].y)-UnderTextYOffset;
             }
-            AutoCAD.DrawRepeatTextInterval(name, Min, Max, yOffset, UnderTextHeight,iStep);
-            /* 
+
+            AnsiString label_under_mark = name;
+            if (Max - Min > 3000) {
+                label_under_mark += " ("+IntToStr((int)(Min/100)) + "-" + IntToStr((int)(Max/100))+")";
+            } else if ( Max - Min > 1500) {
+                label_under_mark += " ("+IntToStr((int)((Max-Min)/100))+")";
+            }
+            AutoCAD.DrawRepeatTextInterval(label_under_mark, Min, Max, yOffset, UnderTextHeight,iStep);
+
             // no need to draw, as Petya asked : D 
-            AutoCAD.DrawLine(Poly->Points[0].x,-ScaleY*(Poly->Points[0].y)-R1_2_1BorderHeight2,
-                            Poly->Points[0].x,-ScaleY*(Poly->Points[0].y)+R1_2_1BorderHeight2);
-            AutoCAD.DrawLine(Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y)-R1_2_1BorderHeight2,
-                            Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y)+R1_2_1BorderHeight2);
-            */
+            AutoCAD.DrawLine(Poly->Points[0].x,-ScaleY*(Poly->Points[0].y)-UnderTextYOffset,
+                            Poly->Points[0].x,-ScaleY*(Poly->Points[0].y)+UnderTextYOffset);
+            AutoCAD.DrawLine(Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y)-UnderTextYOffset,
+                            Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y)+UnderTextYOffset);
+            
             
         } else { // if we draw road mark on attachments
             AcadTextPtr text;
@@ -2550,6 +2565,9 @@ int iPos, int iEnd, AnsiString str)
         ExtractStrings(TSysCharSet() << '\t' << ' ',
         TSysCharSet() << ' ' << '\t',
         params.c_str(), paramsValues);
+        if (paramsValues->Count == 0) {
+            return;
+        }
 
         blockName = paramsValues->Strings[0]; // первый параметр - им€ блока
         paramsValues->Delete(0);
