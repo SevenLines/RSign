@@ -3,7 +3,7 @@ object frmWidePartDialog: TfrmWidePartDialog
   Top = 106
   BorderStyle = bsDialog
   Caption = #1055#1086#1089#1090#1088#1086#1077#1085#1080#1077' '#1091#1095#1072#1089#1090#1082#1086#1074' '#1087#1086' '#1096#1080#1088#1080#1085#1077' '#1080' '#1086#1073#1086#1095#1080#1085
-  ClientHeight = 214
+  ClientHeight = 248
   ClientWidth = 575
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,14 +17,14 @@ object frmWidePartDialog: TfrmWidePartDialog
   TextHeight = 13
   object Label6: TLabel
     Left = 8
-    Top = 136
+    Top = 160
     Width = 117
     Height = 13
     Caption = #1053#1072#1095#1072#1083#1086' '#1091#1095#1072#1089#1090#1082#1072' '#1076#1086#1088#1086#1075#1080
   end
   object Label7: TLabel
     Left = 8
-    Top = 156
+    Top = 180
     Width = 111
     Height = 13
     Caption = #1050#1086#1085#1077#1094' '#1091#1095#1072#1089#1090#1082#1072' '#1076#1086#1088#1086#1075#1080
@@ -33,7 +33,7 @@ object frmWidePartDialog: TfrmWidePartDialog
     Left = 8
     Top = 8
     Width = 269
-    Height = 117
+    Height = 145
     Caption = #1059#1095#1072#1089#1090#1082#1080' '#1087#1086' '#1096#1080#1088#1080#1085#1077
     TabOrder = 0
     object Label1: TLabel
@@ -100,6 +100,20 @@ object frmWidePartDialog: TfrmWidePartDialog
       Position = 10
       TabOrder = 4
       Wrap = False
+    end
+    object cbMethod: TComboBox
+      Left = 8
+      Top = 112
+      Width = 241
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      ItemIndex = 0
+      TabOrder = 5
+      Text = #1054#1082#1088#1091#1075#1083#1077#1085#1080#1077' '#1074#1085#1080#1079
+      Items.Strings = (
+        #1054#1082#1088#1091#1075#1083#1077#1085#1080#1077' '#1074#1085#1080#1079
+        #1042#1099#1088#1072#1074#1085#1080#1074#1072#1085#1080#1077' '#1091#1095#1072#1089#1090#1082#1086#1074)
     end
   end
   object GroupBox2: TGroupBox
@@ -208,7 +222,7 @@ object frmWidePartDialog: TfrmWidePartDialog
   end
   object editStartPos: TEdit
     Left = 164
-    Top = 132
+    Top = 156
     Width = 93
     Height = 21
     TabOrder = 2
@@ -216,7 +230,7 @@ object frmWidePartDialog: TfrmWidePartDialog
   end
   object editEndPos: TEdit
     Left = 164
-    Top = 156
+    Top = 180
     Width = 93
     Height = 21
     TabOrder = 3
@@ -224,7 +238,7 @@ object frmWidePartDialog: TfrmWidePartDialog
   end
   object Button1: TButton
     Left = 40
-    Top = 184
+    Top = 208
     Width = 75
     Height = 25
     Caption = #1055#1086#1089#1090#1088#1086#1080#1090#1100
