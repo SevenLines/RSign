@@ -195,6 +195,8 @@ __published:	// IDE-managed Components
     TCheckBox *chkTrafficLights;
     TCheckBox *chkCityObjects;
     TCheckBox *chkShowAttachmentComments;
+    TEdit *edtProjectBarrierPrefix;
+    TLabel *Label18;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
@@ -266,19 +268,16 @@ public:		// User declarations
         MPROPERTY1(MakeHeader);
         MPROPERTY1(HideAutoCAD);
         MPROPERTY1(ShowAttachmentComments);
-        
+        MPROPERTY1(TopAddRowsWithoutData);
+        MPROPERTY1(GridStep);
+        MPROPERTY1(Ruler);
+        MPROPERTY1(Section);
+        MPROPERTY1(Graphic);
+
         __property bool ExportAddRows = {read = get_ExportAddRows};\
         bool get_ExportAddRows(){
              return getTopRow("дополнительные строки")!=-1 && getBottomRow("дополнительные строки")!=-1 && !edtTopAddRows->Text.IsEmpty();
         }
-
-
-        MPROPERTY1(TopAddRowsWithoutData);
-        MPROPERTY1(GridStep);
-
-        MPROPERTY1(Ruler);
-        MPROPERTY1(Section);
-        MPROPERTY1(Graphic);
 
         MPROPERTY3(RCenter);
         MPROPERTY3(NotExistsColor);
@@ -292,11 +291,9 @@ public:		// User declarations
         MPROPERTY3(HeaderTextHeight);
         MPROPERTY3(UseVerticalTextIfLess);
         MPROPERTY3(SmallGridMarkHeight);
-
-        MPROPERTY6(Start);
-        MPROPERTY6(End);
-        MPROPERTY6(Step);
-        MPROPERTY6(GridStep);
+        MPROPERTY3(SidewalksHatchScale);
+        MPROPERTY3(ProfileHatchScale);
+        MPROPERTY3(TableHatchScale);
 
         MPROPERTY4(LinesTop);
         MPROPERTY4(LinesBottom);
@@ -305,13 +302,13 @@ public:		// User declarations
         MPROPERTY5(ProfileHatch);
         MPROPERTY5(TableHatch);
         MPROPERTY5(InfoTemplate);
+        MPROPERTY5(ProjectBarrierPrefix);
 
-        MPROPERTY3(SidewalksHatchScale);
-        MPROPERTY3(ProfileHatchScale);
-        MPROPERTY3(TableHatchScale);
-
+        MPROPERTY6(Start);
+        MPROPERTY6(End);
+        MPROPERTY6(Step);
+        MPROPERTY6(GridStep);
         MPROPERTY6(ScaleY);
-
 
         __property int ExportTo = {read  = getExportTo};
         __property AnsiString FileName = {read = getFileName};

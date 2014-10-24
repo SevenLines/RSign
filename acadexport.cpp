@@ -212,7 +212,7 @@ AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes,
     if(fUseCodes){
         for(int i=1;i<codes.size();i++){
             if(!codes[i]){
-                if( i - iLast >= 2 ) {
+                if( i - iLast >= 1 ) {
                     range = vector<double>(
                         points.begin() + 2*iLast,
                         points.begin() + 2*i);
@@ -460,6 +460,7 @@ bool __fastcall TAcadExport::ExportTables(TFAutoCADExport *form)
 
     HeaderTextHeight = form->HeaderTextHeight;
     strInfoTemplate = form->EditInfoTemplate;
+    strProjectBarrierPrefix = form->EditProjectBarrierPrefix;
 
     tableTop.RowHeight = form->RowHeight;
     tableTop.HeaderWidth = form->ExportMakeHeader?form->HeaderWidth:0;
@@ -1194,7 +1195,7 @@ int iRow, int line, AutoCADTable *table)
     int count = Poly->Count;
     
     if(count>1) { // are there any points to draw?
-        pl = DrawPolyPoints(Poly, true);
+        pl = DrawPolyPoints(Poly, false);
         
         if(Poly->Points[0].x>Poly->Points[count-1].x){
             Min = Poly->Points[count-1].x;
@@ -1498,7 +1499,9 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                     DrawBlockOnLine("r_1.12", Poly->Points[i], Poly->Points[i+1], "Length");
                 } */
                 pl1 = DrawRoadMark(Poly, "1.12", iRow, line, table);
-                pl1->set_Lineweight(acLnWt040);
+                if (pl1.IsBound()) {
+                    pl1->set_Lineweight(acLnWt040);
+                }
                 break;
 
             case ma13: /*Обозначение места, где водитель обязан уступить дорогу*/
@@ -1950,7 +1953,9 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
         }
     }
 
-    str = AnsiString(exist?"":"недост.") + str;//"ДО (У3)";
+    if (strProjectBarrierPrefix.Length()) {
+        str = AnsiString(exist?"":strProjectBarrierPrefix.c_str()) + " " + str;//"ДО (У3)";
+    }
 
     switch(b->Placement){
     case opLeft:

@@ -584,57 +584,64 @@ object FAutoCADExport: TFAutoCADExport
           Caption = #1086#1073#1097#1080#1077
           ImageIndex = 1
           object Label5: TLabel
-            Left = 118
-            Top = 15
+            Left = 6
+            Top = 7
             Width = 181
             Height = 16
             Caption = #1088#1072#1079#1084#1077#1088' '#1087#1086#1076#1087#1080#1089#1077#1081' '#1088#1072#1079#1084#1077#1090#1082#1080
           end
           object Label6: TLabel
-            Left = 118
-            Top = 44
+            Left = 270
+            Top = 7
             Width = 226
             Height = 16
             Caption = #1089#1076#1074#1080#1075' '#1087#1086' '#1086#1089#1080' Y '#1087#1086#1076#1087#1080#1089#1077#1081' '#1088#1072#1079#1084#1077#1090#1082#1080
           end
           object Label20: TLabel
-            Left = 118
-            Top = 123
+            Left = 6
+            Top = 51
             Width = 47
             Height = 16
             Caption = #1096#1072#1075'('#1089#1084')'
           end
           object Label9: TLabel
-            Left = 10
-            Top = 162
+            Left = 6
+            Top = 98
             Width = 285
             Height = 16
             Caption = #1096#1072#1073#1083#1086#1085' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1086#1085#1085#1086#1075#1086' '#1087#1086#1083#1103' '#1087#1088#1080' '#1087#1077#1095#1072#1090#1080
           end
           object Label26: TLabel
-            Left = 10
-            Top = 271
+            Left = 6
+            Top = 191
             Width = 170
             Height = 16
             Caption = #1074#1099#1089#1086#1090#1072' '#1087#1080#1082#1077#1090#1072#1078#1085#1099#1093' '#1084#1077#1090#1086#1082
           end
           object Label24: TLabel
-            Left = 10
-            Top = 217
+            Left = 6
+            Top = 145
             Width = 406
             Height = 16
             Caption = #1074#1077#1088#1090#1080#1082#1072#1083#1100#1085#1099#1081' '#1087#1080#1082#1077#1090#1072#1078' '#1074' '#1090#1072#1073#1083#1080#1094#1077' '#1077#1089#1083#1080' '#1076#1083#1080#1085#1072' '#1091#1095#1072#1089#1090#1082#1072' '#1084#1077#1085#1100#1096#1077
           end
           object Label16: TLabel
-            Left = 10
-            Top = 325
+            Left = 6
+            Top = 237
             Width = 441
             Height = 16
             Caption = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1072#1103' '#1076#1083#1080#1085#1072' '#1101#1083#1077#1084#1077#1085#1090#1072' '#1073#1072#1088#1100#1077#1088#1085#1086#1075#1086' '#1086#1075#1088#1072#1078#1076#1077#1085#1080#1103' ( -1 -- '#1083#1102#1073#1072#1103')'
           end
+          object Label18: TLabel
+            Left = 6
+            Top = 293
+            Width = 344
+            Height = 16
+            Caption = #1055#1088#1077#1092#1080#1082#1089' '#1074' '#1090#1072#1073#1083#1080#1094#1077' '#1076#1083#1103' '#1087#1088#1086#1077#1082#1090#1080#1088#1091#1077#1084#1099#1093' '#1086#1075#1088#1072#1078#1076#1077#1085#1080#1081':'
+          end
           object edtUnderTextHeight: TEdit
             Left = 10
-            Top = 10
+            Top = 26
             Width = 100
             Height = 24
             TabOrder = 0
@@ -642,8 +649,8 @@ object FAutoCADExport: TFAutoCADExport
             OnDblClick = edtTopAddRowsDblClick
           end
           object edtUnderTextYOffset: TEdit
-            Left = 10
-            Top = 39
+            Left = 274
+            Top = 26
             Width = 100
             Height = 24
             TabOrder = 1
@@ -651,18 +658,18 @@ object FAutoCADExport: TFAutoCADExport
             OnDblClick = edtTopAddRowsDblClick
           end
           object chkAuto6_13: TCheckBox
-            Left = 10
-            Top = 69
-            Width = 247
+            Left = 2
+            Top = 405
+            Width = 151
             Height = 21
-            Caption = #1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1089#1076#1074#1080#1075#1072#1090#1100' '#1079#1085#1072#1082' 6.13 '
+            Caption = #1089#1076#1074#1080#1075#1072#1090#1100' '#1079#1085#1072#1082' 6.13 '
             Checked = True
             State = cbChecked
             TabOrder = 2
           end
           object chkLeftValueOnly6_13: TCheckBox
-            Left = 10
-            Top = 89
+            Left = 154
+            Top = 405
             Width = 296
             Height = 21
             Caption = #1090#1086#1083#1100#1082#1086' '#1082#1080#1083#1086#1084#1077#1090#1088#1072#1078' '#1076#1086' '#1095#1077#1088#1090#1099' ('#1079#1085#1072#1082' 6.13)'
@@ -672,7 +679,7 @@ object FAutoCADExport: TFAutoCADExport
           end
           object edtStep: TEdit
             Left = 10
-            Top = 118
+            Top = 70
             Width = 100
             Height = 24
             TabOrder = 4
@@ -681,14 +688,14 @@ object FAutoCADExport: TFAutoCADExport
           end
           object edtInfoTemplate: TEdit
             Left = 10
-            Top = 187
+            Top = 115
             Width = 109
             Height = 24
             TabOrder = 5
           end
           object edtSmallGridMarkHeight: TEdit
             Left = 10
-            Top = 295
+            Top = 207
             Width = 109
             Height = 24
             TabOrder = 6
@@ -697,7 +704,7 @@ object FAutoCADExport: TFAutoCADExport
           end
           object edtUseVerticalTextIfLess: TEdit
             Left = 10
-            Top = 236
+            Top = 164
             Width = 109
             Height = 24
             TabOrder = 7
@@ -706,26 +713,33 @@ object FAutoCADExport: TFAutoCADExport
           end
           object edtMinBarrierSegmentLength: TEdit
             Left = 10
-            Top = 345
+            Top = 257
             Width = 109
             Height = 24
             TabOrder = 8
           end
           object chkHideAutoCAD: TCheckBox
-            Left = 10
-            Top = 426
+            Left = 266
+            Top = 430
             Width = 208
             Height = 21
             Caption = #1089#1082#1088#1099#1074#1072#1090#1100' AutoCAD'
             TabOrder = 9
           end
           object chkShowAttachmentComments: TCheckBox
-            Left = 8
-            Top = 376
-            Width = 329
+            Left = 0
+            Top = 432
+            Width = 257
             Height = 17
             Caption = #1042#1099#1074#1086#1076#1080#1090#1100' '#1082#1086#1084#1077#1085#1090#1072#1088#1080#1080' '#1087#1088#1080#1084#1099#1082#1072#1085#1080#1081
             TabOrder = 10
+          end
+          object edtProjectBarrierPrefix: TEdit
+            Left = 360
+            Top = 289
+            Width = 121
+            Height = 24
+            TabOrder = 11
           end
         end
         object TabSheet1: TTabSheet
