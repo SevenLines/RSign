@@ -277,7 +277,8 @@ void __fastcall AcadExportThread::Execute()
                             || t->Kind == ma14_1
                             || t->Kind == ma14_2
                             || t->Kind == ma14_3
-                            || t->Kind == ma14_1e) {
+                            || t->Kind == ma14_1e
+                            || t->Kind == ma17) {
                             continue;
                         }
 

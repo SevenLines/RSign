@@ -1921,9 +1921,11 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
         barrierName = "barBarrierMetal";
         //block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         pl = DrawPolyPoints(Poly, false, false);
-        pl->set_Lineweight(lineWeight);
-        pl->set_LinetypeScale(lineTypeScale);
-        pl->set_Linetype(L"barrier-circle");
+        if (pl.IsBound()) {
+          pl->set_Lineweight(lineWeight);
+          pl->set_LinetypeScale(lineTypeScale);
+          pl->set_Linetype(L"barrier-circle");
+        }
         if(!exist) pl->color = NotExistColor;
         pl = AutoCAD.DrawCircle(pMin.x, pMin.y*-ScaleY, endsRadius);
         pl->set_Lineweight(lineWeight);
@@ -1946,9 +1948,11 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
         barrierName = "barNewJersey";
         //block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         pl = DrawPolyPoints(Poly, false, false);
-        pl->set_Lineweight(lineWeight);
-        pl->set_LinetypeScale(lineTypeScale);
-        pl->set_Linetype(L"barrier-square");
+        if (pl.IsBound()) {
+          pl->set_Lineweight(lineWeight);
+          pl->set_LinetypeScale(lineTypeScale);
+          pl->set_Linetype(L"barrier-square");
+        }
         if(!exist) pl->color = NotExistColor;
         pl = AutoCAD.DrawRect(pMin.x, pMin.y*-ScaleY, endsRadius, endsRadius);
         pl->set_Lineweight(lineWeight);
@@ -1963,7 +1967,15 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
     case br117:
         str = "Перила";
         barrierName = "barCivil";
-        block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
+        //block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
+        pl = DrawPolyPoints(Poly, false, false);
+        if (pl.IsBound()) {
+          pl->set_Lineweight(lineWeight);
+          pl->set_LinetypeScale(lineTypeScale*6);
+          pl->set_Linetype(WideString("perila"));
+          pl->color = 20;
+        }
+//        if(!exist) pl->color = NotExistColor;
         break;
     case brm:
         str="ДО (У3)";//str = "Металлическое";
@@ -3104,15 +3116,20 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
 bool __fastcall TAcadExport::ExportCommunication(TExtPolyline *p, TCommunication *t, bool fEnd )
 {
     if(fEnd) return true;
-
+    AcadPolylinePtr pl;
     switch(t->CommKind) {
     case 2385262: // трамвайные пути
-        for(int i=0;i<p->Count-1;i++){
+        pl = DrawPolyPoints(p);
+        /*for(int i=0;i<p->Count-1;i++){
             DrawBlockOnLine("train-lines", p->Points[i], p->Points[i+1], "Length VerticalLineLength");
+        }*/
+        if (pl.IsBound()) {
+            pl->set_Linetype(WideString("trainpath"));
+            pl->set_LinetypeScale(20);
         }
-        break;;
+        break;
     default:
-        AcadPolylinePtr pl = DrawPolyPoints(p);
+        pl = DrawPolyPoints(p);
         pl->set_Linetype(WideString("linedash_1"));
         pl->set_Lineweight(acLnWt030);
     }
