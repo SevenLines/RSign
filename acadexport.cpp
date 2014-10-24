@@ -1234,11 +1234,11 @@ int iRow, int line, AutoCADTable *table)
             }
 
             AnsiString label_under_mark = name;
-            if (Max - Min > 3000) {
+            /*if (Max - Min > 3000) {
                 label_under_mark += " ("+IntToStr((int)(Min/100)) + "-" + IntToStr((int)(Max/100))+")";
             } else if ( Max - Min > 1500) {
                 label_under_mark += " ("+IntToStr((int)((Max-Min)/100))+")";
-            }
+            } */
             AutoCAD.DrawRepeatTextInterval(label_under_mark, Min, Max, yOffset, UnderTextHeight,iStep);
 
             // no need to draw, as Petya asked : D 
@@ -1762,7 +1762,7 @@ AcadBlockReferencePtr TAcadExport::DrawBarrier(vector<TPoint> &points, AnsiStrin
         block = AutoCAD.DrawBlock(blockname,pMin.x,pMin.y, angle);
 
         if(block.IsBound()) {
-            if(!fExist) block->color = NotExistColor;        
+            if(!fExist) block->color = NotExistColor;
             AutoCAD.SetPropertyDouble(block,"Length",length);
             AutoCAD.SetPropertyList(block,"Flip",fFlip);
             if(i>0){
@@ -1909,11 +1909,28 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
     }
 
     AnsiString barrierName = "";
+    AcadPolylinePtr pl;
+    float k = ScaleY / 3.5;
+    int lineTypeScale = 20 * k;
+    int endsRadius = 100 * k;
+    int lineWeight = acLnWt040;
+
     switch(b->Construction){
     case br112:
         str="ДО (У3)";//str = "Барьерное одностороннее"
         barrierName = "barBarrierMetal";
-        block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
+        //block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
+        pl = DrawPolyPoints(Poly, false, false);
+        pl->set_Lineweight(lineWeight);
+        pl->set_LinetypeScale(lineTypeScale);
+        pl->set_Linetype(L"barrier-circle");
+        if(!exist) pl->color = NotExistColor;
+        pl = AutoCAD.DrawCircle(pMin.x, pMin.y*-ScaleY, endsRadius);
+        pl->set_Lineweight(lineWeight);
+        if(!exist) pl->color = NotExistColor;
+        pl = AutoCAD.DrawCircle(pMax.x, pMax.y*-ScaleY, endsRadius);
+        pl->set_Lineweight(lineWeight);
+        if(!exist) pl->color = NotExistColor;
         break;
     case br113:
         str="ДО (У3)";//str = "Барьерное двухстороннее";
@@ -1924,9 +1941,21 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
         str = "Тросовое";
         break;
     case br115:
-        str="ДО (У3)";//str = "Парапеты";
+    case br118:
+        str="ДО (У3)";//str = "Парапеты"; "По типу Нью-Джерси";
         barrierName = "barNewJersey";
-        block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
+        //block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
+        pl = DrawPolyPoints(Poly, false, false);
+        pl->set_Lineweight(lineWeight);
+        pl->set_LinetypeScale(lineTypeScale);
+        pl->set_Linetype(L"barrier-square");
+        if(!exist) pl->color = NotExistColor;
+        pl = AutoCAD.DrawRect(pMin.x, pMin.y*-ScaleY, endsRadius, endsRadius);
+        pl->set_Lineweight(lineWeight);
+        if(!exist) pl->color = NotExistColor;
+        pl = AutoCAD.DrawRect(pMax.x, pMax.y*-ScaleY, endsRadius, endsRadius);
+        pl->set_Lineweight(lineWeight);
+        if(!exist) pl->color = NotExistColor;
         break;
     case br116:
         str = "Сетки";
@@ -1934,11 +1963,6 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
     case br117:
         str = "Перила";
         barrierName = "barCivil";
-        block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
-        break;
-    case br118:
-        str="ДО (У3)";//str = "По типу Нью-Джерси";
-        barrierName = "barNewJersey";
         block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         break;
     case brm:
@@ -2414,7 +2438,7 @@ bool __fastcall TAcadExport::ExportSidewalk(TExtPolyline *Poly,TSquareRoadSideOb
     pl[0] = DrawPolyPoints(Poly, false, true);
     AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl,1,!exist?NotExistColor:0,strSidewalksHatch);
     if(hatch) hatch->PatternScale = iSidewalsHatchScale;
-    AnsiString str = "1.5м,а/б";
+    AnsiString str = "а/б";
     switch(s->Placement){
     case spLeft:
         tableTop.DrawRepeatTextIntervalRoadMark(iTopSidewalks,str,

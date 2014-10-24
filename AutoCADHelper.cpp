@@ -944,10 +944,12 @@ AcadTextPtr AutoCADHelper::DrawText(AnsiString str, double height, AcAlignment a
                                   double x, double y, double rotation)
 {
    AcadTextPtr text;
-   text = cadActiveDocument->ModelSpace->AddText(WideString(str),cadPoint(x,y),height);
-   text->Rotate(cadPoint(x,y),rotation);
-   text->Alignment = alignment;
-   text->set_TextAlignmentPoint(cadPoint(x,y));
+   if (height > 0) {
+     text = cadActiveDocument->ModelSpace->AddText(WideString(str),cadPoint(x,y),height);
+     text->Rotate(cadPoint(x,y),rotation);
+     text->Alignment = alignment;
+     text->set_TextAlignmentPoint(cadPoint(x,y));
+   }
    return text;
 }
 

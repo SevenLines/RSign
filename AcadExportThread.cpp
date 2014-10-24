@@ -273,6 +273,14 @@ void __fastcall AcadExportThread::Execute()
                     SET_PROGRESS_FORM_POSITION(i);
                     TRoadMark *t=dynamic_cast<TRoadMark*>(DataPrj->Objects->Items[i]);
                     if (t) {
+                        if(t->Kind == ma1_park
+                            || t->Kind == ma14_1
+                            || t->Kind == ma14_2
+                            || t->Kind == ma14_3
+                            || t->Kind == ma14_1e) {
+                            continue;
+                        }
+
                         TExtPolyline *p=t->PrepareMetric(R);
                         TPlanLabel *l=t->GetText(0,R,Dict);
                         String s=l->Caption.c_str();
