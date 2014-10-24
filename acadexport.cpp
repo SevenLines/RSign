@@ -1910,6 +1910,7 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
 
     AnsiString barrierName = "";
     AcadPolylinePtr pl;
+    AcadCirclePtr circle;
     float k = ScaleY / 3.5;
     int lineTypeScale = 20 * k;
     int endsRadius = 100 * k;
@@ -1927,12 +1928,13 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
           pl->set_Linetype(L"barrier-circle");
         }
         if(!exist) pl->color = NotExistColor;
-        pl = AutoCAD.DrawCircle(pMin.x, pMin.y*-ScaleY, endsRadius);
-        pl->set_Lineweight(lineWeight);
-        if(!exist) pl->color = NotExistColor;
-        pl = AutoCAD.DrawCircle(pMax.x, pMax.y*-ScaleY, endsRadius);
-        pl->set_Lineweight(lineWeight);
-        if(!exist) pl->color = NotExistColor;
+        pl.Unbind();
+        circle = AutoCAD.DrawCircle(pMin.x, pMin.y*-ScaleY, endsRadius);
+        circle->set_Lineweight(lineWeight);
+        if(!exist) circle->color = NotExistColor;
+        circle = AutoCAD.DrawCircle(pMax.x, pMax.y*-ScaleY, endsRadius);
+        circle->set_Lineweight(lineWeight);
+        if(!exist) circle->color = NotExistColor;
         break;
     case br113:
         str="ДО (У3)";//str = "Барьерное двухстороннее";
@@ -1954,9 +1956,11 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
           pl->set_Linetype(L"barrier-square");
         }
         if(!exist) pl->color = NotExistColor;
+        pl.Unbind();
         pl = AutoCAD.DrawRect(pMin.x, pMin.y*-ScaleY, endsRadius, endsRadius);
         pl->set_Lineweight(lineWeight);
         if(!exist) pl->color = NotExistColor;
+        pl.Unbind();
         pl = AutoCAD.DrawRect(pMax.x, pMax.y*-ScaleY, endsRadius, endsRadius);
         pl->set_Lineweight(lineWeight);
         if(!exist) pl->color = NotExistColor;
