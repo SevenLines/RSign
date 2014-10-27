@@ -31,6 +31,11 @@ inline float GetAngle(TPoint vec1, TPoint vec2)
     else return acos(temp);
 }
 
+bool compareSigns(const TRoadSign* s1, const TRoadSign* s2)
+{
+    return s1->OldTitle < s2->OldTitle;
+}
+
 TPoint operator -(TPoint pt1,TPoint pt2)
 {
     return TPoint(pt1.x-pt2.x, pt1.y-pt2.y);
@@ -918,7 +923,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 		// разбиваем на группы: знаки на примыканиях и знаки на главной дороге
 		for (int i=0;i<count;++i) {
 			TRoadSign *s = signs[i];
-			if (s->OnAttach) {
+			if (s->OnAttach && s->OnAttach != saRoad) {
 				onAttachment.push_back(s);
 			} else {
 				onRoad.push_back(s);
@@ -944,12 +949,24 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
             } else {
                 for (int i=0; i < onAttachment.size(); ++i) {
 				    TRoadSign* s = onAttachment[i];
-                    switch(s->Direction) {
-					case roUnDirect:
-						undirect.push_back(s);
+                    switch(s->OnAttach) {
+					case saOut:
+                        switch(s->Direction) {
+                        case roUnDirect:
+                            direct.push_back(s);
+                            break;
+                        default:
+                            undirect.push_back(s);
+                        }
 						break;
 					default:
-						direct.push_back(s);
+                    switch(s->Direction) {
+                        case roUnDirect:
+                            undirect.push_back(s);
+                            break;
+                        default:
+                            direct.push_back(s);
+                        }
 					}
                 }
             }
@@ -979,8 +996,14 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 				}
 			}
 			if (direct.size() == 0 || undirect.size() == 0) {
-				if (direct.size() > 0) signs = direct.begin();
-				if (undirect.size() > 0) signs = undirect.begin();
+				if (direct.size() > 0) {
+                    sort(direct.begin(), direct.end(), compareSigns);
+                    signs = direct.begin();
+                }
+				if (undirect.size() > 0) {
+                    sort(undirect.begin(), undirect.end(), compareSigns);
+                    signs = undirect.begin();
+                }
 			} else {
 				ExportSigns(Poly, direct.begin(), direct.size(), fEnd);
 				ExportSigns(Poly, undirect.begin(), undirect.size(), fEnd);
@@ -1054,49 +1077,121 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     AnsiString strings[4];
     AcadBlockPtr block;
     AcadBlockReferencePtr signspot;
-    double rotation, rotationHandle;
+    double rotation=0, rotationHandle=0;
 
     switch (signs[0]->Direction) {
     case roDirect:
         switch (signs[0]->Placement) {
         case spRight:
-            rotationHandle = -M_PI/2;
-            rotation = -M_PI/2;
-            signspot = SignSpot1;
+            switch(signs[0]->OnAttach) {
+            case saIn:
+                rotationHandle = -M_PI/2;
+                rotation = 0;                
+                signspot = SignSpot2;
+                fOnAttachment = true;
+                break;
+            case saOut:
+                rotationHandle = M_PI/2;
+                rotation = M_PI;
+                signspot = SignSpot2;
+                fOnAttachment = true;
+                break;
+            default:
+                rotationHandle = -M_PI/2;
+                rotation = -M_PI/2;
+                signspot = SignSpot1;
+            }
             break;
+        case spBetween:
+        case spUp:
         case spLeft:
-            rotationHandle = M_PI/2;
-            rotation = -M_PI/2;
-            signspot = SignSpot1_m;
+            switch(signs[0]->OnAttach) {
+            case saIn:
+                rotationHandle = M_PI/2;
+                rotation = M_PI;
+                signspot = SignSpot2;
+                fOnAttachment = true;
+                break;
+            case saOut:
+                rotationHandle = -M_PI/2;
+                rotation = 0;
+                signspot = SignSpot2;
+                fOnAttachment = true;
+                break;
+            default:
+                rotationHandle = M_PI/2;
+                rotation = -M_PI/2;
+                signspot = SignSpot1_m;
+            }
             break;
         default:
-            rotationHandle = -M_PI/2;
-            rotation = -M_PI/2;
-            signspot = SignSpot1;
+             BUILDER_ERROR("Не могу определить угол поворота знака " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x);
         }
         break;
     case roUnDirect:
         switch (signs[0]->Placement) {
         case spRight:
-            rotationHandle = M_PI/2;
-            rotation = M_PI/2;
-            signspot = SignSpot1;
+            switch(signs[0]->OnAttach) {
+            case saIn:
+                rotationHandle = M_PI/2;
+                rotation = M_PI;
+                signspot = SignSpot2;
+                fOnAttachment = true;
+                break;
+            case saOut:
+                rotationHandle = -M_PI/2;
+                rotation = 0;
+                signspot = SignSpot2;
+                fOnAttachment = true;
+                break;
+            default:
+                rotationHandle = M_PI/2;
+                rotation = M_PI/2;
+                signspot = SignSpot1;
+            }
             break;
+        case spBetween:
+        case spUp:
         case spLeft:
-            rotationHandle = -M_PI/2;
-            rotation = M_PI/2;
-            signspot = SignSpot1_m;
-            break;
+            switch(signs[0]->OnAttach) {
+            case saIn:
+                rotationHandle = -M_PI/2;
+                rotation = 0;
+                signspot = SignSpot2;
+                fOnAttachment = true;
+                break;
+            case saOut:
+                rotationHandle = M_PI/2;
+                rotation = M_PI;
+                signspot = SignSpot2;
+                fOnAttachment = true;
+                break;
+            default:
+                rotationHandle = -M_PI/2;
+                rotation = M_PI/2;
+                signspot = SignSpot1_m;
+            }
         default:
-            rotationHandle = M_PI/2;
-            rotation = M_PI/2;
-            signspot = SignSpot1;            
+             BUILDER_ERROR("Не могу определить угол поворота знака " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x);
         }
         break;
     }
+    switch (signs[0]->Placement) {
+        case spBetween:
+        case spUp:
+            switch(signs[0]->OnAttach) {
+            case saIn:
+            case saOut:
+                break;
+            default:
+                signspot = SignSpot1;
+                rotationHandle *= -1;
+            break;
+        }
+    }
 
     // корректируем поворот знака в соответствии с положением знака на примыкании
-    fOnAttachment = false;
+    /*fOnAttachment = false;
     switch (signs[0]->OnAttach) {
     case saIn:
         rotation += M_PI/2;
@@ -1107,7 +1202,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         rotation -= M_PI/2;
         fOnAttachment = true;
         signspot = SignSpot2;
-    }
+    } */
 
     AnsiString sEmpty = "";
 
