@@ -682,6 +682,7 @@ void __fastcall TAcadExport::EndDocument() {
 
     if(fAlreadyDrawSignSpot){
         SignSpot1->Delete();
+        SignSpot1_m->Delete();
         SignSpot2->Delete();
     }
     if(fAlreadyDrawTube){
@@ -879,8 +880,123 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         return true;
     }
 
+    double scale = ScaleY*50;
+
+    /// создавать новый объект signspot сильно нарпяжно, так что создадим его один раз
+    /// а потом будем все время копировать
+    if(!fAlreadyDrawSignSpot){
+        SignsPositions.clear(); // так как процедура совершается, как правило в
+        // начале, то почистим список позиций знаков  
+        SignSpot1 = AutoCAD.DrawBlock("signspot",0,0,0,scale);
+        if(!AutoCAD.SetPropertyPoint(SignSpot1,"pHand",AutoCADPoint(0,0)))
+            return false;
+
+        SignSpot1_m = AutoCAD.DrawBlock("signspot_m",0,0,0,scale);
+        if(!AutoCAD.SetPropertyPoint(SignSpot1_m,"pHand",AutoCADPoint(0,0)))
+            return false;
+
+        SignSpot2 = AutoCAD.DrawBlock("signspot2",0,0,0,scale);
+        if(!AutoCAD.SetPropertyPoint(SignSpot2,"pHand",AutoCADPoint(0,0)))
+            return false;
+                     
+        fAlreadyDrawSignSpot = true;
+    }
+	
+	// парные знаки
+	AnsiString signsPair[][2] = {
+		{"5.19.1", "5.19.2"},
+		{"5.16", "5.16"},
+		{"5.21", "5.22"}
+	};
+	int signsPairCount = sizeof(signsPair)/sizeof(signsPair[0]);
+    vector<TRoadSign*> direct;
+    vector<TRoadSign*> undirect;
+    vector<TRoadSign*> onRoad;
+    vector<TRoadSign*> onAttachment;
+    
+    if (count >= 2) {
+		// разбиваем на группы: знаки на примыканиях и знаки на главной дороге
+		for (int i=0;i<count;++i) {
+			TRoadSign *s = signs[i];
+			if (s->OnAttach) {
+				onAttachment.push_back(s);
+			} else {
+				onRoad.push_back(s);
+			}
+		}
+
+		if (onAttachment.size() == 0 || onRoad.size() == 0) {
+			// все знаки либо на примыканиях, либо на главной дороге
+			// можно ничего не делать
+			bool fAllOnRoad = onRoad.size() > 0;
+			// разбиваем на группы по направлениям
+            if (onRoad.size() > 0) {
+                for (int i=0; i < onRoad.size(); ++i) {
+				    TRoadSign* s = onRoad[i];
+                    switch(s->Direction) {
+					case roUnDirect:
+						undirect.push_back(s);
+						break;
+					default:
+						direct.push_back(s);
+					}
+                }
+            } else {
+                for (int i=0; i < onAttachment.size(); ++i) {
+				    TRoadSign* s = onAttachment[i];
+                    switch(s->Direction) {
+					case roUnDirect:
+						undirect.push_back(s);
+						break;
+					default:
+						direct.push_back(s);
+					}
+                }
+            }
+			// ищем парные знаки и переносим их из обратного в прямое направление
+			for(int i=0;i<direct.size();++i) {
+				TRoadSign* s = direct[i];
+				for(int j=0;j<signsPairCount;++j) {
+					if(s->OldTitle == signsPair[j][0]) {
+						for (int k=0;k<undirect.size();++k) {
+							TRoadSign* s2 = undirect[k];
+							if (s2->OldTitle == signsPair[j][1]) {
+								direct.push_back(s2);
+								undirect.erase(undirect.begin() + k);
+								--k;
+							}
+						}
+					} else if (s->OldTitle == signsPair[j][1]) {
+						for (int k=0;k<undirect.size();++k) {
+							TRoadSign* s2 = undirect[k];
+							if (s2->OldTitle == signsPair[j][0]) {
+								direct.push_back(s2);
+								undirect.erase(undirect.begin() + k);
+								--k;
+							}
+						}
+					}
+				}
+			}
+			if (direct.size() == 0 || undirect.size() == 0) {
+				if (direct.size() > 0) signs = direct.begin();
+				if (undirect.size() > 0) signs = undirect.begin();
+			} else {
+				ExportSigns(Poly, direct.begin(), direct.size(), fEnd);
+				ExportSigns(Poly, undirect.begin(), undirect.size(), fEnd);
+				return true;				
+			}
+		} else {
+			// выводим каждую группу отдельно
+			ExportSigns(Poly, onAttachment.begin(), onAttachment.size(), fEnd);
+			ExportSigns(Poly, onRoad.begin(), onRoad.size(), fEnd);
+			return true;
+		}
+	}
+
     // проверка на то можно ли склеивать знаки
     // если они в разных направлениях то нельзя
+    /*
     if (count >= 2) {
       bool allSignsWithTheSameRotation = true;
 //      int direction = signs[0]->Direction;
@@ -888,8 +1004,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
       int onAttach = signs[0]->OnAttach;
       for(int i=1;i<count;++i) {
           TRoadSign *s = signs[i];
-          if (/*s->Direction != direction || s->Placement != placement
-                  || */s->OnAttach != onAttach) {
+          if (s->OnAttach != onAttach) {
               allSignsWithTheSameRotation = false;
               break;
           }
@@ -930,14 +1045,15 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
           return true;
         }
       }
-    }
+    } */
 
-    double scale = ScaleY*50;
+
     double yoffset = 20;
     bool ffind, fOnAttachment;
     int i;
     AnsiString strings[4];
     AcadBlockPtr block;
+    AcadBlockReferencePtr signspot;
     double rotation, rotationHandle;
 
     switch (signs[0]->Direction) {
@@ -945,28 +1061,39 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         switch (signs[0]->Placement) {
         case spRight:
             rotationHandle = -M_PI/2;
+            rotation = -M_PI/2;
+            signspot = SignSpot1;
             break;
         case spLeft:
             rotationHandle = M_PI/2;
+            rotation = -M_PI/2;
+            signspot = SignSpot1_m;
             break;
         default:
             rotationHandle = -M_PI/2;
+            rotation = -M_PI/2;
+            signspot = SignSpot1;
         }
         break;
     case roUnDirect:
         switch (signs[0]->Placement) {
         case spRight:
             rotationHandle = M_PI/2;
+            rotation = M_PI/2;
+            signspot = SignSpot1;
             break;
         case spLeft:
             rotationHandle = -M_PI/2;
+            rotation = M_PI/2;
+            signspot = SignSpot1_m;
             break;
         default:
             rotationHandle = M_PI/2;
+            rotation = M_PI/2;
+            signspot = SignSpot1;            
         }
         break;
     }
-    rotation = rotationHandle;
 
     // корректируем поворот знака в соответствии с положением знака на примыкании
     fOnAttachment = false;
@@ -974,10 +1101,12 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     case saIn:
         rotation += M_PI/2;
         fOnAttachment = true;
+        signspot = SignSpot2;
         break;
     case saOut:
         rotation -= M_PI/2;
-        fOnAttachment = true;        
+        fOnAttachment = true;
+        signspot = SignSpot2;
     }
 
     AnsiString sEmpty = "";
@@ -985,9 +1114,17 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     try{
 		if (count==1) {
 			try {
-                DrawSign(signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),signs[0]->Label,
-                AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
-                yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
+                DrawSign(
+                    signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),
+                    signs[0]->Label,
+                    AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
+                    yoffset,
+                    0,
+                    rotation,
+                    rotationHandle,
+                    scale,
+                    fOnAttachment,
+                    signspot);
             }catch(...) {
                 if(!strSignsAbsent.Pos(signs[0]->OldTitle))strSignsAbsent+="\n"+signs[0]->OldTitle;
             }
@@ -1000,14 +1137,20 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 			}
 			block = AutoCAD.MakeCombineBlock(blockNames, labels);
             if(block.IsBound()){
-                DrawSign(block->Name,"",
-                AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
-                yoffset,0,rotation,rotationHandle,scale, fOnAttachment);
+                DrawSign(block->Name,
+                  "",
+                  AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
+                  yoffset,
+                  0,
+                  rotation,
+                  rotationHandle,
+                  scale,
+                  fOnAttachment,
+                  signspot);
             }
 		}
     }catch(...){
-        AnsiString message = "Ошибка вывода знака: " + signs[0]->OldTitle + " на позиции " + IntToStr(Poly->Points[0].x);
-        BUILDER_ERROR( message.c_str() );
+        BUILDER_ERROR("Ошибка вывода знака: " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x );
         return false;
     }
     return true;
@@ -1037,9 +1180,18 @@ int TAcadExport::findSignSuperposition(TPoint pos, int radius)
 /// scale - масштабирование
 /// fOnAttachment - знак находится на примыкании (то есть на въезде или выезде),
 ///                 поставить True если на примыкании    
-void TAcadExport::DrawSign(AnsiString Name,  AnsiString label, AutoCADPoint pos,
-double xoffset, double yoffset, double rotation,
-double rotationHandle, double scale, bool fOnAttachment)
+void TAcadExport::DrawSign(
+  AnsiString Name,
+  AnsiString label,
+  AutoCADPoint pos,
+  double xoffset,
+  double yoffset,
+  double rotation,
+  double rotationHandle,
+  double scale,
+  bool fOnAttachment,
+  AcadBlockReferencePtr &signspot
+  )
 {
     static AcadBlockReferencePtr block;
     static AutoCADPoint newPos;
@@ -1072,28 +1224,19 @@ double rotationHandle, double scale, bool fOnAttachment)
     txOffset = xoffset;
     tyOffset = yoffset;
 
-    /// создавать новый объект signspot сильно нарпяжно, так что создадим его один раз
-    /// а потом будем все время копировать
-    if(!fAlreadyDrawSignSpot){
-        SignsPositions.clear(); // так как процедура совершается, как правило в
-        // начале, то почистим список позиций знаков  
-        SignSpot1 = AutoCAD.DrawBlock("signspot",0,0,0,scale);
-        if(!AutoCAD.SetPropertyPoint(SignSpot1,"pHand",AutoCADPoint(xoffset,yoffset)))
-        return;
-        SignSpot2 = AutoCAD.DrawBlock("signspot2",0,0,0,scale);
-        if(!AutoCAD.SetPropertyPoint(SignSpot2,"pHand",AutoCADPoint(xoffset,yoffset)))
-        return;         
-        fAlreadyDrawSignSpot = true;
-    }
+
 
     // выбираем тип сноски в зависимости от положения знака
     // на примыкании, на основной дороге
-    if(fOnAttachment) {
+    /*if(fOnAttachment) {
         block = SignSpot2->Copy();
     } else {
         block = SignSpot1->Copy();
         AutoCAD.SetAttribute(block,"LABEL",AnsiString(_pos));
-    }
+    }*/
+    block = signspot->Copy();
+    AutoCAD.SetAttribute(block,"LABEL",AnsiString(_pos));
+    
     // поворачиваем сноску
     block->set_Rotation(rotationHandle);
 
