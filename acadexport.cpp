@@ -971,6 +971,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                 }
             }
 			// ищем парные знаки и переносим их из обратного в прямое направление
+            bool wasPair = false;
 			for(int i=0;i<direct.size();++i) {
 				TRoadSign* s = direct[i];
 				for(int j=0;j<signsPairCount;++j) {
@@ -981,6 +982,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 								direct.push_back(s2);
 								undirect.erase(undirect.begin() + k);
 								--k;
+                                wasPair = true;
 							}
 						}
 					} else if (s->OldTitle == signsPair[j][1]) {
@@ -990,12 +992,22 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 								direct.push_back(s2);
 								undirect.erase(undirect.begin() + k);
 								--k;
+                                wasPair = true;
 							}
 						}
 					}
 				}
 			}
-			if (direct.size() == 0 || undirect.size() == 0) {
+            if (wasPair && direct.size() == 2 && undirect.size() == 1) {
+              // комбинация парные знаки и один в противоположном направленнии
+              // подклеиваем пару к противоположному направлению
+              undirect.push_back(direct[0]);
+              undirect.push_back(direct[1]);
+              direct.clear();
+              sort(undirect.begin(), undirect.end(), compareSigns);
+              signs = undirect.begin();              
+            } else if (direct.size() == 0 || undirect.size() == 0) {
+                // если все знаки в одном нарпавлении
 				if (direct.size() > 0) {
                     sort(direct.begin(), direct.end(), compareSigns);
                     signs = direct.begin();
@@ -1005,6 +1017,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                     signs = undirect.begin();
                 }
 			} else {
+                // остальные случаи сводим к предыдущим двум
 				ExportSigns(Poly, direct.begin(), direct.size(), fEnd);
 				ExportSigns(Poly, undirect.begin(), undirect.size(), fEnd);
 				return true;				
@@ -1678,16 +1691,18 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                         tableBottom.DrawRepeatTextIntervalRoadMark(iBottom0,"1.11",Min,Max,StringConvert,iStep,0.25);
                     }
                     AutoCAD.DrawRepeatTextInterval("1.11",
-                    Min,
-                    Max,
-                    -ScaleY*Poly->Points[0].y+UnderTextYOffset,
-                    UnderTextHeight,iStep);
-                    block = AutoCAD.DrawBlock("r_1.11",Min,-ScaleY*Poly->Points[0].y);
+                      Min,
+                      Max,
+                      -ScaleY*Poly->Points[0].y+UnderTextYOffset,
+                      UnderTextHeight,iStep);
+                      block = AutoCAD.DrawBlock("r_1.11",Min,-ScaleY*Poly->Points[0].y);
                 }else{
                     block = AutoCAD.DrawBlock("r_1.11",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
                 }
                 if(block.IsBound()){
-                    AutoCAD.SetPropertyDouble(block, "Length", length);
+                    float lengthScale = 0.1; 
+                    AutoCAD.SetPropertyDouble(block, "Length", length / lengthScale);
+                    block->set_XScaleFactor(lengthScale);
                     if((m->Kind == ma11r&&m->Direction==roDirect)||
                             (m->Kind == ma11l&&m->Direction==roUnDirect)){
                         AutoCAD.SetPropertyList(block, "Flip", 1);
