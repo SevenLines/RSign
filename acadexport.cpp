@@ -1017,60 +1017,6 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 		}
 	}
 
-    // проверка на то можно ли склеивать знаки
-    // если они в разных направлениях то нельзя
-    /*
-    if (count >= 2) {
-      bool allSignsWithTheSameRotation = true;
-//      int direction = signs[0]->Direction;
-//      int placement = signs[0]->Placement;
-      int onAttach = signs[0]->OnAttach;
-      for(int i=1;i<count;++i) {
-          TRoadSign *s = signs[i];
-          if (s->OnAttach != onAttach) {
-              allSignsWithTheSameRotation = false;
-              break;
-          }
-      }
-      if (!allSignsWithTheSameRotation) {
-
-        if (count == 2 && ( (signs[0]->OldTitle == "5.19.1" && signs[1]->OldTitle == "5.19.2") ||
-            (signs[1]->OldTitle == "5.19.1" && signs[0]->OldTitle == "5.19.2"))) {
-        } else if (count > 2) {
-          vector<TRoadSign*> signs5_19;
-          vector<TRoadSign*> signsOnAttach;
-          vector<TRoadSign*> signsOnRoad;
-          bool add5_19_1 = false;
-          bool add5_19_2 = false;
-          for (int i=0;i<count; ++i) {
-              if ((signs[i]->OldTitle == "5.19.1") && !add5_19_1) {
-                 add5_19_1 = true;
-                 signs5_19.push_back(signs[i]);
-              } else if (signs[i]->OldTitle == "5.19.2" && !add5_19_2) {
-                 add5_19_2 = true;
-                 signs5_19.push_back(signs[i]);
-              } else {
-                  if (signs[i]->OnAttach)
-                    signsOnAttach.push_back(signs[i]);
-                  else
-                    signsOnRoad.push_back(signs[i]);
-              }
-          }
-          ExportSigns(Poly, signs5_19.begin(), signs5_19.size(), fEnd);
-          // разбиваем по группам расположения на примыканиях
-          ExportSigns(Poly, signsOnAttach.begin(), signsOnAttach.size(), fEnd);
-          ExportSigns(Poly, signsOnRoad.begin(), signsOnRoad.size(), fEnd);
-          return true;
-        } else {
-          for(int i=0;i<count;++i) {
-              ExportSigns(Poly, &signs[i], 1, fEnd);
-          }
-          return true;
-        }
-      }
-    } */
-
-
     double yoffset = 20;
     bool ffind, fOnAttachment;
     int i;
@@ -1079,6 +1025,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     AcadBlockReferencePtr signspot;
     double rotation=0, rotationHandle=0;
 
+    // настраиваем корректный поворот знаков
     switch (signs[0]->Direction) {
     case roDirect:
         switch (signs[0]->Placement) {
@@ -1171,6 +1118,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                 rotation = M_PI/2;
                 signspot = SignSpot1_m;
             }
+            break;
         default:
              BUILDER_ERROR("Не могу определить угол поворота знака " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x);
         }
