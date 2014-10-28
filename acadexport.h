@@ -53,7 +53,7 @@ class TAcadExport {
       AutoCADHelper AutoCAD;
       AcadLineType* RoadMark1;
 
-      AcadBlockReferencePtr SignSpot1,SignSpot2;
+      AcadBlockReferencePtr SignSpot1,SignSpot1_m,SignSpot2;
       AcadBlockReferencePtr Tube;
       AcadText *tText;
 
@@ -186,9 +186,19 @@ class TAcadExport {
       AcadBlockReferencePtr DrawBorder(vector<TPoint> &points, AnsiString blockname, bool fExist);
       AcadBlockReferencePtr DrawBarrier(vector<TPoint> &points, AnsiString blockname, bool fFlip, bool fExist, bool fOpenLeft = false,int *fLastVisible = 0);
       int findSignSuperposition(TPoint pos, int radius);
-      void DrawSign(AnsiString Name,  AnsiString label, AutoCADPoint pos,
-                    double xoffset, double yoffset, double rotation, double rotationHandle,
-                    double scale, bool fOnAttachment = False);
+
+      void DrawSign(
+          AnsiString Name,
+          AnsiString label,
+          AutoCADPoint pos,
+          double xoffset,
+          double yoffset,
+          double rotation,
+          double rotationHandle,
+          double scale,
+          bool fOnAttachment,
+          AcadBlockReferencePtr &signspot
+      );
 
       void ExportRuler(int iStart, int iEnd, bool fEnd);
 
