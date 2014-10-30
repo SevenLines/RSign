@@ -747,32 +747,35 @@ int __fastcall TFAutoCADExport::CountOfExports()
 {
     int count = 0;
 
-    count += ExportAttachments;
-    count += ExportBorders;
-    count += ExportBridges;
-    count += ExportBusstops;
-    count += ExportCommunications;
-    count += ExportCurves;
-    count += ExportGraphic;
-    count += ExportLamps;
-    count += ExportMark;
-    count += ExportMoundHeights;
-    count += ExportPlan;
-    count += ExportProfile;
     count += ExportRoadMetrics;
-    count += ExportRoadSideObjects;
+    count += ExportAttachments;
     count += ExportRoadSigns;
-    //count += ExportRuler;
-    count += ExportSidewalks;
-    count += ExportSignal;
-    count += ExportSlope;
-    count += ExportSurface;
-    //count += ExportTable;
-    count += ExportTown;
+    count += ExportMark;
     count += ExportTubes;
-    count += ExportAddRows;
+    count += ExportBridges;
+    count += ExportSignal;
+    count += ExportBusstops;
+    count += ExportRoadSideObjects;
+    count += ExportSlope;
+    count += ExportCurves;
+    count += ExportMoundHeights;
+    
+	count += ExportLamps;
+    count += ExportSidewalks;
+	count += ExportBorders;
     count += ExportTrafficLights;
     count += ExportCityObjects;    
+    
+    count += ExportProfile;
+    count += ExportSurface;
+    count += ExportCommunications;
+    count += ExportTown;
+    count += ExportPlan;
+    
+	count += ExportGraphic;
+    count += ExportAddRows;
+    //count += ExportRuler;
+    //count += ExportTable;
 
     return count;
 }
