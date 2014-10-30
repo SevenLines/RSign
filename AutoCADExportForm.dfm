@@ -575,10 +575,10 @@ object FAutoCADExport: TFAutoCADExport
         Top = 60
         Width = 509
         Height = 490
-        ActivePage = TabSheet2
+        ActivePage = TabSheet1
         Align = alClient
         MultiLine = True
-        TabIndex = 0
+        TabIndex = 1
         TabOrder = 1
         object TabSheet2: TTabSheet
           Caption = #1086#1073#1097#1080#1077
@@ -804,6 +804,20 @@ object FAutoCADExport: TFAutoCADExport
               Height = 16
               Caption = #1086#1090' '#1086#1089#1077#1074#1086#1081
             end
+            object Label19: TLabel
+              Left = 8
+              Top = 132
+              Width = 105
+              Height = 16
+              Caption = #1064#1080#1088#1080#1085#1072' '#1087#1086#1083#1086#1089#1099':'
+            end
+            object Label25: TLabel
+              Left = 176
+              Top = 132
+              Width = 16
+              Height = 16
+              Caption = #1089#1084
+            end
             object edtLinesTop: TCSpinEdit
               Left = 10
               Top = 27
@@ -858,6 +872,13 @@ object FAutoCADExport: TFAutoCADExport
               Height = 21
               Caption = #1089#1090#1091#1087#1077#1085#1095#1072#1090#1099#1081' '#1075#1088#1072#1092#1080#1082
               TabOrder = 4
+            end
+            object edtLineWidth: TEdit
+              Left = 120
+              Top = 128
+              Width = 49
+              Height = 24
+              TabOrder = 5
             end
           end
         end

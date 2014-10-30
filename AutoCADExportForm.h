@@ -197,6 +197,9 @@ __published:	// IDE-managed Components
     TCheckBox *chkShowAttachmentComments;
     TEdit *edtProjectBarrierPrefix;
     TLabel *Label18;
+    TEdit *edtLineWidth;
+    TLabel *Label19;
+    TLabel *Label25;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
@@ -309,6 +312,7 @@ public:		// User declarations
         MPROPERTY6(Step);
         MPROPERTY6(GridStep);
         MPROPERTY6(ScaleY);
+        MPROPERTY6(LineWidth);
 
         __property int ExportTo = {read  = getExportTo};
         __property AnsiString FileName = {read = getFileName};

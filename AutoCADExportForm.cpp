@@ -133,6 +133,7 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
    ini->WriteInteger("AutoCAD", "iEnd", End);
    ini->WriteInteger("AutoCAD", "Step", Step);
    ini->WriteInteger("AutoCAD", "GridStep", GridStep);
+   ini->WriteInteger("AutoCAD", "LineWidth", LineWidth);
 
    ini->WriteString("AutoCAD","EditTopAddRows",edtTopAddRows->Text);
 
@@ -217,6 +218,7 @@ void TFAutoCADExport::LoadIni(TIniFile *ini)
    edtScaleY->Text = ini->ReadInteger("AutoCAD","ScaleY",600);
    edtStart->Text = ini->ReadInteger("AutoCAD","iStart",-1);
    edtEnd->Text = ini->ReadInteger("AutoCAD","iEnd",-1);
+   edtLineWidth->Text = ini->ReadInteger("AutoCAD","LineWidth",0);
    edtAutoShrinkOneLetterWidth->Text = ini->ReadInteger("AutoCAD","AutoShrinkOneLetterWidth",2300);
    edtUseVerticalTextIfLess->Text = ini->ReadInteger("AutoCAD","UseVerticalTextIfLess",50);
    edtGridStep->Text = ini->ReadInteger("AutoCAD", "GridStep", 10000);

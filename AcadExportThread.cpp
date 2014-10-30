@@ -267,6 +267,7 @@ void __fastcall AcadExportThread::Execute()
             SET_PROGRESS_FORM_MINMAX(0,DataPrj->Objects->Count-1);
             SET_PROGRESS_FORM_CAPTION("Считаем разметку...")
             SET_PROGRESS_FORM_POSITION(0);
+            int lineWidth = (float)FAutoCADExport->LineWidth;
             for (int i=0;i<DataPrj->Objects->Count;i++) {
                 if (Terminated) goto export_end;
                 if (DataPrj->Objects->Items[i]->DictId==ROADMARKCODE) {
@@ -312,11 +313,15 @@ void __fastcall AcadExportThread::Execute()
                                 float t1;
                                 TRoadObject *tobj=MetricData->FindRoadPart(ROADCATEGORY,(t->LMin+t->LMax)/2);
                                 TRoadCategory *tcat=dynamic_cast<TRoadCategory*>(tobj);
-                                if (tcat) {
-                                    if (tcat->Value==rc1a || tcat->Value==rc1 || tcat->Value==rc1b || tcat->Value==rc2 || tcat->Value==rc3)
-                                        defwidth=350;
-                                    else if (tcat->Value==rc5)
-                                        defwidth=250;
+                                if (lineWidth<=0) {
+                                  if (tcat) {
+                                      if (tcat->Value==rc1a || tcat->Value==rc1 || tcat->Value==rc1b || tcat->Value==rc2 || tcat->Value==rc3)
+                                          defwidth=350;
+                                      else if (tcat->Value==rc5)
+                                          defwidth=250;
+                                  }
+                                } else {
+                                    defwidth = lineWidth;
                                 }
                                 midx/=(2*dl);
                                 if (abs(minx)<50 && abs(maxx)<50)  {
@@ -756,6 +761,7 @@ void __fastcall AcadExportThread::Execute()
                         SET_PROGRESS_FORM_CAPTION_EX("Выводим разметку...")
                         SET_PROGRESS_FORM_POSITION(0);
                         aexp->AddLayer("RoadMark");
+                        int lineWidth = (float)FAutoCADExport->LineWidth;
                         for (int i=0;i<DataPrj->Objects->Count;i++) {
                             if (Terminated) goto export_end;
                             if (DataPrj->Objects->Items[i]->DictId==ROADMARKCODE) {
@@ -792,11 +798,15 @@ void __fastcall AcadExportThread::Execute()
                                             float t1;
                                             TRoadObject *tobj=MetricData->FindRoadPart(ROADCATEGORY,(t->LMin+t->LMax)/2);
                                             TRoadCategory *tcat=dynamic_cast<TRoadCategory*>(tobj);
-                                            if (tcat) {
-                                                if (tcat->Value==rc1a || tcat->Value==rc1 || tcat->Value==rc1b || tcat->Value==rc2 || tcat->Value==rc3)
-                                                    defwidth=350;
-                                                else if (tcat->Value==rc5)
-                                                    defwidth=250;
+                                            if (lineWidth<=0) {
+                                              if (tcat) {
+                                                  if (tcat->Value==rc1a || tcat->Value==rc1 || tcat->Value==rc1b || tcat->Value==rc2 || tcat->Value==rc3)
+                                                      defwidth=350;
+                                                  else if (tcat->Value==rc5)
+                                                      defwidth=250;
+                                              }
+                                            } else {
+                                                defwidth = lineWidth;
                                             }
                                             midx/=(2*dl);
                                             if (abs(minx)<50 && abs(maxx)<50)  {
