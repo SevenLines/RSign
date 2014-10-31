@@ -228,6 +228,7 @@ void __fastcall DrawMetafile(TDrawContents *Cont,TExtPolyline *Poly,TDrwParamRec
 void __fastcall DrawTrafficLight(TTrafficLight *light,TDrawContents *Cont,TExtPolyline *Poly,TDrwParamRec3 *par,RECT*);
 void __fastcall DrawSign(TDrawContents *Cont,int count,__int32 *ObjNum,int flag);
 void __fastcall DrawSignImage(TDrawContents *Cont,int ObjNum);
+void __fastcall DrawSignBackColor(TDrawContents *Cont,int ObjNum);
 void __fastcall DrawSignLines(TDrawContents *Cont,int ObjNum);
 void __fastcall DrawSignLabels(TDrawContents *Cont,int ObjNum);
 /* 4  */

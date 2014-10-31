@@ -901,6 +901,15 @@ for (int i=0;i<ObjCount;i++)
             if (sg)
                 {
                 sg->Tag=0;
+                DrawSignBackColor(Cont,j);
+                }
+            }
+        for (int j=i;j<ObjCount;j++)
+            {
+            TRoadSign *sg=dynamic_cast<TRoadSign*>(Objs[j]);
+            if (sg)
+                {
+                sg->Tag=0;
                 DrawSignImage(Cont,j);
                 }
             }
@@ -1362,6 +1371,40 @@ if ((dc)&&(sign))
         }
     DeleteObject(SelectObject(dc,GetStockObject(BLACK_PEN)));
     }
+}
+
+void __fastcall TDrawManager::DrawSignBackColor(TDrawContents *Cont,int ObjNum) {
+HDC dc=Cont->GetContentDC();
+TRoadSign *sign=dynamic_cast<TRoadSign*>(Objs[ObjNum]);
+if ((dc)&&(sign)) {
+    int drclass=Objs[ObjNum]->DrwClassId;
+    TDrwClassesRec *ClRec=Dict->DrwClasses->Items[drclass];
+    TDrwParamRec3 *DrwRec=dynamic_cast<TDrwParamRec3*>(Dict->DrwParams->Items[ClRec->DrwParamId[0]]);
+    if (DrwRec && (sign->Color==scOrange || sign->Color==scGreenYellow))  {
+        int direction=GetSignDirection(sign,FPlanKind,FPlanDirect);
+        TExtRect *erect=SignsMan.Rects+ObjNum;
+        int SignX,SignY;
+        Road->ConvertPoint(erect->RoadL,erect->RoadX,SignX,SignY);
+        POINT p;
+        p.x=SignX;
+        p.y=SignY;
+        RECT signrect;
+        CalcMetaRect(&p,DrwRec,&signrect,direction,false);
+        RectsMan.PutRect(ObjNum,signrect);
+        int dw=(signrect.right-signrect.left)/5;
+        if (sign->Color==scGreenYellow) {
+           SelectObject(dc,CreateSolidBrush(RGB(233,255,41)));
+           SelectObject(dc,GetStockObject(NULL_PEN));
+           Rectangle(dc,signrect.left-dw,signrect.top-dw,signrect.right+dw,signrect.bottom+dw);
+           DeleteObject(SelectObject(dc,GetStockObject(WHITE_BRUSH)));
+        } else if (sign->Color==scOrange) {
+           SelectObject(dc,CreateSolidBrush(RGB(255,128,64)));
+           SelectObject(dc,GetStockObject(NULL_PEN));
+           Rectangle(dc,signrect.left-dw,signrect.top-dw,signrect.right+dw,signrect.bottom+dw);
+           DeleteObject(SelectObject(dc,GetStockObject(WHITE_BRUSH)));
+        }
+    }
+}
 }
 
 void __fastcall TDrawManager::DrawSignImage(TDrawContents *Cont,int ObjNum)
@@ -3385,3 +3428,4 @@ if (ObjCount>0)
 delete[] LenToObj;
 return selcount;
 }
+
