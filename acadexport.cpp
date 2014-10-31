@@ -1673,11 +1673,28 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma9: /*Обозначение границ реверсивных полос движения*/
-
+                BUILDER_ERROR("Разметка 1.9 не реализована");
                 break;
 
             case ma10:  /*Обозначение мест, где запрещена стоянка*/
-
+                pl1 = DrawPolyPoints(Poly);
+                if(pl1) {
+                    pl1->set_Linetype(WideString("linedash_1"));
+                    color = pl1->TrueColor;
+                    color->SetRGB(255,255,0);
+                    pl1->TrueColor = color;
+                }
+                if(table&&line){
+                    table->DrawRepeatTextIntervalRoadMark(iRow,"1.10",Min,Max,StringConvert,iStep,0.25);
+                }else{
+                    tableTop.DrawRepeatTextIntervalRoadMark(iTop0,"1.10",Min,Max,StringConvert,iStep,0.25);
+                    tableBottom.DrawRepeatTextIntervalRoadMark(iBottom0,"1.10",Min,Max,StringConvert,iStep,0.25);
+                }
+                AutoCAD.DrawRepeatTextInterval("1.10",
+                  Min,
+                  Max,
+                  -ScaleY*Poly->Points[0].y+UnderTextYOffset,
+                  UnderTextHeight,iStep);
                 break;
 
             case ma11l:  /*Движение с одной стороны (прерывистая слева)*/
@@ -1740,6 +1757,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma15: /*Обозначение переезда для велосипедистов*/
+                BUILDER_ERROR("Разметка 1.15 не реализована");
                 //tableBottom.DrawRepeatTextInterval(0,"1.15",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
@@ -1810,24 +1828,26 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
 
             case ma19_1:  /*Направление перестроения(направо)*/
                 block = AutoCAD.DrawBlock("r_1.19",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,
-                m->Direction==roDirect?0:M_PI);
+                    m->Direction==roDirect?0:M_PI);
             case ma19_2:  /*Направление перестроения(налево)*/
                 block = AutoCAD.DrawBlock("r_1.19",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,
-                m->Direction==roDirect?0:M_PI);
+                    m->Direction==roDirect?0:M_PI);
                 AutoCAD.SetPropertyList(block, "Flip", 1);
                 //tableBottom.DrawRepeatTextInterval(0,"1.19",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
             case ma20: /*Приближение к поперечной линии 1.13*/
                 //tableBottom.DrawRepeatTextInterval(0,"1.20",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
+                BUILDER_ERROR("Разметка 1.20 не реализована");
                 break;
 
             case ma21: /*Приближение к поперечной линии 1.12*/
                 //tableBottom.DrawRepeatTextInterval(0,"1.21",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
+                BUILDER_ERROR("Разметка 1.21 не реализована");
                 break;
 
             case ma22:  /*Обозначение номера дороги*/
-
+                BUILDER_ERROR("Разметка 1.22 не реализована");
                 //tableBottom.DrawRepeatTextInterval(0,"1.22",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
@@ -1840,9 +1860,13 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
             case ma24_1: /*Дублирование предупреждающих дорожных знаков*/
             case ma24_2: /*Дублирование запрещающих дорожных знаков*/
             case ma24_3: /*Дублирование дорожного знака Инвалиды*/
+                BUILDER_ERROR("Разметка 1.24 на позиции " << Poly->Points[0].x << " не реализована");
                 //tableBottom.DrawRepeatTextInterval(0,"1.24",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
-
+            case ma24_4: /*Дублирование дорожного знака Инвалиды*/
+                block = AutoCAD.DrawBlock("r_1.24_4",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,
+                    m->Direction==roDirect?0:M_PI);
+                break;
             case ma25:  /*Обозначение искусственных неровностей*/
                 x = Poly->Points[0].x;
                 y = Poly->Points[0].y;
@@ -1856,6 +1880,8 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 block = AutoCAD.DrawBlock("r_1.25",x,-ScaleY*y,rot,1);
                 AutoCAD.SetPropertyDouble(block, "Width", height);
                 break;
+            default:
+                BUILDER_ERROR("Разметка с id=" << m->Kind << " не реализована (id смотри в таблице Classifier)");
             }
         }
     }catch(...){

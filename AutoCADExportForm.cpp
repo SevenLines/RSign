@@ -133,6 +133,7 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
    ini->WriteInteger("AutoCAD", "iEnd", End);
    ini->WriteInteger("AutoCAD", "Step", Step);
    ini->WriteInteger("AutoCAD", "GridStep", GridStep);
+   ini->WriteInteger("AutoCAD", "LineWidth", LineWidth);
 
    ini->WriteString("AutoCAD","EditTopAddRows",edtTopAddRows->Text);
 
@@ -217,6 +218,7 @@ void TFAutoCADExport::LoadIni(TIniFile *ini)
    edtScaleY->Text = ini->ReadInteger("AutoCAD","ScaleY",600);
    edtStart->Text = ini->ReadInteger("AutoCAD","iStart",-1);
    edtEnd->Text = ini->ReadInteger("AutoCAD","iEnd",-1);
+   edtLineWidth->Text = ini->ReadInteger("AutoCAD","LineWidth",0);
    edtAutoShrinkOneLetterWidth->Text = ini->ReadInteger("AutoCAD","AutoShrinkOneLetterWidth",2300);
    edtUseVerticalTextIfLess->Text = ini->ReadInteger("AutoCAD","UseVerticalTextIfLess",50);
    edtGridStep->Text = ini->ReadInteger("AutoCAD", "GridStep", 10000);
@@ -745,32 +747,35 @@ int __fastcall TFAutoCADExport::CountOfExports()
 {
     int count = 0;
 
-    count += ExportAttachments;
-    count += ExportBorders;
-    count += ExportBridges;
-    count += ExportBusstops;
-    count += ExportCommunications;
-    count += ExportCurves;
-    count += ExportGraphic;
-    count += ExportLamps;
-    count += ExportMark;
-    count += ExportMoundHeights;
-    count += ExportPlan;
-    count += ExportProfile;
     count += ExportRoadMetrics;
-    count += ExportRoadSideObjects;
+    count += ExportAttachments;
     count += ExportRoadSigns;
-    //count += ExportRuler;
-    count += ExportSidewalks;
-    count += ExportSignal;
-    count += ExportSlope;
-    count += ExportSurface;
-    //count += ExportTable;
-    count += ExportTown;
+    count += ExportMark;
     count += ExportTubes;
-    count += ExportAddRows;
+    count += ExportBridges;
+    count += ExportSignal;
+    count += ExportBusstops;
+    count += ExportRoadSideObjects;
+    count += ExportSlope;
+    count += ExportCurves;
+    count += ExportMoundHeights;
+    
+	count += ExportLamps;
+    count += ExportSidewalks;
+	count += ExportBorders;
     count += ExportTrafficLights;
     count += ExportCityObjects;    
+    
+    count += ExportProfile;
+    count += ExportSurface;
+    count += ExportCommunications;
+    count += ExportTown;
+    count += ExportPlan;
+    
+	count += ExportGraphic;
+    count += ExportAddRows;
+    //count += ExportRuler;
+    //count += ExportTable;
 
     return count;
 }
