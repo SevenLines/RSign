@@ -31,7 +31,7 @@ CreateEdits();
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TfrmVideoForm::CreateEdits(void)
+void __fastcall TfrmVideoForm::CreateEdits(void)                     
 {
 for (int i=0;i<VIDEOEDITCOUNT;i++)
     {
@@ -118,7 +118,7 @@ FCurHighIndex=-1;
 FStatus=0;
 SetMenu();
 Caption=FData->RoadName;
-//MPlayer->DisplayMode=1;
+//MPlayer->DisplayMode=1; //Это что-то непонятное
 }
 
 void __fastcall TfrmVideoForm::CloseVideo(void)
@@ -142,6 +142,7 @@ switch (FStatus)
 void __fastcall TfrmVideoForm::SetVideoPosition(unsigned long pos)
 {
 MPlayer->CurrentPosition=(double)pos/1000;
+//Caption=IntToStr(MPlayer->OpenState)+" "+IntToStr(MPlayer->PlayState);
 //MPlayer->CurrentPosition=pos/40;
 }
 
@@ -304,6 +305,7 @@ if (FileName!="")
 MPlayer->FileName=FileName;
 SetVideoPosition(VT.Time);
 FCurHighIndex=VT.HighIndex;
+CStartMode=5; CPlayPos=VT.Time; // Дебильный способ справиться с ошибкой
 PlayVideo();
 }
 
@@ -324,13 +326,15 @@ void __fastcall TfrmVideoForm::SetPosition(int newpos)
         FCurHighIndex=Val.HighIndex;
         MPlayer->AutoStart=false;
         String FileName=FindFile(VH->FileName);
-        if (FileName!="")
+        if (FileName!="")  {
             VH->FileName=FileName;
+        }
         MPlayer->FileName=FileName;
+        StartMode=5; // Дебильный способ справиться с ошибкой  при открытии файла. Дается 5 попыток
         AlignEdits();
         }
     SetVideoPosition(Val.Time);
-    SetVideoPosition(Val.Time);
+//    SetVideoPosition(Val.Time);
     FPosition=newpos;
     SetGeometry();
     if (VParams[1])
@@ -477,6 +481,15 @@ void __fastcall TfrmVideoForm::MPlayerPlayStateChange(TObject *Sender,
 FStatus=NewState;
 MainForm->SendBroadCastMessage(CM_CHANGEVIDEOSTATUS,0,(int)FData);
 PostChangeStatus();
+// Дебильный способ справиться с ошибкой
+if (FStatus==0 && StartMode)
+   MPlayer->Play(),--StartMode;
+else if (FStatus==0 && CStartMode)
+   MPlayer->Play(),--CStartMode;
+else if (FStatus==2 && StartMode)
+   StartMode=0,MPlayer->Pause();
+else if (FStatus==2 && CStartMode)
+   CStartMode=0,SetVideoPosition(CPlayPos),PlayVideo();
 }
 //---------------------------------------------------------------------------
 
@@ -563,4 +576,6 @@ SetPosition(ScrollBar->Position*100);
 MainForm->SendBroadCastMessage(CM_CHANGEVIDEOPOSITION,0,(int)FData);
 }
 //---------------------------------------------------------------------------
+
+
 

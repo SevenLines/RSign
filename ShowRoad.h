@@ -297,6 +297,7 @@ private:        // User declarations
     TRoadObject *FActiveObj; // Выбранный объект.
     TDtaSource *FActiveSource; // Источник данных в котором лежит активный объект
     TRoadObject *FInsertingObj; // Добавляемый объект
+    TPolyline *FInsertingPoly;  // Полилиния для добавляемого объекта
 
     TSelectRect *SelectRect;//PBox->Canvas);
     TSelectObj *SelectObj;

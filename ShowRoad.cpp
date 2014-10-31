@@ -49,6 +49,7 @@ __fastcall TRoadFrm::TRoadFrm(TComponent* Owner)
 {
 	FReadyForDrawing=false;
 	FInsertingObj=NULL;
+    FInsertingPoly=new TPolyline(2);
 	FRoadId=0;
 	FViewId=0;
 	FPan1Vis=false;
@@ -128,6 +129,8 @@ void __fastcall TRoadFrm::CloseRoad(void)
 	SelectObj=NULL;
 	delete FInsertingObj;
 	FInsertingObj=NULL;
+	delete FInsertingPoly;
+	FInsertingPoly=NULL;
 	if (VisSet)
 	{
 		TForm *TmpForm=VisSet;
@@ -2191,10 +2194,9 @@ void __fastcall TRoadFrm::AddNewObject(TObjMetaClass *Meta)
 	if (Meta)
 	{
 		delete FInsertingObj;
-		FInsertingObj=NULL;
 		FInsertingObj=MainForm->Factory->CreateRoadObj(Meta->ClassName,0,Meta->Id);
 		if (FInsertingObj)
-		ZoomStatus=zsWaitPoint;
+  		   ZoomStatus=zsWaitPoint;
 	}
 }
 
@@ -2817,15 +2819,20 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 		else
 		{
 			TDescreetRoadObject *dobj=dynamic_cast<TDescreetRoadObject*>(FInsertingObj);
-			if (dobj)
-			dobj->L=CL;
-			else
+			if (dobj) {
+			   dobj->L=CL;
+               FInsertingPoly->Count=1;
+               FInsertingPoly->Points[0]=TRoadPoint(CL,CX);
+               dobj->SetDefaultPlacement(FMetricData->Road,FInsertingPoly);
+			} else
 			{
 				TContRoadObject *cobj=dynamic_cast<TContRoadObject*>(FInsertingObj);
 				if (cobj)
 				{
 					if (ZoomStatus==zsWaitPoint)
 					{
+                        FInsertingPoly->Count=1;
+                        FInsertingPoly->Points[0]=TRoadPoint(CL,CX);
 						cobj->PutPosition(CL,CL+1000);
 						ZoomStatus=zsWaitSecPoint;
 					}
@@ -2835,6 +2842,9 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 						cobj->PutPosition(CL,cobj->LMin);
 						else
 						cobj->PutPosition(cobj->LMin,CL);
+                        FInsertingPoly->Count=2;
+                        FInsertingPoly->Points[1]=TRoadPoint(CL,CX);
+                        cobj->SetDefaultPlacement(FMetricData->Road,FInsertingPoly);
 						ZoomStatus=zsNone;
 					}
 				}

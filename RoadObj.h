@@ -2,7 +2,7 @@
 #ifndef RoadObjH
 #define RoadObjH
 #include "RoadDict.h"
-#include "Lists.h"
+#include "Lists.h"                                    
 #include "Const.h"
 #include "Metrics.h"
 #include "Measures.h"
@@ -225,6 +225,7 @@ void __fastcall SetId(__int32 newid)
 virtual  TExtPolyline* __fastcall GetDefMetric(TRoad *Road)
     {return NULL;}
 virtual TExtPolyline* __fastcall GetPolyMetric(TRoad* Road);
+virtual void __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p) {}
 virtual TExtPolyline* PrepareMetric(TRoad *Road);
 virtual void __fastcall UpdatePoly(void);
 virtual void __fastcall PostEditPoly(void)
