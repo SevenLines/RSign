@@ -57,6 +57,8 @@ __published:	// IDE-managed Components
     void __fastcall ScrollBarChange(TObject *Sender);
 private:	// User declarations
     TDtaSource *FData;
+
+    int StartMode,CStartMode,CPlayPos;  // Дебильный способ справиться с ошибкой в MediaPlayere
     int FNumRoad;
     int FPosIndex;
     int FPosition;

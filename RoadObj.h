@@ -2,7 +2,7 @@
 #ifndef RoadObjH
 #define RoadObjH
 #include "RoadDict.h"
-#include "Lists.h"
+#include "Lists.h"                                    
 #include "Const.h"
 #include "Metrics.h"
 #include "Measures.h"
@@ -225,6 +225,7 @@ void __fastcall SetId(__int32 newid)
 virtual  TExtPolyline* __fastcall GetDefMetric(TRoad *Road)
     {return NULL;}
 virtual TExtPolyline* __fastcall GetPolyMetric(TRoad* Road);
+virtual void __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p) {}
 virtual TExtPolyline* PrepareMetric(TRoad *Road);
 virtual void __fastcall UpdatePoly(void);
 virtual void __fastcall PostEditPoly(void)
@@ -932,6 +933,8 @@ public:
 __fastcall TTrafficLight():TDescreetRoadObject() {}
 __fastcall TTrafficLight(__int32 id,__int32 code):TDescreetRoadObject(id,code) {}
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
+virtual void __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p)
+   {DX=p->Points[0].X;}
 };
 
 
@@ -947,6 +950,7 @@ DEFPROPERTYRW(String,Label)      // Надпись на знаке
 DEFPROPERTYRW(TRoadSignPlacement,Placement)
 DEFPROPERTYRW(String,OldTitle)
 DEFPROPERTYRW(TSignAttach,OnAttach)
+DEFPROPERTYRW(TSignBackColor,Color)
 friend class TSignRules; void __fastcall SetAutoTest(TSignTest tst)
   {FTest=tst;}
 void __fastcall SetAutoDescription(String s)

@@ -95,6 +95,7 @@ IMPPROPERTY(TRoadSign,String,Label)
 IMPPROPERTY(TRoadSign,TRoadSignPlacement,Placement)
 IMPPROPERTY(TRoadSign,String,OldTitle)
 IMPPROPERTY(TRoadSign,TSignAttach,OnAttach)
+IMPPROPERTY(TRoadSign,TSignBackColor,Color)
 
 IMPPROPERTY(TRailCross,TRailKind,RailKind)
 IMPPROPERTY(TRailCross,TRailCrossSignal,SignalKind)

@@ -17,8 +17,8 @@ object frmVideoForm: TfrmVideoForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 296
-    Width = 374
+    Top = 300
+    Width = 382
     Height = 30
     Align = alBottom
     BevelOuter = bvNone
@@ -27,14 +27,14 @@ object frmVideoForm: TfrmVideoForm
     object Panel2: TPanel
       Left = 0
       Top = 0
-      Width = 374
+      Width = 382
       Height = 22
       Align = alTop
       TabOrder = 0
       object ScrollBar: TScrollBar
         Left = 61
         Top = 1
-        Width = 312
+        Width = 320
         Height = 20
         Align = alClient
         PageSize = 0
@@ -166,13 +166,24 @@ object frmVideoForm: TfrmVideoForm
   object MPlayer: TSMediaPlayer
     Left = 0
     Top = 0
-    Width = 374
-    Height = 296
+    Width = 382
+    Height = 300
     Align = alClient
     PopupMenu = PopMenu
     TabOrder = 1
     OnPlayStateChange = MPlayerPlayStateChange
-    ControlData = {}
+    ControlData = {
+      010000007B270000021F00000300FFFFFFFF0B0000000B0000000B00FFFF0B00
+      FFFF0B00FFFF00000200000000000B0000000300000000000800020000000000
+      0500000000000000144008000200000000000B00000003000000000005000000
+      00000000F0BF03000000000008000200000000001300000000001300FFFFFF00
+      0300000000000300040000000B00FFFF0B00FFFF0B0000000B0000000B000000
+      08000200000000000B00FFFF0300FFFFFFFF0B0000000300010000000B000100
+      0500000000000000F03F08000200000000000800020000000000080002000000
+      00000500000000000000F0BF0500000000000000F0BF0B00FFFF0B0000000B00
+      00000B0000000B0000000B0000000B00FFFF0B0000000B0000000B0000000B00
+      00000B0000000B0000000B0000000B0000000B00000003000000000013000000
+      00000B0000000300A8FDFFFF0B000000}
   end
   object Timer: TTimer
     OnTimer = TimerTimer
