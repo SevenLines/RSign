@@ -257,6 +257,7 @@ enum TMarkKind {ma1=2384961,ma1_park=2385261,ma2_1=2385125,ma2_2=2384962,ma3=238
 
 enum TTrafficLightsPlacement {tlpOpora=2385257,tlpConsol=2385258,tlpRast=2385259};
 enum TTrafficLightsKind {tlkT=2385251,tlkTr=2385252,tlkTl=2385253,tlkTrl=2385254,tlkP=2385255,trlkTR=2385257};
+enum TSignBackColor {scNone=2385267,scOrange=2385268,scGreenYellow=2385269};
 
 #define MLLongLinesCount 16
 const TMarkKind MLLongLines[MLLongLinesCount]={ma1,ma2_1,ma2_2,ma3,ma4,ma5,ma6,ma7,ma8,ma9,ma10,ma11l,ma11r,ma12,ma13,ma17};
@@ -266,6 +267,7 @@ const TMarkKind MLCrossLines[MLCrossLinesCount]={ma14_1,ma14_2,ma14_3,ma15,ma25}
 const TMarkKind MLIslands[MLIslandsCount]={ma16_1,ma16_2,ma16_3};
 #define MLArrowsCount 16
 const TMarkKind MLArrows[MLArrowsCount]={ma18p,ma18l,ma18r,ma18pl,ma18pr,ma18rl,ma18prl,ma19_1,ma19_2,ma20,ma21,ma22,ma23,ma24_1,ma24_2,ma24_3};
+
 
 class SetOfInt
 {

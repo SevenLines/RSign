@@ -2786,10 +2786,11 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 {
 	if (FInsertingObj)
 	{
-		int CL,CX;
+		int CL,CX,RX;
 		FMetricData->Road->SetFrame(FPMinL,FPMaxL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
 		FMetricData->Road->SetOutBound(0,PBox->Width,0,PBox->Height);
-		FMetricData->Road->RConvertPoint(X,Y,CL,CX);
+		FMetricData->Road->RConvertPoint(X,Y,CL,RX);
+        CX=RX;
 		if (Leep)
 		FDrawMan->FindNearestL(CL,NULL,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
 		TRoadDirection dr;
@@ -2822,7 +2823,7 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 			if (dobj) {
 			   dobj->L=CL;
                FInsertingPoly->Count=1;
-               FInsertingPoly->Points[0]=TRoadPoint(CL,CX);
+               FInsertingPoly->Points[0]=TRoadPoint(CL,RX);
                dobj->SetDefaultPlacement(FMetricData->Road,FInsertingPoly);
 			} else
 			{
@@ -2832,7 +2833,7 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 					if (ZoomStatus==zsWaitPoint)
 					{
                         FInsertingPoly->Count=1;
-                        FInsertingPoly->Points[0]=TRoadPoint(CL,CX);
+                        FInsertingPoly->Points[0]=TRoadPoint(CL,RX);
 						cobj->PutPosition(CL,CL+1000);
 						ZoomStatus=zsWaitSecPoint;
 					}
@@ -2843,7 +2844,7 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 						else
 						cobj->PutPosition(cobj->LMin,CL);
                         FInsertingPoly->Count=2;
-                        FInsertingPoly->Points[1]=TRoadPoint(CL,CX);
+                        FInsertingPoly->Points[1]=TRoadPoint(CL,RX);
                         cobj->SetDefaultPlacement(FMetricData->Road,FInsertingPoly);
 						ZoomStatus=zsNone;
 					}

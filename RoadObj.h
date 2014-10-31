@@ -933,6 +933,8 @@ public:
 __fastcall TTrafficLight():TDescreetRoadObject() {}
 __fastcall TTrafficLight(__int32 id,__int32 code):TDescreetRoadObject(id,code) {}
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
+virtual void __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p)
+   {DX=p->Points[0].X;}
 };
 
 
@@ -948,6 +950,7 @@ DEFPROPERTYRW(String,Label)      // Надпись на знаке
 DEFPROPERTYRW(TRoadSignPlacement,Placement)
 DEFPROPERTYRW(String,OldTitle)
 DEFPROPERTYRW(TSignAttach,OnAttach)
+DEFPROPERTYRW(TSignBackColor,Color)
 friend class TSignRules; void __fastcall SetAutoTest(TSignTest tst)
   {FTest=tst;}
 void __fastcall SetAutoDescription(String s)
