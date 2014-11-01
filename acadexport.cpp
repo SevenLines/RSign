@@ -1440,11 +1440,12 @@ int iRow, int line, AutoCADTable *table)
             } */
             AutoCAD.DrawRepeatTextInterval(label_under_mark, Min, Max, yOffset, UnderTextHeight,iStep);
 
-            // no need to draw, as Petya asked : D 
-            AutoCAD.DrawLine(Poly->Points[0].x,-ScaleY*(Poly->Points[0].y)-UnderTextYOffset,
-                            Poly->Points[0].x,-ScaleY*(Poly->Points[0].y)+UnderTextYOffset);
-            AutoCAD.DrawLine(Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y)-UnderTextYOffset,
-                            Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y)+UnderTextYOffset);
+            // no need to draw, as Petya asked : D
+            float kEdgeLines = 0.5; 
+            AutoCAD.DrawLine(Poly->Points[0].x,-ScaleY*(Poly->Points[0].y) - UnderTextYOffset * kEdgeLines,
+                            Poly->Points[0].x,-ScaleY*(Poly->Points[0].y) + UnderTextYOffset * kEdgeLines);
+            AutoCAD.DrawLine(Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y) - UnderTextYOffset * kEdgeLines,
+                            Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y) + UnderTextYOffset * kEdgeLines);
             
             
         } else { // if we draw road mark on attachments
@@ -1646,30 +1647,34 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
 
             case ma5: /*ѕрерывиста€ лини€*/
                 pl1 = DrawRoadMark(Poly, "1.5", iRow, line, table);
-                try{
-                    if(pl1) pl1->set_Linetype(WideString("linedash_1"));
-                }catch(...){}
+                if(pl1.IsBound()) {
+                    pl1->set_Linetype(WideString("linedash_1"));
+                    pl1->set_LinetypeScale(0.5);
+                }
                 break;
 
             case ma6: /*ѕриближение к сплошной линии*/
                 pl1 = DrawRoadMark(Poly, "1.6", iRow, line, table);
-                try{
-                    if(pl1) pl1->set_Linetype(WideString("linedash_2"));
-                }catch(...){}
+                if(pl1.IsBound()) {
+                    pl1->set_Linetype(WideString("linedash_2"));
+                    pl1->set_LinetypeScale(0.5);
+                }
                 break;
 
             case ma7:  /*ќбозначение полос движени€ на перекрестке*/
                 pl1 = DrawRoadMark(Poly, "1.7", iRow, line, table);
-                try{
-                    if(pl1) pl1->set_Linetype(WideString("linedash_3"));
-                }catch(...){}
+                if(pl1.IsBound()) {
+                    pl1->set_Linetype(WideString("linedash_3"));
+                    pl1->set_LinetypeScale(0.33);
+                }
                 break;
 
             case ma8: /*ќбозначение границы между полосой разгона и основной полосой*/
                 pl1 = DrawRoadMark(Poly, "1.8", iRow, line, table);
-                try{
-                    if(pl1) pl1->set_Linetype(WideString("linedash_1"));
-                }catch(...){}
+                if(pl1.IsBound()) {
+                    pl1->set_Linetype(WideString("linedash_1"));
+                    pl1->set_LinetypeScale(0.2);
+                }
                 break;
 
             case ma9: /*ќбозначение границ реверсивных полос движени€*/
@@ -1677,7 +1682,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma10:  /*ќбозначение мест, где запрещена сто€нка*/
-                pl1 = DrawPolyPoints(Poly);
+                /*pl1 = DrawPolyPoints(Poly);
                 if(pl1) {
                     pl1->set_Linetype(WideString("linedash_1"));
                     color = pl1->TrueColor;
@@ -1694,7 +1699,15 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                   Min,
                   Max,
                   -ScaleY*Poly->Points[0].y+UnderTextYOffset,
-                  UnderTextHeight,iStep);
+                  UnderTextHeight,iStep);*/
+                pl1 = DrawRoadMark(Poly, "1.6", iRow, line, table);
+                if(pl1.IsBound()) {
+                    pl1->set_Linetype(WideString("linedash_1"));
+                    pl1->set_LinetypeScale(0.33);
+                    color = pl1->TrueColor;
+                    color->SetRGB(255,255,0);
+                    pl1->TrueColor = color;
+                }
                 break;
 
             case ma11l:  /*ƒвижение с одной стороны (прерывиста€ слева)*/
