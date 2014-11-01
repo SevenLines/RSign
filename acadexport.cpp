@@ -886,6 +886,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     }
 
     double scale = ScaleY*50;
+	int signSpotOffset = 19;
 
     /// создавать новый объект signspot сильно нарпяжно, так что создадим его один раз
     /// а потом будем все время копировать
@@ -1031,7 +1032,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 	}
 
     double yoffset = 20;
-    bool ffind, fOnAttachment;
+    bool ffind, fOnAttachment = false;
     int i;
     AnsiString strings[4];
     AcadBlockPtr block;
@@ -1137,6 +1138,9 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         }
         break;
     }
+	
+	
+	
     switch (signs[0]->Placement) {
         case spBetween:
         case spUp:
@@ -1145,25 +1149,17 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
             case saOut:
                 break;
             default:
-                signspot = SignSpot1;
                 rotationHandle *= -1;
+                if (signs[0]->Placement == spUp) {
+                    signspot = SignSpot2;
+                    rotationHandle -= M_PI/2;
+					signSpotOffset = 9;
+                } else {
+                    signspot = SignSpot1;
+                }
             break;
         }
     }
-
-    // корректируем поворот знака в соответствии с положением знака на примыкании
-    /*fOnAttachment = false;
-    switch (signs[0]->OnAttach) {
-    case saIn:
-        rotation += M_PI/2;
-        fOnAttachment = true;
-        signspot = SignSpot2;
-        break;
-    case saOut:
-        rotation -= M_PI/2;
-        fOnAttachment = true;
-        signspot = SignSpot2;
-    } */
 
     AnsiString sEmpty = "";
 
@@ -1174,13 +1170,14 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                     signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),
                     signs[0]->Label,
                     AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
-                    yoffset,
+                    signSpotOffset,
                     0,
                     rotation,
                     rotationHandle,
                     scale,
                     fOnAttachment,
-                    signspot);
+                    signspot,
+					signs[0]->Placement == spUp);
             }catch(...) {
                 if(!strSignsAbsent.Pos(signs[0]->OldTitle))strSignsAbsent+="\n"+signs[0]->OldTitle;
             }
@@ -1196,13 +1193,14 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                 DrawSign(block->Name,
                   "",
                   AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
-                  yoffset,
+                  signSpotOffset,
                   0,
                   rotation,
                   rotationHandle,
                   scale,
                   fOnAttachment,
-                  signspot);
+                  signspot,
+				  signs[0]->Placement == spUp);
             }
 		}
     }catch(...){
@@ -1246,7 +1244,8 @@ void TAcadExport::DrawSign(
   double rotationHandle,
   double scale,
   bool fOnAttachment,
-  AcadBlockReferencePtr &signspot
+  AcadBlockReferencePtr &signspot,
+  bool fUnderRoad
   )
 {
     static AcadBlockReferencePtr block;
@@ -1279,29 +1278,25 @@ void TAcadExport::DrawSign(
 
     txOffset = xoffset;
     tyOffset = yoffset;
-
-
-
-    // выбираем тип сноски в зависимости от положения знака
-    // на примыкании, на основной дороге
-    /*if(fOnAttachment) {
-        block = SignSpot2->Copy();
-    } else {
-        block = SignSpot1->Copy();
-        AutoCAD.SetAttribute(block,"LABEL",AnsiString(_pos));
-    }*/
+	
+	// копируем сноску
     block = signspot->Copy();
     AutoCAD.SetAttribute(block,"LABEL",AnsiString(_pos));
-    
     // поворачиваем сноску
     block->set_Rotation(rotationHandle);
 
     // чтобы за край не уходили
-    if(_pos <= 30){
-        tyOffset += (rotationHandle==-M_PI/2)?3000:-3000;
-    }else if(_pos >= 970){
-        tyOffset += (rotationHandle==-M_PI/2)?-3000:3000;
+    if (!fUnderRoad) {
+      if(_pos <= 30){
+          tyOffset += (rotationHandle==-M_PI/2)?3000:-3000;
+      }else if(_pos >= 970){
+          tyOffset += (rotationHandle==-M_PI/2)?-3000:3000;
+      }
     }
+	
+	if (fUnderRoad) {
+	    tyOffset -= 300;	
+	}
 
     // пересчитываем положение знака, так как он у нас
     //  рисуется отдельно от сноски
@@ -1312,9 +1307,9 @@ void TAcadExport::DrawSign(
     int countOfSignsNearCurrent;
     while((countOfSignsNearCurrent = findSignSuperposition(TPoint(newPos.x, newPos.y) , 400)) > 0) {
         if (fOnAttachment) {
-            txOffset -= 3000;
+            txOffset -= 1000;
         } else {
-            tyOffset += 3000;
+            tyOffset += 1000;
         }
         // пересчитаем положение знака еще раз
         newPos.x = pos.x + txOffset*cos(rotationHandle)- tyOffset*sin(rotationHandle);
@@ -1324,6 +1319,7 @@ void TAcadExport::DrawSign(
     // запомним положение знака
     SignsPositions.push_back(TPoint(newPos.x, newPos.y) );
     // поставим сноску и сдвинем ее хвостик
+	//AutoCAD.SetPropertyDouble(block,"Length",1200);
     block->set_InsertionPoint(AutoCAD.cadPoint(pos.x,pos.y));
     AutoCAD.SetPropertyPoint(block,"pHand",AutoCADPoint(txOffset,tyOffset));
 
@@ -1433,14 +1429,15 @@ int iRow, int line, AutoCADTable *table)
             }
 
             AnsiString label_under_mark = name;
-            /*if (Max - Min > 3000) {
-                label_under_mark += " ("+IntToStr((int)(Min/100)) + "-" + IntToStr((int)(Max/100))+")";
-            } else if ( Max - Min > 1500) {
-                label_under_mark += " ("+IntToStr((int)((Max-Min)/100))+")";
-            } */
-            AutoCAD.DrawRepeatTextInterval(label_under_mark, Min, Max, yOffset, UnderTextHeight,iStep);
+
+            float kUnderTextHeight = 1;
+            if (Max - Min < 750) {
+                kUnderTextHeight = 0.6;
+            }
+            AutoCAD.DrawRepeatTextInterval(label_under_mark, Min, Max, yOffset, kUnderTextHeight * UnderTextHeight,iStep);
 
             // no need to draw, as Petya asked : D
+            // but
             float kEdgeLines = 0.5; 
             AutoCAD.DrawLine(Poly->Points[0].x,-ScaleY*(Poly->Points[0].y) - UnderTextYOffset * kEdgeLines,
                             Poly->Points[0].x,-ScaleY*(Poly->Points[0].y) + UnderTextYOffset * kEdgeLines);

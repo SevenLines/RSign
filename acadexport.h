@@ -197,7 +197,8 @@ class TAcadExport {
           double rotationHandle,
           double scale,
           bool fOnAttachment,
-          AcadBlockReferencePtr &signspot
+          AcadBlockReferencePtr &signspot,
+          bool fUnderRoad
       );
 
       void ExportRuler(int iStart, int iEnd, bool fEnd);
