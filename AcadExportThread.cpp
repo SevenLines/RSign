@@ -588,7 +588,7 @@ int __fastcall AcadExportThread::SortCurrentAndProjectObjects(TDtaSource* dataCu
 	}
 	// только для столбиков требуется в настройках поставить дополнительную галочку
 	// для вывода существующих столбиков
-	if (dataCurrent && dataCurrent!=dataProject) {
+	if (dataCurrent) {
 		SET_PROGRESS_FORM_MINMAX(0,dataCurrent->Objects->Count-1);
 		SET_PROGRESS_FORM_POSITION(0)
 		// столбики из существующего выводим всегда если не указан проектируемый источник,
@@ -640,6 +640,7 @@ int __fastcall AcadExportThread::ExportSignal(vector<pair<int,wpbar> > &data, TA
 			delete p;
 		}
 	}
+    aexp->ExportBarrier(0,0,0,true);
 	return 0;
 }
 
@@ -945,7 +946,7 @@ void __fastcall AcadExportThread::Execute()
 		if (FAutoCADExport->ExportSignal || FAutoCADExport->ExportSidewalks || FAutoCADExport->ExportLamps || FAutoCADExport->ExportBorders) {
 			vector<pair<int,wpbar> > bvec;
             currentItem--;
-			EXPORT_ITEM(SortCurrentAndProjectObjects(DataCur, DataPrj, bvec), "Сортируем проектируемые и существующие ограждения, сигнальные устройства, тротуары, освещение...");
+			EXPORT_ITEM(SortCurrentAndProjectObjects(CurData, PrjData, bvec), "Сортируем проектируемые и существующие ограждения, сигнальные устройства, тротуары, освещение...");
 			
 			if (bvec.size()) {
 				sort(bvec.begin(),bvec.end());

@@ -2677,7 +2677,7 @@ bool __fastcall TAcadExport::ExportBusStop(TExtPolyline *Poly,TBusStop *s, bool 
     }
 
     rotation=s->GetPlacement()==spLeft?M_PI:0;
-    AutoCAD.DrawBlock("busstop",Poly->Points[0].x, -ScaleY*Poly->Points[0].y,rotation);
+    AutoCAD.DrawBlock("busstop",Poly->Points[0].x, -ScaleY*Poly->Points[0].y,rotation, ScaleY / 2);
     return true;
 }
 
@@ -2811,9 +2811,9 @@ bool __fastcall TAcadExport::ExportLighting(TExtPolyline *Poly,TRoadLighting *s,
 
     AcadBlockReferencePtr block;
     if(s->Placement == rsRight) {
-        block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y, M_PI);
+        block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y, M_PI, ScaleY / 2);
     } else {
-        block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y);
+        block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y, 0, ScaleY / 2);
     }
     if(block.IsBound()){
         switch(s->Kind){
@@ -3420,8 +3420,9 @@ bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, TTrafficLight *
     case trlkTR: blockKind = "TR"; break;
     }
 
+    float scale = ScaleY / 2;
     AcadBlockReferencePtr block
-        = AutoCAD.DrawBlock("light", p->Points[0].x, -ScaleY*p->Points[0].y,rotation);
+        = AutoCAD.DrawBlock("light", p->Points[0].x, -ScaleY*p->Points[0].y,rotation, scale);
     if(block.IsBound()){
         AutoCAD.SetPropertyListVariant(block, "Type", blockKind);
         /*if(!exist) {
