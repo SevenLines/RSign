@@ -1839,6 +1839,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
             case ma19_1:  /*Направление перестроения(направо)*/
                 block = AutoCAD.DrawBlock("r_1.19",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,
                     m->Direction==roDirect?0:M_PI);
+                break;
             case ma19_2:  /*Направление перестроения(налево)*/
                 block = AutoCAD.DrawBlock("r_1.19",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,
                     m->Direction==roDirect?0:M_PI);
@@ -1847,8 +1848,8 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma20: /*Приближение к поперечной линии 1.13*/
-                //tableBottom.DrawRepeatTextInterval(0,"1.20",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
-                BUILDER_ERROR("Разметка 1.20 не реализована");
+                block = AutoCAD.DrawBlock("r_1.20",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,
+                    m->Direction==roDirect?0:M_PI);
                 break;
 
             case ma21: /*Приближение к поперечной линии 1.12*/
@@ -3394,7 +3395,7 @@ bool __fastcall TAcadExport::ExportCommunication(TExtPolyline *p, TCommunication
     return true;
 }
 
-bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, TTrafficLight *t, bool fEnd )
+bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, vector<TTrafficLight*> &trafficLights, bool fEnd )
 {
    if (fEnd) return true;
     static float rotation;
@@ -3409,29 +3410,31 @@ bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, TTrafficLight *
         if(p->Points[0].x>iEnd) return true;
     }
 
-    rotation=-(float)t->Direction / 180.0 * M_PI;
-    AnsiString blockKind = "";
-    switch(t->Kind) {
-    case tlkT: blockKind = "T"; break;
-    case tlkTl: blockKind = "T_l"; break;
-    case tlkTr: blockKind = "T_r"; break;
-    case tlkTrl: blockKind = "T_rl"; break;
-    case tlkP: blockKind = "TP"; break;
-    case trlkTR: blockKind = "TR"; break;
-    }
+    for (int i=0;i<trafficLights.size();++i) {
+        TTrafficLight* t = trafficLights[i];
+        rotation=-(float)t->Direction / 180.0 * M_PI;
+        AnsiString blockKind = "";
+        switch(t->Kind) {
+        case tlkT: blockKind = "T"; break;
+        case tlkTl: blockKind = "T_l"; break;
+        case tlkTr: blockKind = "T_r"; break;
+        case tlkTrl: blockKind = "T_rl"; break;
+        case tlkP: blockKind = "TP"; break;
+        case trlkTR: blockKind = "TR"; break;
+        }
 
-    float scale = ScaleY / 2;
-    AcadBlockReferencePtr block
-        = AutoCAD.DrawBlock("light", p->Points[0].x, -ScaleY*p->Points[0].y,rotation, scale);
-    if(block.IsBound()){
-        AutoCAD.SetPropertyListVariant(block, "Type", blockKind);
-        /*if(!exist) {
-            block->color = NotExistColor;
-        } */
-    }else{
-        return false;
+        float scale = ScaleY / 2;
+        AcadBlockReferencePtr block
+            = AutoCAD.DrawBlock("light", p->Points[0].x, -ScaleY*p->Points[0].y,rotation, scale);
+        if(block.IsBound()){
+            AutoCAD.SetPropertyListVariant(block, "Type", blockKind);
+            /*if(!exist) {
+                block->color = NotExistColor;
+            } */
+        }else{
+            return false;
+        }
     }
-
 
     return true;
 }

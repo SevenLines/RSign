@@ -34,66 +34,7 @@ __fastcall AcadExportThread::AcadExportThread(bool CreateSuspended)
 
 
 
-struct wpsign {
-    double x,y;
-    TExtPolyline *p;
-    TRoadSign *s;
-    wpsign(TRoadSign *_s,TExtPolyline *_p) {
-        s=_s;        p=_p;
-        x=p->Points[0].x;
-        y=p->Points[0].y;
-    }
-};
 
-
-#define SSCOUNT 10
-const char SingleSign[SSCOUNT][5]={"1.34","5.23","5.24","5.25","5.26","6.9.","6.10","6.11","6.12","6.13"};
-const int SignPrior[8]={2,1,5,3,4,6,7,8};
-
-bool signgroup(const wpsign &s1,const wpsign &s2) {
-    if (abs((float)(s2.x-s1.x))<=50 && abs((float)(s2.y-s1.y))<=50) {
-        string a=s1.s->OldTitle.SubString(0,4).c_str();
-        string b=s2.s->OldTitle.SubString(0,4).c_str();
-        bool single=false;
-        for (int i=0;i<SSCOUNT && !single;i++)
-            single=(a==SingleSign[i]);
-        for (int i=0;i<SSCOUNT && !single;i++)
-            single=(b==SingleSign[i]);
-        return !single;
-    }
-    return false;
-}
-
-bool operator<(const wpsign &s1,const wpsign &s2) {
-    if (s2.x-s1.x>50) // первый знак раньше более чем на 50 см
-        return true;
-    else if (s1.x-s2.x<50) {// расстояние по x меньше 50 см
-        if (s2.y-s1.y>50) // первый знак по y раньше более 50 см
-            return true;
-        else {            // знаки в одной точке
-            string a=s1.s->OldTitle.SubString(0,4).c_str();
-            string b=s2.s->OldTitle.SubString(0,4).c_str();
-            char da=a[0]-'1';
-            char db=b[0]-'1';
-            bool single=false;
-            for (int i=0;i<SSCOUNT && !single;i++)
-                single=(a==SingleSign[i]);
-            for (int i=0;i<SSCOUNT && !single;i++)
-                single=(b==SingleSign[i]);
-            if (single)
-                return (s1.x<s2.x || s1.x==s2.x && s1.y<s2.y);
-            else if (da<8 && db<8 && da>=0 && db>=0)
-                return SignPrior[da]<SignPrior[db] ||
-                       SignPrior[da]==SignPrior[db] && s1.s->OldTitle<s2.s->OldTitle;
-        }
-    }
-    return false;
-}
-
-
-bool operator<(const wpbar &s1,const wpbar &s2) {
-    return false;
-}
 
 void __fastcall AcadExportThread::setProgressFormCaption()
 {
@@ -306,7 +247,50 @@ int __fastcall AcadExportThread::ExportTrafficLights(TDtaSource* data, TAcadExpo
 {
 	SET_PROGRESS_FORM_POSITION(0;)
 	aexp->AddLayer("RoadTrafficLights");
-	for (int i=0;i<data->Objects->Count;i++) {
+
+    vector<pair<TExtPolyline*, TTrafficLight*> > tlights;
+
+    for (int i=0;i<data->Objects->Count;i++) {
+		if (Terminated) return -1;
+		if (data->Objects->Items[i]->DictId==77) {
+			TTrafficLight *t=dynamic_cast<TTrafficLight*>(data->Objects->Items[i]);
+			if (t) {
+				TExtPolyline *p=t->PrepareMetric(R);
+                tlights.push_back(make_pair(p, t));
+			}
+		}
+	}
+
+    vector<pair<TExtPolyline*, TTrafficLight*> > tlightGroup;
+    vector<TTrafficLight*> trafficLights;
+    for (int i=0;i<tlights.size();++i) {
+        tlightGroup.clear();
+        tlightGroup.push_back(tlights[i]);
+
+        POINT p1 = tlights[i].first->Points[0];
+        // form trafficlights group
+        for (int j=i+1;j<tlights.size();++j) {
+            POINT p2 = tlights[j].first->Points[0];
+            if (abs(p1.x - p2.x) <= 50 && abs(p1.y - p2.y) <= 50) {
+                tlightGroup.push_back(tlights[j]);
+                tlights.erase(tlights.begin() + j);
+                --j;
+            }
+        }
+
+        trafficLights.clear();
+        for (int j=0;j<tlightGroup.size();++j) {
+            trafficLights.push_back(tlightGroup[j].second);
+        }
+        aexp->ExportTrafficLight(tlights[i].first, trafficLights);
+
+        // clear memory
+        for (int j=0;j<tlightGroup.size();++j) {
+            delete tlightGroup[j].first;
+        }
+    }
+
+    /*for (int i=0;i<data->Objects->Count;i++) {
 		if (Terminated) return -1;
 		if (data->Objects->Items[i]->DictId==77) {
 			SET_PROGRESS_FORM_POSITION(i;)
@@ -317,7 +301,24 @@ int __fastcall AcadExportThread::ExportTrafficLights(TDtaSource* data, TAcadExpo
 				delete p;
 			}
 		}
-	}
+	} */
+
+    /*for (int i=0;i<signs.size();++i) {
+        sgrp.clear();
+        sgrp.push_back(signs[i].s);
+        for (int j=i+1;j<signs.size();++j) {
+            if (signgroup(signs[i],signs[j])) {
+                sgrp.push_back(signs[j].s);
+                signs.erase(signs.begin() + j);
+                --j;
+            }
+        }
+        aexp->ExportSigns(signs[i].p,sgrp.begin(),sgrp.size());
+        SET_PROGRESS_FORM_MINMAX(0,signs.size());
+        SET_PROGRESS_FORM_POSITION(i);
+    }*/
+
+
 	return 0;
 }
 
@@ -421,12 +422,75 @@ int __fastcall AcadExportThread::ExportMoundHeights(TDtaSource* data, TAcadExpor
 	return 0;
 }
 
+// ЗНАКИ
+
+#define SSCOUNT 10
+const char SingleSign[SSCOUNT][5]={"1.34","5.23","5.24","5.25","5.26","6.9.","6.10","6.11","6.12","6.13"};
+const int SignPrior[8]={2,1,5,3,4,6,7,8};
+
+struct wpsign {
+    double x,y;
+    TExtPolyline *p;
+    TRoadSign *s;
+    wpsign(TRoadSign *_s,TExtPolyline *_p) {
+        s=_s;        p=_p;
+        x=p->Points[0].x;
+        y=p->Points[0].y;
+    }
+};
+
+bool signgroup(const wpsign &s1,const wpsign &s2) {
+    if (abs((float)(s2.x-s1.x))<=50 && abs((float)(s2.y-s1.y))<=50) {
+        string a=s1.s->OldTitle.SubString(0,4).c_str();
+        string b=s2.s->OldTitle.SubString(0,4).c_str();
+        bool single=false;
+        for (int i=0;i<SSCOUNT && !single;i++)
+            single=(a==SingleSign[i]);
+        for (int i=0;i<SSCOUNT && !single;i++)
+            single=(b==SingleSign[i]);
+        return !single;
+    }
+    return false;
+}
+
+bool operator<(const wpsign &s1,const wpsign &s2) {
+    if (s2.x-s1.x>50) // первый знак раньше более чем на 50 см
+        return true;
+    else if (s1.x-s2.x<50) {// расстояние по x меньше 50 см
+        if (s2.y-s1.y>50) // первый знак по y раньше более 50 см
+            return true;
+        else {            // знаки в одной точке
+            string a=s1.s->OldTitle.SubString(0,4).c_str();
+            string b=s2.s->OldTitle.SubString(0,4).c_str();
+            char da=a[0]-'1';
+            char db=b[0]-'1';
+            bool single=false;
+            for (int i=0;i<SSCOUNT && !single;i++)
+                single=(a==SingleSign[i]);
+            for (int i=0;i<SSCOUNT && !single;i++)
+                single=(b==SingleSign[i]);
+            if (single)
+                return (s1.x<s2.x || s1.x==s2.x && s1.y<s2.y);
+            else if (da<8 && db<8 && da>=0 && db>=0)
+                return SignPrior[da]<SignPrior[db] ||
+                       SignPrior[da]==SignPrior[db] && s1.s->OldTitle<s2.s->OldTitle;
+        }
+    }
+    return false;
+}
+
+
+bool operator<(const wpbar &s1,const wpbar &s2) {
+    return false;
+}
+
+
 int __fastcall AcadExportThread::ExportRoadSigns(TDtaSource* data, TAcadExport* aexp) 
 {
 	SET_PROGRESS_FORM_POSITION(0);
 	aexp->AddLayer("RoadSigns");
 
-	std::vector<wpsign> A;
+	std::vector<wpsign> signs;
 
 	if (data) {
 		for (int i=0;i<data->Objects->Count;i++) {
@@ -435,16 +499,34 @@ int __fastcall AcadExportThread::ExportRoadSigns(TDtaSource* data, TAcadExport* 
 				TRoadSign *t=dynamic_cast<TRoadSign*>(data->Objects->Items[i]);
 				if (t) {
 					TExtPolyline *p=t->PrepareMetric(R);
-					A.push_back(wpsign(t,p));
+					signs.push_back(wpsign(t,p));
 				}
 			}
 		}
 	}
 
-	sort(A.begin(),A.end());
+	sort(signs.begin(),signs.end());
 	vector<TRoadSign*> sgrp;
-	SET_PROGRESS_FORM_MINMAX(0,A.size());
-	for (vector<wpsign>::iterator i=A.begin();i!=A.end();) {
+	SET_PROGRESS_FORM_MINMAX(0,signs.size());
+    for (int i=0;i<signs.size();++i) {
+        sgrp.clear();
+        sgrp.push_back(signs[i].s);
+        for (int j=i+1;j<signs.size();++j) {
+            if (signgroup(signs[i],signs[j])) {
+                sgrp.push_back(signs[j].s);
+                signs.erase(signs.begin() + j);
+                --j;
+            }
+        }
+        aexp->ExportSigns(signs[i].p,sgrp.begin(),sgrp.size());
+        SET_PROGRESS_FORM_MINMAX(0,signs.size());
+        SET_PROGRESS_FORM_POSITION(i);
+
+        for (int j=0;j<sgrp.size();++j) {
+            delete signs[j].p;
+        }
+    }
+	/*for (vector<wpsign>::iterator i=A.begin();i!=A.end();) {
 		if (Terminated) {
 			for (vector<wpsign>::iterator j=A.begin();j!=A.end();j++)
 				delete j->p;
@@ -453,18 +535,21 @@ int __fastcall AcadExportThread::ExportRoadSigns(TDtaSource* data, TAcadExport* 
 		sgrp.clear();
 		sgrp.push_back(i->s);
 		vector<wpsign>::iterator j;
-		for (j=i+1;j!=A.end() && signgroup(*i,*j);j++)
-			sgrp.push_back(j->s);
+		for (j=i+1;j!=A.end() && signgroup(*i,*j);j++) {
+	      sgrp.push_back(j->s);
+        }
 		aexp->ExportSigns(i->p,sgrp.begin(),sgrp.size());
 		i=j;
 		SET_PROGRESS_FORM_POSITION(i-A.begin());
-	}
-	for (vector<wpsign>::iterator i=A.begin();i!=A.end();i++)
+	}*/
+	for (vector<wpsign>::iterator i=signs.begin();i!=signs.end();i++)
 		delete i->p;
 	aexp->ExportSigns(0,0,0,true);
 	
 	return 0;
 }
+
+// ЗНАКИ
 
 int __fastcall AcadExportThread::ExportRoadMark(TDtaSource* data, TAcadExport* aexp, int lineWidth, int* leftMax, int* rightMax)
 {
