@@ -246,6 +246,7 @@ int __fastcall AcadExportThread::ExportCommunications(TDtaSource* data, TAcadExp
 int __fastcall AcadExportThread::ExportTrafficLights(TDtaSource* data, TAcadExport* aexp) 
 {
 	SET_PROGRESS_FORM_POSITION(0;)
+
 	aexp->AddLayer("RoadTrafficLights");
 
     vector<pair<TExtPolyline*, TTrafficLight*> > tlights;
@@ -263,15 +264,22 @@ int __fastcall AcadExportThread::ExportTrafficLights(TDtaSource* data, TAcadExpo
 
     vector<pair<TExtPolyline*, TTrafficLight*> > tlightGroup;
     vector<TTrafficLight*> trafficLights;
+    int progressCounter = 0;
+
+    SET_PROGRESS_FORM_MINMAX(0,tlights.size());
+
     for (int i=0;i<tlights.size();++i) {
         tlightGroup.clear();
         tlightGroup.push_back(tlights[i]);
+
+        ++progressCounter;
 
         POINT p1 = tlights[i].first->Points[0];
         // form trafficlights group
         for (int j=i+1;j<tlights.size();++j) {
             POINT p2 = tlights[j].first->Points[0];
             if (abs(p1.x - p2.x) <= 50 && abs(p1.y - p2.y) <= 50) {
+                ++progressCounter;
                 tlightGroup.push_back(tlights[j]);
                 tlights.erase(tlights.begin() + j);
                 --j;
@@ -288,6 +296,7 @@ int __fastcall AcadExportThread::ExportTrafficLights(TDtaSource* data, TAcadExpo
         for (int j=0;j<tlightGroup.size();++j) {
             delete tlightGroup[j].first;
         }
+        SET_PROGRESS_FORM_POSITION(progressCounter)
     }
 
     /*for (int i=0;i<data->Objects->Count;i++) {
@@ -506,44 +515,41 @@ int __fastcall AcadExportThread::ExportRoadSigns(TDtaSource* data, TAcadExport* 
 	}
 
 	sort(signs.begin(),signs.end());
-	vector<TRoadSign*> sgrp;
-	SET_PROGRESS_FORM_MINMAX(0,signs.size());
+	vector<pair<TExtPolyline*, TRoadSign*> > sgrp;
+    vector<TRoadSign*> signsGroup;
+
+    int progressCounter = 0;
+
+    SET_PROGRESS_FORM_MINMAX(0,signs.size());
+
     for (int i=0;i<signs.size();++i) {
         sgrp.clear();
-        sgrp.push_back(signs[i].s);
+        sgrp.push_back(make_pair(signs[i].p, signs[i].s));
+
+        ++progressCounter;
         for (int j=i+1;j<signs.size();++j) {
             if (signgroup(signs[i],signs[j])) {
-                sgrp.push_back(signs[j].s);
+                sgrp.push_back(make_pair(signs[j].p, signs[j].s));
                 signs.erase(signs.begin() + j);
                 --j;
+                ++progressCounter;
             }
         }
-        aexp->ExportSigns(signs[i].p,sgrp.begin(),sgrp.size());
-        SET_PROGRESS_FORM_MINMAX(0,signs.size());
-        SET_PROGRESS_FORM_POSITION(i);
+
+        signsGroup.clear();
+        for (int j=0;j<sgrp.size();++j) {
+            signsGroup.push_back(sgrp[j].second);
+        }
+
+        aexp->ExportSigns(signs[i].p,signsGroup.begin(),signsGroup.size());
+
+        SET_PROGRESS_FORM_POSITION(progressCounter);
 
         for (int j=0;j<sgrp.size();++j) {
-            delete signs[j].p;
+            delete sgrp[j].first;
         }
     }
-	/*for (vector<wpsign>::iterator i=A.begin();i!=A.end();) {
-		if (Terminated) {
-			for (vector<wpsign>::iterator j=A.begin();j!=A.end();j++)
-				delete j->p;
-			return -1;
-		}
-		sgrp.clear();
-		sgrp.push_back(i->s);
-		vector<wpsign>::iterator j;
-		for (j=i+1;j!=A.end() && signgroup(*i,*j);j++) {
-	      sgrp.push_back(j->s);
-        }
-		aexp->ExportSigns(i->p,sgrp.begin(),sgrp.size());
-		i=j;
-		SET_PROGRESS_FORM_POSITION(i-A.begin());
-	}*/
-	for (vector<wpsign>::iterator i=signs.begin();i!=signs.end();i++)
-		delete i->p;
+
 	aexp->ExportSigns(0,0,0,true);
 	
 	return 0;
