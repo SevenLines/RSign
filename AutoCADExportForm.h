@@ -320,8 +320,8 @@ public:		// User declarations
 
         int getIndexOfItemInComboBox(TComboBox *combo, AnsiString value, bool fAddIfNotExist);
 
-        int getTopRow(AnsiString &rowName);
-        int getBottomRow(AnsiString &rowName);
+        int getTopRow(AnsiString rowName);
+        int getBottomRow(AnsiString rowName);
 
         int setBottomAddRowsCount(int count);   /* это чтобы правильно пересчитывать позицию строк*/
         int setTopAddRowsCount(int count);      /* с учетом дополнительных строк надо вызвать по крайне мере*/

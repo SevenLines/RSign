@@ -465,12 +465,12 @@ int TFAutoCADExport::countOfUnchecksBefore(TCheckListBox *list, int iRow)
    return c;
 }
 
-int TFAutoCADExport::getTopRow(AnsiString &rowName)
+int TFAutoCADExport::getTopRow(AnsiString rowName)
 {
    return getRow(listTopRows, rowName);
 }
 
-int TFAutoCADExport::getBottomRow(AnsiString &rowName)
+int TFAutoCADExport::getBottomRow(AnsiString rowName)
 {
    return getRow(listBottomRows, rowName);
 }

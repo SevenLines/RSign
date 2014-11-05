@@ -20,10 +20,12 @@
 
 #define M_ROWPOS(t) iTop##t, iBottom##t
 
+#undef StrToInt
+
 using namespace std;
 
-#include "AutoCADPrintForm.h"
-#include "AutoCADExportForm.h"
+class KromkaObjectGroup;
+class TFAutoCADExport;
 
 struct drect {
    long double x0,y0,x1,y1;
@@ -117,8 +119,8 @@ class TAcadExport {
       int M_ROWPOS(Axe);
 
 
-      void (__closure *OutInfoLog)(AnsiString &);
-      void (__closure *ProgressChanged)(int , AnsiString &);
+      void (__closure *OutInfoLog)(AnsiString );
+      void (__closure *ProgressChanged)(int , AnsiString );
 
       __fastcall TAcadExport(void);
       __fastcall ~TAcadExport(void);
@@ -155,7 +157,7 @@ class TAcadExport {
 //      bool __fastcall ExportEmbankment(...)
       bool __fastcall ExportMoundHeight(TMoundHeight *m, int fase = 0, bool fEnd = false);
       bool __fastcall ExportRestZone(TExtPolyline *Poly,TSquareRoadSideObject_Kromka *r, bool fEnd = false);
-      bool __fastcall ExportSidewalk(TExtPolyline *Poly,TSquareRoadSideObject_Kromka *s,bool exist, bool fEnd = false);
+      bool __fastcall ExportSidewalk(KromkaObjectGroup *sidewalksGroup, bool fEnd=false);
       bool __fastcall ExportBorder(TExtPolyline *Poly,TLinearRoadSideObject *o,bool exist, bool fEnd = false);
       bool __fastcall ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool fEnd = false);
       bool __fastcall ExportCommunication(TExtPolyline *p, TCommunication *t, bool fEnd = false);

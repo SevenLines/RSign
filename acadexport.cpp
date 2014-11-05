@@ -12,6 +12,9 @@
 #include <list.h>
 #include "MickMacros.h"
 #include "ProgressFrm.h"
+#include "AcadExportObjects.h"
+#include "AutoCADExportForm.h"
+#include "AutoCADPrintForm.h"
 
 using namespace std;
 
@@ -1210,7 +1213,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     return true;
 }
 
-// возыращает кол-во знаков лежащих
+// возвращает кол-во знаков лежащих
 // около позиции pos, в пределах radius
 int TAcadExport::findSignSuperposition(TPoint pos, int radius)
 {
@@ -1380,6 +1383,7 @@ bool __fastcall TAcadExport::ExportSign(TExtPolyline *Poly,TRoadSign *s, bool fE
     if(fEnd){
         return true;
     }
+    return true;
 }
 
 // Миша, взять код разметки можно так
@@ -1511,7 +1515,7 @@ void TAcadExport::DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String
 bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int line,String code, bool fEnd) {
     bool ffind;
     float x,y,height,rot,length,yoffset,xoffset,angle, Min,Max;
-    int iRow,iPos,i;
+    int iRow,i;
     AutoCADTable *table,*table2;
     AcadPolylinePtr pl[1];
     TPoint p;
@@ -1541,8 +1545,6 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
 
 
         table2 = 0;
-
-        iPos = 0;
         iRow = -1;
 
         if(line>=-10&&line<0){
@@ -2690,7 +2692,7 @@ bool __fastcall TAcadExport::ExportRestZone(TExtPolyline *Poly,TSquareRoadSideOb
     return true;
 }
 
-bool __fastcall TAcadExport::ExportSidewalk(TExtPolyline *Poly,TSquareRoadSideObject_Kromka *s,bool exist, bool fEnd) {
+bool __fastcall TAcadExport::ExportSidewalk(KromkaObjectGroup *sidewalksGroup, bool fEnd) {
 
     if(fEnd){
         if(~iTopSidewalks)tableTop.FillLastGaps(iStep,iTopSidewalks);
@@ -2698,29 +2700,40 @@ bool __fastcall TAcadExport::ExportSidewalk(TExtPolyline *Poly,TSquareRoadSideOb
         return true;
     }
 
-    if(~iStart) {
-        if(s->LMax<iStart) return true;
-    }
-    if(~iEnd) {
-        if(s->LMin>iEnd) return true;
-    }
+    if (sidewalksGroup->objects.size()) {
+        for	(int j=0;j<sidewalksGroup->objects.size();++j) {
+            TSquareRoadSideObject_Kromka* s = sidewalksGroup->objects[j].obj;
+				
+            if(~iStart) {
+                if(s->LMax<iStart) continue;
+            }
+            if(~iEnd) {
+                if(s->LMin>iEnd) continue;
+            }
+				
+            TExtPolyline *Poly = s->PrepareMetric(sidewalksGroup->road());
 
-    AcadPolylinePtr pl[1];
-    pl[0] = DrawPolyPoints(Poly, false, true);
-    AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl,1,!exist?NotExistColor:0,strSidewalksHatch);
-    if(hatch) hatch->PatternScale = iSidewalsHatchScale;
-    AnsiString str = "а/б";
-    switch(s->Placement){
-    case spLeft:
-        tableTop.DrawRepeatTextIntervalRoadMark(iTopSidewalks,str,
-        s->LMin,s->LMax,StringConvert,iStep,true,0.43);
-        break;
-    case spRight:
-        tableBottom.DrawRepeatTextIntervalRoadMark(iBottomSidewalks,str,
-        s->LMin,s->LMax,StringConvert,iStep,true,0.43);
-        break;
+            AcadPolylinePtr pl[1];
+            pl[0] = DrawPolyPoints(Poly, false, true);
+            AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl,1,!sidewalksGroup->objects[j].exist?NotExistColor:0,strSidewalksHatch);
+            if(hatch) hatch->PatternScale = iSidewalsHatchScale;
+				
+            delete Poly;
+        }
+			
+        AnsiString str = "а/б";
+        switch(sidewalksGroup->objects[0].obj->Placement){
+        case spLeft:
+            tableTop.DrawRepeatTextIntervalRoadMark(iTopSidewalks,str,
+                sidewalksGroup->min(),sidewalksGroup->max(),StringConvert,iStep,true,0.43);
+            break;
+        case spRight:
+            tableBottom.DrawRepeatTextIntervalRoadMark(iBottomSidewalks,str,
+                sidewalksGroup->min(),sidewalksGroup->max(),StringConvert,iStep,true,0.43);
+            break;
+        }
+			
     }
-
     return true;
 }
 

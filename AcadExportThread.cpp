@@ -11,6 +11,9 @@
 #pragma package(smart_init)
 
 #include "MickMacros.h"
+#include "AcadExportObjects.h"
+#include "AutoCADExportForm.h"
+#include "DataSour.h"
 //---------------------------------------------------------------------------
 
 //   Important: Methods and properties of objects in VCL can only be
@@ -74,13 +77,13 @@ Synchronize(addProgressFormLogLine);
      ProgressFormLogLine = line;    \
     Synchronize(addProgressFormLogLine);
 
-void AcadExportThread::OutInfoLog(AnsiString &str)
+void AcadExportThread::OutInfoLog(AnsiString str)
 {
     SET_PROGRESS_FORM_CAPTION(str);
 }
 
 
-void AcadExportThread::ProgressChanged(int progress, AnsiString &message)
+void AcadExportThread::ProgressChanged(int progress, AnsiString message)
 {
     SET_PROGRESS_FORM_POSITION(progress);
 }
@@ -735,21 +738,53 @@ int __fastcall AcadExportThread::ExportSignal(vector<pair<int,wpbar> > &data, TA
 	return 0;
 }
 
+
 int __fastcall AcadExportThread::ExportSidewalks(vector<pair<int,wpbar> > &data, TAcadExport* aexp) 
 {
 	SET_PROGRESS_FORM_POSITION(0)
-	aexp->AddLayer("Sidewalks");
+	aexp->AddLayer("RoadSidewalks");
 	
-	for (vector<pair<int,wpbar> >::iterator i=data.begin();i!=data.end();i++) {
-		if (Terminated) return -1;
-		SET_PROGRESS_FORM_POSITION((i - data.begin()));
-		if (i->second.w) {
-			TExtPolyline *p=i->second.w->PrepareMetric(R);
-			aexp->ExportSidewalk(p,i->second.w,i->second.exist);
-			delete p;
+    vector<KromkaObject> sidewalks;
+	vector<KromkaObjectGroup> sidewalksGroups;
+    // формируем массив тротуаров, чтобы убрать пересечения
+    for(int i=0;i<data.size();++i) {
+        if (data[i].second.w) {
+          KromkaObject k;
+          k.obj = data[i].second.w;
+          k.exist = data[i].second.exist;
+          sidewalks.push_back(k);
+        }
+    }
+	
+	// формируем группы
+	for(int i=0;i<sidewalks.size();++i) {
+		KromkaObject &obj1 = sidewalks[i];
+		sidewalksGroups.push_back(KromkaObjectGroup(R));
+		sidewalksGroups.back().addObject(obj1);
+		for(int j=i+1;j<sidewalks.size();++j) {
+			KromkaObject &obj2 = sidewalks[j];
+			if (sidewalksGroups.back().isOverlap(obj2)) {
+				sidewalksGroups.back().addObject(obj2);
+				sidewalks.erase(sidewalks.begin() + j);
+				--j;
+			}
 		}
 	}
-	aexp->ExportSidewalk(0,0,0,true);
+
+    SET_PROGRESS_FORM_MINMAX(0,sidewalksGroups.size());
+	// выводим тротуары группами
+	for(int i=0;i<sidewalksGroups.size();++i) {
+		aexp->ExportSidewalk(&sidewalksGroups[i]);
+        SET_PROGRESS_FORM_POSITION(i)
+	}
+	/*for(int i=0;i<sidewalks.size();++i) {
+		TExtPolyline* p = sidewalks[i].obj->PrepareMetric(R);
+		aexp->ExportSidewalk(p,sidewalks[i].obj,sidewalks[i].exist);
+		delete p;
+	}*/
+	
+	aexp->ExportSidewalk(0,true);
+    
 	return 0;
 }
 
