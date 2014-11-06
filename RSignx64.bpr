@@ -19,7 +19,7 @@
       ErrorObjectDlg.obj acadexport.obj AutoCADHelper.obj AutoCADPrintForm.obj 
       AutoCADExportForm.obj unSignalsInsert.obj AcadExportThread.obj 
       AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj 
-      MiniReports.obj ItemSelectDialog.obj"/>
+      MiniReports.obj ItemSelectDialog.obj AcadExportObjects.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -156,6 +156,7 @@
       <FILE FILENAME="Utils.cpp" FORMNAME="" UNITNAME="Utils" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="MiniReports.cpp" FORMNAME="" UNITNAME="MiniReports" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ItemSelectDialog.cpp" FORMNAME="Form1" UNITNAME="ItemSelectDialog" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="AcadExportObjects.cpp" FORMNAME="" UNITNAME="AcadExportObjects" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

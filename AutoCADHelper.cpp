@@ -1185,7 +1185,7 @@ AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, ve
 		try {
 			tempBlock = cadActiveDocument->Blocks->Item(Variant(blocksNames[i]));
 		} catch(...) {
-			continue;
+			BUILDER_ERROR("Ѕлок '" << AnsiString(blocksNames[i]).c_str() << "' не найден");
 		}
 		if (newBlockName!="") newBlockName+="_";
 		newBlockName += blocksNames[i];
