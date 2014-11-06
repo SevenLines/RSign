@@ -90,6 +90,8 @@ int LBase(void)
     {return (Val>>8)&15;}
 int XBase(void)
     {return (Val>>12)&15;}
+void SetXBase(int xb) {
+    Val=(Val&0xFFFF0FFF)|((xb&15)<<12);}
 bool Polar(void)
     {return (Val>>16)&1;}
 bool BaseFixed1(void)

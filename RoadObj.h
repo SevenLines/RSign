@@ -1065,7 +1065,10 @@ void __fastcall CalcPointPos(TPolyline*,int i,TRoadObject*);
 void __fastcall SetPointPos(TPolyline *Poly,int i,TRoadObject *RefObj,int &ind1,int &ind2);
 void __fastcall CalcPointsPos(TPolyline*,TRoadObject *);
 void __fastcall CalcPointParam(TRoadPoint &p,__int32 BaseL,__int32 BaseX);
-void __fastcall GetBase(TPolyline *Poly,int i,TRoadObject *RefObj,__int32 &BaseL,__int32 &BaseX);
+//Старый вариант функции
+//void __fastcall GetBase(TPolyline *Poly,int i,TRoadObject *RefObj,__int32 &BaseL,__int32 &BaseX);
+void __fastcall GetBaseL(TPolyline *Poly,int i,TRoadObject *RefObj,__int32 &BaseL);
+void __fastcall GetBaseX(TPolyline *Poly,int i,TRoadObject *RefObj,__int32 L,__int32 &BaseX);
 virtual TExtPolyline* __fastcall GetProfilMetric(TRect &OutRect);
 void __fastcall CalcMinMaxZ(void)
     {Geometry.GetMinMaxZ(FZMin,FZMax);

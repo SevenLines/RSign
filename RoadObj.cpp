@@ -2145,18 +2145,21 @@ __int32 BaseL,BaseX;
 int n=Poly->Count;
 TRoadPoint *p=Poly->Points;
 TPointCode Code=p[i].Code;
-GetBase(Poly,i,RefObj,BaseL,BaseX);
+//GetBase(Poly,i,RefObj,BaseL,BaseX);
+GetBaseL(Poly,i,RefObj,BaseL);
 if (Code.Polar())
     {
     double angle=(p[i].BasePar1*M_PI)/180000;
     double sina=sin(angle);
     double cosa=cos(angle);
     p[i].L=BaseL+cosa*p[i].BasePar2;
+    GetBaseX(Poly,i,RefObj,p[i].L,BaseX);
     p[i].X=BaseX+sina*p[i].BasePar2;
     }
 else
     {
     p[i].L=BaseL+p[i].BasePar1;
+    GetBaseX(Poly,i,RefObj,p[i].L,BaseX);    
     p[i].X=BaseX+p[i].BasePar2;
     }
 int leep=Code.Leep();
@@ -2266,7 +2269,49 @@ else
     {
     }
 }
-
+void __fastcall TRoad::GetBaseL(TPolyline *Poly,int i,TRoadObject *RefObj,__int32 &BaseL) {
+    BaseL=0;
+    int n=Poly->Count;
+    TRoadPoint *p=Poly->Points;
+    TPointCode Code=p[i].Code;
+    int pred_i=(i+n-1)%n;
+    int next_i=(i+1)%n;
+    TRoadObject *ParObj=RefObj->Parent;
+    if (ParObj==NULL)
+        ParObj=RefObj;
+    switch (Code.LBase()) {
+        case 1: BaseL=RefObj->L; break;
+        case 2: BaseL=RefObj->LMax; break;
+        case 3: BaseL=p[pred_i].L;break;
+        case 4: BaseL=p[next_i].L;break;
+        case 5: BaseL=ParObj->L; break;
+        case 6: BaseL=ParObj->LMax; break;
+    }
+}
+void __fastcall TRoad::GetBaseX(TPolyline *Poly,int i,TRoadObject *RefObj,__int32 L,__int32 &BaseX)
+{
+BaseX=0;
+int n=Poly->Count;
+TRoadPoint *p=Poly->Points;
+TPointCode Code=p[i].Code;
+int pred_i=(i+n-1)%n;
+int next_i=(i+1)%n;
+TRoadObject *ParObj=RefObj->Parent;
+if (ParObj==NULL)
+    ParObj=RefObj;
+switch (Code.XBase())
+    {
+    case 1: BaseX=RightSide.FindX(L); break;
+    case 2: BaseX=LeftSide.FindX(L); break;
+    case 3: BaseX=RightLine.FindX(L); break;
+    case 4: BaseX=LeftLine.FindX(L); break;
+    case 5: BaseX=XMax;break;
+    case 6: BaseX=XMin;break;
+    case 7: BaseX=p[pred_i].X;break;
+    case 8: BaseX=p[next_i].X;break;
+    }
+}
+/*
 void __fastcall TRoad::GetBase(TPolyline *Poly,int i,TRoadObject *RefObj,__int32 &BaseL,__int32 &BaseX)
 {
 BaseL=0;
@@ -2300,6 +2345,7 @@ switch (Code.XBase())
     case 8: BaseX=p[next_i].X;break;
     }
 }
+*/
 
 void __fastcall TRoad::CalcPointParam(TRoadPoint &p,__int32 BaseL,__int32 BaseX)
 {
@@ -2340,7 +2386,9 @@ void __fastcall TRoad::SetPointPos(TPolyline *Poly,int i,TRoadObject *RefObj,int
 __int32 BaseL,BaseX;
 int n=Poly->Count;
 TRoadPoint *p=Poly->Points;
-GetBase(Poly,i,RefObj,BaseL,BaseX);
+//GetBase(Poly,i,RefObj,BaseL,BaseX);
+GetBaseL(Poly,i,RefObj,BaseL);
+GetBaseX(Poly,i,RefObj,p[i].L,BaseX);
 CalcPointParam(p[i],BaseL,BaseX);
 CalcPointPos(Poly,i,RefObj);
 if (n>1)           // Считаем интервал точек, которые изменятся после изменения текущей точки

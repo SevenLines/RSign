@@ -26,6 +26,13 @@ if ((Mes.Msg==CM_DATARELOAD)||(Mes.Msg==CM_REMOVEOBJ)||(Mes.Msg==CM_INSERTOBJ)||
                 BuildObjectList(ClTree->Selected);
     return;
     }
+else if (Mes.Msg==CM_CHANGEVIS) {
+    if (Data)
+        if (Mes.LParam==(int)Data)
+            if (ClTree->Selected)
+               NeedRebuild=true;
+    return;
+}
 else if (Mes.Msg==CM_CLOSEDATASOURCE)
     {
     if (Data)

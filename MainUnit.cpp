@@ -1174,3 +1174,11 @@ void __fastcall TMainForm::N81Click(TObject *Sender)
 //---------------------------------------------------------------------------
 
 
+void __fastcall TMainForm::N83Click(TObject *Sender)
+{
+TMenuItem *it=(TMenuItem*)Sender;
+if (FActiveRoad)
+   FActiveRoad->ConnectToBaseLine(it->Tag);
+}
+//---------------------------------------------------------------------------
+
