@@ -441,6 +441,7 @@ public:         // User declarations
     void __fastcall ContinueMarkLine(void);   // Создает новый объект разметки, продолжая текущий
     void __fastcall NewMarkLine(void);        // Создает новый объект разметки. Если выделена разметка, то ее можно дублировать
     void __fastcall MoveActiveObject(void);
+    void __fastcall ConnectToBaseLine(int ln); //Привязывает объекты к линии (кромка или ось)
     void __fastcall MoveObjects(void);
     void __fastcall AddNewObject(void);
     void __fastcall AddNewObject(int DictId);

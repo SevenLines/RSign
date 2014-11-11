@@ -237,6 +237,7 @@ void __fastcall DeleteChildObjects(TRoadObject *robj);
 void __fastcall DeleteObject(int index);
 void __fastcall MoveAllObjects(int len,TRoad *RefRoad);
 void __fastcall MoveSelectedObjects(int len,TRoad *RefRoad);
+void __fastcall ConnectSelectedToBaseLine(int ln,TRoad *RefRoad);
 void __fastcall MoveVideo(int len);
 // Функция добавляет объект в отсортированный список
 void __fastcall AddRoadObject(TRoadObject *obj);

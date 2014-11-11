@@ -1775,6 +1775,38 @@ void __fastcall TDtaSource::MoveSelectedObjects(int len,TRoad *RefRoad) {
          if (ob->Poly) {
             ob->Poly->Move(len*100);
             ob->PostEditPoly();
+            MainForm->SendBroadCastMessage(CM_CHANGESEL,(int)ob,(int)this);
+         }
+      }
+   }
+   SortByPlacement();
+   CalcMetrics(RefRoad);
+}
+
+void __fastcall TDtaSource::ConnectSelectedToBaseLine(int ln,TRoad *RefRoad) {
+   int n=FObjects->Count;
+   TRoadObject **FList=(TRoadObject**)FObjects->List;
+   for (int i=0;i<n;i++) {
+      TRoadObject *ob=dynamic_cast<TRoadObject*>(FList[i]);
+      if (ob && ob->Selected) {
+         ob->Selected=false;
+         MainForm->SendBroadCastMessage(CM_CHANGESEL,(int)ob,(int)this);         
+         if (ob->DictId==ROADMETRIC) { // С кромкой ничего не делаем
+            TRoadSideObject *rs=dynamic_cast<TRoadSideObject *>(ob);
+            if (rs && rs->MetricsKind==mkKromka)
+                continue;
+         }
+         if (ob->Poly) {
+            TRoadPoint *p=ob->Poly->Points;
+            for (int i=0;i<ob->Poly->Count;i++) {
+                int BaseL,BaseX;
+                if (p[i].Code.XBase()<=4)
+                   p[i].Code.SetXBase(ln==1 ? (p[i].X<0 ? 4 : 3) : 0);
+                RefRoad->GetBaseL(ob->Poly,i,ob,BaseL);
+                RefRoad->GetBaseX(ob->Poly,i,ob,p[i].L,BaseX);
+                RefRoad->CalcPointParam(p[i],BaseL,BaseX);
+            }
+            ob->PostEditPoly();
          }
       }
    }
@@ -1800,6 +1832,7 @@ void __fastcall TDtaSource::MoveAllObjects(int len,TRoad *RefRoad) {
    }
    SortByPlacement();
    CalcMetrics(RefRoad);
+   MainForm->SendBroadCastMessage(CM_CHANGESEL,RefRoad->Id,0);
 }
 
 void __fastcall TDtaSource::MoveVideo(int len) {

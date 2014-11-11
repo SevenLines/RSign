@@ -204,7 +204,7 @@ void __fastcall TRoadFrm::Initialize(TDictSource *dict,TSharedObjSource *shared)
 	FLayersCont=new TDrawBitmap;
 	SelectRect=new TSelectRect(PBox->Canvas);
 	SelectObj=new TSelectObj(PBox->Canvas,FDrawMan);
-	ShowPanels();
+	ShowPanels();                                                                           
 }
 
 void __fastcall TRoadFrm::OpenView(__int32 RoadId,__int32 ViewId,TDictSource *dict,TSharedObjSource *shared)
@@ -1478,7 +1478,7 @@ void __fastcall TRoadFrm::UpdateActiveObject(bool leep)
 	{
 		TDescreetRoadObject *dobj=dynamic_cast<TDescreetRoadObject*>(FActiveObj);
 		TContRoadObject *cobj=dynamic_cast<TContRoadObject*>(FActiveObj);
-		int DL=FDrawMan->BaseScaleL/20; // точки хватаются в пределах 0.5 мм.
+		int DL=max(FDrawMan->BaseScaleL,FSclL)/KFLEEP; // точки хватаются в пределах 0.5 мм.
 		if (dobj)
 		{
 			__int32 L,X;
@@ -1516,7 +1516,7 @@ void __fastcall TRoadFrm::UpdateActiveObject(bool leep)
 				FDrawMan->Road->RConvertPoint(0,FGridMaxX,L,X);
 			}
 			if (leep)
-			FDrawMan->FindNearestL(L,dobj,DL);
+			FDrawMan->FindNearestL(L,cobj,DL);
 			if (FMinMov)
 			{
 				if (L<cobj->LMax)
@@ -2534,6 +2534,10 @@ void __fastcall TRoadFrm::MoveObjects(void) {
 	}
 }
 
+void __fastcall TRoadFrm::ConnectToBaseLine(int ln) {
+    if (FEditedData && FMetricData)
+       FEditedData->ConnectSelectedToBaseLine(ln,FEditedData->Road);
+}
 
 void __fastcall TRoadFrm::CalculateRoadMarkLength(void)
 {
@@ -2804,7 +2808,7 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 			int SelCount=FDrawMan->SelectByXY(X,Y,SelObjs,SelSrc,DrwIndexes,MAXSEL);
 			TRoadSign *tempSign = 0;
 			for (int i=0;i<SelCount;i++) {
-				if (0==(tempSign = dynamic_cast<TRoadSign*>(SelObjs[i]))) {
+				if (0!=(tempSign = dynamic_cast<TRoadSign*>(SelObjs[i]))&& tempSign!=s ) {
 					break;
 				}
 			}
@@ -3331,7 +3335,7 @@ int X, int Y)
 	if ((ZoomStatus==zsWaitPoint)||((ZoomStatus==zsWaitSecPoint)))
 	{
 		if (Shift.Contains(ssShift))
-		FDrawMan->LeepPoint(X,Y,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
+		   FDrawMan->LeepPoint(X,Y,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
 		MoveCurrentPoint(X,Y);
 	}
 	else if (ZoomStatus==zsZoom)
@@ -3357,12 +3361,12 @@ int X, int Y)
 	{
 		int CX=X+FMovePtDX;
 		int CY=Y+FMovePtDY;
-		//    if (Shift.Contains(ssShift))
-		//            FDrawMan->LeepPoint(CX,CY,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
 		TRoadPoint P=(*FPoly)[FActivePoint];
 		FDrawMan->Road->RConvertPoint(CX,CY,P.L,P.X);
-		if (Shift.Contains(ssShift))
-		FDrawMan->FindNearestL(P.L,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
+		if (Shift.Contains(ssShift)) {
+		   if (0==FDrawMan->FindNearestLX(P.L,P.X,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP))
+              FDrawMan->FindNearestL(P.L,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
+        }
 		SetPoint(P,FActivePoint);
 		PolyFrm->UpdatePoint(FActivePoint);
 		PBox->Invalidate();
@@ -3390,7 +3394,7 @@ int X, int Y)
 		{
 			int Val;
 			if (FMoving&&Shift.Contains(ssShift))
-			FDrawMan->LeepPoint(X,Y,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
+			   FDrawMan->LeepPoint(X,Y,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
 			if (FPlanKind==pkGorizontal)
 			Val=X;
 			else

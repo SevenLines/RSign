@@ -3329,22 +3329,23 @@ void __fastcall TDrawManager::StopDrawing(void)
 TRoadObject* __fastcall TDrawManager::FindNearestL(__int32 &L,TRoadObject *obj,__int32 DL)
 {
 TRoadObject *res=NULL;
-__int32 NewL;
+__int32 NewL,newPrior=0,maxL=DL;
 for (int i=0;i<ObjCount;i++)
     {
     TRoadObject *robj=Objs[i];
+    int prior=obj!=0 && robj->ClassType()==obj->ClassType();
     if (robj!=obj)
         {
         TContRoadObject *cobj=dynamic_cast<TContRoadObject*>(robj);
         if (cobj)
             {
             int d=abs(L-cobj->LMax);
-            if (d<DL)
-                DL=d,NewL=cobj->LMax,res=cobj;
+            if ((d<DL && prior==newPrior || prior>newPrior) && d<maxL)
+                DL=d,NewL=cobj->LMax,res=cobj,newPrior=prior;
             }
         int d=abs(L-robj->L);
-        if (d<DL)
-            DL=d,NewL=robj->L,res=robj;
+        if ((d<DL && prior==newPrior || prior>newPrior) && d<maxL)
+            DL=d,NewL=robj->L,res=robj,newPrior=prior;
         TPolyline *Poly=robj->Poly;
         if (Poly)
             {
@@ -3352,8 +3353,8 @@ for (int i=0;i<ObjCount;i++)
             for (int i=0;i<n;i++)
                 {
                 int d=abs(L-(*Poly)[i].L);
-                if (d<DL)
-                    DL=d,NewL=(*Poly)[i].L,res=robj;
+                if ((d<DL && prior==newPrior || prior>newPrior) && d<maxL)
+                    DL=d,NewL=(*Poly)[i].L,res=robj,newPrior=prior;
                 }
             }
         }
@@ -3363,11 +3364,40 @@ if (res)
 return res;
 }
 
+
+TRoadObject* __fastcall TDrawManager::FindNearestLX(__int32 &L,__int32 &X, TRoadObject *obj,__int32 DL)
+{
+TRoadObject *res=NULL;
+__int32 newL,newX;
+for (int i=0;i<ObjCount;i++)
+    {
+    TRoadObject *robj=Objs[i];
+    if (robj!=obj)
+        {
+        TPolyline *Poly=robj->Poly;
+        if (Poly)
+            {
+            int n=Poly->Count;
+            for (int i=0;i<n;i++)
+                {
+                int d=abs(L-(*Poly)[i].L)+abs(X-(*Poly)[i].X);
+                if (d<DL)
+                    DL=d,newL=(*Poly)[i].L,newX=(*Poly)[i].X,res=robj;
+                }
+            }
+        }
+    }
+if (res)
+   L=newL,X=newX;
+return res;
+}
+
+
 void __fastcall TDrawManager::LeepPoint(int& PX,int &PY,TRoadObject *obj,__int32 DL)
 {
 int L,X;
 Road->RConvertPoint(PX,PY,L,X);
-if (FindNearestL(L,obj,DL))
+if (FindNearestLX(L,X,obj,2*DL)!=0 || FindNearestL(L,obj,DL)!=0)
     Road->ConvertPoint(L,X,PX,PY);
 }
 

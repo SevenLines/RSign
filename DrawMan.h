@@ -272,7 +272,11 @@ void virtual __fastcall StopDrawing(void);
 int virtual __fastcall SelectByXY(__int32 X,__int32 Y,TRoadObject** Array,TDtaSource **Src,int *Indexes,int max);
 // функция находит точку ближайшую к L, не дальше чем на расстоянии DL
 // во всех объектах, кроме obj. В случае успеха изменяет точку и возвращает true
+// При этом предпочтение отдается объектам того же типа что obj
 TRoadObject* __fastcall FindNearestL(__int32 &L,TRoadObject *obj,__int32 DL);
+// функция находит точку ближайшую к L,X не дальше чем на расстоянии DL
+// во всех объектах, кроме obj. В случае успеха изменяет точку и возвращает true
+TRoadObject* __fastcall FindNearestLX(__int32 &L,__int32 &X, TRoadObject *obj,__int32 DL);
 // функция изменяет координаты экранной точки, так, чтобы она прилипала
 // к объекту найденному с помощью FindNearestL
 void __fastcall LeepPoint(int& PX,int &PY,TRoadObject *obj,__int32 DL);
