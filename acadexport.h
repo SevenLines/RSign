@@ -180,7 +180,9 @@ class TAcadExport {
       void __fastcall DrawGrid(int step);
       void DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName);
 
-      AcadPolylinePtr DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes = true, bool fLockGaps = false);
+      AcadPolylinePtr DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes = true, bool fLockGaps = false,
+                        void(*lineEditFunction)(AcadPolylinePtr&, void* data)=0, void* data=0);
+                        
       AcadPolylinePtr DrawPolyLine(vector<double> &points);
       AcadPolylinePtr DrawRoadMark(TExtPolyline *Poly, AnsiString name,
                                  int iRow, int line, AutoCADTable *table);
