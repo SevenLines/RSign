@@ -146,6 +146,7 @@ public:		// User declarations
        enum PrintType {ptDWG, ptPDF};
 
        void Print(PrintType printType = ptPDF);
+       void ChangeFramePosition();
        
        bool BeginPrint();
        bool PauseLastFramePrint(std::list<AnsiString> &fileNames);
