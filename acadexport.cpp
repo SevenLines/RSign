@@ -2337,6 +2337,8 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool
         if(s->LMin>iEnd) return true;
     }
 
+    float scale = ((float)ScaleY / 2) * 100;
+
     AcadBlockReferencePtr block;
 
     int count = Poly->Count;
@@ -2350,7 +2352,7 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool
                 tableBottom.DrawRepeatTextIntervalRoadMark(iBottomBarriers,"1",s->LMin,s->LMin+100,StringConvert,iStep,true,0.43);
                 break;
             }
-            block = AutoCAD.DrawBlock("signalpost",Poly->Points[0].x, -ScaleY*Poly->Points[0].y, 0,300);
+            block = AutoCAD.DrawBlock("signalpost",Poly->Points[0].x, -ScaleY*Poly->Points[0].y, 0, scale);
             if(!exist) block->color = NotExistColor;
         }else if(s->Count>1&&count>1){
 
@@ -2390,7 +2392,7 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool
                 tx = Poly->Points[iCur].x - Poly->Points[iCur-1].x;
                 ty = -ScaleY*(Poly->Points[iCur].y - Poly->Points[iCur-1].y);
                 signalsPos[signalsPosCount] = Poly->Points[iCur-1].x+k*tx;
-                block = AutoCAD.DrawBlock("signalpost",signalsPos[signalsPosCount], -ScaleY*Poly->Points[iCur-1].y +k*ty, 0,300);
+                block = AutoCAD.DrawBlock("signalpost",signalsPos[signalsPosCount], -ScaleY*Poly->Points[iCur-1].y +k*ty, 0, scale);
                 if(!exist) block->color = NotExistColor;
                 signalsPosCount++;
             }
@@ -2408,9 +2410,9 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool
             }
 
 
-            block = AutoCAD.DrawBlock("signalpost",Poly->Points[0].x, -ScaleY*Poly->Points[0].y, 0,300);
+            block = AutoCAD.DrawBlock("signalpost",Poly->Points[0].x, -ScaleY*Poly->Points[0].y, 0, scale);
             if(!exist) block->color = NotExistColor;
-            block = AutoCAD.DrawBlock("signalpost",Poly->Points[count-1].x, -ScaleY*Poly->Points[count-1].y, 0,300);
+            block = AutoCAD.DrawBlock("signalpost",Poly->Points[count-1].x, -ScaleY*Poly->Points[count-1].y, 0, scale);
             if(!exist) block->color = NotExistColor;
             delete[] length;
             delete[] signalsPos;
