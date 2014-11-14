@@ -292,6 +292,7 @@ bool __fastcall TMainForm::OpenRoadById(__int32 id,__int32 dataclass,bool OpenCo
 			Shared=new TDBSharedObjSource(Connection);
 			Shared->Load();
 		}
+
 		//    int SourType=DBDataModule->GetSourceType(dataclass);
 		TDictSource *Dict=ResManager->AddDictSource(0,Connection);
 		TDtaSource *Data;

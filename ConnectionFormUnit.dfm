@@ -46,7 +46,7 @@ object ConnectionForm: TConnectionForm
       Width = 233
       Height = 24
       Anchors = [akLeft, akTop, akRight]
-      TabOrder = 0
+      TabOrder = 1
     end
     object edtPassword: TEdit
       Left = 112
@@ -54,7 +54,7 @@ object ConnectionForm: TConnectionForm
       Width = 233
       Height = 24
       Anchors = [akLeft, akTop, akRight]
-      TabOrder = 1
+      TabOrder = 2
     end
     object chkAsLocalUser: TCheckBox
       Left = 8
@@ -62,7 +62,7 @@ object ConnectionForm: TConnectionForm
       Width = 209
       Height = 17
       Caption = #1044#1086#1074#1077#1088#1080#1090#1077#1083#1100#1085#1086#1077' '#1089#1086#1077#1076#1080#1085#1077#1085#1080#1077
-      TabOrder = 2
+      TabOrder = 0
       OnClick = chkAsLocalUserClick
     end
   end
@@ -92,7 +92,7 @@ object ConnectionForm: TConnectionForm
       Width = 105
       Height = 24
       Anchors = [akLeft, akTop, akRight]
-      TabOrder = 1
+      TabOrder = 2
       Text = 'SQLOLEDB.1'
     end
     object btnConnectToSever: TButton
@@ -101,7 +101,7 @@ object ConnectionForm: TConnectionForm
       Width = 41
       Height = 25
       Caption = 'X'
-      TabOrder = 2
+      TabOrder = 1
       OnClick = btnConnectToSeverClick
     end
   end
@@ -146,7 +146,7 @@ object ConnectionForm: TConnectionForm
       Anchors = [akRight, akBottom]
       Caption = #1054#1090#1084#1077#1085#1072
       ModalResult = 2
-      TabOrder = 0
+      TabOrder = 1
     end
     object Panel4: TPanel
       Left = 0
@@ -155,7 +155,7 @@ object ConnectionForm: TConnectionForm
       Height = 41
       Align = alLeft
       BevelOuter = bvNone
-      TabOrder = 1
+      TabOrder = 0
       DesignSize = (
         249
         41)
@@ -173,7 +173,7 @@ object ConnectionForm: TConnectionForm
         Height = 25
         Anchors = [akLeft, akBottom]
         Caption = #1057#1086#1077#1076#1080#1085#1080#1090#1100
-        TabOrder = 0
+        TabOrder = 1
         OnClick = btnConnectClick
       end
       object btnTest: TButton
@@ -183,9 +183,15 @@ object ConnectionForm: TConnectionForm
         Height = 25
         Anchors = [akLeft, akBottom]
         Caption = #1058#1077#1089#1090
-        TabOrder = 1
+        TabOrder = 0
         OnClick = btnTestClick
       end
     end
+  end
+  object TimerComboInitialCatalog: TTimer
+    Interval = 750
+    OnTimer = TimerComboInitialCatalogTimer
+    Left = 8
+    Top = 152
   end
 end

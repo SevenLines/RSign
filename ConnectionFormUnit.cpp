@@ -4,6 +4,7 @@
 #pragma hdrstop
 
 #include "ConnectionFormUnit.h"
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -13,6 +14,8 @@ __fastcall TConnectionForm::TConnectionForm(TComponent* Owner)
     : TForm(Owner)
 {
     mConnection = new TADOConnection(this);
+    fTryToConnect = false;
+    fCheckDatabaseList = false;
 }
 //---------------------------------------------------------------------------
 void TConnectionForm::loadIni(TIniFile *ini)
@@ -37,58 +40,78 @@ void TConnectionForm::saveIni(TIniFile *ini)
     ini->WriteBool("ConnectionForm", "AsLocalUser", chkAsLocalUser->Checked);
 }
 //---------------------------------------------------------------------------
-void TConnectionForm::fillSchemasList(TADOConnection *connection)
+void __fastcall TConnectionForm::ThreadOnTerminate(TObject *object)
 {
-    if (connection->Connected) {
-        WideString lastDataBaseName = cmbInitialCatalog->Text;
-        int selectedIndex = -1;
-        
-        TADODataSet* response = new TADODataSet(0);
-
-        OleVariant ErrorParam;
-        ErrorParam.VType = VT_ERROR;
-        //EmptyParam.VError = DISP_E_PARAMNOTFOUND;
-        connection->OpenSchema(siCatalogs, OleVariant(), ErrorParam, response);
-
-        cmbInitialCatalog->Clear();
-        response->Open();
-        response->First();
-        int recordNum = 0;
-        while(!response->Eof) {
-            AnsiString dbName = response->FieldByName("CATALOG_NAME")->AsString;
-            if (dbName == lastDataBaseName) {
-                selectedIndex = recordNum;
+    TConnectionFormThread* thread = dynamic_cast<TConnectionFormThread*>(object);
+    if (thread && thread == this->thread) {
+        AnsiString lastDataBaseName;
+        int selectedIndex;
+        vector<AnsiString> lst;
+        switch(thread->action) {
+        case cfaGetSchemasList:
+            lst = thread->SchemasList();
+            lastDataBaseName = cmbInitialCatalog->Text;
+            cmbInitialCatalog->Clear();
+            selectedIndex = -1;
+            for (int i=0;i<lst.size();++i) {
+                cmbInitialCatalog->AddItem(lst[i], 0);
+                if (lst[i] == lastDataBaseName) {
+                    selectedIndex = i;
+                }
             }
-            ++recordNum;
-            cmbInitialCatalog->AddItem(dbName, 0);
-            response->Next();
+            cmbInitialCatalog->ItemIndex = selectedIndex;
+            break;
         }
-        response->Close();
-
-        delete response;
-
-        cmbInitialCatalog->ItemIndex = selectedIndex;
+        this->thread = 0;
+        cmbInitialCatalog->Enabled = true;
+        toggleComboInitialCatalog(true);
     }
+
+}
+
+void __fastcall TConnectionForm::ConnectComplete(TADOConnection* Connection,
+        const _di_Error Error, TEventStatus &EventStatus)
+{
+    fTryToConnect = false;
+    toggleComboInitialCatalog(true);
+    lblSuccess->Color = Connection->Connected ? clGreen : clRed;
+    if (Connection->Connected && fCheckDatabaseList) {
+        fillSchemasList(Connection);
+    }
+    //mConnection->Errors
 }
 //---------------------------------------------------------------------------
-bool TConnectionForm::testConnection(bool checkDatabaseList)
+void TConnectionForm::fillSchemasList(TADOConnection *connection)
 {
-    mConnection->Close();
+    TConnectionFormThread *thread = new TConnectionFormThread(true);
+    thread->OnTerminate = ThreadOnTerminate;
+    thread->action = cfaGetSchemasList;
+    toggleComboInitialCatalog(false);
+
+    this->thread = thread;
+    thread->Connection = connection;
+    thread->Resume();
+}
+//---------------------------------------------------------------------------
+bool TConnectionForm::testConnection(bool checkDatabaseList, bool async)
+{
+
     lblSuccess->Color = clRed;
     Application->ProcessMessages();
     Sleep(100);
-    mConnection->ConnectionString = getConnectionString(checkDatabaseList);
-    try {
-        mConnection->LoginPrompt = false;
-        mConnection->Open();
-    } catch (Exception* e) {
-        ShowMessage(e->Message);
-    }
-    lblSuccess->Color = mConnection->Connected ? clGreen : clRed;
 
-    if (mConnection->Connected  && checkDatabaseList) {
-        fillSchemasList(mConnection);
-    }
+    mConnection->Close();
+    mConnection->ConnectionString = getConnectionString(checkDatabaseList);
+
+    fTryToConnect = true;
+    fCheckDatabaseList = checkDatabaseList && async;
+
+
+    mConnection->ConnectOptions = async ? coAsyncConnect : coConnectUnspecified;
+    mConnection->OnConnectComplete = ConnectComplete;
+    mConnection->LoginPrompt = false;
+    toggleComboInitialCatalog(false);
+    mConnection->Open();
 
     return mConnection->Connected;
 
@@ -96,7 +119,7 @@ bool TConnectionForm::testConnection(bool checkDatabaseList)
 //---------------------------------------------------------------------------
 bool TConnectionForm::connect()
 {
-    if (!testConnection()) {
+    if (!testConnection(false, false)) {
         ShowMessage("Не могу подсоединится!");
         return false;
     }
@@ -116,6 +139,7 @@ bool TConnectionForm::connect()
 void TConnectionForm::setInitConnection(TADOConnection *connection)
 {
     mInitConnection = connection;
+    updateInterface();
     if (connection) {
         bool userID_is_Set = false;
         for(char* tok = strtok(AnsiString(connection->ConnectionString).c_str(), ";"); tok; tok = strtok(NULL, ";"))  {
@@ -123,9 +147,9 @@ void TConnectionForm::setInitConnection(TADOConnection *connection)
             if (str.Pos("Initial Catalog=")) {
                 cmbInitialCatalog->Text = str.Delete(1, strlen("Initial Catalog="));
             }
-            if (str.Pos("User Id=")) {
+            if (str.Pos("User ID=")) {
                 userID_is_Set = true;
-                edtUserID->Text = str.Delete(1, strlen("UserId="));
+                edtUserID->Text = str.Delete(1, strlen("User ID="));
             }
             if (str.Pos("Provider=")) {
                 edtProvider->Text = str.Delete(1, strlen("Provider="));
@@ -140,7 +164,6 @@ void TConnectionForm::setInitConnection(TADOConnection *connection)
         }
     }
 
-    updateInterface();
 }
 //---------------------------------------------------------------------------
 WideString TConnectionForm::getConnectionItem(WideString key, WideString value, WideString def)
@@ -193,10 +216,22 @@ void TConnectionForm::updateInterface()
     lblUserID->Enabled = !chkAsLocalUser->Checked;
     lblPassword->Enabled = !chkAsLocalUser->Checked;
     lblSuccess->Color = (mInitConnection && mInitConnection->Connected) ? clGreen : clRed;
+    toggleComboInitialCatalog(true);
 }
 void __fastcall TConnectionForm::btnConnectToSeverClick(TObject *Sender)
 {
-    testConnection(true);    
+    if (fTryToConnect) {
+        mConnection->Cancel();
+        return;
+    }
+    
+    if (thread) {
+        toggleComboInitialCatalog(true);
+        thread = 0;
+        return;
+    }
+
+    testConnection(true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TConnectionForm::btnConnectClick(TObject *Sender)
@@ -206,4 +241,40 @@ void __fastcall TConnectionForm::btnConnectClick(TObject *Sender)
     }
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TConnectionForm::TimerComboInitialCatalogTimer(
+      TObject *Sender)
+{
+    static int index = 0;
+    ++index;
+    AnsiString message[] = {
+        "Пробую подключиться, подождите",
+        "> Пробую подключиться, подождите .",
+        ">> Пробую подключиться, подождите ..",
+        ">>> Пробую подключиться, подождите ..."
+    };
+    cmbInitialCatalog->Text = message[index%4];
+    if (index > 3)
+        index = 0;
+}
+//---------------------------------------------------------------------------
+void TConnectionForm::toggleConnectButtons(bool enable)
+{
+    btnConnect->Enabled = enable;
+    btnTest->Enabled = enable;
+}
+
+void TConnectionForm::toggleComboInitialCatalog(bool enable)
+{
+    static AnsiString lastComboValue;
+    if (enable == false) {
+        lastComboValue = cmbInitialCatalog->Text;
+    } else {
+        cmbInitialCatalog->Text = lastComboValue;
+    }
+    cmbInitialCatalog->Enabled = enable;
+    cmbDataSource->Enabled = enable;
+    TimerComboInitialCatalog->Enabled = !enable;
+    toggleConnectButtons(enable);
+}
 
