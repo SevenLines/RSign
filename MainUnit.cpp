@@ -175,7 +175,7 @@ void __fastcall TMainForm::SaveIni(void)
 
 void __fastcall TMainForm::SetActiveRoad(TRoadFrm *R)
 {
-	N61->Enabled=!(Connection->Connected);
+	//N61->Enabled=!(Connection->Connected);
 	if (R!=FActiveRoad)
 	{
 		FActiveRoad=R;
@@ -1012,6 +1012,10 @@ void __fastcall TMainForm::N57Click(TObject *Sender)
 
 void __fastcall TMainForm::N61Click(TObject *Sender)
 {
+    if (FActiveRoad) {
+    	ShowMessage("Ïåğåä óñòàíîâêîé ïîäêëş÷åíèÿ íåîáõîäèìî çàêğûòü âñå îòêğûòûå äîğîãè");
+        return;
+    }
     ConnectionForm->Connection = Connection;
     ConnectionForm->ShowModal();
 	/*if (FActiveRoad)
@@ -1187,4 +1191,5 @@ if (FActiveRoad)
    FActiveRoad->ConnectToBaseLine(it->Tag);
 }
 //---------------------------------------------------------------------------
+
 

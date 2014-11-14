@@ -2,9 +2,9 @@ object ConnectionForm: TConnectionForm
   Left = 596
   Top = 251
   Width = 387
-  Height = 272
+  Height = 280
   AutoSize = True
-  BorderWidth = 4
+  BorderWidth = 8
   Caption = 'ConnectionForm'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,12 +19,12 @@ object ConnectionForm: TConnectionForm
   object grpUserInfo: TGroupBox
     Left = 0
     Top = 41
-    Width = 361
+    Width = 353
     Height = 96
     Align = alTop
     TabOrder = 0
     DesignSize = (
-      361
+      353
       96)
     object lblUserID: TLabel
       Left = 8
@@ -43,7 +43,7 @@ object ConnectionForm: TConnectionForm
     object edtUserID: TEdit
       Left = 112
       Top = 24
-      Width = 233
+      Width = 225
       Height = 24
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 1
@@ -51,7 +51,7 @@ object ConnectionForm: TConnectionForm
     object edtPassword: TEdit
       Left = 112
       Top = 56
-      Width = 233
+      Width = 225
       Height = 24
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 2
@@ -69,18 +69,18 @@ object ConnectionForm: TConnectionForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 361
+    Width = 353
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
     DesignSize = (
-      361
+      353
       41)
     object cmbDataSource: TComboBox
       Left = 0
       Top = 8
-      Width = 200
+      Width = 192
       Height = 24
       Anchors = [akLeft, akTop, akRight]
       ItemHeight = 16
@@ -89,7 +89,7 @@ object ConnectionForm: TConnectionForm
     object edtProvider: TEdit
       Left = 256
       Top = 8
-      Width = 105
+      Width = 97
       Height = 24
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 2
@@ -108,19 +108,19 @@ object ConnectionForm: TConnectionForm
   object Panel2: TPanel
     Left = 0
     Top = 137
-    Width = 361
+    Width = 353
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     Caption = 'Panel2'
     TabOrder = 2
     DesignSize = (
-      361
+      353
       41)
     object cmbInitialCatalog: TComboBox
       Left = 0
       Top = 9
-      Width = 360
+      Width = 352
       Height = 24
       Anchors = [akLeft, akTop, akRight]
       ItemHeight = 16
@@ -130,16 +130,16 @@ object ConnectionForm: TConnectionForm
   object Panel3: TPanel
     Left = 0
     Top = 178
-    Width = 361
+    Width = 353
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 3
     DesignSize = (
-      361
+      353
       41)
     object btnCancel: TButton
-      Left = 284
+      Left = 276
       Top = 8
       Width = 75
       Height = 25
@@ -151,13 +151,14 @@ object ConnectionForm: TConnectionForm
     object Panel4: TPanel
       Left = 0
       Top = 0
-      Width = 249
+      Width = 241
       Height = 41
       Align = alLeft
+      AutoSize = True
       BevelOuter = bvNone
       TabOrder = 0
       DesignSize = (
-        249
+        241
         41)
       object lblSuccess: TLabel
         Left = 176
@@ -189,7 +190,7 @@ object ConnectionForm: TConnectionForm
     end
   end
   object TimerComboInitialCatalog: TTimer
-    Interval = 750
+    Interval = 400
     OnTimer = TimerComboInitialCatalogTimer
     Left = 8
     Top = 152

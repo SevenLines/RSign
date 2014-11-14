@@ -111,7 +111,11 @@ bool TConnectionForm::testConnection(bool checkDatabaseList, bool async)
     mConnection->OnConnectComplete = ConnectComplete;
     mConnection->LoginPrompt = false;
     toggleComboInitialCatalog(false);
-    mConnection->Open();
+    try {
+        mConnection->Open();
+    } catch (Exception* e) {
+        ShowMessage(e->Message);
+    }
 
     return mConnection->Connected;
 

@@ -20,7 +20,7 @@
       AutoCADExportForm.obj unSignalsInsert.obj AcadExportThread.obj 
       AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj 
       MiniReports.obj ItemSelectDialog.obj AcadExportObjects.obj 
-      ConnectionFormUnit.obj"/>
+      ConnectionFormUnit.obj TConnectionFormThreadUnit.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -159,6 +159,7 @@
       <FILE FILENAME="ItemSelectDialog.cpp" FORMNAME="Form1" UNITNAME="ItemSelectDialog" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="AcadExportObjects.cpp" FORMNAME="" UNITNAME="AcadExportObjects" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ConnectionFormUnit.cpp" FORMNAME="ConnectionForm" UNITNAME="ConnectionFormUnit" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="TConnectionFormThreadUnit.cpp" FORMNAME="" UNITNAME="TConnectionFormThreadUnit" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
