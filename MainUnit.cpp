@@ -35,6 +35,7 @@
 #include "without_autocad.h"
 #include "AutoCADPrintForm.h"
 #include "ItemSelectDialog.h"
+#include "ConnectionFormUnit.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -138,6 +139,7 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
 	if (PatName!="")
 	    if (Pattern->LoadFromFile(PatName))
 	        VPatFrm->FileName=PatName;
+    ConnectionForm->loadIni(ini);
 }
 
 void __fastcall TMainForm::WriteIni(TIniFile *ini)
@@ -147,6 +149,7 @@ void __fastcall TMainForm::WriteIni(TIniFile *ini)
 	ini->WriteInteger("MainForm","Top",Top);
 	ini->WriteString("PrintPattern","Name",VPatFrm->FileName);
 	ini->WriteString("Video","Servers",VideoServers->CommaText);
+    ConnectionForm->saveIni(ini);
 }
 
 void __fastcall TMainForm::LoadIni(void)
@@ -1008,7 +1011,9 @@ void __fastcall TMainForm::N57Click(TObject *Sender)
 
 void __fastcall TMainForm::N61Click(TObject *Sender)
 {
-	if (FActiveRoad)
+    ConnectionForm->Connection = Connection;
+    ConnectionForm->ShowModal();
+	/*if (FActiveRoad)
 	ShowMessage("Перед установкой подключения необходимо закрыть все открытые дороги");
 	else
 	{
@@ -1028,7 +1033,7 @@ void __fastcall TMainForm::N61Click(TObject *Sender)
 			    Connection->LoginPrompt=false;
 		}
 		FreeLibrary(dll);
-	}
+	} */
 }
 //---------------------------------------------------------------------------
 
