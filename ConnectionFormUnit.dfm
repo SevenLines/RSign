@@ -12,8 +12,10 @@ object ConnectionForm: TConnectionForm
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnKeyDown = FormKeyDown
   PixelsPerInch = 120
   TextHeight = 16
   object grpUserInfo: TGroupBox
@@ -96,7 +98,7 @@ object ConnectionForm: TConnectionForm
       Text = 'SQLOLEDB.1'
     end
     object btnConnectToSever: TButton
-      Left = 208
+      Left = 200
       Top = 8
       Width = 41
       Height = 25

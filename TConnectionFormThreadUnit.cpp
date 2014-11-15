@@ -51,18 +51,13 @@ void TConnectionFormThread::getSchemasList()
         Connection->OpenSchema(siCatalogs, OleVariant(), ErrorParam, response);
 
         schemasList.clear();
-        //cmbInitialCatalog->Clear();
         response->Open();
         response->First();
         int recordNum = 0;
         while(!response->Eof) {
             AnsiString dbName = response->FieldByName("CATALOG_NAME")->AsString;
-            /*if (dbName == lastDataBaseName) {
-                selectedIndex = recordNum;
-            }*/
             schemasList.push_back(dbName);
             ++recordNum;
-            //cmbInitialCatalog->AddItem(dbName, 0);
             response->Next();
         }
         response->Close();

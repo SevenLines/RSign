@@ -4,6 +4,7 @@
 #pragma hdrstop
 
 #include "ConnectionFormUnit.h"
+#include <algorithms>
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -25,6 +26,7 @@ void TConnectionForm::loadIni(TIniFile *ini)
     edtUserID->Text = ini->ReadString("ConnectionForm", "UserID", "");
     edtPassword->Text = ini->ReadString("ConnectionForm", "Password", "");
     edtProvider->Text = ini->ReadString("ConnectionForm", "Provider", "SQLOLEDB.1");
+    FillServerList(ini->ReadString("ConnectionForm", "Servers", ""));
     chkAsLocalUser->Checked = ini->ReadBool("ConnectionForm", "AsLocalUser", false);
 
     updateInterface();   
@@ -37,6 +39,7 @@ void TConnectionForm::saveIni(TIniFile *ini)
     ini->WriteString("ConnectionForm", "UserID", edtUserID->Text);
     ini->WriteString("ConnectionForm", "Password", edtPassword->Text);
     ini->WriteString("ConnectionForm", "Provider", edtProvider->Text);
+    ini->WriteString("ConnectionForm", "Servers", getServersListString());
     ini->WriteBool("ConnectionForm", "AsLocalUser", chkAsLocalUser->Checked);
 }
 //---------------------------------------------------------------------------
@@ -47,21 +50,24 @@ void __fastcall TConnectionForm::ThreadOnTerminate(TObject *object)
         AnsiString lastDataBaseName;
         int selectedIndex;
         vector<AnsiString> lst;
+
         switch(thread->action) {
         case cfaGetSchemasList:
             lst = thread->SchemasList();
             lastDataBaseName = cmbInitialCatalog->Text;
             cmbInitialCatalog->Clear();
-            selectedIndex = -1;
+            cmbInitialCatalog->Text = "";
+            //selectedIndex = -1;
             for (int i=0;i<lst.size();++i) {
                 cmbInitialCatalog->AddItem(lst[i], 0);
-                if (lst[i] == lastDataBaseName) {
-                    selectedIndex = i;
-                }
+                //if (lst[i] == lastDataBaseName) {
+                    //selectedIndex = i;
+                //}
             }
-            cmbInitialCatalog->ItemIndex = selectedIndex;
+            //cmbInitialCatalog->ItemIndex = selectedIndex;
             break;
         }
+
         this->thread = 0;
         cmbInitialCatalog->Enabled = true;
         toggleComboInitialCatalog(true);
@@ -76,6 +82,7 @@ void __fastcall TConnectionForm::ConnectComplete(TADOConnection* Connection,
     toggleComboInitialCatalog(true);
     lblSuccess->Color = Connection->Connected ? clGreen : clRed;
     if (Connection->Connected && fCheckDatabaseList) {
+        updateServerList(cmbDataSource->Text);
         fillSchemasList(Connection);
     }
     //mConnection->Errors
@@ -178,14 +185,14 @@ WideString TConnectionForm::getConnectionItem(WideString key, WideString value, 
 WideString TConnectionForm::getConnectionString(bool withoutDataBase)
 {
     WideString out;
-    out += getConnectionItem("Provider", edtProvider->Text, "SQLOLEDB.1");
+    out += getConnectionItem("Provider", edtProvider->Text.Trim(), "SQLOLEDB.1");
     if (!withoutDataBase) {
-        out += getConnectionItem("Initial Catalog", cmbInitialCatalog->Text, "");
+        out += getConnectionItem("Initial Catalog", cmbInitialCatalog->Text.Trim(), "");
     }
-    out += getConnectionItem("Data Source", cmbDataSource->Text, "(local)");
+    out += getConnectionItem("Data Source", cmbDataSource->Text.Trim(), "(local)");
     if (!chkAsLocalUser->Checked) {
-        out += getConnectionItem("User ID", edtUserID->Text, "");
-        out += getConnectionItem("Password", edtPassword->Text, "");
+        out += getConnectionItem("User ID", edtUserID->Text.Trim(), "");
+        out += getConnectionItem("Password", edtPassword->Text.Trim(), "");
     } else {
         out += getConnectionItem("Integrated Security", "", "SSPI");
     }
@@ -222,6 +229,36 @@ void TConnectionForm::updateInterface()
     lblSuccess->Color = (mInitConnection && mInitConnection->Connected) ? clGreen : clRed;
     toggleComboInitialCatalog(true);
 }
+//---------------------------------------------------------------------------
+AnsiString TConnectionForm::getServersListString()
+{
+    AnsiString out;
+    for (int i=0;i<serversList.size();++i) {
+        out += serversList[i]+";";
+    }
+    return out;
+}
+//---------------------------------------------------------------------------
+void TConnectionForm::FillServerList(AnsiString ServersString)
+{
+    for(char* tok = strtok(ServersString.c_str(), ";"); tok; tok = strtok(NULL, ";"))  {
+        serversList.push_back(tok);
+    }
+    sort(serversList.begin(), serversList.end());
+    for (int  i=0;i<serversList.size();++i) {
+        cmbDataSource->AddItem(serversList[i], 0);
+    }
+}
+//---------------------------------------------------------------------------
+void TConnectionForm::updateServerList(AnsiString serverName)
+{
+    if(find(serversList.begin(), serversList.end(), serverName) == serversList.end() ) {
+        cmbDataSource->AddItem(serverName, 0);
+        serversList.push_back(serverName);
+        sort(serversList.begin(), serversList.end());
+    }
+}
+//---------------------------------------------------------------------------
 void __fastcall TConnectionForm::btnConnectToSeverClick(TObject *Sender)
 {
     if (fTryToConnect) {
@@ -266,19 +303,45 @@ void TConnectionForm::toggleConnectButtons(bool enable)
 {
     btnConnect->Enabled = enable;
     btnTest->Enabled = enable;
+    btnConnectToSever->Enabled = enable;
 }
-
+//---------------------------------------------------------------------------
+void TConnectionForm::restoreComboItemPosition(AnsiString itemText, TComboBox *cmb)
+{
+    int selectedIndex = -1;
+    for (int i=0;i<cmb->Items->Count;++i) {
+        if (cmb->Items->Strings[i] == itemText) {
+            selectedIndex = i;
+        }
+    }
+    cmb->ItemIndex = selectedIndex;
+}
+//---------------------------------------------------------------------------
 void TConnectionForm::toggleComboInitialCatalog(bool enable)
 {
     static AnsiString lastComboValue;
+
     if (enable == false) {
         lastComboValue = cmbInitialCatalog->Text;
     } else {
-        cmbInitialCatalog->Text = lastComboValue;
+        restoreComboItemPosition(lastComboValue, cmbInitialCatalog);
     }
+
     cmbInitialCatalog->Enabled = enable;
     cmbDataSource->Enabled = enable;
+
+    chkAsLocalUser->Enabled = enable;
     TimerComboInitialCatalog->Enabled = !enable;
     toggleConnectButtons(enable);
 }
+
+
+void __fastcall TConnectionForm::FormKeyDown(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+    if(Key == VK_ESCAPE) {
+        ModalResult = mrCancel;
+    }    
+}
+//---------------------------------------------------------------------------
 

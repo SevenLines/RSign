@@ -41,12 +41,21 @@ __published:	// IDE-managed Components
     void __fastcall btnConnectToSeverClick(TObject *Sender);
     void __fastcall btnConnectClick(TObject *Sender);
     void __fastcall TimerComboInitialCatalogTimer(TObject *Sender);
+    void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
+          TShiftState Shift);
 private:	// User declarations
     TADOConnection *mConnection;
     TADOConnection *mInitConnection;
     TConnectionFormThread *thread;
     bool fTryToConnect;
     bool fCheckDatabaseList;
+
+    vector<AnsiString> serversList;
+    AnsiString getServersListString();
+    void FillServerList(AnsiString ServersString);
+    void updateServerList(AnsiString serverName);
+    void restoreComboItemPosition(AnsiString itemText, TComboBox *cmb);
+
     WideString getConnectionString();
     WideString getConnectionString(bool withoutDataBase);
     WideString getConnectionItem(WideString key, WideString value, WideString def="");
