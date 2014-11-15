@@ -87,24 +87,27 @@ object ConnectionForm: TConnectionForm
       Anchors = [akLeft, akTop, akRight]
       ItemHeight = 16
       TabOrder = 0
-    end
-    object edtProvider: TEdit
-      Left = 256
-      Top = 8
-      Width = 97
-      Height = 24
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 2
-      Text = 'SQLOLEDB.1'
+      OnKeyPress = cmbDataSourceKeyPress
     end
     object btnConnectToSever: TButton
       Left = 200
-      Top = 8
+      Top = 7
       Width = 41
       Height = 25
       Caption = 'X'
       TabOrder = 1
       OnClick = btnConnectToSeverClick
+    end
+    object edtProvider: TComboBox
+      Left = 248
+      Top = 8
+      Width = 105
+      Height = 24
+      ItemHeight = 16
+      TabOrder = 2
+      Items.Strings = (
+        'SQLOLEDB.1'
+        'MSDASQL.1')
     end
   end
   object Panel2: TPanel
@@ -144,7 +147,7 @@ object ConnectionForm: TConnectionForm
       Left = 276
       Top = 8
       Width = 75
-      Height = 25
+      Height = 33
       Anchors = [akRight, akBottom]
       Caption = #1054#1090#1084#1077#1085#1072
       ModalResult = 2
@@ -173,7 +176,7 @@ object ConnectionForm: TConnectionForm
         Left = 0
         Top = 8
         Width = 89
-        Height = 25
+        Height = 33
         Anchors = [akLeft, akBottom]
         Caption = #1057#1086#1077#1076#1080#1085#1080#1090#1100
         TabOrder = 1
@@ -183,7 +186,7 @@ object ConnectionForm: TConnectionForm
         Left = 92
         Top = 8
         Width = 75
-        Height = 25
+        Height = 33
         Anchors = [akLeft, akBottom]
         Caption = #1058#1077#1089#1090
         TabOrder = 0

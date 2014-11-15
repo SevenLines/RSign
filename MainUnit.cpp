@@ -123,8 +123,7 @@ void __fastcall TMainForm::AppShortCut(TWMKey &Key, bool &Handled)
 
 void __fastcall TMainForm::ReadIni(TIniFile *ini)
 {
-	String Con=ini->ReadString("Connection","ConnectionString",
-	"Provider=MSDASQL.1;Persist Security Info=False;Data Source=Victory_istu");
+	String Con=ini->ReadString("Connection","ConnectionString", "Provider=MSDASQL.1;Persist Security Info=False;Data Source=Victory_istu");
     if (Con!=Connection->ConnectionString)  {
          Connection->Close();
   	    Connection->ConnectionString=ini->ReadString("Connection","ConnectionString",
@@ -1016,8 +1015,10 @@ void __fastcall TMainForm::N61Click(TObject *Sender)
     	ShowMessage("Перед установкой подключения необходимо закрыть все открытые дороги");
         return;
     }
+
     ConnectionForm->Connection = Connection;
     ConnectionForm->ShowModal();
+
 	/*if (FActiveRoad)
 	ShowMessage("Перед установкой подключения необходимо закрыть все открытые дороги");
 	else

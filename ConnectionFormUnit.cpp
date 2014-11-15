@@ -122,6 +122,9 @@ bool TConnectionForm::testConnection(bool checkDatabaseList, bool async)
         mConnection->Open();
     } catch (Exception* e) {
         ShowMessage(e->Message);
+        cmbInitialCatalog->Text = "";
+        toggleComboInitialCatalog(true);
+        fTryToConnect = false;
     }
 
     return mConnection->Connected;
@@ -263,6 +266,7 @@ void __fastcall TConnectionForm::btnConnectToSeverClick(TObject *Sender)
 {
     if (fTryToConnect) {
         mConnection->Cancel();
+        fTryToConnect = false;
         return;
     }
     
@@ -329,6 +333,7 @@ void TConnectionForm::toggleComboInitialCatalog(bool enable)
 
     cmbInitialCatalog->Enabled = enable;
     cmbDataSource->Enabled = enable;
+    edtProvider->Enabled = enable;
 
     chkAsLocalUser->Enabled = enable;
     TimerComboInitialCatalog->Enabled = !enable;
@@ -341,7 +346,18 @@ void __fastcall TConnectionForm::FormKeyDown(TObject *Sender, WORD &Key,
 {
     if(Key == VK_ESCAPE) {
         ModalResult = mrCancel;
-    }    
+    }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TConnectionForm::cmbDataSourceKeyPress(TObject *Sender,
+      char &Key)
+{
+    switch(Key) {
+    case VK_RETURN:
+        btnConnectToSever->Click();
+        break;
+    }
 }
 //---------------------------------------------------------------------------
 

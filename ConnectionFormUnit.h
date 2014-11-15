@@ -28,7 +28,6 @@ __published:	// IDE-managed Components
     TComboBox *cmbInitialCatalog;
     TPanel *Panel3;
     TButton *btnCancel;
-    TEdit *edtProvider;
     TCheckBox *chkAsLocalUser;
     TPanel *Panel4;
     TButton *btnConnect;
@@ -36,6 +35,7 @@ __published:	// IDE-managed Components
     TButton *btnConnectToSever;
     TLabel *lblSuccess;
     TTimer *TimerComboInitialCatalog;
+    TComboBox *edtProvider;
     void __fastcall btnTestClick(TObject *Sender);
     void __fastcall chkAsLocalUserClick(TObject *Sender);
     void __fastcall btnConnectToSeverClick(TObject *Sender);
@@ -43,6 +43,7 @@ __published:	// IDE-managed Components
     void __fastcall TimerComboInitialCatalogTimer(TObject *Sender);
     void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
+    void __fastcall cmbDataSourceKeyPress(TObject *Sender, char &Key);
 private:	// User declarations
     TADOConnection *mConnection;
     TADOConnection *mInitConnection;
