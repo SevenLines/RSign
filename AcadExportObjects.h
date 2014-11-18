@@ -13,6 +13,18 @@ struct KromkaObject{
     bool exist;
 };
 
+
+struct BarrierDrawStyleParameters {
+    TPoint *pMin;
+    TPoint *pMax;
+    int lineWeight;
+    int lineTypeScale;
+    int NotExistColor;
+    float ScaleY;
+    int endsRadius;
+    bool exist;
+};
+
 class KromkaObjectGroup {
 private:
 	int mMin, mMax;

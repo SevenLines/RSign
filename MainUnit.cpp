@@ -35,6 +35,7 @@
 #include "without_autocad.h"
 #include "AutoCADPrintForm.h"
 #include "ItemSelectDialog.h"
+#include "ConnectionFormUnit.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -122,8 +123,7 @@ void __fastcall TMainForm::AppShortCut(TWMKey &Key, bool &Handled)
 
 void __fastcall TMainForm::ReadIni(TIniFile *ini)
 {
-	String Con=ini->ReadString("Connection","ConnectionString",
-	"Provider=MSDASQL.1;Persist Security Info=False;Data Source=Victory_istu");
+	String Con=ini->ReadString("Connection","ConnectionString", "Provider=MSDASQL.1;Persist Security Info=False;Data Source=Victory_istu");
     if (Con!=Connection->ConnectionString)  {
          Connection->Close();
   	    Connection->ConnectionString=ini->ReadString("Connection","ConnectionString",
@@ -138,6 +138,7 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
 	if (PatName!="")
 	    if (Pattern->LoadFromFile(PatName))
 	        VPatFrm->FileName=PatName;
+    ConnectionForm->loadIni(ini);
 }
 
 void __fastcall TMainForm::WriteIni(TIniFile *ini)
@@ -147,6 +148,7 @@ void __fastcall TMainForm::WriteIni(TIniFile *ini)
 	ini->WriteInteger("MainForm","Top",Top);
 	ini->WriteString("PrintPattern","Name",VPatFrm->FileName);
 	ini->WriteString("Video","Servers",VideoServers->CommaText);
+    ConnectionForm->saveIni(ini);
 }
 
 void __fastcall TMainForm::LoadIni(void)
@@ -172,7 +174,7 @@ void __fastcall TMainForm::SaveIni(void)
 
 void __fastcall TMainForm::SetActiveRoad(TRoadFrm *R)
 {
-	N61->Enabled=!(Connection->Connected);
+	//N61->Enabled=!(Connection->Connected);
 	if (R!=FActiveRoad)
 	{
 		FActiveRoad=R;
@@ -289,6 +291,7 @@ bool __fastcall TMainForm::OpenRoadById(__int32 id,__int32 dataclass,bool OpenCo
 			Shared=new TDBSharedObjSource(Connection);
 			Shared->Load();
 		}
+
 		//    int SourType=DBDataModule->GetSourceType(dataclass);
 		TDictSource *Dict=ResManager->AddDictSource(0,Connection);
 		TDtaSource *Data;
@@ -1008,7 +1011,15 @@ void __fastcall TMainForm::N57Click(TObject *Sender)
 
 void __fastcall TMainForm::N61Click(TObject *Sender)
 {
-	if (FActiveRoad)
+    if (FActiveRoad) {
+    	ShowMessage("Ïåğåä óñòàíîâêîé ïîäêëş÷åíèÿ íåîáõîäèìî çàêğûòü âñå îòêğûòûå äîğîãè");
+        return;
+    }
+
+    ConnectionForm->Connection = Connection;
+    ConnectionForm->ShowModal();
+
+	/*if (FActiveRoad)
 	ShowMessage("Ïåğåä óñòàíîâêîé ïîäêëş÷åíèÿ íåîáõîäèìî çàêğûòü âñå îòêğûòûå äîğîãè");
 	else
 	{
@@ -1028,7 +1039,7 @@ void __fastcall TMainForm::N61Click(TObject *Sender)
 			    Connection->LoginPrompt=false;
 		}
 		FreeLibrary(dll);
-	}
+	} */
 }
 //---------------------------------------------------------------------------
 
@@ -1181,4 +1192,5 @@ if (FActiveRoad)
    FActiveRoad->ConnectToBaseLine(it->Tag);
 }
 //---------------------------------------------------------------------------
+
 

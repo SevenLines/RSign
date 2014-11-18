@@ -200,7 +200,8 @@ AcadPolylinePtr TAcadExport::DrawPolyLine(vector<double> &points)
    return pl;
 }
 
-AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes, bool fLockGaps)
+AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes, bool fLockGaps,
+    void(*lineEditFunction)(AcadPolylinePtr&, void* data), void* data)
 {
     vector<double> points, range;
     vector<int> codes;
@@ -225,6 +226,9 @@ AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes,
                         points.begin() + 2*iLast,
                         points.begin() + 2*i);
                     pl = DrawPolyLine(range);
+                    if (lineEditFunction) {
+                        lineEditFunction(pl, data);
+                    }
                 }
                 iLast = i;
             }
@@ -238,6 +242,9 @@ AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes,
                range.push_back(points[1]);               
             }
             pl = DrawPolyLine(range);
+            if (lineEditFunction) {
+                lineEditFunction(pl, data);
+            }
         }
     } else {
         if(fLockGaps && Poly->Count > 2) {
@@ -245,6 +252,9 @@ AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes,
             points.push_back(-ScaleY*Poly->Points[0].y);
         }
         pl = DrawPolyLine(points);
+        if (lineEditFunction) {
+            lineEditFunction(pl, data);
+        }
     }
     return pl;
 }
@@ -1803,9 +1813,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma17: /*Обозначение остановок маршрутных транспортных средств*/
-                for(int i=0;i<count-1;i++){
-                    DrawBlockOnLine("r_1.17", Poly->Points[i+1], Poly->Points[i], "Length");
-                }
+                DrawBlockOnLine("r_1.17", Poly->Points[0], Poly->Points[count-1], "Length");
                 //tableBottom.DrawRepeatTextInterval(0,"1.17",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
@@ -2035,6 +2043,45 @@ AcadBlockReferencePtr TAcadExport::DrawBarrier(vector<TPoint> &points, AnsiStrin
 }
 
 
+void StyleDrawBarrierMetal(AcadPolylinePtr& pl, void* data)
+{
+    BarrierDrawStyleParameters* params = (BarrierDrawStyleParameters*)data;
+    pl->set_Lineweight(params->lineWeight);
+    pl->set_LinetypeScale(params->lineTypeScale);
+    pl->set_Linetype(WideString("barrier-circle"));
+    if(!params->exist)
+        pl->color = params->NotExistColor;
+}
+
+void StyleDrawBarrierUndefined(AcadPolylinePtr& pl, void* data)
+{
+    BarrierDrawStyleParameters* params = (BarrierDrawStyleParameters*)data;
+    pl->set_Lineweight(params->lineWeight);
+    pl->set_LinetypeScale(params->lineTypeScale);
+    pl->set_Linetype(WideString("barrier-square"));
+    if(!params->exist)
+        pl->color = params->NotExistColor;
+}
+
+void StyleDrawBarrierCivil(AcadPolylinePtr& pl, void* data)
+{
+    BarrierDrawStyleParameters* params = (BarrierDrawStyleParameters*)data;
+    pl->set_Lineweight(params->lineWeight);
+    pl->set_LinetypeScale(params->lineTypeScale*6);
+    pl->set_Linetype(WideString("perila"));
+    pl->color = 20;
+}
+
+void StyleDrawBarrierNewJersey(AcadPolylinePtr& pl, void* data)
+{
+    BarrierDrawStyleParameters* params = (BarrierDrawStyleParameters*)data;
+    pl->set_Lineweight(params->lineWeight);
+    pl->set_LinetypeScale(params->lineTypeScale);
+    pl->set_Linetype(WideString("barrier-square"));
+    if(!params->exist)
+        pl->color = params->NotExistColor;
+}
+
 bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, bool exist, bool fEnd) {
     static dir, counter = 0;
     static AnsiString str;
@@ -2151,105 +2198,89 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
     AnsiString barrierName = "";
     AcadPolylinePtr pl;
     AcadCirclePtr circle;
+    vector<AcadPolylinePtr> lines;
     float k = ScaleY / 3.5;
     int lineTypeScale = 20 * k;
     int endsRadius = 100 * k;
     int lineWeight = acLnWt040;
+
+    BarrierDrawStyleParameters params;
+    params.lineWeight = lineWeight;
+    params.lineTypeScale = lineTypeScale;
+    params.NotExistColor = lineWeight;
+    params.exist = exist;
 
     switch(b->Construction){
     case br112:
         str="ДО (У3)";//str = "Барьерное одностороннее"
         barrierName = "barBarrierMetal";
         //block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
-        pl = DrawPolyPoints(Poly, false, false);
-        if (pl.IsBound()) {
-          pl->set_Lineweight(lineWeight);
-          pl->set_LinetypeScale(lineTypeScale);
-          pl->set_Linetype(L"barrier-circle");
-          if(!exist) pl->color = NotExistColor;
-          pl.Unbind();
-          circle = AutoCAD.DrawCircle(pMin.x, pMin.y*-ScaleY, endsRadius);
-          circle->set_Lineweight(lineWeight);
-          if(!exist) circle->color = NotExistColor;
-          circle = AutoCAD.DrawCircle(pMax.x, pMax.y*-ScaleY, endsRadius);
-          circle->set_Lineweight(lineWeight);
-          if(!exist) circle->color = NotExistColor;
-        }
+        DrawPolyPoints(Poly, true, false, StyleDrawBarrierMetal,&params);
+        circle = AutoCAD.DrawCircle(pMin.x, pMin.y*-ScaleY, endsRadius);
+        circle->set_Lineweight(lineWeight);
+        if(!exist) circle->color = NotExistColor;
+
+        circle = AutoCAD.DrawCircle(pMax.x, pMax.y*-ScaleY, endsRadius);
+        circle->set_Lineweight(lineWeight);
+        if(!exist) circle->color = NotExistColor;
         break;
+
     case br113:
         str="ДО (У3)";//str = "Барьерное двухстороннее";
         barrierName = "barBarrierMetalDuo";
         block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         break;
+
     case br114:
         str = "Тросовое";
         break;
+
     case br115:
     case br118:
         str="ДО (У3)";//str = "Парапеты"; "По типу Нью-Джерси";
         barrierName = "barNewJersey";
-        //block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
-        pl = DrawPolyPoints(Poly, false, false);
-        if (pl.IsBound()) {
-          pl->set_Lineweight(lineWeight);
-          pl->set_LinetypeScale(lineTypeScale);
-          pl->set_Linetype(L"barrier-square");
-          if(!exist) pl->color = NotExistColor;
-          pl.Unbind();
-          pl = AutoCAD.DrawRect(pMin.x, pMin.y*-ScaleY, endsRadius, endsRadius);
-          pl->set_Lineweight(lineWeight);
-          if(!exist) pl->color = NotExistColor;
-          pl.Unbind();
-          pl = AutoCAD.DrawRect(pMax.x, pMax.y*-ScaleY, endsRadius, endsRadius);
-          pl->set_Lineweight(lineWeight);
-          if(!exist) pl->color = NotExistColor;
-        }
+        DrawPolyPoints(Poly, true, false, StyleDrawBarrierNewJersey, &params);
+
+        pl = AutoCAD.DrawRect(pMin.x, pMin.y*-ScaleY, endsRadius, endsRadius);
+        pl->set_Lineweight(lineWeight);
+        if(!exist) pl->color = NotExistColor;
+        
+        pl = AutoCAD.DrawRect(pMax.x, pMax.y*-ScaleY, endsRadius, endsRadius);
+        pl->set_Lineweight(lineWeight);
+        if(!exist) pl->color = NotExistColor;
+
         break;
+
     case br116:
         str = "Сетки";
         break;
+
     case br117:
         str = "Перила";
         barrierName = "barCivil";
-        //block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
-        pl = DrawPolyPoints(Poly, true, false);
-        if (pl.IsBound()) {
-          pl->set_Lineweight(lineWeight);
-          pl->set_LinetypeScale(lineTypeScale*6);
-          pl->set_Linetype(WideString("perila"));
-          pl->color = 20;
-        }
-//        if(!exist) pl->color = NotExistColor;
+        DrawPolyPoints(Poly, true, false, StyleDrawBarrierCivil, &params);
         break;
+
     case brm:
         str="ДО (У3)";//str = "Металлическое";
         barrierName = "barBarrierMetal";
         block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         break;
+
     default:
         str="ДО (У3)";// нестандартное
-        //block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
-        pl = DrawPolyPoints(Poly, false, false);
-        if (pl.IsBound()) {
-          pl->set_Lineweight(lineWeight);
-          pl->set_LinetypeScale(lineTypeScale);
-          pl->set_Linetype(L"barrier-square");
-          if(!exist) pl->color = NotExistColor;
-          pl.Unbind();
-          pl = AutoCAD.DrawRect(pMin.x, pMin.y*-ScaleY, endsRadius, endsRadius);
-          pl->set_Lineweight(lineWeight);
-          if(!exist) pl->color = NotExistColor;
-          pl.Unbind();
-          pl = AutoCAD.DrawRect(pMax.x, pMax.y*-ScaleY, endsRadius, endsRadius);
-          pl->set_Lineweight(lineWeight);
-          if(!exist) pl->color = NotExistColor;
-          break;
-        }
+        DrawPolyPoints(Poly, true, false, StyleDrawBarrierUndefined, &params);
+        pl = AutoCAD.DrawRect(pMin.x, pMin.y*-ScaleY, endsRadius, endsRadius);
+        pl->set_Lineweight(lineWeight);
+        if(!exist) pl->color = NotExistColor;
+
+        pl = AutoCAD.DrawRect(pMax.x, pMax.y*-ScaleY, endsRadius, endsRadius);
+        pl->set_Lineweight(lineWeight);
+        if(!exist) pl->color = NotExistColor;
+		break;
     }
 
     if(block.IsBound()){
-        /*AutoCAD.SetPropertyDouble(block,"Length",length);
-    AutoCAD.SetPropertyList(block,"Flip",dir<0?0:1);  */
         switch(curProp){
         case 0:
             break;
@@ -2265,18 +2296,22 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
         }
     }
 
+    for	(int i=0;i<lines.size();++i) {
+        lines[i].Release();
+    }
+
     if (strProjectBarrierPrefix.Length()) {
         str = AnsiString(exist?"":strProjectBarrierPrefix.c_str()) + " " + str;//"ДО (У3)";
     }
 
     switch(b->Placement){
     case opLeft:
-        lBlockLeft = block; 
+        if(block.IsBound()) lBlockLeft = block;
         lPropLeft = curProp;
         tableTop.DrawRepeatTextIntervalRoadMark(iTopBarriers,str,Poly->Points[0].x,lPointBarrier.x,StringConvert,iStep,true,0.43);
         break;
     case opRight:
-        lBlockRight = block;
+        if(block.IsBound()) lBlockRight = block;
         lPropRight = curProp;
         tableBottom.DrawRepeatTextIntervalRoadMark(iBottomBarriers,str,Poly->Points[0].x,lPointBarrier.x,StringConvert,iStep,true,0.43);
         break;
@@ -2302,6 +2337,8 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool
         if(s->LMin>iEnd) return true;
     }
 
+    float scale = ((float)ScaleY / 2) * 100;
+
     AcadBlockReferencePtr block;
 
     int count = Poly->Count;
@@ -2315,7 +2352,7 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool
                 tableBottom.DrawRepeatTextIntervalRoadMark(iBottomBarriers,"1",s->LMin,s->LMin+100,StringConvert,iStep,true,0.43);
                 break;
             }
-            block = AutoCAD.DrawBlock("signalpost",Poly->Points[0].x, -ScaleY*Poly->Points[0].y, 0,300);
+            block = AutoCAD.DrawBlock("signalpost",Poly->Points[0].x, -ScaleY*Poly->Points[0].y, 0, scale);
             if(!exist) block->color = NotExistColor;
         }else if(s->Count>1&&count>1){
 
@@ -2355,7 +2392,7 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool
                 tx = Poly->Points[iCur].x - Poly->Points[iCur-1].x;
                 ty = -ScaleY*(Poly->Points[iCur].y - Poly->Points[iCur-1].y);
                 signalsPos[signalsPosCount] = Poly->Points[iCur-1].x+k*tx;
-                block = AutoCAD.DrawBlock("signalpost",signalsPos[signalsPosCount], -ScaleY*Poly->Points[iCur-1].y +k*ty, 0,300);
+                block = AutoCAD.DrawBlock("signalpost",signalsPos[signalsPosCount], -ScaleY*Poly->Points[iCur-1].y +k*ty, 0, scale);
                 if(!exist) block->color = NotExistColor;
                 signalsPosCount++;
             }
@@ -2373,9 +2410,9 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool
             }
 
 
-            block = AutoCAD.DrawBlock("signalpost",Poly->Points[0].x, -ScaleY*Poly->Points[0].y, 0,300);
+            block = AutoCAD.DrawBlock("signalpost",Poly->Points[0].x, -ScaleY*Poly->Points[0].y, 0, scale);
             if(!exist) block->color = NotExistColor;
-            block = AutoCAD.DrawBlock("signalpost",Poly->Points[count-1].x, -ScaleY*Poly->Points[count-1].y, 0,300);
+            block = AutoCAD.DrawBlock("signalpost",Poly->Points[count-1].x, -ScaleY*Poly->Points[count-1].y, 0, scale);
             if(!exist) block->color = NotExistColor;
             delete[] length;
             delete[] signalsPos;

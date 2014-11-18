@@ -366,58 +366,72 @@ void __fastcall TFAutoCADPrint::cmdPrintClick(TObject *Sender)
 
 void __fastcall TFAutoCADPrint::Button7Click(TObject *Sender)
 {
+    int lPos = tbPos->Position;
 	tbPos->Position--;
+    if (lPos == tbPos->Position) { // force update
+        ChangeFramePosition();
+    }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TFAutoCADPrint::Button3Click(TObject *Sender)
 {
-	tbPos->Position++;        
+    int lPos = tbPos->Position;
+	tbPos->Position++;
+    if (lPos == tbPos->Position) { // force update
+        ChangeFramePosition();
+    }
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TFAutoCADPrint::tbPosChange(TObject *Sender)
+void TFAutoCADPrint::ChangeFramePosition()
 {
-	static last = -1;
+    static last = -1;
 	int v;
 
 	if(TryStrToInt(edtStep->Text,v)){
 		edtPos->Text = tbPos->Position*v;
 		v = tbPos->Position;
-		if(last!=v){
-			if(!helper) return;
-			AnsiString str;
-			int iMin = tbPos->Position;
+		//if(last!=v){
+        if(!helper) return;
+        AnsiString str;
+        int iMin = tbPos->Position;
 			
-			ReadValues();
+        ReadValues();
 
-			int km = (iMin*vStep)/100000;
-			int meters = (int(iMin*vStep)/100)%1000;
-			try{
-				str.sprintf(edtPattern->Text.c_str(),km,meters);
-			}catch(...){return;}
+        int km = (iMin*vStep)/100000;
+        int meters = (int(iMin*vStep)/100)%1000;
+        try{
+            str.sprintf(edtPattern->Text.c_str(),km,meters);
+        }catch(...){return;}
 
-			if(!BindViewports()) return;
+        if(!BindViewports()) return;
 			
-			helper->SelectPaperSpace();
-			AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
+        helper->SelectPaperSpace();
+        AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
 
-			if(text.IsBound()) text->set_TextString(WideString(str));
-			if(roadName.IsBound()) roadName->set_TextString(WideString(strRoadName));
+        if(text.IsBound()) text->set_TextString(WideString(str));
+        if(roadName.IsBound()) roadName->set_TextString(WideString(strRoadName));
 
-			int j = tbPos->Position;
-			int minPos = tbPos->Min;
-			int diff = tbPos->Max - tbPos->Min;
+        int j = tbPos->Position;
+        int minPos = tbPos->Min;
+        int diff = tbPos->Max - tbPos->Min;
 
-			if(page.IsBound())
-			page->set_TextString(WideString(iPage+j-minPos));
-			if(page_max.IsBound())
-			page_max->set_TextString(WideString(iPage+diff));
+        if(page.IsBound())
+        page->set_TextString(WideString(iPage+j-minPos));
+        if(page_max.IsBound())
+        page_max->set_TextString(WideString(iPage+diff));
 
-			SetFrame(j*vStep, vStep);
-		}
+        SetFrame(j*vStep, vStep);
+		//}
 		last = v;
 	}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFAutoCADPrint::tbPosChange(TObject *Sender)
+{
+    ChangeFramePosition();
 }
 //---------------------------------------------------------------------------
 
