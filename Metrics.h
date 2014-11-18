@@ -145,7 +145,8 @@ private:
 void __fastcall CopyExtPolyline(TExtPolyline *Source);
 public:
 __int32 DirectionVal;
-__int32 Count;
+__int32 Count;     //Количество точек
+__int32 FCapacity; //Выделенный объем памяти в точках
 POINT *Points;
 TPointCode *Codes;
 __int32 *Flags; // Флажки для хранения информации о точках
@@ -157,6 +158,7 @@ __fastcall TExtPolyline(TExtPolyline*,double offset);
 // Создает новую полинию, копируя исходную со смещенеим
 __fastcall TExtPolyline(TExtPolyline*,int ofsx,int ofsy);
 __fastcall ~TExtPolyline(void);
+void __fastcall ReSize(int n);
 POINT &operator[](int n)
     {return Points[n];}
 void __fastcall DisSelect(void);

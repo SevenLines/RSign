@@ -1029,7 +1029,7 @@ __int32 FGeoXMin,FGeoXMax,FGeoYMin,FGeoYMax;
 double FGeoKx,FGeoKy;
 TPlanKind FPlKind;
 TPlanDirect FPlDirect;
-//TPtConvertMethod FConvertMethod;
+TPtConvertMethod FConvertMethod;
 void __fastcall CalcConvertion(void);
 void __fastcall SetPlanKind(TPlanKind pk);
 void __fastcall SetPlanDirect(TPlanDirect pd);
@@ -1045,17 +1045,19 @@ TPolyline RightDivPart; // Край разделительной полосы справа
 TPolyline LeftBound;    // Граница укрепленной части дороги с учетом перекрестков
 TPolyline RightBound;   // Граница укрепленной части дороги с учетом перекрестков
 
+TCurvePlan CurvePlan;   // Схематический план дороги
 
 TRoadGeometry Geometry; // Продольный профиль дороги
 bool GeometryMoved;     // true после редактирования геометрических параметров
 __fastcall TRoad(__int32 id,__int32 code):TBandRoadObject(id,code)
-        {GeometryMoved=false;}
+        {GeometryMoved=false;/*FConvertMethod=pc2d;*/}
 void __fastcall SetBound(__int32 minx,__int32 maxx,__int32 miny,__int32 maxy);
 void __fastcall SetFrame(__int32 lmin,__int32 lmax,__int32 xmin,__int32 xmax,TPlanKind pk,TPlanDirect dr);
 void __fastcall SetOutBound(__int32 lmin,__int32 lmax,__int32 xmin,__int32 xmax);
 void __fastcall ConvertPoint(__int32 L,__int32 X,__int32 &PX,__int32 &PY);
 void __fastcall RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX);
-void __fastcall ConvertPoly(__int32 n, TRoadPoint *in, POINT *out);
+void __fastcall ConvertPointsArray(__int32 n, TRoadPoint *in, POINT *out);
+void __fastcall ConvertPolyline(TPolyline &src,TExtPolyline &dst);
 // Вычисляет значения точек в интервале от head до tale включительно
 void __fastcall CalcPointsInterval(TPolyline *Poly,int head,int tale,TRoadObject* RefObj);
 //void __fastcall CalcPointPos(TRoadPoint &p);
@@ -1082,7 +1084,7 @@ __property __int32 ZMin={read=FZMin};
 __property __int32 ZMax={read=FZMax};
 __property TPlanKind PlKind={read=FPlKind};
 __property TPlanDirect PlDirect={read=FPlDirect};
-//__property TPtConvertMethod ConvertMethod={read=FConvertMethod,write=FConvertMethod};
+__property TPtConvertMethod ConvertMethod={read=FConvertMethod,write=FConvertMethod};
 __property __int32 FrameLMin={read=FFrameLMin};
 __property __int32 FrameLMax={read=FFrameLMax};
 __property __int32 FrameXMin={read=FFrameXMin};

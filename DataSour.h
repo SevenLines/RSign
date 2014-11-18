@@ -209,6 +209,8 @@ void __fastcall BreakRoadLines(void);
 void __fastcall CalcMetrics(TRoad *RefRoad);
 // Функция считает геометрию дороги по объектам
 void __fastcall CalcGeometry(int MinL,int MaxL);
+// Функция считает CurvePlan по объектам
+void __fastcall CalcCurvePlan(int MinL,int MaxL);
 void __fastcall Recreate(TDictSource *Dict);
 void virtual __fastcall Load(__int32 id_,__int32 dataclass_,TDictSource *Dict);
 virtual TRoadObject * __fastcall CopyObject(TRoadObject *obj,TDictSource *Dict,int newid=0);

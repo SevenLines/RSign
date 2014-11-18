@@ -1655,7 +1655,7 @@ TExtPolyline* __fastcall TRoadFrm::BuildPoly(bool re)
 {
 	if (!re && FVector!=0 && FPoly!=0) {
 		int n=FPoly->Count<FVector->Count?FPoly->Count:FVector->Count;
-		FDrawMan->Road->ConvertPoly(n,FPoly->Points,FVector->Points);
+		FDrawMan->Road->ConvertPointsArray(n,FPoly->Points,FVector->Points);
 
 	} else {
 		delete FVector;
@@ -1664,7 +1664,7 @@ TExtPolyline* __fastcall TRoadFrm::BuildPoly(bool re)
 		{
 			int n=FPoly->Count;
 			FVector=new TExtPolyline(n);
-			FDrawMan->Road->ConvertPoly(n,FPoly->Points,FVector->Points);
+			FDrawMan->Road->ConvertPointsArray(n,FPoly->Points,FVector->Points);
 			for (int i=0;i<n;i++)
 			{
 				FVector->Codes[i]=FPoly->Points[i].Code.VisCon();

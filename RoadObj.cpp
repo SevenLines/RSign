@@ -485,17 +485,8 @@ TExtPolyline* __fastcall TRoadObject::GetPolyMetric(TRoad* Road)
 TExtPolyline *Res=NULL;
 if (FPoly)
     {
-    int n=FPoly->Count;
-    int d=FPoly->Points[0].Code.VisCon();
-    if (n>0)
-        {
-        Res=new TExtPolyline(n+d);
-        Road->ConvertPoly(n,FPoly->Points,Res->Points);
-        for (int i=0;i<n;i++)
-            Res->Codes[i]=FPoly->Points[i].Code.VisCon();
-        if (d)
-            Res->Codes[n]=Res->Codes[0],Res->Points[n]=Res->Points[0];
-        }
+    Res=new TExtPolyline();
+    Road->ConvertPolyline(*FPoly,*Res);
     }
 return Res;
 }
@@ -566,7 +557,7 @@ TExtPolyline* __fastcall TMoundHeight::GetDefMetric(TRoad *Road) {
       Rp[1].X=Rp[0].X+Height;
    }
    Res->Codes[0]=0;
-   Road->ConvertPoly(2,Rp,Res->Points);
+   Road->ConvertPointsArray(2,Rp,Res->Points);
    return Res;
 }
 
@@ -594,36 +585,37 @@ return l;
 
 TExtPolyline* __fastcall TCommunication::GetDefMetric(TRoad *Road)
 {
-TRoadPoint Rp[2];
-TExtPolyline *Res=new TExtPolyline(2,1);
+TPolyline Rp(2);
+TExtPolyline *Res=new TExtPolyline;
+Rp.Points[0].Code=0;
+Rp.Points[1].Code=0;
 if (Placement==cpLeft)
     {
-    Rp[0].L=LMin;
-    Rp[0].X=Road->XMin*2/3;
-    Rp[1].L=LMax;
-    Rp[1].X=Road->XMin*2/3;
+    Rp.Points[0].L=LMin;
+    Rp.Points[0].X=Road->XMin*2/3;
+    Rp.Points[1].L=LMax;
+    Rp.Points[1].X=Road->XMin*2/3;
     Res->DirectionVal=-1;
     }
 else if (Placement==cpRight)
     {
-    Rp[0].L=LMin;
-    Rp[0].X=Road->XMax*2/3;
-    Rp[1].L=LMax;
-    Rp[1].X=Road->XMax*2/3;
+    Rp.Points[0].L=LMin;
+    Rp.Points[0].X=Road->XMax*2/3;
+    Rp.Points[1].L=LMax;
+    Rp.Points[1].X=Road->XMax*2/3;
     }
 else
     {
-    Rp[0].L=LMin;
-    Rp[0].X=Road->XMin;
-    Rp[1].L=LMax;
-    Rp[1].X=Road->XMax;
+    Rp.Points[0].L=LMin;
+    Rp.Points[0].X=Road->XMin;
+    Rp.Points[1].L=LMax;
+    Rp.Points[1].X=Road->XMax;
     }
-if (Rp[0].L<Road->LMin)
-    Rp[0].L=Road->LMin;
-if (Rp[1].L>Road->LMax)
-    Rp[1].L=Road->LMax;
-Res->Codes[0]=0;
-Road->ConvertPoly(2,Rp,Res->Points);
+if (Rp.Points[0].L<Road->LMin)
+    Rp.Points[0].L=Road->LMin;
+if (Rp.Points[1].L>Road->LMax)
+    Rp.Points[1].L=Road->LMax;
+Road->ConvertPolyline(Rp,*Res);
 return Res;
 }
 
@@ -636,7 +628,7 @@ Rp[0].X=lx;
 Rp[1].X=rx;
 TExtPolyline *Res=new TExtPolyline(2,1);
 Res->Codes[0]=0;
-Road->ConvertPoly(2,Rp,Res->Points);
+Road->ConvertPointsArray(2,Rp,Res->Points);
 return Res;
 }
 
@@ -672,7 +664,7 @@ else
     Rp[0].X=lx-(dl>>1);
     Rp[1].X=rx+(dl>>1);
     }
-Road->ConvertPoly(2,Rp,Res->Points);
+Road->ConvertPointsArray(2,Rp,Res->Points);
 return Res;
 }
 
@@ -727,7 +719,7 @@ Res->Codes[0]=0;
 Rp[0].L=Rp[1].L=FL;
 Rp[0].X=Road->RightSide.FindX(FL);;
 Rp[1].X=Road->LeftSide.FindX(FL);
-Road->ConvertPoly(2,Rp,Res->Points);
+Road->ConvertPointsArray(2,Rp,Res->Points);
 return Res;
 }
 
@@ -783,7 +775,7 @@ Rp[2].L=LMax;
 Rp[3].X=Road->XMin;
 Rp[3].L=LMax;
 TExtPolyline *Res=new TExtPolyline(4,1);
-Road->ConvertPoly(4,Rp,Res->Points);
+Road->ConvertPointsArray(4,Rp,Res->Points);
 Res->Codes[0]=0;
 Res->Codes[2]=0;
 return Res;
@@ -874,8 +866,9 @@ if ((Kind==dk12)||(Kind==dk83)||(Kind==dk84)||(Kind==dk88)||(Kind==dk89)||(Kind=
         }
     int n=PL->Count+PR->Count;
     Res=new TExtPolyline(n,1);
-    Road->ConvertPoly(PR->Count,PR->Points,Res->Points);
-    Road->ConvertPoly(PL->Count,PL->Points,Res->Points+PR->Count);
+    // В дефекты точки пока не добавляем
+    Road->ConvertPointsArray(PR->Count,PR->Points,Res->Points);
+    Road->ConvertPointsArray(PL->Count,PL->Points,Res->Points+PR->Count);
     __int32 i,j;
     for (i=PR->Count,j=n-1;i<j;i++,j--)
         {
@@ -901,7 +894,7 @@ else if ((Kind==dk2)||(Kind==dk56)||(Kind==dk94)) // Выбоины ямы заплаты
     Rp[2].X=Road->RightLine.FindX(L2)/2;
     Rp[3].L=L2;
     Rp[3].X=Road->LeftLine.FindX(L2)/2;
-    Road->ConvertPoly(4,Rp,Res->Points);
+    Road->ConvertPointsArray(4,Rp,Res->Points);
     }
 else if ((Kind==dk1)||(Kind==dk96))               // кромка ступенька
     {
@@ -912,7 +905,7 @@ else if ((Kind==dk1)||(Kind==dk96))               // кромка ступенька
         P->CopyAndCut(&(Road->RightLine),L1,L2);
     Res=new TExtPolyline(P->Count,1);
     Res->Codes[0]=0;
-    Road->ConvertPoly(P->Count,P->Points,Res->Points);
+    Road->ConvertPointsArray(P->Count,P->Points,Res->Points);
     delete P;
     }
 else if (Kind==dk17)   // Заросший кювет
@@ -933,7 +926,7 @@ else if (Kind==dk17)   // Заросший кювет
         P->Points[i].X+=DX;
     Res=new TExtPolyline(P->Count,1);
     Res->Codes[0]=0;
-    Road->ConvertPoly(P->Count,P->Points,Res->Points);
+    Road->ConvertPointsArray(P->Count,P->Points,Res->Points);
     delete P;
     }
 else if (Kind==dk67)  //Трещины
@@ -946,7 +939,7 @@ else if (Kind==dk67)  //Трещины
 
     Res=new TExtPolyline(2,1);
     Res->Codes[0]=0;
-    Road->ConvertPoly(2,Rp,Res->Points);
+    Road->ConvertPointsArray(2,Rp,Res->Points);
     }
 if (Res)
     if (Placement==rsLeft)
@@ -998,35 +991,40 @@ return Res;
 
 TExtPolyline* __fastcall TSquareCenterObject::GetDefMetric(TRoad *Road)
 {
-TRoadPoint Rp[4];
+TPolyline Rp(4);
 int L1=LMin>Road->LMin ? LMin : Road->LMin;
 int L2=LMax<Road->LMax ? LMax : Road->LMax;
 int X=FWidth>>1;
-Rp[0].L=L1;
-Rp[0].X=X;
-Rp[1].L=L2;
-Rp[1].X=X;
-Rp[2].L=L2;
-Rp[2].X=-X;
-Rp[3].L=L1;
-Rp[3].X=-X;
-TExtPolyline *Res=new TExtPolyline(4,1);
-Road->ConvertPoly(4,Rp,Res->Points);
+Rp.Points[0].L=L1;
+Rp.Points[0].X=X;
+Rp.Points[0].Code=1;
+Rp.Points[1].L=L2;
+Rp.Points[1].X=X;
+Rp.Points[1].Code=1;
+Rp.Points[2].L=L2;
+Rp.Points[2].X=-X;
+Rp.Points[2].Code=1;
+Rp.Points[3].L=L1;
+Rp.Points[3].X=-X;
+Rp.Points[3].Code=1;
+TExtPolyline *Res=new TExtPolyline;
+Road->ConvertPolyline(Rp,*Res);
 return Res;
 }
 
 TExtPolyline* __fastcall TLinearCenterRoadObject::GetDefMetric(TRoad *Road)
 {
-TRoadPoint Rp[2];
+TPolyline Rp;
 int L1=LMin>Road->LMin ? LMin : Road->LMin;
 int L2=LMax<Road->LMax ? LMax : Road->LMax;
-Rp[0].L=L1;
-Rp[0].X=0;
-Rp[1].L=L2;
-Rp[1].X=0;
-TExtPolyline *Res=new TExtPolyline(2,1);
-Road->ConvertPoly(2,Rp,Res->Points);
-Res->Codes[0]=0;
+Rp.Points[0].L=L1;
+Rp.Points[0].X=0;
+Rp.Points[0].Code=0;
+Rp.Points[1].L=L2;
+Rp.Points[1].X=0;
+Rp.Points[1].Code=1;
+TExtPolyline *Res=new TExtPolyline;
+Road->ConvertPolyline(Rp,*Res);
 return Res;
 }
 
@@ -1065,19 +1063,14 @@ else
     PR->CopyAndCut(&(Road->RightLine),L1,L2);
     }
 int n=PL->Count+PR->Count;
-TExtPolyline *Res=new TExtPolyline(n,1);
-Road->ConvertPoly(PR->Count,PR->Points,Res->Points);
-Road->ConvertPoly(PL->Count,PL->Points,Res->Points+PR->Count);
-__int32 i,j;
-for (i=PR->Count,j=n-1;i<j;i++,j--)
-    {
-    __int32 tmp=Res->Points[i].x;
-    Res->Points[i].x=Res->Points[j].x;
-    Res->Points[j].x=tmp;
-    tmp=Res->Points[i].y;
-    Res->Points[i].y=Res->Points[j].y;
-    Res->Points[j].y=tmp;
-    }
+TPolyline R(n);
+for (int i=0;i<PR->Count;i++)
+    R.Points[i]=PR->Points[i],R.Points[i].Code=1;
+for (int i=0;i<PL->Count;i++)
+    R.Points[n-1-i]=PL->Points[i],R.Points[n-i-1].Code=1;
+
+TExtPolyline *Res=new TExtPolyline;
+Road->ConvertPolyline(R,*Res);
 delete PL;
 delete PR;
 return Res;
@@ -1129,10 +1122,10 @@ if (FPlacement!=opRight)
         }
     }
 for (int i=0;i<n;i++)
-    p[i].X+=dx;
-Res=new TExtPolyline(n,1);
-Res->Codes[0]=0;
-Road->ConvertPoly(n,p,Res->Points);
+    p[i].X+=dx,p[i].Code=1;
+p[0].Code=0;
+Res=new TExtPolyline;
+Road->ConvertPolyline(*pl,*Res);
 delete pl;
 if (FPlacement==opLeft)
     Res->DirectionVal=-1;
@@ -1198,24 +1191,17 @@ else
     dx=-FDX,wid=-drwwid;
 pl->CopyAndCut(GetAttachPoly(Road),L1,L2);
 int n=pl->Count;
-TExtPolyline *Res=new TExtPolyline(2*n,1);
-
-TRoadPoint *p=pl->Points;
-for (__int32 i=0;i<n;i++)
-        p[i].X+=dx;
-Road->ConvertPoly(n,p,Res->Points);
-for (__int32 i=0;i<n;i++)
-        p[i].X+=wid;
-Road->ConvertPoly(n,p,Res->Points+n);
-for (int i=0,j=n-1;i<j;i++,j--)
-  {
-  int t=Res->Points[i].x;
-  Res->Points[i].x=Res->Points[j].x;
-  Res->Points[j].x=t;
-  t=Res->Points[i].y;
-  Res->Points[i].y=Res->Points[j].y;
-  Res->Points[j].y=t;
-  }
+TPolyline R(2*n);
+for (int i=0;i<n;i++) {
+   R.Points[i]=pl->Points[i];
+   R.Points[i].X+=dx;
+   R.Points[i].Code=1;
+   R.Points[n-i-1]=pl->Points[i];
+   R.Points[n-i-i].X+=dx+wid;
+   R.Points[n-i-1].Code=1;
+}
+TExtPolyline *Res=new TExtPolyline;
+Road->ConvertPolyline(R,*Res);
 delete pl;
 return Res;
 }
@@ -1243,18 +1229,15 @@ else
     p2.CopyAndCut(&(Road->LeftSide),L1,L2);
     }
 int n=p1.Count+p2.Count;
-TExtPolyline *Res=new TExtPolyline(n,1);
-Road->ConvertPoly(p1.Count,p1.Points,Res->Points);
-Road->ConvertPoly(p2.Count,p2.Points,Res->Points+p1.Count);
-for (int i=p1.Count,j=n-1;i<j;i++,j--)
-    {
-    int t=Res->Points[i].x;
-    Res->Points[i].x=Res->Points[j].x;
-    Res->Points[j].x=t;
-    t=Res->Points[i].y;
-    Res->Points[i].y=Res->Points[j].y;
-    Res->Points[j].y=t;
-    }
+TPolyline R(n);
+for (int i=0;i<p1.Count;i++)
+    R.Points[i]=p1.Points[i],R.Points[i].Code=1;
+for (int i=0;i<p2.Count;i++)
+    R.Points[n-1-i]=p2.Points[i],R.Points[n-i-1].Code=1;
+
+TExtPolyline *Res=new TExtPolyline;
+Road->ConvertPolyline(R,*Res);
+
 if (FPlacement==opLeft)
     Res->DirectionVal=-1;
 return Res;
@@ -1422,14 +1405,14 @@ else
 TRoadPoint *p=pl->Points;
 int n=pl->Count;
 for (__int32 i=0;i<n;i++)
-    p[i].X=(p[i].X*FK)/1000+offs;
-TExtPolyline *Res=new TExtPolyline(n,1);
-Res->Codes[0]=0;
-Road->ConvertPoly(n,p,Res->Points);
+    p[i].X=(p[i].X*FK)/1000+offs,p[i].Code=1;
+p[0].Code=0;
+TExtPolyline *Res=new TExtPolyline;
+Road->ConvertPolyline(*pl,*Res);
 if (FDirection==roUnDirect)
     {
-    int i,j;
-    for (i=0,j=n-1;i<j;i++,j--)
+    int i,j=Res->Count;
+    for (i=0,j=Res->Count-1;i<j;i++,j--)
         {
         POINT tmp=Res->Points[i];
         Res->Points[i]=Res->Points[j];
@@ -1485,7 +1468,7 @@ else
 TExtPolyline *Res=new TExtPolyline(4,1);
 Res->Codes[0]=0;
 Res->Codes[2]=0;
-Road->ConvertPoly(4,Rp,Res->Points);
+Road->ConvertPointsArray(4,Rp,Res->Points);
 return Res;
 }
 
@@ -1606,20 +1589,20 @@ else
 TExtPolyline *Res=new TExtPolyline(4,1);
 Res->Codes[0]=0;
 Res->Codes[2]=0;
-Road->ConvertPoly(4,Rp,Res->Points);
+Road->ConvertPointsArray(4,Rp,Res->Points);
 return Res;
 }
 
 TExtPolyline* __fastcall TCommRoadObject::GetDefMetric(TRoad *Road)
 {
-TRoadPoint Rp[2];
-POINT *Pt;
+TPolyline Rp(2);
 Rp[1].L=Rp[0].L=L;
+Rp[0].Code=0;
+Rp[1].Code=1;
 Rp[0].X=Road->XMin;
 Rp[1].X=Road->XMax;
-TExtPolyline *Res=new TExtPolyline(2,1);
-Res->Codes[0]=0;
-Road->ConvertPoly(2,Rp,Res->Points);
+TExtPolyline *Res=new TExtPolyline;
+Road->ConvertPolyline(Rp,*Res);
 return Res;
 }
 
@@ -1648,7 +1631,7 @@ Res->Codes[2]=5;
 Res->Codes[6]=5;
 Res->Codes[10]=5;
 Res->Codes[14]=5;
-Road->ConvertPoly(16,Rp,Res->Points);
+Road->ConvertPointsArray(16,Rp,Res->Points);
 return Res;
 }
 
@@ -1680,23 +1663,27 @@ return Res;
 
 TExtPolyline* __fastcall TSquareAttachObject::GetDefMetric(TRoad *Road)
 {
-TRoadPoint Rp[4];
+TPolyline Rp(4);
 int lmin=LMin;
 if (lmin<Road->LMin)
     lmin=Road->LMin;
 int lmax=LMax;
 if (lmax>Road->LMax)
     lmax=Road->LMax;
-Rp[0].X=Road->XMin;
-Rp[0].L=lmin;
-Rp[1].X=Road->XMax;
-Rp[1].L=lmin;
-Rp[2].X=Road->XMax;
-Rp[2].L=lmax;
-Rp[3].X=Road->XMin;
-Rp[3].L=lmax;
-TExtPolyline *Res=new TExtPolyline(4,1);
-Road->ConvertPoly(4,Rp,Res->Points);
+Rp.Points[0].X=Road->XMin;
+Rp.Points[0].L=lmin;
+Rp.Points[0].Code=1;
+Rp.Points[1].X=Road->XMax;
+Rp.Points[1].L=lmin;
+Rp.Points[1].Code=1;
+Rp.Points[2].X=Road->XMax;
+Rp.Points[2].L=lmax;
+Rp.Points[2].Code=1;
+Rp.Points[3].X=Road->XMin;
+Rp.Points[3].L=lmax;
+Rp.Points[3].Code=1;
+TExtPolyline *Res=new TExtPolyline;
+Road->ConvertPolyline(Rp,*Res);
 return Res;
 }
 
@@ -1743,7 +1730,7 @@ Rp[1].L=(LMin+LMax)>>1;
 //else
   Rp[1].X=Road->FrameXMax;
 TExtPolyline *Res=new TExtPolyline(3,1);
-Road->ConvertPoly(3,Rp,Res->Points);
+Road->ConvertPointsArray(3,Rp,Res->Points);
 return Res;
 }
 
@@ -1797,8 +1784,9 @@ else
     }
 int n=PL->Count+PR->Count;
 TExtPolyline *Res=new TExtPolyline(n,1);
-Road->ConvertPoly(PR->Count,PR->Points,Res->Points);
-Road->ConvertPoly(PL->Count,PL->Points,Res->Points+PR->Count);
+// Опасные участки пока не будем изгибать
+Road->ConvertPointsArray(PR->Count,PR->Points,Res->Points);
+Road->ConvertPointsArray(PL->Count,PL->Points,Res->Points+PR->Count);
 __int32 i,j;
 for (i=PR->Count,j=n-1;i<j;i++,j--)
     {
@@ -1914,7 +1902,8 @@ else
 TExtPolyline *Res=new TExtPolyline(4,1);
 Res->Codes[0]=0;
 Res->Codes[2]=0;
-Road->ConvertPoly(4,Rp,Res->Points);
+// Бывают ли изогнутые мосты?
+Road->ConvertPointsArray(4,Rp,Res->Points);
 return Res;
 }
 
@@ -1953,10 +1942,13 @@ return l;
 __fastcall TRoad::TRoad(TRoad* Rd,__int32 L1,__int32 L2)
     : TBandRoadObject(Rd->Id,Rd->DictId)
 {
+
 FL=L1;
 FLMax=L2;
 FZMin=Rd->ZMin;
 FZMax=Rd->ZMax;
+
+FConvertMethod=Rd->FConvertMethod;
 
 FDrwClassId=Rd->DrwClassId;
 LeftLine.CopyAndCut(&(Rd->LeftLine),L1,L2);
@@ -1971,6 +1963,7 @@ LeftBound.CopyAndCut(&(Rd->LeftBound),L1,L2);
 RightBound.CopyAndCut(&(Rd->RightBound),L1,L2);
 
 Geometry.CopyAndCut(&(Rd->Geometry),L1,L2);
+CurvePlan.CopyAndCut(&(Rd->CurvePlan),L1,L2);
 
 FXMin=Rd->XMin;
 FXMax=Rd->XMax;
@@ -2054,8 +2047,62 @@ FOutYMax=maxy;
 CalcConvertion();
 }
 
+// Функция изменяет координаты точки которая двигается по дуге
+// с изменяющимся радиусом кривизны от BR1 до BR2
+inline void Calc2D(double &X,double &Y, double &A,double L,double BR1,double BR2) {
+  if (fabs(L)<0.01) return;
+  if (BR1==BR2) {// Дуга или прямая
+     if (BR1==0) // Прямая
+        X+=L*cos(A),Y+=L*sin(A);
+     else {
+        BR1/=100;
+        double DA=L*BR1;//Изменение угла
+        double DY=(1-cos(DA))/BR1; //Приращение при угле в 0 градусов
+        double DX=sin(DA)/BR1;
+        X+=cos(A)*DX-sin(A)*DY;
+        Y+=+sin(A)*DX+cos(A)*DY;
+        A+=DA;
+     }
+  } else {
+      double c=(BR2-BR1)/L; // Центробежное ускорение
+  }
+}
+
 void __fastcall TRoad::ConvertPoint(__int32 L,__int32 X,__int32 &PX,__int32 &PY)
 {
+if (FConvertMethod==pc2d) {
+    int k;
+    for (k=0;FrameLMin>CurvePlan.L[k];++k); // Ищем участок плана где начинается окно
+    double CX=0,CY=0,CA=0; // Координаты в системе карты повернутые
+    double PL;
+    TCurvePoint CR(0.0);
+    if (k==0) {// FrameLMin<=L[0] {
+        Calc2D(CX,CY,CA,CurvePlan.L[0]-FrameLMin,0.0,0.0);
+        k=1;
+        PL=CurvePlan.L[0];
+        CR=CurvePlan.Values[0];
+    } else {   //FrameLMin<=L[k],k>0
+        CR.Extrapolate(CurvePlan.Values[k-1],CurvePlan.Values[k],FrameLMin,CurvePlan.L[k-1],CurvePlan.L[k]);
+        PL=FrameLMin;
+    }
+    for (;k<CurvePlan.Count && L>CurvePlan.L[k];k++) {
+        Calc2D(CX,CY,CA,CurvePlan.L[k]-PL,CR.bR,CurvePlan.Values[k].bR);
+        CR=CurvePlan.Values[k];
+        PL=CurvePlan.L[k];
+    }
+    if (k<CurvePlan.Count) { // L<=CurvePlan.L[k] && k>0
+        TCurvePoint TR;
+        TR.Extrapolate(CurvePlan.Values[k-1],CurvePlan.Values[k],LMin,CurvePlan.L[k-1],CurvePlan.L[k]);
+        Calc2D(CX,CY,CA,L-PL,CR.bR,TR.bR);
+        TR.bR=0;
+    } else //ТОчка после окончания плана
+        Calc2D(CX,CY,CA,L-PL,0,0);
+    CX-=X*sin(CA);
+    CY+=X*cos(CA);
+    PX=FOutXMin+(CX)*FKl;
+    PY=FOutYMin+(CY-FFrameXMin)*FKx;//FKx; Масштаб всегда одинаковый
+}
+else {
 if (FPlKind==pkGorizontal)
     {
     if (FPlDirect==pdDirect)
@@ -2081,6 +2128,7 @@ else
         PY=FOutYMin+(L-FFrameLMin)*FKl;
         PX=FOutXMax-(X-FFrameXMin)*FKx;
         }
+    }
     }
 }
 
@@ -2504,8 +2552,61 @@ void __fastcall TRoad::RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX
         }
 }
 
-void __fastcall TRoad::ConvertPoly(__int32 n, TRoadPoint *in, POINT *out)
+void __fastcall TRoad::ConvertPolyline(TPolyline &src,TExtPolyline &dst) {
+if (FConvertMethod==pc2d) {
+    dst.ReSize(0);
+    double stepl=100000; // Пока будем ставить точки через 10 метров.
+    // Еще в будущем надо учитывать что не все точки соеденены отрезками
+    int n=src.Count+src.Points[0].Code.VisCon(); // Для замыкания полигона
+    __int32 x,y,k=0;
+    dst.ReSize(n+1);
+    double CL=src.Points[0].L, CX=src.Points[0].X;
+    ConvertPoint(CL,CX,x,y);
+    dst.Points[k].x=x;
+    dst.Points[k].y=y;
+    dst.Codes[k]=src.Points[0].Code.VisCon();
+    k=1;
+    for (int i=1;i<n;k++) {
+       int cind=i%src.Count;
+       double dl=src.Points[cind].L-CL;
+       double dx=src.Points[cind].X-CX;
+       double ds=sqrt(dl*dl+dx*dx);
+       if (ds>stepl)  { // Добавляем точку
+          CL+=stepl*dl/ds;
+          CX+=stepl*dx/ds;
+       } else {         // Переходим к следующей точке
+          CL=src.Points[cind].L;
+          CX=src.Points[cind].X;
+          i++;
+       }
+       dst.ReSize(k+1);
+       ConvertPoint(CL,CX,x,y);
+       dst.Points[k].x=x;
+       dst.Points[k].y=y;
+       dst.Codes[k]=src.Points[cind].Code.VisCon();
+    }
+//    ConvertPointsArray(src.Count,src.Points,dst.Points);
+} else {
+    __int32 n=src.Count;
+    __int32 d=src.Points[0].Code.VisCon();
+    dst.ReSize(n+d);
+    ConvertPointsArray(src.Count,src.Points,dst.Points);
+    for (int i=0;i<n;i++)
+       dst.Codes[i]=src.Points[i].Code.VisCon();
+    if (d)
+       dst.Codes[n]=dst.Codes[0],dst.Points[n]=dst.Points[0];
+    }
+}
+
+void __fastcall TRoad::ConvertPointsArray(__int32 n, TRoadPoint *in, POINT *out)
 {
+if (FConvertMethod==pc2d) {
+   for (int i=0;i<n;i++) {
+      __int32 x,y;
+      ConvertPoint(in[i].L,in[i].X,x,y);
+      out[i].x=x,out[i].y=y;
+   }
+} else {
 if (FPlKind==pkGorizontal)
     {
     if (FPlDirect==pdDirect)
@@ -2537,6 +2638,8 @@ else
             }
     }
 }
+}
+
 
 TExtPolyline* __fastcall TRoad::GetProfilMetric(TRect &OutRect)
 {
