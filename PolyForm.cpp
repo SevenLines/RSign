@@ -368,7 +368,7 @@ FPoly->Count=n;
 for (int i=0;i<n;i++)
     if (NewPt[i])
         FRefForm->SetPoint(FPoly->Points[i],i);
-delete NewPt;
+delete[] NewPt;
 }
 
 void __fastcall TPolyFrm::PolyListClick(TObject *Sender)
