@@ -346,7 +346,8 @@ void __fastcall TFAutoCADPrint::cmdPrintClick(TObject *Sender)
 	if(!helper) return;
 	ReadValues();
 	try{
-		SaveDialog1->FileName = AutoCAD.ActiveDocument->SummaryInfo->Title;
+        AnsiString title = AutoCAD.ActiveDocument->SummaryInfo->Title;
+		SaveDialog1->FileName = title;
 	}catch(...){}
 	if(!SaveDialog1->Execute()){
 		return;
