@@ -151,9 +151,16 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
 	String PatName=ini->ReadString("PrintPattern","Name","").Trim();
 	ini->ReadSectionValues("Cheefs",CheefList);
 	VideoServers->CommaText=ini->ReadString("Video","Servers","");
-	if (PatName!="")
-	    if (Pattern->LoadFromFile(PatName))
+	if (PatName!="") {
+	    if (Pattern->LoadFromFile(PatName)) {
 	        VPatFrm->FileName=PatName;
+        }
+    }
+
+    lastRoadWindowPosition.Left = ini->ReadInteger("ShowRoad", "Left", 0);
+    lastRoadWindowPosition.Top = ini->ReadInteger("ShowRoad", "Top", 0);
+    lastRoadWindowPosition.Right = ini->ReadInteger("ShowRoad", "Right", 0);
+    lastRoadWindowPosition.Bottom = ini->ReadInteger("ShowRoad", "Bottom", 0);
 
 }
 
@@ -162,6 +169,12 @@ void __fastcall TMainForm::WriteIni(TIniFile *ini)
 	ini->WriteString("Connection","ConnectionString",Connection->ConnectionString);
 	ini->WriteInteger("MainForm","Left",Left);
 	ini->WriteInteger("MainForm","Top",Top);
+
+    ini->WriteInteger("ShowRoad", "Left", lastRoadWindowPosition.Left);
+    ini->WriteInteger("ShowRoad", "Top", lastRoadWindowPosition.Top);
+    ini->WriteInteger("ShowRoad", "Right", lastRoadWindowPosition.Right);
+    ini->WriteInteger("ShowRoad", "Bottom", lastRoadWindowPosition.Bottom);
+
 	ini->WriteString("PrintPattern","Name",VPatFrm->FileName);
 	ini->WriteString("Video","Servers",VideoServers->CommaText);
     ConnectionForm->saveIni(ini);
@@ -315,11 +328,24 @@ bool __fastcall TMainForm::OpenRoadById(__int32 id,__int32 dataclass,bool OpenCo
 		Data=ResManager->AddDataSource(Capt,id,dataclass,0,Connection,Factory);
 		if (Data)
 		{
+            blockShowRoadSizeEventProcessor = true;
+
 			Application->CreateForm(__classid(TRoadFrm), &frm);
 			frm->OpenRoad(Capt,Data,Dict,Shared);
 			frm->Show();
+
+            if (lastRoadWindowPosition.Right - lastRoadWindowPosition.Left  > 0
+                && lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top > 0) {
+              frm->Left = lastRoadWindowPosition.Left;
+              frm->Top = lastRoadWindowPosition.Top;
+              frm->Width = lastRoadWindowPosition.Right - lastRoadWindowPosition.Left;
+              frm->Height = lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top;
+            }
+
 			ResManager->ReleaseDataSource(Data); // “еперь источником владеет окно
 			res=true;
+
+            blockShowRoadSizeEventProcessor = false;
 		}
 	}
 	return res;
@@ -405,7 +431,12 @@ void __fastcall TMainForm::OpenRoad(TObject *Sender)
 			<< OpenRoadDialog->RoadName.Trim().c_str()
 			<< " [id:" << OpenRoadDialog->RoadId << "]"
 			<< " источник: " << OpenSourceDialog->DataSource );
+
+
 			OpenRoadById(OpenRoadDialog->RoadId,OpenSourceDialog->DataSource,true);
+
+
+
 		}
 	}
 }
@@ -989,10 +1020,24 @@ void __fastcall TMainForm::N58Click(TObject *Sender)
 					Shared->Load();
 				}
 				TDictSource *Dict=ResManager->AddDictSource(0,Connection);
+
+                blockShowRoadSizeEventProcessor = true;
 				TRoadFrm *frm;
 				Application->CreateForm(__classid(TRoadFrm), &frm);
+
+                frm->OnFormGeometryChange = ShowRoadFormGeometryChange;
 				frm->OpenView(OpenViewFrm->RoadId,OpenViewFrm->ViewId,Dict,Shared);
 				frm->Show();
+                
+                if (lastRoadWindowPosition.Right - lastRoadWindowPosition.Left  > 0
+                    && lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top > 0) {
+                  frm->Left = lastRoadWindowPosition.Left;
+                  frm->Top = lastRoadWindowPosition.Top;
+                  frm->Width = lastRoadWindowPosition.Right - lastRoadWindowPosition.Left;
+                  frm->Height = lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top;
+                }
+                
+                blockShowRoadSizeEventProcessor = false;
 			}  catch(...) {
 				std::cerr << "ошибка при открытии дороги" << std::endl;
 			}
@@ -1234,3 +1279,11 @@ if (FActiveRoad)
 }
 //---------------------------------------------------------------------------
 
+void TMainForm::ShowRoadFormGeometryChange(TRect windowRect, TRect videoRect)
+{
+    if (blockShowRoadSizeEventProcessor) {
+        return;
+    }
+    lastRoadWindowPosition = windowRect;
+}
+//---------------------------------------------------------------------------

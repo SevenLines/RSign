@@ -204,15 +204,29 @@ private:	// User declarations
     TRoadFrm *FActiveRoad;
     int FCurAttachDesigner;
     bool HaveInit;
+
+    TRect lastRoadWindowPosition;
+    TRect lastVideoWindowPosition;
+    bool blockShowRoadSizeEventProcessor;
+
+    void ShowRoadFormGeometryChange(TRect windowRect, TRect videoRect);
+
     virtual void __fastcall WndProc(TMessage&);
+
     TRoadFrm* __fastcall FindRoad(__int32 id,__int32 dataclass);
+
     void __fastcall SetActiveRoad(TRoadFrm *);
+
     int __fastcall AddProject(__int32 RoadId);
+
     bool __fastcall GetPropertyByClick(void)
         {return BtnPropMode->Down;}
+
     bool __fastcall GetSelectByClick(void)
         {return BtnSelectMode->Down;}
-    void __fastcall SetDesigner(TObject *Send);        
+
+    void __fastcall SetDesigner(TObject *Send);
+           
 public:		// User declarations
     TSignPanel *SignPanel;
     TResManager *ResManager;

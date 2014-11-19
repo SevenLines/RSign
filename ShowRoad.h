@@ -537,8 +537,7 @@ public:         // User declarations
     __property TRoadObject *ActiveObj={read=FActiveObj};
     __property TRoadObject *InsertingObj={read=FInsertingObj};
 
-    TRect lastRoadWindowPosition;
-    TRect lastVideoWindowPosition;
+    void (__closure *OnFormGeometryChange)(TRect, TRect);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TRoadFrm *RoadFrm;

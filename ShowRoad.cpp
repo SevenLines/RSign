@@ -3774,6 +3774,11 @@ void __fastcall TRoadFrm::FormResize(TObject *Sender)
 {
 	ShowScale();
 	InvalidateBoxes();
+
+    if (OnFormGeometryChange) {
+        TRect windowRect(Left, Top, Left + Width, Top + Height);
+        OnFormGeometryChange(windowRect, TRect());
+    }
 }
 //---------------------------------------------------------------------------
 
