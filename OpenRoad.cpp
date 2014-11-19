@@ -44,15 +44,20 @@ void __fastcall TOpenRoadDialog::SetFilter(TObject *Sender) {
 
        // фильтр по ID-ишнику
        if (!txtIDFilter->Text.IsEmpty()) {
-          if (fWas) f+=" and ";
-          f+="id_="+txtIDFilter->Text;
+          int id;
+          if (TryStrToInt(txtIDFilter->Text, id)) {
+            if (fWas) f+=" and ";
+            f+="id_="+txtIDFilter->Text;
+          }
        } else {
           // фильтр района
           if (cbDist->ItemIndex > -1 && cbDist->ItemIndex < cbDist->Items->Count) {
              if ((int)cbDist->Items->Objects[cbDist->ItemIndex]!=0) {
                if (fWas) f+=" and ";
                fWas = true;
-               f +="did="+IntToStr((int)cbDist->Items->Objects[cbDist->ItemIndex]);
+               try {
+                f +="did="+IntToStr((int)cbDist->Items->Objects[cbDist->ItemIndex]);
+               } catch (...) {}
              }
           }
           // фильтр по названию
@@ -71,7 +76,8 @@ void __fastcall TOpenRoadDialog::SetFilter(TObject *Sender) {
 void __fastcall TOpenRoadDialog::FormShow(TObject *Sender)
 {
  SubTitul_DataSet->Open();
- TADODataSet *ds=new TADODataSet(this);
+ TADODataSet *ds=new TADODataSet(this); 
+
  ds->Connection=MainForm->Connection;
  ds->CommandText="select * from ListTitleGroups";
  ds->Open();

@@ -97,7 +97,7 @@ __published:	// IDE-managed Components
   TMenuItem *N58;
   TMenuItem *N59;
     TMenuItem *N60;
-    TMenuItem *N61;
+    TMenuItem *MenuItemConnect;
     TMenuItem *N62;
     TPopupMenu *DesignersList;
     TMenuItem *N63;
@@ -177,7 +177,7 @@ __published:	// IDE-managed Components
   void __fastcall N59Click(TObject *Sender);
   void __fastcall N58Click(TObject *Sender);
   void __fastcall N57Click(TObject *Sender);
-    void __fastcall N61Click(TObject *Sender);
+    void __fastcall MenuItemConnectClick(TObject *Sender);
     void __fastcall N63Click(TObject *Sender);
     void __fastcall N64Click(TObject *Sender);
     void __fastcall N66Click(TObject *Sender);
@@ -240,6 +240,7 @@ public:		// User declarations
     void __fastcall PostBroadCastMessage(int Command,int Wpar,int Lpar);
 
     void __fastcall PrepareMinireports();
+    int __fastcall SetupConnection();
 
     __property bool PropertyByClick={read=GetPropertyByClick};
     __property bool SelectByClick={read=GetSelectByClick};

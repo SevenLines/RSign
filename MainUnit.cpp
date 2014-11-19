@@ -390,6 +390,12 @@ bool __fastcall TMainForm::ShowRoadPart(__int32 RoadId,__int32 dataclass,__int32
 
 void __fastcall TMainForm::OpenRoad(TObject *Sender)
 {
+    if (!MainForm->Connection->Connected) {
+        if (MainForm->SetupConnection() != mrOk) {
+            return;
+        }
+    }
+    
 	if (OpenRoadDialog->ShowModal()==mrOk)
 	{
 		OpenSourceDialog->RoadId=OpenRoadDialog->RoadId;
@@ -961,6 +967,12 @@ void __fastcall TMainForm::N59Click(TObject *Sender)
 
 void __fastcall TMainForm::N58Click(TObject *Sender)
 {
+    if (!MainForm->Connection->Connected) {
+        if (MainForm->SetupConnection() != mrOk) {
+            return;
+        }
+    }
+
 	if (OpenRoadDialog->ShowModal()==mrOk)
 	{
 		OpenViewFrm->RoadId=OpenRoadDialog->RoadId;
@@ -1025,16 +1037,21 @@ void __fastcall TMainForm::N57Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TMainForm::N61Click(TObject *Sender)
+int __fastcall TMainForm::SetupConnection()
 {
     if (FActiveRoad) {
     	ShowMessage("Перед установкой подключения необходимо закрыть все открытые дороги");
-        return;
+        return mrCancel;
     }
 
     ConnectionForm->Connection = Connection;
-    ConnectionForm->ShowModal();
+    return ConnectionForm->ShowModal();
+}
 
+void __fastcall TMainForm::MenuItemConnectClick(TObject *Sender)
+{
+
+    SetupConnection();
 	/*if (FActiveRoad)
 	ShowMessage("Перед установкой подключения необходимо закрыть все открытые дороги");
 	else

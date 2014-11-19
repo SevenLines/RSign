@@ -17,6 +17,7 @@
 #include <Buttons.hpp>
 #include <Menus.hpp>
 #include <ComCtrls.hpp>
+#include <Types.hpp>
 //---------------------------------------------------------------------------
 enum TZoomStatus {zsNone,zsWaitZoom,zsZoom,zsWaitPoint,zsWaitSecPoint,zsMovePoint,zsFocusRect};
 #define MAXSEL 16
@@ -535,6 +536,9 @@ public:         // User declarations
     __property int RoadId={read=FRoadId};
     __property TRoadObject *ActiveObj={read=FActiveObj};
     __property TRoadObject *InsertingObj={read=FInsertingObj};
+
+    TRect lastRoadWindowPosition;
+    TRect lastVideoWindowPosition;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TRoadFrm *RoadFrm;

@@ -26,6 +26,7 @@
 #include "acadexport.h"
 #include "MoveForm.h.h"
 #include <Registry.hpp>
+#include <IniFiles.hpp>
 #include <algorithm>
 
 #include "VideoForm.h"
@@ -396,6 +397,8 @@ void __fastcall TRoadFrm::ShowAll(void)
 	FPMaxX=FMaxX;
 	SetMarkerPos((FPMinL+FPMaxL)>>1);
 	ScaleL(1);
+
+
 }
 
 void __fastcall TRoadFrm::ScaleByRect(void)
