@@ -97,7 +97,7 @@ __published:	// IDE-managed Components
   TMenuItem *N58;
   TMenuItem *N59;
     TMenuItem *N60;
-    TMenuItem *N61;
+    TMenuItem *MenuItemConnect;
     TMenuItem *N62;
     TPopupMenu *DesignersList;
     TMenuItem *N63;
@@ -125,6 +125,7 @@ __published:	// IDE-managed Components
     TMenuItem *N82;
     TMenuItem *N83;
     TMenuItem *N84;
+    TMenuItem *N85;
   void __fastcall OpenRoad(TObject *Sender);
   void __fastcall FormCreate(TObject *Sender);
   void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
@@ -176,7 +177,7 @@ __published:	// IDE-managed Components
   void __fastcall N59Click(TObject *Sender);
   void __fastcall N58Click(TObject *Sender);
   void __fastcall N57Click(TObject *Sender);
-    void __fastcall N61Click(TObject *Sender);
+    void __fastcall MenuItemConnectClick(TObject *Sender);
     void __fastcall N63Click(TObject *Sender);
     void __fastcall N64Click(TObject *Sender);
     void __fastcall N66Click(TObject *Sender);
@@ -195,6 +196,7 @@ __published:	// IDE-managed Components
         void __fastcall N81Click(TObject *Sender);
     void __fastcall ItemMiniReportsClick(TObject *Sender);
     void __fastcall N83Click(TObject *Sender);
+    void __fastcall N85Click(TObject *Sender);
 
 
 private:	// User declarations
@@ -202,15 +204,29 @@ private:	// User declarations
     TRoadFrm *FActiveRoad;
     int FCurAttachDesigner;
     bool HaveInit;
+
+    TRect lastRoadWindowPosition;
+    TRect lastVideoWindowPosition;
+    bool blockShowRoadSizeEventProcessor;
+
+    void ShowRoadFormGeometryChange(TRect windowRect, TRect videoRect);
+
     virtual void __fastcall WndProc(TMessage&);
+
     TRoadFrm* __fastcall FindRoad(__int32 id,__int32 dataclass);
+
     void __fastcall SetActiveRoad(TRoadFrm *);
+
     int __fastcall AddProject(__int32 RoadId);
+
     bool __fastcall GetPropertyByClick(void)
         {return BtnPropMode->Down;}
+
     bool __fastcall GetSelectByClick(void)
         {return BtnSelectMode->Down;}
-    void __fastcall SetDesigner(TObject *Send);        
+
+    void __fastcall SetDesigner(TObject *Send);
+           
 public:		// User declarations
     TSignPanel *SignPanel;
     TResManager *ResManager;
@@ -238,6 +254,7 @@ public:		// User declarations
     void __fastcall PostBroadCastMessage(int Command,int Wpar,int Lpar);
 
     void __fastcall PrepareMinireports();
+    int __fastcall SetupConnection();
 
     __property bool PropertyByClick={read=GetPropertyByClick};
     __property bool SelectByClick={read=GetSelectByClick};

@@ -36,9 +36,9 @@ Source: "{#MyDir}RSign.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyDir}GenRep.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyDir}HTMLGenRep.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyDir}LoginDB.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MyDir}Emfedit.exe"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "{#MyDir}Emfedit.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyDir}GdiEdit.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MyDir}MoundHeights.exe"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "{#MyDir}MoundHeights.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyDir}RSign.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyDir}GdiEdit.ini"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#MyDir}PolyPat.ini"; DestDir: "{app}"; Flags: ignoreversion
