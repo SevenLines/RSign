@@ -1,0 +1,115 @@
+Error 00040. 0x130C10 (Thread 0x0B54):
+Method called on illegally casted object: Attempt to access 608 byte(s) at
+ 0x011B606C. The 'this' pointer points to heap block 0x011B606C which is only
+ 604 bytes long.
+Call Tree:
+   0x0041EF74(=RSign.exe:0x01:01DF74) c:\program files\borland\cbuilder6\include\vcl\ADODB.hpp#965
+   0x00419A66(=RSign.exe:0x01:018A66) D:\Projects\RSign\DBDataSource.h#71
+   0x0041967D(=RSign.exe:0x01:01867D) D:\Projects\RSign\MainUnit.cpp#413
+   0x00694DDF(=RSign.exe:0x01:293DDF)
+   0x00694A52(=RSign.exe:0x01:293A52)
+   0x004156A5(=RSign.exe:0x01:0146A5) c:\program files\borland\cbuilder6\include\vcl\Forms.hpp#930
+
+The memory block (0x011B606C) [size: 604 bytes] was allocated with SysGetMem
+Call Tree:
+   0x00702A1F(=RSign.exe:0x01:301A1F)
+   0x00419A66(=RSign.exe:0x01:018A66) D:\Projects\RSign\DBDataSource.h#71
+   0x0041967D(=RSign.exe:0x01:01867D) D:\Projects\RSign\MainUnit.cpp#413
+   0x00694DDF(=RSign.exe:0x01:293DDF)
+   0x00694A52(=RSign.exe:0x01:293A52)
+   0x004156A5(=RSign.exe:0x01:0146A5) c:\program files\borland\cbuilder6\include\vcl\Forms.hpp#930
+
+------------------------------------------
+Error 00050. 0x130C10 (Thread 0x0B54):
+Method called on illegally casted object: Attempt to access 224 byte(s) at
+ 0x011B2D30. The 'this' pointer points to heap block 0x011B2D30 which is only
+ 220 bytes long.
+Call Tree:
+   0x00417746(=RSign.exe:0x01:016746) c:\program files\borland\cbuilder6\include\vcl\ADODB.hpp#277
+   0x004170DD(=RSign.exe:0x01:0160DD) D:\Projects\RSign\MainUnit.cpp#140
+   0x00417C9D(=RSign.exe:0x01:016C9D) D:\Projects\RSign\MainUnit.cpp#170
+   0x0041BAEA(=RSign.exe:0x01:01AAEA) D:\Projects\RSign\MainUnit.cpp#783
+   0x0069551F(=RSign.exe:0x01:29451F)
+   0x006ABB47(=RSign.exe:0x01:2AAB47)
+
+The memory block (0x011B2D30) [size: 220 bytes] was allocated with SysGetMem
+Call Tree:
+   0x00702A1F(=RSign.exe:0x01:301A1F)
+   0x006E6E4A(=RSign.exe:0x01:2E5E4A)
+   0x006E7096(=RSign.exe:0x01:2E6096)
+   0x006E6FD5(=RSign.exe:0x01:2E5FD5)
+   0x006EB72E(=RSign.exe:0x01:2EA72E)
+   0x0069502A(=RSign.exe:0x01:29402A)
+
+------------------------------------------
+Functions called:
+ fflush (8 times)
+ strtok (24 times)
+ vsnprintf (184 times)
+ delete[] (16 times)
+ lstrcatA (7 times)
+ lstrcpyA (9 times)
+ new[] (16 times)
+ memset (89 times)
+ memchr (4 times)
+ delete (63 times)
+ free (12 times)
+ memmove (6 times)
+ new (69 times)
+ SysReallocMem (4121 times)
+ SysFreeMem (44278 times)
+ SysGetMem (44328 times)
+ lstrlenA (12 times)
+ lstrcpynA (4 times)
+ calloc (1 times)
+ strlen (259 times)
+ realloc (1 times)
+ strdup (1 times)
+ malloc (9 times)
+ memcpy (138 times)
+Resource types used:
+ object array (16 allocs, 8 max)
+ object (69 allocs, 65 max)
+ memory block (44340 allocs, 11627 max)
+Modules used:
+ 00400000 11/19/2014 14:06:22 D:\Projects\RSign\RSign.exe
+ 01190000 02/01/2002 22:00:00 C:\PROGRA~1\Borland\CBuilder6\Bin\borlndmm.dll
+ 01350000 11/17/2009 05:00:00 C:\WINDOWS\system32\COMRes.dll
+ 014B0000 11/17/2009 05:00:00 C:\WINDOWS\system32\xpsp2res.dll
+ 0CD00000 02/01/2002 22:00:00 C:\PROGRA~1\Borland\CBuilder6\Bin\CG32.DLL
+ 13470000 11/17/2009 05:00:00 C:\WINDOWS\system32\wmpdxm.dll
+ 1B5D0000 11/17/2009 05:00:00 C:\WINDOWS\system32\MSWSTR10.DLL
+ 4DDD0000 11/17/2009 05:00:00 C:\Program Files\Common
+ Files\System\ado\msado15.dll
+ 5B260000 11/17/2009 05:00:00 C:\WINDOWS\system32\uxtheme.dll
+ 5D5B0000 11/17/2009 05:00:00 C:\WINDOWS\system32\COMCTL32.DLL
+ 5F2F0000 11/17/2009 05:00:00 C:\WINDOWS\system32\OLEPRO32.DLL
+ 71B00000 11/17/2009 05:00:00 C:\WINDOWS\system32\MPR.dll
+ 72BB0000 11/17/2009 05:00:00 C:\WINDOWS\system32\msdxm.ocx
+ 72FC0000 11/17/2009 05:00:00 C:\WINDOWS\system32\WINSPOOL.DRV
+ 732A0000 11/17/2009 05:00:00 C:\WINDOWS\system32\RICHED32.DLL
+ 746E0000 11/17/2009 05:00:00 C:\WINDOWS\system32\MSCTF.dll
+ 747D0000 11/17/2009 05:00:00 C:\WINDOWS\system32\Quartz.dll
+ 74DF0000 11/17/2009 05:00:00 C:\WINDOWS\system32\RICHED20.dll
+ 76380000 11/17/2009 05:00:00 C:\WINDOWS\system32\COMDLG32.DLL
+ 76580000 11/17/2009 05:00:00 C:\WINDOWS\system32\MSDART.DLL
+ 76B20000 11/17/2009 05:00:00 C:\WINDOWS\system32\WINMM.dll
+ 76FC0000 11/17/2009 05:00:00 C:\WINDOWS\system32\CLBCATQ.DLL
+ 77110000 11/17/2009 05:00:00 C:\WINDOWS\system32\OLEAUT32.DLL
+ 773C0000 11/17/2009 05:00:00
+ C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.
+2600.5512_x-ww_35d4ce83\comctl32.dll
+ 774D0000 11/17/2009 05:00:00 C:\WINDOWS\system32\OLE32.DLL
+ 77BF0000 11/17/2009 05:00:00 C:\WINDOWS\system32\VERSION.DLL
+ 77C00000 11/17/2009 05:00:00 C:\WINDOWS\system32\msvcrt.dll
+ 77DC0000 11/17/2009 05:00:00 C:\WINDOWS\system32\ADVAPI32.DLL
+ 77E70000 11/17/2009 05:00:00 C:\WINDOWS\system32\RPCRT4.dll
+ 77F10000 11/17/2009 05:00:00 C:\WINDOWS\system32\GDI32.dll
+ 77F60000 11/17/2009 05:00:00 C:\WINDOWS\system32\SHLWAPI.dll
+ 77FE0000 11/17/2009 05:00:00 C:\WINDOWS\system32\Secur32.dll
+ 7C800000 11/17/2009 05:00:00 C:\WINDOWS\system32\kernel32.dll
+ 7C900000 11/17/2009 05:00:00 C:\WINDOWS\system32\ntdll.dll
+ 7C9C0000 11/17/2009 05:00:00 C:\WINDOWS\system32\SHELL32.dll
+ 7E360000 11/17/2009 05:00:00 C:\WINDOWS\system32\USER32.DLL
+ 7E690000 11/17/2009 05:00:00 C:\WINDOWS\system32\SXS.DLL
+==========================================

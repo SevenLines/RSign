@@ -78,8 +78,6 @@ IMPPROPERTY(TRoadMark,int, K)
 IMPPROPERTY(TRoadMark,TRoadDirection,Direction)
 IMPPROPERTY(TRoadMark,TMarkKind,Kind)
 
-
-IMPPROPERTY(TTrafficLight,__int32,DX)
 IMPPROPERTY(TTrafficLight,__int32,Direction)
 IMPPROPERTY(TTrafficLight,TTrafficLightsPlacement,Placement)
 IMPPROPERTY(TTrafficLight,TTrafficLightsKind,Kind)
@@ -463,21 +461,25 @@ void __fastcall TRoadObject::UpdatePoly(void)
 if (FPoly)
     {
     int n=FPoly->Count;
-    int i;
-    for (i=0;i<n;i++)
-        {
-        int c=FPoly->Points[i].Code.LBase();
-        if ((c==1)||(c==2))
-            break;
-        }
-    if (i==n)
-        {
-        int mn,mx;
-        if (FPoly->GetMinMax(mn,mx))
-            FL=(mn+mx)>>1;
+    if (n==0) {
+       delete FPoly;
+       FPoly=0;
+    } else {
+        int i;
+        for (i=0;i<n;i++)
+            {
+            int c=FPoly->Points[i].Code.LBase();
+            if ((c==1)||(c==2))
+                break;
+            }
+        if (i==n)
+            {
+            int mn,mx;
+            if (FPoly->GetMinMax(mn,mx))
+                FL=(mn+mx)>>1;
+            }
         }
     }
-
 }
 
 TExtPolyline* __fastcall TRoadObject::GetPolyMetric(TRoad* Road)
@@ -945,6 +947,33 @@ if (Res)
     if (Placement==rsLeft)
         Res->DirectionVal=-1;
 return Res;
+}
+
+bool __fastcall TDescreetDirRoadObject::SetDefaultPlacement(TRoad* Road,TPolyline *p) {
+if (p && p->Count>0) {
+   __int32 cx=p->Points[0].X;
+   if (FDirection!=roDirect && FDirection!=roUnDirect)
+      FDirection= cx<0 ? roUnDirect : roDirect;
+   if (FDirection==roDirect)
+      FDX=cx-Road->RightLine.FindX(L);
+   else
+      FDX=Road->LeftLine.FindX(L)-cx;
+    return true;
+}
+return false;
+}
+
+TPolyline* __fastcall TDescreetDirRoadObject::GetDefaultPlacement(TRoad* Road) {
+   TPolyline *p=new TPolyline(1);
+   p->Points[0].L=FL;
+   if (FDirection==roDirect)
+    p->Points[0].X=Road->RightLine.FindX(L)+FDX;
+   else
+    p->Points[0].X=Road->LeftLine.FindX(L)-FDX;
+   p->Points[0].BasePar1=FL;
+   p->Points[0].BasePar2=p->Points[0].X;
+   p->Points[0].Code=0;
+    return p;
 }
 
 TExtPolyline* __fastcall TDescreetDirRoadObject::GetDefMetric(TRoad *Road)
@@ -1650,6 +1679,33 @@ Res->Points[0].y=y;
 return Res;
 }
 
+TPolyline* __fastcall TDescreetSideRoadObject::GetDefaultPlacement(TRoad* Road) {
+   TPolyline *p=new TPolyline(1);
+   p->Points[0].L=FL;
+   if (FPlacement==rsRight)
+    p->Points[0].X=Road->RightLine.FindX(L)+FDX;
+   else
+    p->Points[0].X=Road->LeftLine.FindX(L)-FDX;
+   p->Points[0].BasePar1=FL;
+   p->Points[0].BasePar2=p->Points[0].X;
+   p->Points[0].Code=0;
+    return p;
+}
+
+bool __fastcall TDescreetSideRoadObject::SetDefaultPlacement(TRoad* Road,TPolyline *p) {
+if (p && p->Count>0) {
+   __int32 cx=p->Points[0].X;
+   if (FPlacement!=rsLeft && FPlacement!=rsRight)
+       FPlacement= cx<0 ? rsLeft : rsRight;
+   if (FPlacement==rsRight)
+      FDX=cx-Road->RightLine.FindX(L);
+   else
+      FDX=Road->LeftLine.FindX(L)-cx;
+   return true;   
+}
+return false;
+}
+
 TExtPolyline* __fastcall TDescreetCenterRoadObject::GetDefMetric(TRoad *Road)
 {
 TExtPolyline *Res=new TExtPolyline(1,0);
@@ -1658,6 +1714,16 @@ Road->ConvertPoint(FL,FDX,x,y);
 Res->Points[0].x=x;
 Res->Points[0].y=y;
 return Res;
+}
+
+TPolyline* __fastcall TDescreetCenterRoadObject::GetDefaultPlacement(TRoad* Road) {
+   TPolyline *p=new TPolyline(1);
+   p->Points[0].L=FL;
+   p->Points[0].X=FDX;
+   p->Points[0].BasePar1=FL;
+   p->Points[0].BasePar2=FDX;
+   p->Points[0].Code=0;
+   return p;
 }
 
 

@@ -27,7 +27,6 @@ __published:	// IDE-managed Components
     TPanel *Panel2;
     TComboBox *cmbInitialCatalog;
     TPanel *Panel3;
-    TButton *btnCancel;
     TCheckBox *chkAsLocalUser;
     TPanel *Panel4;
     TButton *btnConnect;
@@ -36,6 +35,8 @@ __published:	// IDE-managed Components
     TLabel *lblSuccess;
     TTimer *TimerComboInitialCatalog;
     TComboBox *edtProvider;
+    TPanel *Panel5;
+    TButton *btnCancel;
     void __fastcall btnTestClick(TObject *Sender);
     void __fastcall chkAsLocalUserClick(TObject *Sender);
     void __fastcall btnConnectToSeverClick(TObject *Sender);

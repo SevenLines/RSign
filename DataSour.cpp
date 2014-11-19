@@ -1834,6 +1834,27 @@ void __fastcall TDtaSource::MoveSelectedObjects(int len,TRoad *RefRoad) {
    CalcMetrics(RefRoad);
 }
 
+void __fastcall TDtaSource::MoveMetricToProp(TRoad *RefRoad) {
+   int n=FObjects->Count;
+   TRoadObject **FList=(TRoadObject**)FObjects->List;
+   for (int i=0;i<n;i++) {
+      TRoadObject *ob=dynamic_cast<TRoadObject*>(FList[i]);
+      if (ob && ob->Selected) {
+         ob->Selected=false;
+         MainForm->SendBroadCastMessage(CM_CHANGESEL,(int)ob,(int)this);
+         if (dynamic_cast<TDescreetRoadObject*>(ob)!=0){
+            if (ob->Poly) {
+                if (ob->SetDefaultPlacement(RefRoad,ob->Poly)) {
+                    delete ob->Poly;
+                    ob->Poly=0;
+                }
+            }
+         }
+      }
+   }
+   SortByPlacement();
+}
+
 void __fastcall TDtaSource::ConnectSelectedToBaseLine(int ln,TRoad *RefRoad) {
    int n=FObjects->Count;
    TRoadObject **FList=(TRoadObject**)FObjects->List;
@@ -1841,11 +1862,14 @@ void __fastcall TDtaSource::ConnectSelectedToBaseLine(int ln,TRoad *RefRoad) {
       TRoadObject *ob=dynamic_cast<TRoadObject*>(FList[i]);
       if (ob && ob->Selected) {
          ob->Selected=false;
-         MainForm->SendBroadCastMessage(CM_CHANGESEL,(int)ob,(int)this);         
+         MainForm->SendBroadCastMessage(CM_CHANGESEL,(int)ob,(int)this);
          if (ob->DictId==ROADMETRIC) { // С кромкой ничего не делаем
             TRoadSideObject *rs=dynamic_cast<TRoadSideObject *>(ob);
             if (rs && rs->MetricsKind==mkKromka)
                 continue;
+         }
+         if (ob->Poly==0) {
+             ob->Poly=ob->GetDefaultPlacement(RefRoad);
          }
          if (ob->Poly) {
             TRoadPoint *p=ob->Poly->Points;

@@ -123,13 +123,26 @@ void __fastcall TMainForm::AppShortCut(TWMKey &Key, bool &Handled)
 
 void __fastcall TMainForm::ReadIni(TIniFile *ini)
 {
-	String Con=ini->ReadString("Connection","ConnectionString", "Provider=MSDASQL.1;Persist Security Info=False;Data Source=Victory_istu");
-    if (Con!=Connection->ConnectionString)  {
-         Connection->Close();
-  	    Connection->ConnectionString=ini->ReadString("Connection","ConnectionString",
-	    "Provider=MSDASQL.1;Persist Security Info=False;Data Source=Victory_istu");
+    ConnectionForm->loadIni(ini);
+
+	String connectionString = ini->ReadString("Connection","ConnectionString", "");
+    if (connectionString!=Connection->ConnectionString && !connectionString.IsEmpty())  {
+        Connection->Close();
+        int pass = connectionString.Pos("Password");
+        // if password not present in current connection string, use password from connection form
+        if (pass == -1) {
+            String password = ini->ReadString("ConnectionForm", "Password", "");
+            if (!password.IsEmpty()) {
+                connectionString += "Password:" + password + ";";
+            }
+        }
+  	    Connection->ConnectionString = connectionString;
         Connection->Open();
+        ConnectionForm->Connection = Connection;
     }
+
+
+
 	Left=ini->ReadInteger("MainForm","Left",Left);
 	Top=ini->ReadInteger("MainForm","Top",Top);
 	String PatName=ini->ReadString("PrintPattern","Name","").Trim();
@@ -138,7 +151,7 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
 	if (PatName!="")
 	    if (Pattern->LoadFromFile(PatName))
 	        VPatFrm->FileName=PatName;
-    ConnectionForm->loadIni(ini);
+
 }
 
 void __fastcall TMainForm::WriteIni(TIniFile *ini)
@@ -1193,4 +1206,11 @@ if (FActiveRoad)
 }
 //---------------------------------------------------------------------------
 
+
+void __fastcall TMainForm::N85Click(TObject *Sender)
+{
+if (FActiveRoad)
+   FActiveRoad->MoveMetricToProp();
+}
+//---------------------------------------------------------------------------
 

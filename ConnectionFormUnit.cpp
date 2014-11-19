@@ -154,9 +154,11 @@ void TConnectionForm::setInitConnection(TADOConnection *connection)
 {
     mInitConnection = connection;
     updateInterface();
+    AnsiString connectionAnsiString = AnsiString(connection->ConnectionString);
+    char* connectionString = connectionAnsiString.c_str();
     if (connection) {
         bool userID_is_Set = false;
-        for(char* tok = strtok(AnsiString(connection->ConnectionString).c_str(), ";"); tok; tok = strtok(NULL, ";"))  {
+        for(char* tok = strtok(connectionString, ";"); tok; tok = strtok(NULL, ";"))  {
             AnsiString str = AnsiString(tok);
             if (str.Pos("Initial Catalog=")) {
                 cmbInitialCatalog->Text = str.Delete(1, strlen("Initial Catalog="));

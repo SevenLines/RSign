@@ -208,6 +208,7 @@ __fastcall TRoadObject()
 __fastcall ~TRoadObject()
     {
     delete FCharList;
+    delete FPoly;
     }
 
 void __fastcall SetDictId(__int32 newdid)
@@ -225,7 +226,8 @@ void __fastcall SetId(__int32 newid)
 virtual  TExtPolyline* __fastcall GetDefMetric(TRoad *Road)
     {return NULL;}
 virtual TExtPolyline* __fastcall GetPolyMetric(TRoad* Road);
-virtual void __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p) {}
+virtual bool __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p) {return false;}
+virtual TPolyline* __fastcall GetDefaultPlacement(TRoad* Road) {return 0;}
 virtual TExtPolyline* PrepareMetric(TRoad *Road);
 virtual void __fastcall UpdatePoly(void);
 virtual void __fastcall PostEditPoly(void)
@@ -308,6 +310,8 @@ __fastcall TDescreetDirRoadObject(__int32 id,__int32 code):TDescreetRoadObject(i
 void __fastcall PutPosition(__int32 l,__int32 x,TRoadDirection dir)
     {FL=l;FDX=x;FDirection=dir;FModified=true;}
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
+virtual bool __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p);
+virtual TPolyline* __fastcall GetDefaultPlacement(TRoad* Road);
 };
 
 // Дорожный объект с точечной локализацией привязанный к кромке дороги
@@ -327,21 +331,26 @@ public:
 __fastcall TDescreetSideRoadObject():TDescreetRoadObject() {}
 __fastcall TDescreetSideRoadObject(__int32 id,__int32 code):TDescreetRoadObject(id,code) {}
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
+virtual bool __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p);
+virtual TPolyline* __fastcall GetDefaultPlacement(TRoad* Road);
 };
 
 const char DescreetCenterRoadObjectInfo[]="Дорожный объект с точечной локализацией, с привязкой к оси дороги\
-Произведен от TDescreetRoadObject. Вводятся два новых свойства. DX - раcстояние от кромки дороги.\
+Произведен от TDescreetRoadObject. Вводятся два новых свойства. DX - раcстояние от центра дороги.\
 Placement - расположение (слева, справа). Метрика содержит одну точку, лежащую с указанной стороны\
 от дороги (в прямом направлении) на расстоянии DX от оси дороги";
 
 class TDescreetCenterRoadObject : public TDescreetRoadObject
 {
 private:
-DEFPROPERTY(__int32,DX)
+DEFPROPERTYRW(__int32,DX)
 public:
 __fastcall TDescreetCenterRoadObject():TDescreetRoadObject() {}
 __fastcall TDescreetCenterRoadObject(__int32 id,__int32 code):TDescreetRoadObject(id,code) {}
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
+virtual TPolyline* __fastcall GetDefaultPlacement(TRoad* Road);
+virtual bool __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p)
+   {if (p && p->Count>0) DX=p->Points[0].X; return true;}
 };
 
 
@@ -922,19 +931,16 @@ virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 };
 
 // Светофоры
-const char TrafficLightInfo[]="";
-class TTrafficLight : public TDescreetRoadObject {
+const char TrafficLightInfo[]="Светофор";
+class TTrafficLight : public TDescreetCenterRoadObject {
 protected:
-DEFPROPERTYRW(__int32,DX)
 DEFPROPERTYRW(__int32,Direction)
 DEFPROPERTYRW(TTrafficLightsPlacement,Placement)
 DEFPROPERTYRW(TTrafficLightsKind,Kind)
 public:
-__fastcall TTrafficLight():TDescreetRoadObject() {}
-__fastcall TTrafficLight(__int32 id,__int32 code):TDescreetRoadObject(id,code) {}
+__fastcall TTrafficLight():TDescreetCenterRoadObject() {}
+__fastcall TTrafficLight(__int32 id,__int32 code):TDescreetCenterRoadObject(id,code) {}
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
-virtual void __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p)
-   {DX=p->Points[0].X;}
 };
 
 

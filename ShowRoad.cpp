@@ -2539,6 +2539,11 @@ void __fastcall TRoadFrm::ConnectToBaseLine(int ln) {
        FEditedData->ConnectSelectedToBaseLine(ln,FEditedData->Road);
 }
 
+void __fastcall TRoadFrm::MoveMetricToProp(void) {
+    if (FEditedData && FMetricData)
+       FEditedData->MoveMetricToProp(FEditedData->Road);
+}
+
 void __fastcall TRoadFrm::CalculateRoadMarkLength(void)
 {
 	TDtaSource *src;
