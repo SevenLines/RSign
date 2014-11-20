@@ -663,9 +663,24 @@ void __fastcall TRoadFrm::ShowVideo(int Direction,int id)
 		FVideoData->DirVideoId=id;
 		else if (id>=0)
 		FVideoData->UnDirVideoId=id;
+
+        frmVideoForm->OnFormGeometryChange = NULL;
+
 		frmVideoForm->InitVideo(FVideoData,Direction);
 		frmVideoForm->Show();
+
 		SynchronizeVideo();
+
+        if ( lastVideoWindowPosition && lastVideoWindowPosition->Right - lastVideoWindowPosition->Left > 0 &&
+             lastVideoWindowPosition->Bottom - lastVideoWindowPosition->Top > 0 ) {
+
+            frmVideoForm->Left = lastVideoWindowPosition->Left;
+            frmVideoForm->Top = lastVideoWindowPosition->Top;
+            frmVideoForm->Width = lastVideoWindowPosition->Right - lastVideoWindowPosition->Left;
+            frmVideoForm->Height = lastVideoWindowPosition->Bottom - lastVideoWindowPosition->Top;
+        }
+
+        frmVideoForm->OnFormGeometryChange = OnVideoFormGeometryChange;
 	}
 }
 
@@ -3769,10 +3784,11 @@ void __fastcall TRoadFrm::FormResize(TObject *Sender)
 
     if (OnFormGeometryChange) {
         TRect windowRect(Left, Top, Left + Width, Top + Height);
-        OnFormGeometryChange(windowRect, TRect());
+        OnFormGeometryChange(windowRect);
     }
 }
 //---------------------------------------------------------------------------
+
 
 void __fastcall TRoadFrm::WndProc(TMessage &Mes)
 {
@@ -3932,7 +3948,12 @@ void __fastcall TRoadFrm::WndProc(TMessage &Mes)
 	{
 		if (Mes.LParam==(int)FVideoData)
 		SetVideoPos(frmVideoForm->Position);
-	}
+	} else if (Mes.Msg == WM_MOVE) {
+      if (OnFormGeometryChange) {
+          TRect windowRect(Left, Top, Left + Width, Top + Height);
+          OnFormGeometryChange(windowRect);
+      }
+    }
 	TForm::WndProc(Mes);
 }
 

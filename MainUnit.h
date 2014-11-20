@@ -209,7 +209,8 @@ private:	// User declarations
     TRect lastVideoWindowPosition;
     bool blockShowRoadSizeEventProcessor;
 
-    void ShowRoadFormGeometryChange(TRect windowRect, TRect videoRect);
+    void ShowRoadFormGeometryChange(TRect windowRect);
+    void VideoFormGeometryChange(TRect windowRect);
 
     virtual void __fastcall WndProc(TMessage&);
 
@@ -252,6 +253,8 @@ public:		// User declarations
     void __fastcall SaveIni(void);
     void __fastcall SendBroadCastMessage(int Command,int Wpar,int Lpar);
     void __fastcall PostBroadCastMessage(int Command,int Wpar,int Lpar);
+
+    void __fastcall PrepareShowRoadSize(TRoadFrm* frm);
 
     void __fastcall PrepareMinireports();
     int __fastcall SetupConnection();

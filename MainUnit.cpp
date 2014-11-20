@@ -162,6 +162,11 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
     lastRoadWindowPosition.Right = ini->ReadInteger("ShowRoad", "Right", 0);
     lastRoadWindowPosition.Bottom = ini->ReadInteger("ShowRoad", "Bottom", 0);
 
+    lastVideoWindowPosition.Left = ini->ReadInteger("ShowRoad", "VideoLeft", 0);
+    lastVideoWindowPosition.Top = ini->ReadInteger("ShowRoad", "VideoTop", 0);
+    lastVideoWindowPosition.Right = ini->ReadInteger("ShowRoad", "VideoRight", 0);
+    lastVideoWindowPosition.Bottom = ini->ReadInteger("ShowRoad", "VideoBottom", 0);
+
 }
 
 void __fastcall TMainForm::WriteIni(TIniFile *ini)
@@ -174,6 +179,11 @@ void __fastcall TMainForm::WriteIni(TIniFile *ini)
     ini->WriteInteger("ShowRoad", "Top", lastRoadWindowPosition.Top);
     ini->WriteInteger("ShowRoad", "Right", lastRoadWindowPosition.Right);
     ini->WriteInteger("ShowRoad", "Bottom", lastRoadWindowPosition.Bottom);
+
+    ini->WriteInteger("ShowRoad", "VideoLeft", lastVideoWindowPosition.Left);
+    ini->WriteInteger("ShowRoad", "VideoTop", lastVideoWindowPosition.Top);
+    ini->WriteInteger("ShowRoad", "VideoRight", lastVideoWindowPosition.Right);
+    ini->WriteInteger("ShowRoad", "VideoBottom", lastVideoWindowPosition.Bottom);
 
 	ini->WriteString("PrintPattern","Name",VPatFrm->FileName);
 	ini->WriteString("Video","Servers",VideoServers->CommaText);
@@ -334,13 +344,7 @@ bool __fastcall TMainForm::OpenRoadById(__int32 id,__int32 dataclass,bool OpenCo
 			frm->OpenRoad(Capt,Data,Dict,Shared);
 			frm->Show();
 
-            if (lastRoadWindowPosition.Right - lastRoadWindowPosition.Left  > 0
-                && lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top > 0) {
-              frm->Left = lastRoadWindowPosition.Left;
-              frm->Top = lastRoadWindowPosition.Top;
-              frm->Width = lastRoadWindowPosition.Right - lastRoadWindowPosition.Left;
-              frm->Height = lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top;
-            }
+            PrepareShowRoadSize(frm);
 
 			ResManager->ReleaseDataSource(Data); // Теперь источником владеет окно
 			res=true;
@@ -1025,17 +1029,10 @@ void __fastcall TMainForm::N58Click(TObject *Sender)
 				TRoadFrm *frm;
 				Application->CreateForm(__classid(TRoadFrm), &frm);
 
-                frm->OnFormGeometryChange = ShowRoadFormGeometryChange;
 				frm->OpenView(OpenViewFrm->RoadId,OpenViewFrm->ViewId,Dict,Shared);
 				frm->Show();
-                
-                if (lastRoadWindowPosition.Right - lastRoadWindowPosition.Left  > 0
-                    && lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top > 0) {
-                  frm->Left = lastRoadWindowPosition.Left;
-                  frm->Top = lastRoadWindowPosition.Top;
-                  frm->Width = lastRoadWindowPosition.Right - lastRoadWindowPosition.Left;
-                  frm->Height = lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top;
-                }
+
+                PrepareShowRoadSize(frm);
                 
                 blockShowRoadSizeEventProcessor = false;
 			}  catch(...) {
@@ -1274,12 +1271,12 @@ if (FActiveRoad)
 
 void __fastcall TMainForm::N85Click(TObject *Sender)
 {
-if (FActiveRoad)
-   FActiveRoad->MoveMetricToProp();
+/*if (FActiveRoad)
+   FActiveRoad->MoveMetricToProp();*/
 }
 //---------------------------------------------------------------------------
 
-void TMainForm::ShowRoadFormGeometryChange(TRect windowRect, TRect videoRect)
+void TMainForm::ShowRoadFormGeometryChange(TRect windowRect)
 {
     if (blockShowRoadSizeEventProcessor) {
         return;
@@ -1287,3 +1284,25 @@ void TMainForm::ShowRoadFormGeometryChange(TRect windowRect, TRect videoRect)
     lastRoadWindowPosition = windowRect;
 }
 //---------------------------------------------------------------------------
+void TMainForm::VideoFormGeometryChange(TRect windowRect)
+{
+    if (blockShowRoadSizeEventProcessor) {
+        return;
+    }
+    lastVideoWindowPosition = windowRect;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::PrepareShowRoadSize(TRoadFrm* frm)
+{
+    if (lastRoadWindowPosition.Right - lastRoadWindowPosition.Left  > 0
+        && lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top > 0) {
+      frm->Left = lastRoadWindowPosition.Left;
+      frm->Top = lastRoadWindowPosition.Top;
+      frm->Width = lastRoadWindowPosition.Right - lastRoadWindowPosition.Left;
+      frm->Height = lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top;
+    }
+
+    frm->lastVideoWindowPosition = &lastVideoWindowPosition;
+    frm->OnFormGeometryChange = ShowRoadFormGeometryChange;
+    frm->OnVideoFormGeometryChange = VideoFormGeometryChange;
+}
