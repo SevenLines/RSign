@@ -1276,7 +1276,7 @@ if (FActiveRoad)
 }
 //---------------------------------------------------------------------------
 
-void TMainForm::ShowRoadFormGeometryChange(TRect windowRect, TRect videoRect)
+void TMainForm::ShowRoadFormGeometryChange(TRect windowRect)
 {
     if (blockShowRoadSizeEventProcessor) {
         return;

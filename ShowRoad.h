@@ -443,6 +443,7 @@ public:         // User declarations
     void __fastcall MoveActiveObject(void);
     void __fastcall ConnectToBaseLine(int ln); //Привязывает объекты к линии (кромка или ось)
     void __fastcall MoveObjects(void);
+    void __fastcall MoveMetricToProp(void);     
     void __fastcall AddNewObject(void);
     void __fastcall AddNewObject(int DictId);
     void __fastcall AddNewObject(TObjMetaClass *Meta);
