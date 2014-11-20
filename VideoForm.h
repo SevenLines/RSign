@@ -55,6 +55,7 @@ __published:	// IDE-managed Components
     void __fastcall PosEditExit(TObject *Sender);
     void __fastcall PosEditKeyPress(TObject *Sender, char &Key);
     void __fastcall ScrollBarChange(TObject *Sender);
+    void __fastcall FormResize(TObject *Sender);
 private:	// User declarations
     TDtaSource *FData;
 
@@ -98,6 +99,13 @@ public:		// User declarations
     __property int Direction={read=FDirection};
     __property int NumRoad={read=FNumRoad};
     __property TDtaSource* Data={read=FData};
+
+    void (__closure *OnFormGeometryChange)(TRect);
+    void RecalculatePosition(TWMMove message);
+
+BEGIN_MESSAGE_MAP
+    VCL_MESSAGE_HANDLER(WM_MOVE, TWMMove, RecalculatePosition)
+END_MESSAGE_MAP(TForm);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfrmVideoForm *frmVideoForm;
