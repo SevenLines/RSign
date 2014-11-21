@@ -572,8 +572,8 @@ void __fastcall TfrmVideoForm::PosEditKeyPress(TObject *Sender, char &Key)
 
 void __fastcall TfrmVideoForm::ScrollBarChange(TObject *Sender)
 {
-SetPosition(ScrollBar->Position*100);
-MainForm->SendBroadCastMessage(CM_CHANGEVIDEOPOSITION,0,(int)FData);
+    SetPosition(ScrollBar->Position*100);
+    MainForm->SendBroadCastMessage(CM_CHANGEVIDEOPOSITION,0,(int)FData);
 }
 //---------------------------------------------------------------------------
 
