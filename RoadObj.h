@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 #ifndef RoadObjH
 #define RoadObjH
-#include "RoadDict.h"
+#include "RoadDict.h"                                        T
 #include "Lists.h"                                    
 #include "Const.h"
 #include "Metrics.h"
@@ -968,6 +968,8 @@ virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 void __fastcall SetAutoTest(TSignTest Tst,String note)
     {FTest=Tst;
      FNote=note;}
+virtual bool __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p);
+virtual TPolyline* __fastcall GetDefaultPlacement(TRoad* Road);
 };
 
 const char DTPInfo[]="";

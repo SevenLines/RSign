@@ -485,7 +485,7 @@ if (FPoly)
 TExtPolyline* __fastcall TRoadObject::GetPolyMetric(TRoad* Road)
 {
 TExtPolyline *Res=NULL;
-if (FPoly)
+if (FPoly && FPoly->Count>0)
     {
     Res=new TExtPolyline();
     Road->ConvertPolyline(*FPoly,*Res);
@@ -496,7 +496,7 @@ return Res;
 TExtPolyline* TRoadObject::PrepareMetric(TRoad *Road)
 {
 TExtPolyline *Res=GetPolyMetric(Road);
-if (Res==NULL)
+if (Res==NULL || Res->Count==0)
     Res=GetDefMetric(Road);
 return Res;
 }
@@ -989,6 +989,59 @@ Road->ConvertPoint(FL,cx,x,y);
 Res->Points[0].x=x;
 Res->Points[0].y=y;
 return Res;
+}
+
+bool __fastcall TRoadSign::SetDefaultPlacement(TRoad* Road,TPolyline *p) {
+if (p && p->Count>0) {
+   FL=p->Points[0].L;
+   __int32 kx,cx=p->Points[0].X;
+   if (Direction!=roDirect && Direction!=roUnDirect)
+       FDirection=(cx>=0? roDirect : roUnDirect);
+   if (cx>=0)
+      kx=Road->RightLine.FindX(L);
+   else
+      kx=Road->LeftLine.FindX(L);
+   if (Placement!=spLeft && Placement!=spRight && Placement!=spBetween && Placement!=spUp) {
+      if (fabs(kx)>fabs(cx))
+         FPlacement=spUp;
+      else
+         FPlacement=spRight;
+   }
+   if (Placement!=spLeft && Placement !=spRight)
+       FDX=cx;
+   else {
+       bool b=Placement==spRight;
+       if (Direction==roUnDirect)
+          b=!b;
+       if (b)
+          FDX=cx-Road->RightLine.FindX(L);
+       else
+          FDX=Road->LeftLine.FindX(L)-cx;
+   }
+   return true;
+}
+return false;
+}
+
+TPolyline* __fastcall TRoadSign::GetDefaultPlacement(TRoad* Road) {
+__int32 cx;
+if ((Placement!=spLeft)&&(Placement!=spRight))
+    cx=FDX;
+else
+    {
+    bool b=Placement==spRight;
+    if (Direction==roUnDirect)
+        b=!b;
+    if (b)
+        cx=Road->RightLine.FindX(L)+FDX;
+    else
+        cx=Road->LeftLine.FindX(L)-FDX;
+    }
+TPolyline *pl=new TPolyline(1);
+pl->Points[0].BasePar1=pl->Points[0].L=FL;
+pl->Points[0].BasePar2=pl->Points[0].X=cx;
+pl->Points[0].Code=0;
+return pl;
 }
 
 TExtPolyline* __fastcall TRoadSign::GetDefMetric(TRoad *Road)
@@ -1701,7 +1754,7 @@ if (p && p->Count>0) {
       FDX=cx-Road->RightLine.FindX(L);
    else
       FDX=Road->LeftLine.FindX(L)-cx;
-   return true;   
+   return true;
 }
 return false;
 }
