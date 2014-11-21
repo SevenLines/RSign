@@ -535,6 +535,10 @@ public:         // User declarations
     __property int RoadId={read=FRoadId};
     __property TRoadObject *ActiveObj={read=FActiveObj};
     __property TRoadObject *InsertingObj={read=FInsertingObj};
+
+    void (__closure *OnFormGeometryChange)(TRect);
+    void (__closure *OnVideoFormGeometryChange)(TRect);
+    TRect* lastVideoWindowPosition;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TRoadFrm *RoadFrm;
