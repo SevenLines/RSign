@@ -423,20 +423,7 @@ if (FCount>0)
     }
 }
 
-class TCurvePoint {
-public :
-   double bR; // Обратный радиус кривизны в точке
-   __fastcall TCurvePoint() : bR(0) {}   
-   __fastcall TCurvePoint(double _br) : bR(_br) {}
-   void __fastcall Extrapolate(TCurvePoint &V1,TCurvePoint &V2,__int32 L,__int32 L1,__int32 L2)
-    {
-    bR=(V1.bR*(L2-L)+V2.bR*(L-L1))/(L2-L1);
-    }
-};
 
-class TCurvePlan : public TRoadMeasure<TCurvePoint> {
-
-};
 
 
 

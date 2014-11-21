@@ -41,6 +41,7 @@ __published:	// IDE-managed Components
     void __fastcall chkAsLocalUserClick(TObject *Sender);
     void __fastcall btnConnectToSeverClick(TObject *Sender);
     void __fastcall btnConnectClick(TObject *Sender);
+    void __fastcall btnListServersClick(TObject *Sender);
     void __fastcall TimerComboInitialCatalogTimer(TObject *Sender);
     void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);

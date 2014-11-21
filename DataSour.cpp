@@ -673,57 +673,6 @@ for (int i=FObjects->Count-1;i>=0;i--)
 
 }
 
-void __fastcall TDtaSource::CalcCurvePlan(int MinL,int MaxL) {
-   vector<pair<int,TDangerCurve*> > V;
-   for (int i=0;i<FObjects->Count;i++)
-      {
-      TRoadObject *Obj=FObjects->Items[i];
-      if (Obj->DictId==DANGERCURVECODE) {
-         TDangerCurve *slp=dynamic_cast<TDangerCurve*>(Obj);
-         if (slp && (slp->Kind==ckLine || slp->Kind==ckCircle))
-            V.push_back(make_pair(slp->LMin,slp));
-         }
-   }
-   sort(V.begin(),V.end());
-   int n=V.size()*2;
-   int p=0;
-   if (V.size()==0 || MinL<V[0].second->LMin)
-      n+=2;
-   if (V.size()==0 || MaxL>V.back().second->LMax)
-      n+=2;
-   Road->CurvePlan.SetCount(n);
-   if (V.size()==0) {
-      Road->CurvePlan.L[0]=MinL;
-      Road->CurvePlan.L[1]=MaxL;
-   } else {
-      if (MinL<V[0].second->LMin) {
-          Road->CurvePlan.L[0]=MinL;
-          Road->CurvePlan.L[1]=V[0].second->LMin;
-          p=2;
-      }
-/*   if (p)
-      Road->CurvePlan.L[0]=MinL;
-   if (V.size()==0 || MaxL>V.back().second->LMax)
-      Road->CurvePlan.L[n-1]=MaxL;*/
-   for (int i=0;i<V.size();i++) {
-      Road->CurvePlan.L[2*i+p]=V[i].second->LMin;
-      Road->CurvePlan.L[2*i+1+p]=V[i].second->LMax;
-      if (V[i].second->Kind==ckLine) {
-          Road->CurvePlan.Values[2*i+p].bR=0;
-          Road->CurvePlan.Values[2*i+1+p].bR=0;
-      } else if (V[i].second->Kind==ckCircle) {
-          Road->CurvePlan.Values[2*i+p].bR=1.0/V[i].second->Radius;
-          Road->CurvePlan.Values[2*i+1+p].bR=1.0/V[i].second->Radius;
-      }
-   }
-   if (MaxL>V.back().second->LMax) {
-      Road->CurvePlan.L[n-2]=V.back().second->LMax;
-      Road->CurvePlan.L[n-1]=MaxL;
-   }
-   }
-}
-
-
 struct dpart {
    int begin,end,prom;
    dpart(int b,int e,int p) : begin(b),end(e),prom(p) {}
@@ -1834,27 +1783,6 @@ void __fastcall TDtaSource::MoveSelectedObjects(int len,TRoad *RefRoad) {
    CalcMetrics(RefRoad);
 }
 
-void __fastcall TDtaSource::MoveMetricToProp(TRoad *RefRoad) {
-   int n=FObjects->Count;
-   TRoadObject **FList=(TRoadObject**)FObjects->List;
-   for (int i=0;i<n;i++) {
-      TRoadObject *ob=dynamic_cast<TRoadObject*>(FList[i]);
-      if (ob && ob->Selected) {
-         ob->Selected=false;
-         MainForm->SendBroadCastMessage(CM_CHANGESEL,(int)ob,(int)this);
-         if (dynamic_cast<TDescreetRoadObject*>(ob)!=0){
-            if (ob->Poly) {
-                if (ob->SetDefaultPlacement(RefRoad,ob->Poly)) {
-                    delete ob->Poly;
-                    ob->Poly=0;
-                }
-            }
-         }
-      }
-   }
-   SortByPlacement();
-}
-
 void __fastcall TDtaSource::ConnectSelectedToBaseLine(int ln,TRoad *RefRoad) {
    int n=FObjects->Count;
    TRoadObject **FList=(TRoadObject**)FObjects->List;
@@ -1862,14 +1790,11 @@ void __fastcall TDtaSource::ConnectSelectedToBaseLine(int ln,TRoad *RefRoad) {
       TRoadObject *ob=dynamic_cast<TRoadObject*>(FList[i]);
       if (ob && ob->Selected) {
          ob->Selected=false;
-         MainForm->SendBroadCastMessage(CM_CHANGESEL,(int)ob,(int)this);
+         MainForm->SendBroadCastMessage(CM_CHANGESEL,(int)ob,(int)this);         
          if (ob->DictId==ROADMETRIC) { // С кромкой ничего не делаем
             TRoadSideObject *rs=dynamic_cast<TRoadSideObject *>(ob);
             if (rs && rs->MetricsKind==mkKromka)
                 continue;
-         }
-         if (ob->Poly==0) {
-             ob->Poly=ob->GetDefaultPlacement(RefRoad);
          }
          if (ob->Poly) {
             TRoadPoint *p=ob->Poly->Points;

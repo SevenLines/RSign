@@ -663,9 +663,24 @@ void __fastcall TRoadFrm::ShowVideo(int Direction,int id)
 		FVideoData->DirVideoId=id;
 		else if (id>=0)
 		FVideoData->UnDirVideoId=id;
+
+        frmVideoForm->OnFormGeometryChange = NULL;
+
 		frmVideoForm->InitVideo(FVideoData,Direction);
 		frmVideoForm->Show();
+
 		SynchronizeVideo();
+
+        if ( lastVideoWindowPosition && lastVideoWindowPosition->Right - lastVideoWindowPosition->Left > 0 &&
+             lastVideoWindowPosition->Bottom - lastVideoWindowPosition->Top > 0 ) {
+
+            frmVideoForm->Left = lastVideoWindowPosition->Left;
+            frmVideoForm->Top = lastVideoWindowPosition->Top;
+            frmVideoForm->Width = lastVideoWindowPosition->Right - lastVideoWindowPosition->Left;
+            frmVideoForm->Height = lastVideoWindowPosition->Bottom - lastVideoWindowPosition->Top;
+        }
+
+        frmVideoForm->OnFormGeometryChange = OnVideoFormGeometryChange;
 	}
 }
 
@@ -1655,7 +1670,7 @@ TExtPolyline* __fastcall TRoadFrm::BuildPoly(bool re)
 {
 	if (!re && FVector!=0 && FPoly!=0) {
 		int n=FPoly->Count<FVector->Count?FPoly->Count:FVector->Count;
-		FDrawMan->Road->ConvertPointsArray(n,FPoly->Points,FVector->Points);
+		FDrawMan->Road->ConvertPoly(n,FPoly->Points,FVector->Points);
 
 	} else {
 		delete FVector;
@@ -1664,7 +1679,7 @@ TExtPolyline* __fastcall TRoadFrm::BuildPoly(bool re)
 		{
 			int n=FPoly->Count;
 			FVector=new TExtPolyline(n);
-			FDrawMan->Road->ConvertPointsArray(n,FPoly->Points,FVector->Points);
+			FDrawMan->Road->ConvertPoly(n,FPoly->Points,FVector->Points);
 			for (int i=0;i<n;i++)
 			{
 				FVector->Codes[i]=FPoly->Points[i].Code.VisCon();
@@ -2537,11 +2552,6 @@ void __fastcall TRoadFrm::MoveObjects(void) {
 void __fastcall TRoadFrm::ConnectToBaseLine(int ln) {
     if (FEditedData && FMetricData)
        FEditedData->ConnectSelectedToBaseLine(ln,FEditedData->Road);
-}
-
-void __fastcall TRoadFrm::MoveMetricToProp(void) {
-    if (FEditedData && FMetricData)
-       FEditedData->MoveMetricToProp(FEditedData->Road);
 }
 
 void __fastcall TRoadFrm::CalculateRoadMarkLength(void)
@@ -3777,8 +3787,14 @@ void __fastcall TRoadFrm::FormResize(TObject *Sender)
 {
 	ShowScale();
 	InvalidateBoxes();
+
+    if (OnFormGeometryChange) {
+        TRect windowRect(Left, Top, Left + Width, Top + Height);
+        OnFormGeometryChange(windowRect);
+    }
 }
 //---------------------------------------------------------------------------
+
 
 void __fastcall TRoadFrm::WndProc(TMessage &Mes)
 {
@@ -3938,7 +3954,12 @@ void __fastcall TRoadFrm::WndProc(TMessage &Mes)
 	{
 		if (Mes.LParam==(int)FVideoData)
 		SetVideoPos(frmVideoForm->Position);
-	}
+	} else if (Mes.Msg == WM_MOVE) {
+      if (OnFormGeometryChange) {
+          TRect windowRect(Left, Top, Left + Width, Top + Height);
+          OnFormGeometryChange(windowRect);
+      }
+    }
 	TForm::WndProc(Mes);
 }
 

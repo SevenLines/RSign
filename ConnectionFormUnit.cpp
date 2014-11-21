@@ -2,10 +2,9 @@
 
 #include <vcl.h>
 #pragma hdrstop
-
-#include "ConnectionFormUnit.h"
+//#include <ComObj.hpp>
 #include <algorithms>
-
+#include "ConnectionFormUnit.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -360,6 +359,38 @@ void __fastcall TConnectionForm::cmbDataSourceKeyPress(TObject *Sender,
         btnConnectToSever->Click();
         break;
     }
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TConnectionForm::btnListServersClick(TObject *Sender)
+{
+    ShowMessage("Эта кнопка пока не работает, не тыкайте, пожалуйста, в нее, пока.");
+    return;/*
+    ::ISourcesRowset* pISourceRowset = NULL;
+    ::IRowset* pIRowset = NULL;
+    ::IAccessor* pIAccessor = NULL;
+    DBBINDING* pDBBindings = NULL;
+
+    CoInitialize(NULL);
+
+    if (FAILED(CoCreateInstance(ProgIDToClassID("SQLOLEDB Enumerator"), 
+                               NULL,
+                               CLSCTX_INPROC_SERVER, 
+                               ::IID_ISourcesRowset, 
+                               (void**)&pISourceRowset))) {
+      // Process error.
+      return;
+   }
+
+   HRESULT hr = pISourceRowset->GetSourcesRowset(NULL, ::IID_IRowset, 0, NULL, (IUnknown**)&pIRowset);
+   pISourceRowset->Release();
+   if (FAILED(hr)) {
+      // Process error.
+      return;
+   }
+
+   CoUninitialize(); */
 }
 //---------------------------------------------------------------------------
 

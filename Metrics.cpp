@@ -106,7 +106,6 @@ __fastcall TExtPolyline::TExtPolyline(void)
 {
 DirectionVal=1;
 Count=0;
-FCapacity=0;
 Points=NULL;
 Codes=NULL;
 Flags=NULL;
@@ -115,7 +114,6 @@ __fastcall TExtPolyline::TExtPolyline(int n)
 {
 DirectionVal=1;
 Count=n;
-FCapacity=n;
 Points=new POINT [n];
 Codes=new TPointCode [n];
 Flags=new int [n];
@@ -128,7 +126,6 @@ Count=n;
 Points=new POINT [n];
 Codes=new TPointCode [n];
 Flags=new int [n];
-FCapacity=n;
 for(int i=0;i<n;i++)
     {
     Codes[i]=defcode;
@@ -136,32 +133,10 @@ for(int i=0;i<n;i++)
     }
 }
 
-void __fastcall TExtPolyline::ReSize(__int32 n) {
-   if (n<=FCapacity)
-       Count=n;
-   else {
-       FCapacity=n*2;
-       POINT* xPoints= new POINT [FCapacity];
-       TPointCode *xCodes=new TPointCode [FCapacity];
-       __int32 *xFlags=new __int32 [FCapacity];
-       for (int i=0;i<Count;i++)
-          xPoints[i]=Points[i],xCodes[i]=Codes[i],xFlags[i]=Flags[i];
-       Count=n;
-       delete[] Points;
-       delete[] Codes;
-       delete[] Flags;
-       Points=xPoints;
-       Flags=xFlags;
-       Codes=xCodes;
-
-   }
-}
-
 void __fastcall TExtPolyline::CopyExtPolyline(TExtPolyline *Source)
 {
 DirectionVal=Source->DirectionVal;
 Count=Source->Count;
-FCapacity=Count;
 Points=new POINT[Count];
 memcpy(Points,Source->Points,sizeof(POINT)*Count);
 Codes=new TPointCode [Count];
@@ -296,7 +271,6 @@ Points=NULL;
 Codes=NULL;
 Flags=NULL;
 Count=0;
-FCapacity=0;
 }
 
 void __fastcall TExtPolyline::DrawBezierSeg(void *dc,int n)

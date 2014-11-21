@@ -2903,7 +2903,6 @@ void __fastcall TDrawManager::DrawDressLayers(TDrawContents *Cont,TRect *OutRect
             }
          }
       }
-    delete Poly;
    }
 }
 

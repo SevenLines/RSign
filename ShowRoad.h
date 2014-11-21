@@ -442,7 +442,6 @@ public:         // User declarations
     void __fastcall NewMarkLine(void);        // Создает новый объект разметки. Если выделена разметка, то ее можно дублировать
     void __fastcall MoveActiveObject(void);
     void __fastcall ConnectToBaseLine(int ln); //Привязывает объекты к линии (кромка или ось)
-    void __fastcall MoveMetricToProp(void);    
     void __fastcall MoveObjects(void);
     void __fastcall AddNewObject(void);
     void __fastcall AddNewObject(int DictId);
@@ -535,6 +534,10 @@ public:         // User declarations
     __property int RoadId={read=FRoadId};
     __property TRoadObject *ActiveObj={read=FActiveObj};
     __property TRoadObject *InsertingObj={read=FInsertingObj};
+
+    void (__closure *OnFormGeometryChange)(TRect);
+    void (__closure *OnVideoFormGeometryChange)(TRect);
+    TRect* lastVideoWindowPosition;
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TRoadFrm *RoadFrm;

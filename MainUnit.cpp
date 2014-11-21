@@ -151,9 +151,21 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
 	String PatName=ini->ReadString("PrintPattern","Name","").Trim();
 	ini->ReadSectionValues("Cheefs",CheefList);
 	VideoServers->CommaText=ini->ReadString("Video","Servers","");
-	if (PatName!="")
-	    if (Pattern->LoadFromFile(PatName))
+	if (PatName!="") {
+	    if (Pattern->LoadFromFile(PatName)) {
 	        VPatFrm->FileName=PatName;
+        }
+    }
+
+    lastRoadWindowPosition.Left = ini->ReadInteger("ShowRoad", "Left", 0);
+    lastRoadWindowPosition.Top = ini->ReadInteger("ShowRoad", "Top", 0);
+    lastRoadWindowPosition.Right = ini->ReadInteger("ShowRoad", "Right", 0);
+    lastRoadWindowPosition.Bottom = ini->ReadInteger("ShowRoad", "Bottom", 0);
+
+    lastVideoWindowPosition.Left = ini->ReadInteger("ShowRoad", "VideoLeft", 0);
+    lastVideoWindowPosition.Top = ini->ReadInteger("ShowRoad", "VideoTop", 0);
+    lastVideoWindowPosition.Right = ini->ReadInteger("ShowRoad", "VideoRight", 0);
+    lastVideoWindowPosition.Bottom = ini->ReadInteger("ShowRoad", "VideoBottom", 0);
 
 }
 
@@ -162,6 +174,17 @@ void __fastcall TMainForm::WriteIni(TIniFile *ini)
 	ini->WriteString("Connection","ConnectionString",Connection->ConnectionString);
 	ini->WriteInteger("MainForm","Left",Left);
 	ini->WriteInteger("MainForm","Top",Top);
+
+    ini->WriteInteger("ShowRoad", "Left", lastRoadWindowPosition.Left);
+    ini->WriteInteger("ShowRoad", "Top", lastRoadWindowPosition.Top);
+    ini->WriteInteger("ShowRoad", "Right", lastRoadWindowPosition.Right);
+    ini->WriteInteger("ShowRoad", "Bottom", lastRoadWindowPosition.Bottom);
+
+    ini->WriteInteger("ShowRoad", "VideoLeft", lastVideoWindowPosition.Left);
+    ini->WriteInteger("ShowRoad", "VideoTop", lastVideoWindowPosition.Top);
+    ini->WriteInteger("ShowRoad", "VideoRight", lastVideoWindowPosition.Right);
+    ini->WriteInteger("ShowRoad", "VideoBottom", lastVideoWindowPosition.Bottom);
+
 	ini->WriteString("PrintPattern","Name",VPatFrm->FileName);
 	ini->WriteString("Video","Servers",VideoServers->CommaText);
     ConnectionForm->saveIni(ini);
@@ -315,11 +338,18 @@ bool __fastcall TMainForm::OpenRoadById(__int32 id,__int32 dataclass,bool OpenCo
 		Data=ResManager->AddDataSource(Capt,id,dataclass,0,Connection,Factory);
 		if (Data)
 		{
+            blockShowRoadSizeEventProcessor = true;
+
 			Application->CreateForm(__classid(TRoadFrm), &frm);
 			frm->OpenRoad(Capt,Data,Dict,Shared);
 			frm->Show();
+
+            PrepareShowRoadSize(frm);
+
 			ResManager->ReleaseDataSource(Data); // Теперь источником владеет окно
 			res=true;
+
+            blockShowRoadSizeEventProcessor = false;
 		}
 	}
 	return res;
@@ -390,6 +420,12 @@ bool __fastcall TMainForm::ShowRoadPart(__int32 RoadId,__int32 dataclass,__int32
 
 void __fastcall TMainForm::OpenRoad(TObject *Sender)
 {
+    if (!MainForm->Connection->Connected) {
+        if (MainForm->SetupConnection() != mrOk) {
+            return;
+        }
+    }
+    
 	if (OpenRoadDialog->ShowModal()==mrOk)
 	{
 		OpenSourceDialog->RoadId=OpenRoadDialog->RoadId;
@@ -399,7 +435,12 @@ void __fastcall TMainForm::OpenRoad(TObject *Sender)
 			<< OpenRoadDialog->RoadName.Trim().c_str()
 			<< " [id:" << OpenRoadDialog->RoadId << "]"
 			<< " источник: " << OpenSourceDialog->DataSource );
+
+
 			OpenRoadById(OpenRoadDialog->RoadId,OpenSourceDialog->DataSource,true);
+
+
+
 		}
 	}
 }
@@ -961,6 +1002,12 @@ void __fastcall TMainForm::N59Click(TObject *Sender)
 
 void __fastcall TMainForm::N58Click(TObject *Sender)
 {
+    if (!MainForm->Connection->Connected) {
+        if (MainForm->SetupConnection() != mrOk) {
+            return;
+        }
+    }
+
 	if (OpenRoadDialog->ShowModal()==mrOk)
 	{
 		OpenViewFrm->RoadId=OpenRoadDialog->RoadId;
@@ -977,10 +1024,17 @@ void __fastcall TMainForm::N58Click(TObject *Sender)
 					Shared->Load();
 				}
 				TDictSource *Dict=ResManager->AddDictSource(0,Connection);
+
+                blockShowRoadSizeEventProcessor = true;
 				TRoadFrm *frm;
 				Application->CreateForm(__classid(TRoadFrm), &frm);
+
 				frm->OpenView(OpenViewFrm->RoadId,OpenViewFrm->ViewId,Dict,Shared);
 				frm->Show();
+
+                PrepareShowRoadSize(frm);
+                
+                blockShowRoadSizeEventProcessor = false;
 			}  catch(...) {
 				std::cerr << "ошибка при открытии дороги" << std::endl;
 			}
@@ -1025,16 +1079,21 @@ void __fastcall TMainForm::N57Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TMainForm::N61Click(TObject *Sender)
+int __fastcall TMainForm::SetupConnection()
 {
     if (FActiveRoad) {
     	ShowMessage("Перед установкой подключения необходимо закрыть все открытые дороги");
-        return;
+        return mrCancel;
     }
 
     ConnectionForm->Connection = Connection;
-    ConnectionForm->ShowModal();
+    return ConnectionForm->ShowModal();
+}
 
+void __fastcall TMainForm::MenuItemConnectClick(TObject *Sender)
+{
+
+    SetupConnection();
 	/*if (FActiveRoad)
 	ShowMessage("Перед установкой подключения необходимо закрыть все открытые дороги");
 	else
@@ -1212,8 +1271,38 @@ if (FActiveRoad)
 
 void __fastcall TMainForm::N85Click(TObject *Sender)
 {
-if (FActiveRoad)
-   FActiveRoad->MoveMetricToProp();
+/*if (FActiveRoad)
+   FActiveRoad->MoveMetricToProp();*/
 }
 //---------------------------------------------------------------------------
 
+void TMainForm::ShowRoadFormGeometryChange(TRect windowRect)
+{
+    if (blockShowRoadSizeEventProcessor) {
+        return;
+    }
+    lastRoadWindowPosition = windowRect;
+}
+//---------------------------------------------------------------------------
+void TMainForm::VideoFormGeometryChange(TRect windowRect)
+{
+    if (blockShowRoadSizeEventProcessor) {
+        return;
+    }
+    lastVideoWindowPosition = windowRect;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::PrepareShowRoadSize(TRoadFrm* frm)
+{
+    if (lastRoadWindowPosition.Right - lastRoadWindowPosition.Left  > 0
+        && lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top > 0) {
+      frm->Left = lastRoadWindowPosition.Left;
+      frm->Top = lastRoadWindowPosition.Top;
+      frm->Width = lastRoadWindowPosition.Right - lastRoadWindowPosition.Left;
+      frm->Height = lastRoadWindowPosition.Bottom - lastRoadWindowPosition.Top;
+    }
+
+    frm->lastVideoWindowPosition = &lastVideoWindowPosition;
+    frm->OnFormGeometryChange = ShowRoadFormGeometryChange;
+    frm->OnVideoFormGeometryChange = VideoFormGeometryChange;
+}

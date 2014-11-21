@@ -1,25 +1,26 @@
 object frmVideoForm: TfrmVideoForm
-  Left = 590
-  Top = 164
+  Left = 1388
+  Top = 174
   Width = 390
   Height = 364
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -14
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
   OnCanResize = FormCanResize
   OnClose = FormClose
+  OnResize = FormResize
   OnShow = FormShow
-  PixelsPerInch = 96
-  TextHeight = 13
+  PixelsPerInch = 120
+  TextHeight = 16
   object Panel1: TPanel
     Left = 0
-    Top = 300
-    Width = 382
-    Height = 30
+    Top = 282
+    Width = 372
+    Height = 37
     Align = alBottom
     BevelOuter = bvNone
     PopupMenu = PopMenu
@@ -27,15 +28,15 @@ object frmVideoForm: TfrmVideoForm
     object Panel2: TPanel
       Left = 0
       Top = 0
-      Width = 382
-      Height = 22
+      Width = 372
+      Height = 27
       Align = alTop
       TabOrder = 0
       object ScrollBar: TScrollBar
-        Left = 61
+        Left = 75
         Top = 1
-        Width = 320
-        Height = 20
+        Width = 296
+        Height = 25
         Align = alClient
         PageSize = 0
         TabOrder = 0
@@ -44,16 +45,16 @@ object frmVideoForm: TfrmVideoForm
       object Panel3: TPanel
         Left = 1
         Top = 1
-        Width = 60
-        Height = 20
+        Width = 74
+        Height = 25
         Align = alLeft
         BevelOuter = bvNone
         TabOrder = 1
         object cmdPlay: TSpeedButton
           Left = 0
           Top = 0
-          Width = 20
-          Height = 20
+          Width = 25
+          Height = 25
           AllowAllUp = True
           GroupIndex = 1
           Flat = True
@@ -87,10 +88,10 @@ object frmVideoForm: TfrmVideoForm
           OnClick = cmdPlayClick
         end
         object cmdPause: TSpeedButton
-          Left = 20
+          Left = 25
           Top = 0
-          Width = 20
-          Height = 20
+          Width = 24
+          Height = 25
           AllowAllUp = True
           GroupIndex = 1
           Flat = True
@@ -124,10 +125,10 @@ object frmVideoForm: TfrmVideoForm
           OnClick = cmdPauseClick
         end
         object cmdStop: TSpeedButton
-          Left = 40
+          Left = 49
           Top = 0
-          Width = 20
-          Height = 20
+          Width = 25
+          Height = 25
           AllowAllUp = True
           GroupIndex = 1
           Flat = True
@@ -166,24 +167,13 @@ object frmVideoForm: TfrmVideoForm
   object MPlayer: TSMediaPlayer
     Left = 0
     Top = 0
-    Width = 382
-    Height = 300
+    Width = 372
+    Height = 282
     Align = alClient
     PopupMenu = PopMenu
     TabOrder = 1
     OnPlayStateChange = MPlayerPlayStateChange
-    ControlData = {
-      010000007B270000021F00000300FFFFFFFF0B0000000B0000000B00FFFF0B00
-      FFFF0B00FFFF00000200000000000B0000000300000000000800020000000000
-      0500000000000000144008000200000000000B00000003000000000005000000
-      00000000F0BF03000000000008000200000000001300000000001300FFFFFF00
-      0300000000000300040000000B00FFFF0B00FFFF0B0000000B0000000B000000
-      08000200000000000B00FFFF0300FFFFFFFF0B0000000300010000000B000100
-      0500000000000000F03F08000200000000000800020000000000080002000000
-      00000500000000000000F0BF0500000000000000F0BF0B00FFFF0B0000000B00
-      00000B0000000B0000000B0000000B00FFFF0B0000000B0000000B0000000B00
-      00000B0000000B0000000B0000000B0000000B00000003000000000013000000
-      00000B0000000300A8FDFFFF0B000000}
+    ControlData = {}
   end
   object Timer: TTimer
     OnTimer = TimerTimer

@@ -782,8 +782,6 @@ if (!FConnection)
                  DB->Close();
                 }
         }
-// Строим план по кривым
-    CalcCurvePlan(MinL,MaxL);
 // Читаем профиль
     ProgressForm->Note="Загружаются геометрические параметры";
     if (!LoadGeometryBlob() && !LoadGeometry())

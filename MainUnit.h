@@ -97,7 +97,7 @@ __published:	// IDE-managed Components
   TMenuItem *N58;
   TMenuItem *N59;
     TMenuItem *N60;
-    TMenuItem *N61;
+    TMenuItem *MenuItemConnect;
     TMenuItem *N62;
     TPopupMenu *DesignersList;
     TMenuItem *N63;
@@ -177,7 +177,7 @@ __published:	// IDE-managed Components
   void __fastcall N59Click(TObject *Sender);
   void __fastcall N58Click(TObject *Sender);
   void __fastcall N57Click(TObject *Sender);
-    void __fastcall N61Click(TObject *Sender);
+    void __fastcall MenuItemConnectClick(TObject *Sender);
     void __fastcall N63Click(TObject *Sender);
     void __fastcall N64Click(TObject *Sender);
     void __fastcall N66Click(TObject *Sender);
@@ -204,15 +204,30 @@ private:	// User declarations
     TRoadFrm *FActiveRoad;
     int FCurAttachDesigner;
     bool HaveInit;
+
+    TRect lastRoadWindowPosition;
+    TRect lastVideoWindowPosition;
+    bool blockShowRoadSizeEventProcessor;
+
+    void ShowRoadFormGeometryChange(TRect windowRect);
+    void VideoFormGeometryChange(TRect windowRect);
+
     virtual void __fastcall WndProc(TMessage&);
+
     TRoadFrm* __fastcall FindRoad(__int32 id,__int32 dataclass);
+
     void __fastcall SetActiveRoad(TRoadFrm *);
+
     int __fastcall AddProject(__int32 RoadId);
+
     bool __fastcall GetPropertyByClick(void)
         {return BtnPropMode->Down;}
+
     bool __fastcall GetSelectByClick(void)
         {return BtnSelectMode->Down;}
-    void __fastcall SetDesigner(TObject *Send);        
+
+    void __fastcall SetDesigner(TObject *Send);
+           
 public:		// User declarations
     TSignPanel *SignPanel;
     TResManager *ResManager;
@@ -239,7 +254,10 @@ public:		// User declarations
     void __fastcall SendBroadCastMessage(int Command,int Wpar,int Lpar);
     void __fastcall PostBroadCastMessage(int Command,int Wpar,int Lpar);
 
+    void __fastcall PrepareShowRoadSize(TRoadFrm* frm);
+
     void __fastcall PrepareMinireports();
+    int __fastcall SetupConnection();
 
     __property bool PropertyByClick={read=GetPropertyByClick};
     __property bool SelectByClick={read=GetSelectByClick};
