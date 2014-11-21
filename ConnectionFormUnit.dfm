@@ -2,7 +2,7 @@ object ConnectionForm: TConnectionForm
   Left = 596
   Top = 251
   Width = 329
-  Height = 217
+  Height = 204
   AutoSize = True
   BorderWidth = 8
   Caption = 'ConnectionForm'
@@ -46,7 +46,7 @@ object ConnectionForm: TConnectionForm
       Left = 91
       Top = 20
       Width = 201
-      Height = 24
+      Height = 21
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 1
     end
@@ -54,7 +54,7 @@ object ConnectionForm: TConnectionForm
       Left = 91
       Top = 46
       Width = 201
-      Height = 24
+      Height = 21
       Anchors = [akLeft, akTop, akRight]
       PasswordChar = '*'
       TabOrder = 2
@@ -116,18 +116,19 @@ object ConnectionForm: TConnectionForm
     Left = 0
     Top = 100
     Width = 305
-    Height = 34
+    Height = 21
     Align = alTop
+    AutoSize = True
     BevelOuter = bvNone
     Caption = 'Panel2'
     TabOrder = 2
     DesignSize = (
       305
-      34)
+      21)
     object cmbInitialCatalog: TComboBox
       Left = 0
-      Top = 7
-      Width = 304
+      Top = 0
+      Width = 305
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       ItemHeight = 13
@@ -136,7 +137,7 @@ object ConnectionForm: TConnectionForm
   end
   object Panel3: TPanel
     Left = 0
-    Top = 134
+    Top = 121
     Width = 305
     Height = 33
     Align = alTop

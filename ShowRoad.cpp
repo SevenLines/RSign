@@ -2216,8 +2216,8 @@ void __fastcall TRoadFrm::AddNewSign(String Code,int Variation=0)
 	if (FEditedData)
 	if (!FEditedData->ReadOnly)
 	{
-		TRoadSign *NewSign=FEditedData->CreateManSign(FDictSour,roDirect,spRight,0,0,Code,"","");
-
+		//TRoadSign *NewSign=FEditedData->CreateManSign(FDictSour,roDirect,spRight,0,0,Code,"","");
+        TRoadSign *NewSign=FEditedData->CreateManSign(FDictSour,0,0,0,0,Code,"","");
 		if (NewSign) {
 			NewSign->ViewKind=Variation;
 			MainForm->SignPanel->AddButton(Dict,Code.Trim());
@@ -2820,11 +2820,17 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 			if(tempSign) {
 				s->L = tempSign->L;
 				s->SetDX(tempSign->DX);
+                s->SetDirection(tempSign->Direction);
+                s->SetPlacement(tempSign->Placement);
 			}else{
-				s->L=CL;
-				s->SetDX(CX);
+                FInsertingPoly->Count=1;
+                FInsertingPoly->Points[0]=TRoadPoint(CL,RX);
+                s->SetDefaultPlacement(FMetricData->Road,FInsertingPoly);
+//				s->L=CL;
+//				s->SetDX(CX);
 			}
-			s->SetDirection(dr);
+			//s->SetDirection(dr);
+//            s->SetDefaultPlacement()
 		}
 		else
 		{

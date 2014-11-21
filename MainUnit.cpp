@@ -130,18 +130,21 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
         Connection->Close();
         int pass = connectionString.Pos("Password");
         // if password not present in current connection string, use password from connection form
-        if (pass == -1) {
+        if (pass == 0) {
             String password = ini->ReadString("ConnectionForm", "Password", "");
             if (!password.IsEmpty()) {
-                connectionString += "Password:" + password + ";";
+                int userIdPos = connectionString.Pos("User ID");
+                if (!userIdPos) userIdPos = connectionString.Pos("UserID");
+                
+                if (userIdPos) {
+                    connectionString.Insert("Password=" + password + ";", userIdPos);
+                }
             }
         }
   	    Connection->ConnectionString = connectionString;
         Connection->Open();
         ConnectionForm->Connection = Connection;
     }
-
-
 
 	Left=ini->ReadInteger("MainForm","Left",Left);
 	Top=ini->ReadInteger("MainForm","Top",Top);
