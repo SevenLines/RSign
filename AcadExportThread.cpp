@@ -272,6 +272,7 @@ int __fastcall AcadExportThread::ExportTrafficLights(TDtaSource* data, TAcadExpo
     SET_PROGRESS_FORM_MINMAX(0,tlights.size());
 
     for (int i=0;i<tlights.size();++i) {
+        if (Terminated) return -1;
         tlightGroup.clear();
         tlightGroup.push_back(tlights[i]);
 
@@ -526,6 +527,7 @@ int __fastcall AcadExportThread::ExportRoadSigns(TDtaSource* data, TAcadExport* 
     SET_PROGRESS_FORM_MINMAX(0,signs.size());
 
     for (int i=0;i<signs.size();++i) {
+        if (Terminated) return -1;
         sgrp.clear();
         sgrp.push_back(make_pair(signs[i].p, signs[i].s));
 
@@ -774,6 +776,7 @@ int __fastcall AcadExportThread::ExportSidewalks(vector<pair<int,wpbar> > &data,
     SET_PROGRESS_FORM_MINMAX(0,sidewalksGroups.size());
 	// выводим тротуары группами
 	for(int i=0;i<sidewalksGroups.size();++i) {
+        if (Terminated) return -1;
 		aexp->ExportSidewalk(&sidewalksGroups[i]);
         SET_PROGRESS_FORM_POSITION(i)
 	}
