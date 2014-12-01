@@ -1860,7 +1860,7 @@ void __fastcall TRoadFrm::StartEditPoly(void)
 		{
 			FPoly=new TPolyline(0,0);
 			FActiveObj->Poly=FPoly;
-			FActiveSource->PolyList->Add(FPoly);
+			//FActiveSource->PolyList->Add(FPoly);
 		}
 		FEditMetric=true;
 		BuildPoly(true);
@@ -1872,6 +1872,8 @@ void __fastcall TRoadFrm::StopEditPoly(void)
 {
 	FPoly=NULL;
 	FEditMetric=false;
+    delete FVector;
+    FVector=NULL;
 	if (FActiveObj)
 	FActiveObj->PostEditPoly();
 	InvalidateBoxes();

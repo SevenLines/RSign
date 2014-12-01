@@ -258,6 +258,7 @@ object PolyFrm: TPolyFrm
       Width = 23
       Height = 22
       Hint = #1064#1072#1073#1083#1086#1085
+      Caption = 'P'
       ParentShowHint = False
       ShowHint = True
       OnClick = SpeedButton3Click

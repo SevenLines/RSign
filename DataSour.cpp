@@ -541,7 +541,7 @@ void __fastcall TDtaSource::CreateClasses(void)
 FObjects=new TObjList<TRoadObject>;
 FBuffer=new TObjList<TRoadObject>;
 FDelBuffer=new TObjList<TRoadObject>;
-FPolyList=new TObjList<TPolyline>;
+//FPolyList=new TObjList<TPolyline>;
 FDocList=new TObjList<TDocument>;
 FDirVideoTime=new TObjList<TVideoTime>;
 FUnDirVideoTime=new TObjList<TVideoTime>;
@@ -555,13 +555,14 @@ void __fastcall TDtaSource::FreeClasses(void)
 delete FRoad;
 FRoad=NULL;
 delete FObjects;
+
 FObjects=NULL;
 delete FBuffer;
 FBuffer=NULL;
 delete FDelBuffer;
 FDelBuffer=NULL;
-delete FPolyList;
-FPolyList=NULL;
+//delete FPolyList;
+//FPolyList=NULL;
 delete FDocList;
 FDocList=NULL;
 delete FDirVideoTime;
@@ -1269,9 +1270,11 @@ out<<FRoad->LMin<<" "<<FRoad->LMax<<" "<<FRoad->XMin<<" "<<FRoad->XMax<<endl;
 //Road->LeftLine.Dump(out);
 //Road->RightSide.Dump(out);
 //Road->LeftSide.Dump(out);
+/*
 out<<PolyList->Count<<endl;
 for (int i=0;i<PolyList->Count;i++)
     PolyList->Items[i]->Dump(out);
+*/
 if (savegeom)
     FRoad->Geometry.Dump(out);
 else
@@ -1344,7 +1347,7 @@ if (Meta)
                 {
                 Res->Poly=new TPolyline(obj->Poly,0);
                 Road->CalcPointsPos(Res->Poly,obj);
-                FPolyList->Add(Res->Poly);
+                //FPolyList->Add(Res->Poly);
                 }
             Res->PutProperty("PrevId",obj->Id);
             FBuffer->Add(Res);
@@ -1386,7 +1389,7 @@ if ((index>=0)&&(index<FObjects->Count))
         {
         if (Obj->Poly)
             {
-            FPolyList->Remove(Obj->Poly);
+            //FPolyList->Remove(Obj->Poly);
             delete Obj->Poly;
             }
         delete Obj;
@@ -1465,19 +1468,19 @@ for (int i=FObjects->Count-1;i>=0;i--)
         DeleteObject(i);
     }
 TPolyline *pl=new TPolyline(&(Road->LeftSide),0);
-FPolyList->Add(pl);
+//FPolyList->Add(pl);
 AddRoadLine(Dict,pl,rsLeft,mkBrovka);
 
 pl=new TPolyline(&(Road->RightSide),0);
-FPolyList->Add(pl);
+//FPolyList->Add(pl);
 AddRoadLine(Dict,pl,rsRight,mkBrovka);
 
 pl=new TPolyline(&(Road->LeftLine),0);
-FPolyList->Add(pl);
+//FPolyList->Add(pl);
 AddRoadLine(Dict,pl,rsLeft,mkKromka);
 
 pl=new TPolyline(&(Road->RightLine),0);
-FPolyList->Add(pl);
+//FPolyList->Add(pl);
 AddRoadLine(Dict,pl,rsRight,mkKromka);
 AddFromBufer();
 }
@@ -1917,7 +1920,7 @@ void __fastcall TDtaSource::MoveVideo(int len) {
    for (int i=0;i<FUnDirVideoTime->Count;i++)
       FUnDirVideoTime->Items[i]->Move(len);
 }
-
+/*
 TPolyline* __fastcall TDtaSource::FindPolyline(__int32 id)
 {
 TPolyline *Res=NULL;
@@ -1939,6 +1942,7 @@ if (epos>=0)
     }
 return Res;
 }
+*/
 
 int __fastcall TDtaSource::GetDocumentsCount(__int32 AId,__int32 ADictId)
 {

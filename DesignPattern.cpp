@@ -107,7 +107,7 @@ if (Att) {
       ewidth=frmAttachParams->edEndWidth->Text.ToInt();
       if (!Att->Poly){
         Att->Poly=new TPolyline(PtCount,0);
-        Data->PolyList->Add(Att->Poly);
+        //Data->PolyList->Add(Att->Poly);
       } else
         Att->Poly->Count=PtCount;
       Att->Angle=angle;
@@ -308,7 +308,7 @@ if (Att->Poly)
             Signal->DrwClassId=Dict->SelectDrwParam(Signal,1);
             Att->AddChild(Signal);
             Signal->Poly=new TPolyline(SignalPointCount,0);
-            Data->PolyList->Add(Signal->Poly);
+            //Data->PolyList->Add(Signal->Poly);
             Signal->Poly->Count=SignalPointCount;
             TRoadPoint *AttP=Att->Poly->Points;
             TRoadPoint *P=Signal->Poly->Points;
@@ -336,7 +336,7 @@ if (Att->Poly)
             Signal->DrwClassId=Dict->SelectDrwParam(Signal,1);
             Att->AddChild(Signal);
             Signal->Poly=new TPolyline(SignalPointCount,0);
-            Data->PolyList->Add(Signal->Poly);
+            //Data->PolyList->Add(Signal->Poly);
             Signal->Poly->Count=SignalPointCount;
             P=Signal->Poly->Points;
             if (Signal->Placement==opLeft)

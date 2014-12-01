@@ -226,6 +226,19 @@ Code.SetBase(LBase->ItemIndex,XBase->ItemIndex,Polar->ItemIndex,BaseFixed1->Chec
 return Code;
 }
 
+void __fastcall TPolyFrm::SetCodeToSelectedPoints(TPointCode code,int leeppar) {
+    for (int i=0;i<FPoly->Count;i++)
+        if (PolyList->Selected[i]) {
+           TRoadPoint P=(*FPoly)[i];
+           P.LeepPar=leeppar;
+           P.Code=code;
+           FRefForm->SetPoint(P,i);
+           PolyList->Items->Strings[i]=GetPointInfo(i);
+           PolyList->Checked[i]=P.Code.Visible();
+        }
+}
+
+
 void __fastcall TPolyFrm::CopySelectedPoints(void)
 {
 int n=0;
@@ -397,7 +410,8 @@ GroupBox2->Visible=PolyList->ItemIndex>=0;
 void __fastcall TPolyFrm::Button1Click(TObject *Sender)
 {
 int n=PolyList->ItemIndex;
-if (n>=0)
+int m=PolyList->SelCount;
+if (n>=0 && m<=1)
     {
     TRoadPoint P=(*FPoly)[n];
     P.Code=GetCode();
@@ -408,13 +422,21 @@ if (n>=0)
     BuildProp(n);
     FRefForm->PBox->Invalidate();
     }
+else if (m>1 && FPoly) {
+    TPointCode code=GetCode();
+    int lpar=LeepPar->Text.ToInt();
+    SetCodeToSelectedPoints(code,lpar);
+    FVector=FRefForm->BuildPoly(true);
+    FRefForm->PBox->Invalidate();
+    }
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TPolyFrm::Button2Click(TObject *Sender)
 {
 int n=PolyList->ItemIndex;
-if (n>=0)
+int m=PolyList->SelCount;
+if (n>=0 && m<=1)
     {
     TRoadPoint P=(*FPoly)[n];
     P.Code=GetCode();
@@ -427,6 +449,13 @@ if (n>=0)
     PolyList->Items->Strings[n]=GetPointInfo(n);
     PolyList->Checked[n]=P.Code.Visible();
     BuildProp(n);
+    FRefForm->PBox->Invalidate();
+    }
+else if (m>1 && FPoly) {
+    TPointCode code=GetCode();
+    int lpar=LeepPar->Text.ToInt();
+    SetCodeToSelectedPoints(code,lpar);
+    FVector=FRefForm->BuildPoly(true);
     FRefForm->PBox->Invalidate();
     }
 }
@@ -550,4 +579,6 @@ if (FPoly && FPoly->Count) {
    }
 }
 //---------------------------------------------------------------------------
+
+
 

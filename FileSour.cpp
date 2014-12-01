@@ -253,7 +253,7 @@ if (in.is_open())
         {
         TPolyline *Poly=new TPolyline;
         Poly->LoadDump(in);
-        FPolyList->Add(Poly);
+        //FPolyList->Add(Poly);
         }
     FRoad->Geometry.LoadDump(in);
     FRoad->CalcMinMaxZ();    
@@ -270,8 +270,8 @@ if (in.is_open())
         TObjMetaClass *Meta=dynamic_cast<TObjMetaClass*>(Dict->ObjClasses->Items[code]);
         TRoadObject *obj=FFactory->CreateRoadObj(Meta->ClassName,id,code);
         obj->LoadDump(slst,Dict);
-        if (poly)
-            obj->Poly=FindPolyline(poly);
+        //if (poly)
+        //    obj->Poly=FindPolyline(poly);
         obj->DrwClassId=Dict->SelectDrwParam(obj,1);
         FObjects->Add(obj);
         obj->PostLoadObject();

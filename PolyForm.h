@@ -96,6 +96,7 @@ private:	// User declarations
     void __fastcall RemoveSelectedPoints(void);
     void __fastcall CutSelectedPoints(void);
     void __fastcall SelectAllPoints(void);
+    void __fastcall SetCodeToSelectedPoints(TPointCode code,int leeppar);
     void __fastcall PastePoints(void);
     void __fastcall AddPoints(void);
     void __fastcall ReplaceSelectedToWidePart(void);

@@ -2817,6 +2817,8 @@ SelectObject(dc,oldpen);
 DeleteObject(pen);
 SelectObject(dc,oldfont);
 DeleteObject(labfont);
+delete Poly1;
+delete Poly2;
 }
 
 void* __fastcall TDrawManager::CreateLabelFont(int dpi)
