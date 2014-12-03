@@ -219,9 +219,19 @@ AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes,
 
     int iLast = 0;
     if(fUseCodes){
+        if(Poly->Count>=2 && codes[0]){
+            range.push_back(*points.begin());
+            range.push_back(*(points.begin() + 1));
+            range.push_back(*(points.end() - 2));
+            range.push_back(*(points.end() - 1));
+            pl = DrawPolyLine(range);
+            if (lineEditFunction) {
+                lineEditFunction(pl, data);
+            }
+        }
         for(int i=1;i<codes.size();i++){
             if(!codes[i]){
-                if( i - iLast >= 1 ) {
+                if( i - iLast > 1 ) {
                     range = vector<double>(
                         points.begin() + 2*iLast,
                         points.begin() + 2*i);
@@ -2803,6 +2813,25 @@ AcadBlockReferencePtr TAcadExport::DrawBorder(vector<TPoint> &points, AnsiString
     return block;
 }
 
+void StyleBorderBgLine(AcadPolylinePtr& line, void* data)
+{
+    BorderDrawStyleParams *params = (BorderDrawStyleParams*)data;
+    line->set_Lineweight(50);
+    if(!params->exist) {
+        line->color = params->NotExistColor;
+    }
+}
+
+void StyleBorderFgLine(AcadPolylinePtr& line, void* data)
+{
+    line->set_Lineweight(30);
+    line->set_Linetype(WideString("linedash_1"));
+    AcadAcCmColorPtr color;
+    color = line->TrueColor;
+    color->SetRGB(255,255,255);
+    line->TrueColor = color;
+}
+
 bool __fastcall TAcadExport::ExportBorder(TExtPolyline *Poly,TLinearRoadSideObject *o,bool exist, bool fEnd) {
     if(fEnd) return true;
 
@@ -2812,39 +2841,11 @@ bool __fastcall TAcadExport::ExportBorder(TExtPolyline *Poly,TLinearRoadSideObje
     if(~iEnd) {
         if(o->LMin>iEnd) return true;
     }
-
-    /*
-vector<TPoint> points;
-vector<double> points2;
-int count = Poly->Count;
-
-for(int i=0;i<count;i++) {
-        points.push_back(Poly->Points[i]);
-        points2.push_back(Poly->Points[i].x);
-        points2.push_back(Poly->Points[i].y);
-}
-DrawBorder(points, "borderblock", exist);
-*/
-    AcadPolylinePtr line;
-    
-    line = DrawPolyPoints(Poly, false);
-    if (line.IsBound()) {
-      line->set_Lineweight(50);
-      if(!exist) {
-          line->color = NotExistColor;
-      }
-    }
-
-    line = DrawPolyPoints(Poly, false);
-    if (line.IsBound()) {
-      line->set_Lineweight(30);
-      line->set_Linetype(WideString("linedash_1"));
-      AcadAcCmColorPtr color;
-      color = line->TrueColor;
-      color->SetRGB(255,255,255);
-      line->TrueColor = color;
-    }
-
+    BorderDrawStyleParams params;
+    params.exist = exist;
+    params.NotExistColor = NotExistColor;
+    DrawPolyPoints(Poly, true, false, StyleBorderBgLine, &params);
+    DrawPolyPoints(Poly, true, false, StyleBorderFgLine, &params);
     return true;
 }
 
