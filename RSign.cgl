@@ -1,44 +1,118 @@
-Error 00040. 0x130C10 (Thread 0x0780):
+Error 00001. 0x130C10 (Thread 0x0F78):
 Method called on illegally casted object: Attempt to access 608 byte(s) at
- 0x011B5DAC. The 'this' pointer points to heap block 0x011B5DAC which is only
+ 0x011D6084. The 'this' pointer points to heap block 0x011D6084 which is only
  604 bytes long.
 Call Tree:
    0x00420078(=RSign.exe:0x01:01F078) c:\program files\borland\cbuilder6\include\vcl\ADODB.hpp#965
    0x0041A796(=RSign.exe:0x01:019796) D:\Projects\RSign\DBDataSource.h#71
    0x0041A3AD(=RSign.exe:0x01:0193AD) D:\Projects\RSign\MainUnit.cpp#452
-   0x006967A7(=RSign.exe:0x01:2957A7)
-   0x0069641A(=RSign.exe:0x01:29541A)
+   0x00696D67(=RSign.exe:0x01:295D67)
+   0x006969DA(=RSign.exe:0x01:2959DA)
    0x004156D9(=RSign.exe:0x01:0146D9) c:\program files\borland\cbuilder6\include\vcl\Forms.hpp#930
 
-The memory block (0x011B5DAC) [size: 604 bytes] was allocated with SysGetMem
+The memory block (0x011D6084) [size: 604 bytes] was allocated with SysGetMem
 Call Tree:
-   0x007043E7(=RSign.exe:0x01:3033E7)
+   0x007049A7(=RSign.exe:0x01:3039A7)
    0x0041A796(=RSign.exe:0x01:019796) D:\Projects\RSign\DBDataSource.h#71
    0x0041A3AD(=RSign.exe:0x01:0193AD) D:\Projects\RSign\MainUnit.cpp#452
-   0x006967A7(=RSign.exe:0x01:2957A7)
-   0x0069641A(=RSign.exe:0x01:29541A)
+   0x00696D67(=RSign.exe:0x01:295D67)
+   0x006969DA(=RSign.exe:0x01:2959DA)
    0x004156D9(=RSign.exe:0x01:0146D9) c:\program files\borland\cbuilder6\include\vcl\Forms.hpp#930
 
 ------------------------------------------
-Error 00050. 0x130C10 (Thread 0x0780):
+Error 00002. 0x130C10 (Thread 0x0F78):
 Method called on illegally casted object: Attempt to access 224 byte(s) at
- 0x011B2DCC. The 'this' pointer points to heap block 0x011B2DCC which is only
+ 0x011D3068. The 'this' pointer points to heap block 0x011D3068 which is only
  220 bytes long.
 Call Tree:
    0x00417E36(=RSign.exe:0x01:016E36) c:\program files\borland\cbuilder6\include\vcl\ADODB.hpp#277
    0x00417235(=RSign.exe:0x01:016235) D:\Projects\RSign\MainUnit.cpp#145
    0x00418951(=RSign.exe:0x01:017951) D:\Projects\RSign\MainUnit.cpp#196
    0x0041C81A(=RSign.exe:0x01:01B81A) D:\Projects\RSign\MainUnit.cpp#822
-   0x00696EE7(=RSign.exe:0x01:295EE7)
-   0x006AD50F(=RSign.exe:0x01:2AC50F)
+   0x006974A7(=RSign.exe:0x01:2964A7)
+   0x006ADACF(=RSign.exe:0x01:2ACACF)
 
-The memory block (0x011B2DCC) [size: 220 bytes] was allocated with SysGetMem
+The memory block (0x011D3068) [size: 220 bytes] was allocated with SysGetMem
 Call Tree:
-   0x007043E7(=RSign.exe:0x01:3033E7)
-   0x006E8812(=RSign.exe:0x01:2E7812)
-   0x006E8A5E(=RSign.exe:0x01:2E7A5E)
-   0x006E899D(=RSign.exe:0x01:2E799D)
-   0x006ED0F6(=RSign.exe:0x01:2EC0F6)
-   0x006969F2(=RSign.exe:0x01:2959F2)
+   0x007049A7(=RSign.exe:0x01:3039A7)
+   0x006E8DD2(=RSign.exe:0x01:2E7DD2)
+   0x006E901E(=RSign.exe:0x01:2E801E)
+   0x006E8F5D(=RSign.exe:0x01:2E7F5D)
+   0x006ED6B6(=RSign.exe:0x01:2EC6B6)
+   0x00696FB2(=RSign.exe:0x01:295FB2)
 
 ------------------------------------------
+Functions called:
+ fflush (8 times)
+ ceil (4 times)
+ strncpy (12 times)
+ strcpy (117 times)
+ strtok (13 times)
+ vsnprintf (802 times)
+ delete[] (433 times)
+ lstrcatA (7 times)
+ lstrcpyA (9 times)
+ new[] (433 times)
+ memset (97 times)
+ memchr (5 times)
+ delete (120 times)
+ free (12 times)
+ memmove (6 times)
+ new (126 times)
+ SysReallocMem (5677 times)
+ SysFreeMem (122819 times)
+ SysGetMem (122957 times)
+ lstrlenA (12 times)
+ lstrcpynA (4 times)
+ calloc (1 times)
+ strlen (260 times)
+ realloc (1 times)
+ strdup (1 times)
+ malloc (9 times)
+ memcpy (388 times)
+Resource types used:
+ object array (433 allocs, 51 max)
+ object (126 allocs, 77 max)
+ memory block (122969 allocs, 17933 max)
+Modules used:
+ 00400000 12/03/2014 15:28:16 D:\Projects\RSign\RSign.exe
+ 01190000 02/01/2002 22:00:00 C:\PROGRA~1\Borland\CBuilder6\Bin\borlndmm.dll
+ 01340000 11/17/2009 05:00:00 C:\WINDOWS\system32\COMRes.dll
+ 014A0000 11/17/2009 05:00:00 C:\WINDOWS\system32\xpsp2res.dll
+ 0CD00000 02/01/2002 22:00:00 C:\PROGRA~1\Borland\CBuilder6\Bin\CG32.DLL
+ 13470000 11/17/2009 05:00:00 C:\WINDOWS\system32\wmpdxm.dll
+ 1B5D0000 11/17/2009 05:00:00 C:\WINDOWS\system32\MSWSTR10.DLL
+ 4DDD0000 11/17/2009 05:00:00 C:\Program Files\Common
+ Files\System\ado\msado15.dll
+ 5B260000 11/17/2009 05:00:00 C:\WINDOWS\system32\uxtheme.dll
+ 5D5B0000 11/17/2009 05:00:00 C:\WINDOWS\system32\COMCTL32.DLL
+ 5F2F0000 11/17/2009 05:00:00 C:\WINDOWS\system32\OLEPRO32.DLL
+ 71B00000 11/17/2009 05:00:00 C:\WINDOWS\system32\MPR.dll
+ 72BB0000 11/17/2009 05:00:00 C:\WINDOWS\system32\msdxm.ocx
+ 72FC0000 11/17/2009 05:00:00 C:\WINDOWS\system32\WINSPOOL.DRV
+ 732A0000 11/17/2009 05:00:00 C:\WINDOWS\system32\RICHED32.DLL
+ 746E0000 11/17/2009 05:00:00 C:\WINDOWS\system32\MSCTF.dll
+ 747D0000 11/17/2009 05:00:00 C:\WINDOWS\system32\Quartz.dll
+ 74DF0000 11/17/2009 05:00:00 C:\WINDOWS\system32\RICHED20.dll
+ 76380000 11/17/2009 05:00:00 C:\WINDOWS\system32\COMDLG32.DLL
+ 76580000 11/17/2009 05:00:00 C:\WINDOWS\system32\MSDART.DLL
+ 76B20000 11/17/2009 05:00:00 C:\WINDOWS\system32\WINMM.dll
+ 76FC0000 11/17/2009 05:00:00 C:\WINDOWS\system32\CLBCATQ.DLL
+ 77110000 11/17/2009 05:00:00 C:\WINDOWS\system32\OLEAUT32.DLL
+ 773C0000 11/17/2009 05:00:00
+ C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.
+2600.5512_x-ww_35d4ce83\comctl32.dll
+ 774D0000 11/17/2009 05:00:00 C:\WINDOWS\system32\OLE32.DLL
+ 77BF0000 11/17/2009 05:00:00 C:\WINDOWS\system32\VERSION.DLL
+ 77C00000 11/17/2009 05:00:00 C:\WINDOWS\system32\msvcrt.dll
+ 77DC0000 11/17/2009 05:00:00 C:\WINDOWS\system32\ADVAPI32.DLL
+ 77E70000 11/17/2009 05:00:00 C:\WINDOWS\system32\RPCRT4.dll
+ 77F10000 11/17/2009 05:00:00 C:\WINDOWS\system32\GDI32.dll
+ 77F60000 11/17/2009 05:00:00 C:\WINDOWS\system32\SHLWAPI.dll
+ 77FE0000 11/17/2009 05:00:00 C:\WINDOWS\system32\Secur32.dll
+ 7C800000 11/17/2009 05:00:00 C:\WINDOWS\system32\kernel32.dll
+ 7C900000 11/17/2009 05:00:00 C:\WINDOWS\system32\ntdll.dll
+ 7C9C0000 11/17/2009 05:00:00 C:\WINDOWS\system32\SHELL32.dll
+ 7E360000 11/17/2009 05:00:00 C:\WINDOWS\system32\USER32.DLL
+ 7E690000 11/17/2009 05:00:00 C:\WINDOWS\system32\SXS.DLL
+==========================================

@@ -627,8 +627,43 @@ SRoad->SetFrame(Cont->L1,Cont->L2,SRoad->XMin,SRoad->XMax,pkGorizontal,pdDirect)
 SRoad->SetOutBound(0,(Cont->L2-Cont->L1)*100/FBaseScaleL,(SRoad->XMin*100)/FBaseScaleP,(SRoad->XMax*100)/FBaseScaleP);
 SignsMan.NewSession(ObjCount,0);
 int GostLabelSize=FFontSize*254*FBaseScaleX/(72*FBaseScaleP);
+// Еще будем учитывать светофоры но не будем для них искать положение
+// Возможно, это работает не всегда
 for (int i=0;i<ObjCount;i++)
     {
+    TTrafficLight *light=dynamic_cast<TTrafficLight*>(Objs[i]);
+    if (light) {
+        TDrwClassesRec *ClRec=DrCl->Items[light->DrwClassId];
+        TDrwParamRec3 *DrwRec=dynamic_cast<TDrwParamRec3*>(DrPar->Items[ClRec->DrwParamId[0]]);
+        if (DrwRec) {
+            TExtPolyline *pl=light->PrepareMetric(SRoad);
+            int x=pl->Points[0].x;
+            int y=pl->Points[0].y;
+            delete pl;
+
+            int DrwWidth=(DrwRec->Width*FBaseScaleX)/FBaseScaleP;
+            int DrwHeight=(DrwRec->Height*FBaseScaleX)/FBaseScaleP;
+            int DrwDX=(DrwRec->DX*FBaseScaleX)/FBaseScaleP;
+            int DrwDY=(DrwRec->DY*FBaseScaleX)/FBaseScaleP;
+            RECT r;
+            if (light->Direction>=45 && light->Direction<135) {
+                r.right=x+DrwDY;r.left=r.right-DrwHeight;
+                r.top=y-DrwDX;r.bottom=r.top+DrwWidth;
+            } else if (light->Direction>=135 && light->Direction<225) {
+                r.right=x+DrwDX;r.left=r.right-DrwWidth;
+                r.bottom=y+DrwDY;r.top=r.bottom-DrwHeight;
+            }  else if (light->Direction>=225 && light->Direction<315) {
+                r.left=x-DrwDY;r.right=r.left+DrwHeight;
+                r.bottom=y+DrwDX;r.top=r.bottom-DrwWidth;
+            } else {
+                r.left=x-DrwDX;r.right=r.left+DrwWidth;
+                r.top=y-DrwDY;r.bottom=r.top+DrwHeight;
+            }
+            SignsMan.PutRect(i,r);
+        }
+    }
+}
+for (int i=0;i<ObjCount;i++) {
     TRoadSign *sign=dynamic_cast<TRoadSign*>(Objs[i]);
     if (sign)
         {
