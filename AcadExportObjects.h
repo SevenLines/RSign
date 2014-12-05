@@ -25,6 +25,11 @@ struct BarrierDrawStyleParameters {
     bool exist;
 };
 
+struct BorderDrawStyleParams {
+    int NotExistColor;
+    bool exist;
+};
+
 class KromkaObjectGroup {
 private:
 	int mMin, mMax;

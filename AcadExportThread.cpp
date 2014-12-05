@@ -629,14 +629,41 @@ int __fastcall AcadExportThread::ExportRoadMark(TDtaSource* data, TAcadExport* a
 						}
 					}
                     if (onlyCountLines) {
-                      if (line<0) {
-                          if (*leftMax < -line && line > -10) {
-                              *leftMax = -line;
-                          }
-                      } else if (line > 0) {
-                          if (*rightMax < line && line < 10) {
-                              *rightMax = line;
-                          }
+                      switch(t->Kind) {
+                      case ma1_park:
+                      case ma14_1:
+                      case ma14_2:
+                      case ma14_3:
+                      case ma12:
+                      case ma13:
+                      case ma14_1e:
+                      case ma18p:
+                      case ma18r:
+                      case ma18l:
+                      case ma18pr:
+                      case ma18pl:
+                      case ma18rl:
+                      case ma18prl:
+                      case ma19_1:
+                      case ma19_2:
+                      case ma20:
+                      case ma23:
+                      case ma24_1:
+                      case ma24_2:
+                      case ma24_3:
+                      case ma24_4:
+                      case ma25:
+                        break;
+                      default:
+                        if (line<0) {
+                            if (*leftMax < -line && line > -10) {
+                                *leftMax = -line;
+                            }
+                        } else if (line > 0) {
+                            if (*rightMax < line && line < 10) {
+                                *rightMax = line;
+                            }
+                        }
                       }
                     }
 				}
@@ -890,7 +917,7 @@ void __fastcall AcadExportThread::Execute()
     aexp->RoadName = RoadName;
     int L1=MetricData->Road->LMin;
     int L2=MetricData->Road->LMax;
-    int DX=1200;
+    int DX=10000;
     bool fDeleteLayerObjects = false;
 
     R = new TRoad(MetricData->Road,L1,L2);

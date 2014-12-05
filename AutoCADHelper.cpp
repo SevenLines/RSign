@@ -1194,7 +1194,9 @@ AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, ve
 		label = StringReplace(label, " ", "", TReplaceFlags() << rfReplaceAll);
 		label = StringReplace(label, "\t", "", TReplaceFlags() << rfReplaceAll);
 		label = StringReplace(label, "\n", "", TReplaceFlags() << rfReplaceAll);
-		label = StringReplace(label, ":", "", TReplaceFlags() << rfReplaceAll);        
+		label = StringReplace(label, ":", "", TReplaceFlags() << rfReplaceAll);
+        label = StringReplace(label, "<", "", TReplaceFlags() << rfReplaceAll);
+        label = StringReplace(label, ">", "", TReplaceFlags() << rfReplaceAll);
 		if (!labels[i].IsEmpty()) {
 			newBlockName += "[" + label + "]";
 		}
