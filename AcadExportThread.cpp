@@ -917,7 +917,7 @@ void __fastcall AcadExportThread::Execute()
     aexp->RoadName = RoadName;
     int L1=MetricData->Road->LMin;
     int L2=MetricData->Road->LMax;
-    int DX=1200;
+    int DX=10000;
     bool fDeleteLayerObjects = false;
 
     R = new TRoad(MetricData->Road,L1,L2);
