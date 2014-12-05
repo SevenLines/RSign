@@ -860,7 +860,7 @@ if ((Kind==dk12)||(Kind==dk83)||(Kind==dk84)||(Kind==dk88)||(Kind==dk89)||(Kind=
         case dk85:
         case dk88:
         case dk89:
-        case dk95:        
+        case dk95:
             {
             PL->CopyAndCut(&(Road->LeftLine),L1,L2);
             PR->CopyAndCut(&(Road->RightLine),L1,L2);
@@ -1278,9 +1278,9 @@ for (int i=0;i<n;i++) {
    R.Points[i]=pl->Points[i];
    R.Points[i].X+=dx;
    R.Points[i].Code=1;
-   R.Points[n-i-1]=pl->Points[i];
-   R.Points[n-i-i].X+=dx+wid;
-   R.Points[n-i-1].Code=1;
+   R.Points[2*n-i-1]=pl->Points[i];
+   R.Points[2*n-i-1].X+=dx+wid;
+   R.Points[2*n-i-1].Code=1;
 }
 TExtPolyline *Res=new TExtPolyline;
 Road->ConvertPolyline(R,*Res);
