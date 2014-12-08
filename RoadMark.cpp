@@ -9,8 +9,8 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TfrmMarkParam *frmMarkParam;
-String CenterFilter="1.1 1.3 1.5 1.6 1.7 1.11";
-String BorderFilter="1.2.1 1.2.2 1.7";
+String CenterFilter="1.1L 1.3L 1.5L 1.6L 1.7L 1.11L";
+String BorderFilter="1.2.1L 1.2.2L 1.4L 1.7L 1.10L 1.13L";
 //---------------------------------------------------------------------------
 __fastcall TfrmMarkParam::TfrmMarkParam(TComponent* Owner)
     : TForm(Owner)
@@ -32,7 +32,7 @@ if (comboKind->ItemIndex>0)
     for (int i=ListKinds->Items->Count-1;i>=0;i--)
         {
         TTextPropRec *prec=(TTextPropRec*)ListKinds->Items->Objects[i];
-        if (Filter.Pos(prec->ShortText)==0)
+        if (Filter.Pos(prec->ShortText+"L")==0)
             ListKinds->Items->Delete(i);
         }
     ListKinds->Items->EndUpdate();
