@@ -61,7 +61,7 @@ Source: "{#MyDir}Документы\*"; DestDir: "{app}\Документы\"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 Name: "{group}\удалить RSign"; Filename: "{uninstallexe}"
 
 [Run]
