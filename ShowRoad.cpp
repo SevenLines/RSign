@@ -1050,7 +1050,13 @@ void __fastcall TRoadFrm::AcadExport(void) {
 		fBreakedLines = true;
 	}
 
-	AcadExportThread *thread = new AcadExportThread(true);
+    TRoad *R = new TRoad(MetricData->Road,MetricData->Road->LMin,MetricData->Road->LMax);
+    /*R->SetBound(L1,L2,-DX,DX);
+    R->SetFrame(L1,L2,-DX,DX,pkGorizontal,pdDirect);
+    R->SetOutBound(L1,L2,-DX,DX);*/
+    R->SetFrame(FPMinL,FPMaxL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
+    R->SetOutBound(FPMinL,FPMaxL,FPMinX, FPMaxX);
+	AcadExportThread *thread = new AcadExportThread(true, R);
 
 	ProgressForm->windowBelow = this->Handle;
 	thread->FAutoCADExport = FAutoCADExport;

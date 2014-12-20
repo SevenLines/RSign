@@ -29,15 +29,18 @@
 //      }
 //---------------------------------------------------------------------------
 
-__fastcall AcadExportThread::AcadExportThread(bool CreateSuspended)
+__fastcall AcadExportThread::AcadExportThread(bool CreateSuspended, TRoad *r)
         : TThread(CreateSuspended)
 {
+    this->R = r;
 }
 //---------------------------------------------------------------------------
 
-
-
-
+void __fastcall AcadExportThread::deleteRoad()
+{
+    delete this->R;
+    this->R = 0;
+}
 
 void __fastcall AcadExportThread::setProgressFormCaption()
 {
@@ -893,6 +896,8 @@ int __fastcall AcadExportThread::ExportCurves(TDtaSource* data, TAcadExport* aex
 }
 
 
+
+
 void __fastcall AcadExportThread::Execute()
 {
 
@@ -917,13 +922,8 @@ void __fastcall AcadExportThread::Execute()
     aexp->RoadName = RoadName;
     int L1=MetricData->Road->LMin;
     int L2=MetricData->Road->LMax;
-    int DX=10000;
-    bool fDeleteLayerObjects = false;
 
-    R = new TRoad(MetricData->Road,L1,L2);
-    R->SetBound(L1,L2,-DX,DX);
-    R->SetFrame(L1,L2,-DX,DX,pkGorizontal,pdDirect);
-    R->SetOutBound(L1,L2,-DX,DX);
+    bool fDeleteLayerObjects = false;
 
     aexp->OutInfoLog = OutInfoLog;
     aexp->ProgressChanged = ProgressChanged;
@@ -1210,7 +1210,7 @@ export_end:
     aexp->EndDocument();
     FlashWindow(Application->Handle, true);
     delete aexp;
-    delete R;
+    Synchronize(deleteRoad);
 }
 //---------------------------------------------------------------------------
 
