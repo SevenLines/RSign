@@ -884,13 +884,14 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly,TRoadAttach *a, boo
 
 
     // вывод названия примыкания
+
     if (a->Name != "") {
       AutoCAD.DrawText(a->Name,
                   UnderTextHeight,
                   acAlignmentMiddleLeft,
-                  a->L,
-                  -ScaleY*(pMax.y - pMin.y) / 2,
-                  pMin.y - pMax.y > 0 ? M_PI_2 : -M_PI_2
+                  pMin.x + (pMax.x - pMin.x) / 2,
+                  -ScaleY*(pMin.y + (pMax.y - pMin.y) / 2),
+                  GetAngle(pMin, pMax)
                   );
     }
 
@@ -1349,11 +1350,11 @@ void TAcadExport::DrawSign(
     SignsPositions.push_back(TPoint(newPos.x, newPos.y) );
     // поставим сноску и сдвинем ее хвостик
 	//AutoCAD.SetPropertyDouble(block,"Length",1200);
-    block->set_InsertionPoint(AutoCAD.cadPoint(pos.x,pos.y));
+    block->set_InsertionPoint(AutoCAD.cadPoint(int(pos.x),int(pos.y)));
     AutoCAD.SetPropertyPoint(block,"pHand",AutoCADPoint(txOffset,tyOffset));
 
     // собственно рисуем знак
-    block = AutoCAD.DrawBlock(Name,newPos.x,newPos.y,rotation,scale);
+    block = AutoCAD.DrawBlock(Name,int(newPos.x),int(newPos.y),rotation,scale);
     if(block.IsBound()) {
         SetAttributes(block,SignLabelParser(Name,label));
         if(Name.Pos("6.10.1") || Name.Pos("6.10.2") || Name.Pos("6.9.1") || Name.Pos("6.9.2")) {
@@ -2270,10 +2271,11 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
         if(!exist) pl->color = NotExistColor;
 
         // рисование сноски на разметку 2.5 на ограждении
-        lastStep = NaN;
+        lastStep = -9999;
         for (int i=0;i<points.size();i++) {
             int step = points[i].x / iStep;
-            if (step != lastStep) {
+            if (step != lastStep
+                || (i == points.size()-1 && abs(points.front().x - points.back().x) > 10000)) {
                 AutoCAD.DrawBlock("r_2.5", points[i].x, points[i].y*-ScaleY, 0, 1);
             }
             lastStep = step;
