@@ -29,15 +29,18 @@
 //      }
 //---------------------------------------------------------------------------
 
-__fastcall AcadExportThread::AcadExportThread(bool CreateSuspended)
+__fastcall AcadExportThread::AcadExportThread(bool CreateSuspended, TRoad *r)
         : TThread(CreateSuspended)
 {
+    this->R = r;
 }
 //---------------------------------------------------------------------------
 
-
-
-
+void __fastcall AcadExportThread::deleteRoad()
+{
+    delete this->R;
+    this->R = 0;
+}
 
 void __fastcall AcadExportThread::setProgressFormCaption()
 {
@@ -629,14 +632,41 @@ int __fastcall AcadExportThread::ExportRoadMark(TDtaSource* data, TAcadExport* a
 						}
 					}
                     if (onlyCountLines) {
-                      if (line<0) {
-                          if (*leftMax < -line && line > -10) {
-                              *leftMax = -line;
-                          }
-                      } else if (line > 0) {
-                          if (*rightMax < line && line < 10) {
-                              *rightMax = line;
-                          }
+                      switch(t->Kind) {
+                      case ma1_park:
+                      case ma14_1:
+                      case ma14_2:
+                      case ma14_3:
+                      case ma12:
+                      case ma13:
+                      case ma14_1e:
+                      case ma18p:
+                      case ma18r:
+                      case ma18l:
+                      case ma18pr:
+                      case ma18pl:
+                      case ma18rl:
+                      case ma18prl:
+                      case ma19_1:
+                      case ma19_2:
+                      case ma20:
+                      case ma23:
+                      case ma24_1:
+                      case ma24_2:
+                      case ma24_3:
+                      case ma24_4:
+                      case ma25:
+                        break;
+                      default:
+                        if (line<0) {
+                            if (*leftMax < -line && line > -10) {
+                                *leftMax = -line;
+                            }
+                        } else if (line > 0) {
+                            if (*rightMax < line && line < 10) {
+                                *rightMax = line;
+                            }
+                        }
                       }
                     }
 				}
@@ -866,6 +896,8 @@ int __fastcall AcadExportThread::ExportCurves(TDtaSource* data, TAcadExport* aex
 }
 
 
+
+
 void __fastcall AcadExportThread::Execute()
 {
 
@@ -890,13 +922,8 @@ void __fastcall AcadExportThread::Execute()
     aexp->RoadName = RoadName;
     int L1=MetricData->Road->LMin;
     int L2=MetricData->Road->LMax;
-    int DX=1200;
-    bool fDeleteLayerObjects = false;
 
-    R = new TRoad(MetricData->Road,L1,L2);
-    R->SetBound(L1,L2,-DX,DX);
-    R->SetFrame(L1,L2,-DX,DX,pkGorizontal,pdDirect);
-    R->SetOutBound(L1,L2,-DX,DX);
+    bool fDeleteLayerObjects = false;
 
     aexp->OutInfoLog = OutInfoLog;
     aexp->ProgressChanged = ProgressChanged;
@@ -1183,7 +1210,7 @@ export_end:
     aexp->EndDocument();
     FlashWindow(Application->Handle, true);
     delete aexp;
-    delete R;
+    Synchronize(deleteRoad);
 }
 //---------------------------------------------------------------------------
 

@@ -52,6 +52,7 @@ private:
 
 protected:
         void __fastcall Execute();
+        void __fastcall deleteRoad();
         void __fastcall setProgressFormCaption();
         void __fastcall setProgressFormPosition();
         void __fastcall setProgressFormMinMax();
@@ -81,7 +82,7 @@ protected:
         int __fastcall ExportSlope(TDtaSource* data, TAcadExport* aexp);
         int __fastcall ExportCurves(TDtaSource* data, TAcadExport* aexp);        
 public:
-        __fastcall AcadExportThread(bool CreateSuspended);
+        __fastcall AcadExportThread(bool CreateSuspended, TRoad *r);
         void __fastcall Clear();
         void OutInfoLog(AnsiString str);
         void ProgressChanged(int progress, AnsiString message);

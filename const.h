@@ -245,7 +245,7 @@ enum TBridgeMaterial {};
 enum TRailKind {rtp1=2135092,rtp2=2135093,rtp3=2135094,rtp4=2135095};
 enum TRailCrossSignal {rcsSigns=2135096,rcsMBlock=2135097,rcsEBlock=2135098,rcsABlock=2135099,rcsSound=2135100,rcsSemaphor=2135101};
 
-enum TMetricsKind {mkKromka=2384959,mkBrovka=2384960,mkDivPart=2385157,mkKromkaLine=2385234,mkBrovkaLine=2385235,mkBoundLine=2385247};
+enum TMetricsKind {mkKromka=2384959,mkBrovka=2384960,mkDivPart=2385157,mkKromkaLine=2385234,mkBrovkaLine=2385235,mkBoundLine=2385247,mkSafeZone=2385264};
 
 enum TMarkKind {ma1=2384961,ma1_park=2385261,ma2_1=2385125,ma2_2=2384962,ma3=2384963,ma4=2384964,ma5=2384965,
     ma6=2384966,ma7=2384967,ma8=2384968,ma9=2384969,ma10=2384970,ma11l=2384971,ma11r=2385126,

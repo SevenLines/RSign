@@ -150,7 +150,7 @@ __fastcall TAcadExport::TAcadExport(void) {
     tableBottom.Owner = &AutoCAD;
     tableGraphic.Owner = &AutoCAD;
 
-    
+
     tableTop.RepeatInterval = 100000;
     tableTop.RepeatInterval = 100000;
 
@@ -219,9 +219,19 @@ AcadPolylinePtr  TAcadExport::DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes,
 
     int iLast = 0;
     if(fUseCodes){
+        if(Poly->Count>=2 && codes[0]){
+            range.push_back(*points.begin());
+            range.push_back(*(points.begin() + 1));
+            range.push_back(*(points.end() - 2));
+            range.push_back(*(points.end() - 1));
+            pl = DrawPolyLine(range);
+            if (lineEditFunction) {
+                lineEditFunction(pl, data);
+            }
+        }
         for(int i=1;i<codes.size();i++){
             if(!codes[i]){
-                if( i - iLast >= 1 ) {
+                if( i - iLast > 1 ) {
                     range = vector<double>(
                         points.begin() + 2*iLast,
                         points.begin() + 2*i);
@@ -804,6 +814,12 @@ bool __fastcall TAcadExport::ExportRoadMetric(TExtPolyline *Poly,TMetricsKind ki
     case mkKromka:
         DrawPolyPoints(Poly);
         break;
+    case mkDivPart:
+        DrawPolyPoints(Poly, false, false);
+        break;
+    case mkSafeZone:
+        DrawPolyPoints(Poly, false, true);
+        break;
     default:
         BUILDER_INFO("Неизвестный тип метрики: " << kind);
         DrawPolyPoints(Poly);
@@ -868,13 +884,14 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly,TRoadAttach *a, boo
 
 
     // вывод названия примыкания
+
     if (a->Name != "") {
       AutoCAD.DrawText(a->Name,
                   UnderTextHeight,
                   acAlignmentMiddleLeft,
-                  a->L,
-                  -ScaleY*(pMax.y - pMin.y) / 2,
-                  pMin.y - pMax.y > 0 ? M_PI_2 : -M_PI_2
+                  pMin.x + (pMax.x - pMin.x) / 2,
+                  -ScaleY*(pMin.y + (pMax.y - pMin.y) / 2),
+                  GetAngle(pMin, pMax)
                   );
     }
 
@@ -1251,8 +1268,8 @@ void TAcadExport::DrawSign(
   AnsiString Name,
   AnsiString label,
   AutoCADPoint pos,
-  double xoffset,
-  double yoffset,
+  int xoffset,
+  int yoffset,
   double rotation,
   double rotationHandle,
   double scale,
@@ -1333,11 +1350,11 @@ void TAcadExport::DrawSign(
     SignsPositions.push_back(TPoint(newPos.x, newPos.y) );
     // поставим сноску и сдвинем ее хвостик
 	//AutoCAD.SetPropertyDouble(block,"Length",1200);
-    block->set_InsertionPoint(AutoCAD.cadPoint(pos.x,pos.y));
+    block->set_InsertionPoint(AutoCAD.cadPoint(int(pos.x),int(pos.y)));
     AutoCAD.SetPropertyPoint(block,"pHand",AutoCADPoint(txOffset,tyOffset));
 
     // собственно рисуем знак
-    block = AutoCAD.DrawBlock(Name,newPos.x,newPos.y,rotation,scale);
+    block = AutoCAD.DrawBlock(Name,int(newPos.x),int(newPos.y),rotation,scale);
     if(block.IsBound()) {
         SetAttributes(block,SignLabelParser(Name,label));
         if(Name.Pos("6.10.1") || Name.Pos("6.10.2") || Name.Pos("6.9.1") || Name.Pos("6.9.2")) {
@@ -1462,7 +1479,7 @@ int iRow, int line, AutoCADTable *table)
         } else { // if we draw road mark on attachments
             AcadTextPtr text;
             // we should recalculate angle of text, to draw it properly
-            if(iMaxY>0){ 
+            if(iMaxY>0){
                 angle = GetAngle(Poly->Points[iMaxY], Poly->Points[iMaxY-1]);
                 Max = Poly->Points[iMaxY].x + (Poly->Points[iMaxY-1].x-Poly->Points[iMaxY].x)/2;
                 MaxY = Poly->Points[iMaxY].y + (Poly->Points[iMaxY-1].y-Poly->Points[iMaxY].y)/2;
@@ -1539,6 +1556,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
     AcadPolylinePtr pl1;
     AcadBlockReferencePtr block;
     AcadAcCmColorPtr color;
+    int lastUnderTextYOffset;
 
     try{
         if(fEnd){
@@ -1638,7 +1656,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 pl1 = DrawPolyPoints(Poly);
 
                 color = pl1->TrueColor;
-                color->SetRGB(255,255,0);
+                color->SetRGB(255,180,0);
                 pl1->TrueColor = color;
 
                 if(table&&line){
@@ -1709,7 +1727,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                   Max,
                   -ScaleY*Poly->Points[0].y+UnderTextYOffset,
                   UnderTextHeight,iStep);*/
-                pl1 = DrawRoadMark(Poly, "1.6", iRow, line, table);
+                pl1 = DrawRoadMark(Poly, "1.10", iRow, line, table);
                 if(pl1.IsBound()) {
                     pl1->set_Linetype(WideString("linedash_1"));
                     pl1->set_LinetypeScale(0.33);
@@ -1873,8 +1891,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma23:  /*Обозначение полосы движения только для маршрутных транспортных средств*/
-                block = AutoCAD.DrawBlock("r_1.23",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,
-                m->Direction==roDirect?0:M_PI);
+                block = AutoCAD.DrawBlock("r_1.23",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,m->Direction==roDirect?0:M_PI, ScaleY / 2);
                 //tableBottom.DrawRepeatTextInterval(0,"1.23",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
@@ -2115,16 +2132,19 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
 
     float Min, Max, yoffset, xoffset, angle, length;
     TPoint pMin, pMax;
+    bool inversed;
     if(points.front().x>points.back().x){
         Min = points.back().x;
         pMin = points.back();
         pMax = points.front();
         Max = points.front().x;
+        inversed = true;
     }else{
         Max = points.back().x;
         pMax = points.back();
         pMin = points.front();
         Min = points.front().x;
+        inversed = false;
     }
 
     if(~iStart) {
@@ -2137,6 +2157,7 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
     curProp = 0;
 
     fOpenLeft = false;
+    int lastStep;
 
     switch(b->Placement){
     case opLeft:
@@ -2248,6 +2269,17 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
         pl = AutoCAD.DrawRect(pMax.x, pMax.y*-ScaleY, endsRadius, endsRadius);
         pl->set_Lineweight(lineWeight);
         if(!exist) pl->color = NotExistColor;
+
+        // рисование сноски на разметку 2.5 на ограждении
+        lastStep = -9999;
+        for (int i=0;i<points.size();i++) {
+            int step = points[i].x / iStep;
+            if (step != lastStep
+                || (i == points.size()-1 && abs(points.front().x - points.back().x) > 10000)) {
+                AutoCAD.DrawBlock("r_2.5", points[i].x, points[i].y*-ScaleY, 0, 1);
+            }
+            lastStep = step;
+        }
 
         break;
 
@@ -2803,6 +2835,25 @@ AcadBlockReferencePtr TAcadExport::DrawBorder(vector<TPoint> &points, AnsiString
     return block;
 }
 
+void StyleBorderBgLine(AcadPolylinePtr& line, void* data)
+{
+    BorderDrawStyleParams *params = (BorderDrawStyleParams*)data;
+    line->set_Lineweight(50);
+    if(!params->exist) {
+        line->color = params->NotExistColor;
+    }
+}
+
+void StyleBorderFgLine(AcadPolylinePtr& line, void* data)
+{
+    line->set_Lineweight(30);
+    line->set_Linetype(WideString("linedash_1"));
+    AcadAcCmColorPtr color;
+    color = line->TrueColor;
+    color->SetRGB(255,255,255);
+    line->TrueColor = color;
+}
+
 bool __fastcall TAcadExport::ExportBorder(TExtPolyline *Poly,TLinearRoadSideObject *o,bool exist, bool fEnd) {
     if(fEnd) return true;
 
@@ -2812,39 +2863,11 @@ bool __fastcall TAcadExport::ExportBorder(TExtPolyline *Poly,TLinearRoadSideObje
     if(~iEnd) {
         if(o->LMin>iEnd) return true;
     }
-
-    /*
-vector<TPoint> points;
-vector<double> points2;
-int count = Poly->Count;
-
-for(int i=0;i<count;i++) {
-        points.push_back(Poly->Points[i]);
-        points2.push_back(Poly->Points[i].x);
-        points2.push_back(Poly->Points[i].y);
-}
-DrawBorder(points, "borderblock", exist);
-*/
-    AcadPolylinePtr line;
-    
-    line = DrawPolyPoints(Poly, false);
-    if (line.IsBound()) {
-      line->set_Lineweight(50);
-      if(!exist) {
-          line->color = NotExistColor;
-      }
-    }
-
-    line = DrawPolyPoints(Poly, false);
-    if (line.IsBound()) {
-      line->set_Lineweight(30);
-      line->set_Linetype(WideString("linedash_1"));
-      AcadAcCmColorPtr color;
-      color = line->TrueColor;
-      color->SetRGB(255,255,255);
-      line->TrueColor = color;
-    }
-
+    BorderDrawStyleParams params;
+    params.exist = exist;
+    params.NotExistColor = NotExistColor;
+    DrawPolyPoints(Poly, true, false, StyleBorderBgLine, &params);
+    DrawPolyPoints(Poly, true, false, StyleBorderFgLine, &params);
     return true;
 }
 
