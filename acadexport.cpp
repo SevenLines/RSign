@@ -1806,9 +1806,9 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
             case ma16_3: /*Обозначение островков в местах слияния транспортных потоков*/
 
                 switch(m->Kind){
-                case  ma16_1:str = "16.1";break;
-                case  ma16_2:str = "16.2";break;
-                case  ma16_3:str = "16.3";break;
+                case  ma16_1:str = "1.16.1";break;
+                case  ma16_2:str = "1.16.2";break;
+                case  ma16_3:str = "1.16.3";break;
                 }
                 p.y = 0;
                 p.x = 0;
@@ -1821,12 +1821,16 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 p.x /= Poly->Count;
                 p.y /= Poly->Count;
 
-
-                text = AutoCAD.DrawText(str,UnderTextHeight,acAlignmentMiddleCenter, p.x,p.y);
-
+                //text = AutoCAD.DrawText(str,UnderTextHeight,acAlignmentMiddleCenter, p.x,p.y);
                 pl[0] = DrawPolyPoints(Poly, false, true);
                 hatch = AutoCAD.FillArea((IDispatch**)pl,1,0,L"ANSI31");
                 hatch->PatternScale = 50;
+
+                block = AutoCAD.DrawBlock("r_label",p.x, p.y);
+                if (block.IsBound()) {
+                    AutoCAD.SetAttribute(block, "Label", str);
+                }
+
                 //tableBottom.DrawRepeatTextInterval(0,"1.16",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
@@ -2276,7 +2280,10 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
             int step = points[i].x / iStep;
             if (step != lastStep
                 || (i == points.size()-1 && abs(points.front().x - points.back().x) > 10000)) {
-                AutoCAD.DrawBlock("r_2.5", points[i].x, points[i].y*-ScaleY, 0, 1);
+                block = AutoCAD.DrawBlock("r_label", points[i].x, points[i].y*-ScaleY, 0, 1);
+                if(block.IsBound()) {
+                    AutoCAD.SetAttribute(block, "Label", "2.5");
+                }
             }
             lastStep = step;
         }
