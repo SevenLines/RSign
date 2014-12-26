@@ -470,12 +470,30 @@ bool signgroup(const wpsign &s1,const wpsign &s2) {
 }
 
 bool operator<(const wpsign &s1,const wpsign &s2) {
+    /*int order[] = {
+       2, 1, 5, 3, 4, 6, 7, 8
+    };
+
+    int signNum1;
+    int signNum2;
+    if (TryStrToInt(s1.s->OldTitle.SubString(0,1), signNum1)
+        && TryStrToInt(s2.s->OldTitle.SubString(0,1), signNum2)) {
+        return order[signNum1-1] > order[signNum2-1];
+    }
+    return false;     */
+
     if (s2.x-s1.x>50) // первый знак раньше более чем на 50 см
         return true;
     else if (s1.x-s2.x<50) {// расстояние по x меньше 50 см
         if (s2.y-s1.y>50) // первый знак по y раньше более 50 см
             return true;
         else {            // знаки в одной точке
+            /*int signNum1;
+            int signNum2;
+            if (TryStrToInt(s1.s->OldTitle.SubString(0,1), signNum1)
+                && TryStrToInt(s2.s->OldTitle.SubString(0,1), signNum2)) {
+                return order[signNum1-1] < order[signNum2-1];
+            } */
             string a=s1.s->OldTitle.SubString(0,4).c_str();
             string b=s2.s->OldTitle.SubString(0,4).c_str();
             char da=a[0]-'1';
@@ -494,7 +512,6 @@ bool operator<(const wpsign &s1,const wpsign &s2) {
     }
     return false;
 }
-
 
 bool operator<(const wpbar &s1,const wpbar &s2) {
     return false;
@@ -548,6 +565,8 @@ int __fastcall AcadExportThread::ExportRoadSigns(TDtaSource* data, TAcadExport* 
         for (int j=0;j<sgrp.size();++j) {
             signsGroup.push_back(sgrp[j].second);
         }
+
+        //sort(signsGroup.begin(), signsGroup.end(), funcSignsGroupSort);
 
         aexp->ExportSigns(signs[i].p,signsGroup.begin(),signsGroup.size());
 
