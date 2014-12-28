@@ -196,7 +196,7 @@ class TAcadExport {
       AnsiString RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle);
 
       AcadPolylinePtr DrawRoadMark(TExtPolyline *Poly, AnsiString name,
-                                 int iRow, int line, AutoCADTable *table);
+                                 int iRow, int line, AutoCADTable *table, bool dontDrawPolyLine=false);
 
       float GetAngle(TPoint &p1, TPoint &p2, float *length = 0);
       AcadBlockReferencePtr DrawBorder(vector<TPoint> &points, AnsiString blockname, bool fExist);

@@ -1642,7 +1642,7 @@ AnsiString TAcadExport::RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint 
 // line это номер линии (0 - осевая 1,2 - номера справа -1,-2 - слева
 // 100 - разметка не на линиях
 AcadPolylinePtr TAcadExport::DrawRoadMark(TExtPolyline *Poly, AnsiString name,
-int iRow, int line, AutoCADTable *table)
+    int iRow, int line, AutoCADTable *table, bool dontDrawPolyLine)
 {
     AcadPolylinePtr pl;
     float Min, Max, angle;
@@ -1651,7 +1651,9 @@ int iRow, int line, AutoCADTable *table)
     float kEdgeLines = 0.5;      
     
     if(count>1) { // are there any points to draw?
-        pl = DrawPolyPoints(Poly, false);
+        if (!dontDrawPolyLine) {
+            pl = DrawPolyPoints(Poly, false);
+        }
         
         if(Poly->Points[0].x>Poly->Points[count-1].x){
             Min = Poly->Points[count-1].x;
@@ -1852,7 +1854,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
 
             case ma3: /*двойная сплошная*/
                 angle = GetAngle(Poly->Points[0], Poly->Points[count-1], &length);
-                if(iRow>=0){
+                /*if(iRow>=0){
                     if(table&&line){
                         table->DrawRepeatTextIntervalRoadMark(iRow,"1.3",Min,Max,StringConvert,iStep,0.25);
                     }else{
@@ -1862,9 +1864,12 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                     block = AutoCAD.DrawBlock("r_1.3",Min,-ScaleY*Poly->Points[0].y);
                 }else{
                     block = AutoCAD.DrawBlock("r_1.3",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
-                }
-                DrawTextOverPoly(Poly, "1.3", RoadMarkTextDraw);
-                if(block.IsBound())AutoCAD.SetPropertyDouble(block, "Length", length);
+                }*/
+                //DrawTextOverPoly(Poly, "1.3", RoadMarkTextDraw);
+                DrawRoadMark(Poly, "1.3", iRow, line, table, true);
+                block = AutoCAD.DrawBlock("r_1.3",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
+                if(block.IsBound())
+                    AutoCAD.SetPropertyDouble(block, "Length", length);
                 break;
 
             case ma4:/*Обозначение мест, где запрещена остановка*/
@@ -1935,7 +1940,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                     pl1->set_LinetypeScale(0.33);
                     color = pl1->TrueColor;
                     pl1->set_Lineweight(acLnWt040);
-                    color->SetRGB(255,180,0)
+                    color->SetRGB(255,180,0);
                     pl1->TrueColor = color;
                 }
                 break;
@@ -1943,7 +1948,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
             case ma11l:  /*Движение с одной стороны (прерывистая слева)*/
             case ma11r:  /*Движение с одной стороны (прерывистая справа)*/
                 angle = GetAngle(Poly->Points[0], Poly->Points[count-1], &length);
-                if(iRow>=0){
+                /*if(iRow>=0){
                     if(table&&line){
                         table->DrawRepeatTextIntervalRoadMark(iRow,"1.11",Min,Max,StringConvert,iStep,0.25);
                     }else{
@@ -1952,8 +1957,9 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                     }
                     block = AutoCAD.DrawBlock("r_1.11",Min,-ScaleY*Poly->Points[0].y);
                 }else{
-                    block = AutoCAD.DrawBlock("r_1.11",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
-                }
+
+                }*/
+                block = AutoCAD.DrawBlock("r_1.11",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
                 if(block.IsBound()){
                     float lengthScale = 0.1; 
                     AutoCAD.SetPropertyDouble(block, "Length", length / lengthScale);
@@ -1963,7 +1969,8 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                         AutoCAD.SetPropertyList(block, "Flip", 1);
                     }
                 }
-                DrawTextOverPoly(Poly, "1.11", RoadMarkTextDraw);
+                DrawRoadMark(Poly, "1.11", iRow, line, table, true);
+                //DrawTextOverPoly(Poly, "1.11", RoadMarkTextDraw);
                 break;
 
             case ma12:  /*Стоп линия*/
