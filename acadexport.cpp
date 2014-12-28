@@ -34,6 +34,7 @@ inline float GetAngle(TPoint vec1, TPoint vec2)
     else return acos(temp);
 }
 
+// функция для сортировки знаков 
 bool compareSigns(const TRoadSign* s1, const TRoadSign* s2)
 {
 /*    return s1->OldTitle < s2->OldTitle;*/
@@ -1433,6 +1434,172 @@ bool __fastcall TAcadExport::ExportSign(TExtPolyline *Poly,TRoadSign *s, bool fE
     return true;
 }
 
+
+TPoint __fastcall TAcadExport::GetCenterOnPolyline(
+    TExtPolyline *p, int minx, int maxx, float* out_angle, int *width_of_sector, TPoint* pointStart, TPoint* pointEnd)
+{
+    float length, k;
+    int i1 = 0,
+        i2 = p->Count-1;
+    TPoint pEnd, pStart, pOffset;
+    std::vector<TPoint> Points;
+    for(int i=0;i<p->Count;++i) {
+        int j = i;
+
+        if (p->Points[0].x > p->Points[p->Count-1].x) {
+            j = p->Count - j - 1;
+        }
+        Points.push_back(p->Points[j]);
+    }
+    
+    if (Points[i1].x < minx) {
+        i1 = -1;
+        for (int i=1;i<Points.size();++i) {
+            if (Points[i].x > minx) {
+                i1 = i-1;
+                break;
+            }
+        }
+        if (i1 == -1) {
+            return TPoint(-1, -1);
+        }
+    }
+
+    if (Points[i2].x > maxx) {
+        i2 = -1;
+        for (int i=Points.size()-2;i>=0;--i) {
+            if (Points[i].x < maxx) {
+                i2 = i+1;
+                break;
+            }
+        }
+        if (i2 == -1) {
+            return TPoint(-1, -1);
+        }
+    }
+
+    pStart = Points[i1];
+    pEnd = Points[i2];
+
+    if (pStart.x < minx) {
+        k = 1;
+        pOffset.x = Points[i1+1].x - Points[i1].x;
+        pOffset.y = Points[i1+1].y - Points[i1].y;
+        k = (float) (minx - pStart.x) / pOffset.x;
+        pStart.x += pOffset.x * k;
+        pStart.y += pOffset.y * k;
+    }
+
+    if (pEnd.x > maxx) {
+        k = 1;
+        pOffset.x = Points[i2].x - Points[i2-1].x;
+        pOffset.y = Points[i2].y - Points[i2-1].y;
+        k = (float) (pEnd.x - maxx) / pOffset.x;
+        pEnd.x -= pOffset.x * k;
+        pEnd.y -= pOffset.y * k;
+    }
+
+    int centerX = (pEnd.x + pStart.x) / 2;
+
+    for (int i=i1;i<i2;++i) {
+        TPoint p1 = Points[i];
+        TPoint p2 = Points[i+1];
+        if (i==i1) p1 = pStart;
+        if (i==i2-1) p2 = pEnd;
+        if (p1.x < centerX && centerX < p2.x) {
+            k = 1;
+            if (out_angle) {
+                *out_angle = GetAngle(p1, p2);
+            }
+            if (width_of_sector) {
+                *width_of_sector = pEnd.x - pStart.x;
+            }
+            if (pointStart) {
+                *pointStart = pStart;
+            }
+            if (pointEnd) {
+                *pointEnd = pEnd;
+            }
+            k = (float) (centerX - p1.x) / (p2.x - p1.x);
+            return TPoint(p1.x + (p2.x - p1.x) * k, p1.y + (p2.y - p1.y) * k);
+        }
+    }
+    return TPoint(-1,-1);
+}
+
+void __fastcall TAcadExport::DrawTextUnderLine(TPoint p1, TPoint p2, AnsiString text) 
+{
+    TPoint centerPoint;
+    float kUnderTextHeight = 1;
+    float angle = GetAngle(p1, p2);
+    centerPoint.x = (p1.x + p2.x) / 2;
+    centerPoint.y = (p1.y + p2.y) / 2;
+    AutoCAD.DrawText(text, kUnderTextHeight * UnderTextHeight, acAlignmentBottomCenter,  centerPoint.x, -ScaleY*centerPoint.y, angle);     
+}
+
+void __fastcall TAcadExport::DrawTextOverPoly(TExtPolyline *Poly, AnsiString text,
+        AnsiString(__closure *textControlFunction)(AnsiString text, int start, int end))
+{
+    int lastStep, curStep;
+    float angle;
+    int width_of_sector;
+    float kUnderTextHeight = 1;
+
+    int ilastStepPoint = 0;
+    AnsiString str;
+    TPoint centerPoint, pStart, pEnd;
+
+    curStep = lastStep = Poly->Points[0].x / iStep;
+    for (int i=1;i<Poly->Count;++i) {
+        curStep = Poly->Points[i].x / iStep;
+
+        if(curStep != lastStep) {
+            centerPoint = GetCenterOnPolyline(Poly, lastStep * iStep, (lastStep+1) * iStep, &angle, &width_of_sector, &pStart, &pEnd);
+            if (centerPoint.x != -1) {
+                str = text;
+                if (textControlFunction) {
+                    str = textControlFunction(text, pStart.x, pEnd.x);
+                }
+                if (!str.IsEmpty()) {
+                    AutoCAD.DrawText(str,
+                                     kUnderTextHeight * UnderTextHeight,
+                                     acAlignmentBottomCenter,
+                                     centerPoint.x,
+                                     -ScaleY*centerPoint.y,
+                                     angle);  
+                }
+            }   
+            lastStep = curStep;
+        }
+    }
+
+    centerPoint = GetCenterOnPolyline(Poly, curStep * iStep, (curStep+1) * iStep, &angle, &width_of_sector, &pStart, &pEnd);
+    if (centerPoint.x != -1) {
+        str = text;
+        if (textControlFunction) {
+            str = textControlFunction(text, pStart.x, pEnd.x);
+        }
+        if (!str.IsEmpty()) {
+            AutoCAD.DrawText(str,
+                             kUnderTextHeight * UnderTextHeight,
+                             acAlignmentBottomCenter,
+                             centerPoint.x,
+                             -ScaleY*centerPoint.y,
+                             angle); 
+        }
+    }
+}
+
+AnsiString TAcadExport::RoadMarkTextPrepare(AnsiString text, int start, int end) 
+{
+    AnsiString str = text;
+    int length = (end - start) / 100;
+    if (length >= 15) {
+        return str.sprintf("%s(%d)", text, (end - start) / 100);
+    }
+    return str;
+}
+
 // Миша, взять код разметки можно так
 // TPlanLabel *l=m->GetText(0);
 // String s=l->Caption;
@@ -1485,7 +1652,7 @@ int iRow, int line, AutoCADTable *table)
             if (Max - Min < 750) {
                 kUnderTextHeight = 0.6;
             }
-            AutoCAD.DrawRepeatTextInterval(label_under_mark, Min, Max, yOffset, kUnderTextHeight * UnderTextHeight,iStep);
+            DrawTextOverPoly(Poly, label_under_mark, RoadMarkTextPrepare);
 
             // no need to draw, as Petya asked : D
             // but
@@ -1685,11 +1852,12 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                     tableTop.DrawRepeatTextIntervalRoadMark(iTop0,"1.4",Min,Max,StringConvert,iStep,0.25);
                     tableBottom.DrawRepeatTextIntervalRoadMark(iBottom0,"1.4",Min,Max,StringConvert,iStep,0.25);
                 }
-                AutoCAD.DrawRepeatTextInterval("1.4",
+                /*AutoCAD.DrawRepeatTextInterval("1.4",
                   Min,
                   Max,
                   -ScaleY*Poly->Points[0].y+UnderTextYOffset,
-                  UnderTextHeight,iStep);
+                  UnderTextHeight,iStep); */
+                DrawTextOverPoly(Poly, "1.4");
                 break;
 
             case ma5: /*Прерывистая линия*/
