@@ -184,14 +184,20 @@ class TAcadExport {
                         void(*lineEditFunction)(AcadPolylinePtr&, void* data)=0, void* data=0);
                         
       AcadPolylinePtr DrawPolyLine(vector<double> &points);
+
       void __fastcall DrawTextUnderLine(TPoint p1, TPoint p2, AnsiString text);
+
       void __fastcall DrawTextOverPoly(TExtPolyline *Poly, AnsiString text,
-                                        AnsiString(__closure *textControlFunction)(AnsiString text, int start, int end)=0);
+              AnsiString(__closure *textControlFunction)(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle)=0);
+
       TPoint __fastcall GetCenterOnPolyline(TExtPolyline *p, int minx, int maxx, float* out_angle=0,
                                         int* width_of_sector=0, TPoint* pointStart=0, TPoint* pointEnd=0);
-      AnsiString RoadMarkTextPrepare(AnsiString text, int start, int end);
+
+      AnsiString RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle);
+
       AcadPolylinePtr DrawRoadMark(TExtPolyline *Poly, AnsiString name,
                                  int iRow, int line, AutoCADTable *table);
+
       float GetAngle(TPoint &p1, TPoint &p2, float *length = 0);
       AcadBlockReferencePtr DrawBorder(vector<TPoint> &points, AnsiString blockname, bool fExist);
       AcadBlockReferencePtr DrawBarrier(vector<TPoint> &points, AnsiString blockname, bool fFlip, bool fExist, bool fOpenLeft = false,int *fLastVisible = 0);

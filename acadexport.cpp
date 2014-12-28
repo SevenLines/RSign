@@ -1538,7 +1538,7 @@ void __fastcall TAcadExport::DrawTextUnderLine(TPoint p1, TPoint p2, AnsiString 
 }
 
 void __fastcall TAcadExport::DrawTextOverPoly(TExtPolyline *Poly, AnsiString text,
-        AnsiString(__closure *textControlFunction)(AnsiString text, int start, int end))
+        AnsiString(__closure *textControlFunction)(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle))
 {
     int lastStep, curStep;
     float angle;
@@ -1558,7 +1558,7 @@ void __fastcall TAcadExport::DrawTextOverPoly(TExtPolyline *Poly, AnsiString tex
             if (centerPoint.x != -1) {
                 str = text;
                 if (textControlFunction) {
-                    str = textControlFunction(text, pStart.x, pEnd.x);
+                    str = textControlFunction(text, pStart, pEnd, centerPoint, angle);
                 }
                 if (!str.IsEmpty()) {
                     AutoCAD.DrawText(str,
@@ -1577,7 +1577,7 @@ void __fastcall TAcadExport::DrawTextOverPoly(TExtPolyline *Poly, AnsiString tex
     if (centerPoint.x != -1) {
         str = text;
         if (textControlFunction) {
-            str = textControlFunction(text, pStart.x, pEnd.x);
+            str = textControlFunction(text, pStart, pEnd, centerPoint, angle);
         }
         if (!str.IsEmpty()) {
             AutoCAD.DrawText(str,
@@ -1590,14 +1590,42 @@ void __fastcall TAcadExport::DrawTextOverPoly(TExtPolyline *Poly, AnsiString tex
     }
 }
 
-AnsiString TAcadExport::RoadMarkTextPrepare(AnsiString text, int start, int end) 
+AnsiString TAcadExport::RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle) 
 {
     AnsiString str = text;
-    int length = (end - start) / 100;
+    float kUnderTextHeight = 1, kEdgeLines = 0.5;
+    int length = (pEnd.x - pStart.x) / 100;
+    int start = (pStart.x / 100) % 1000;
+    int end = (pEnd.x / 100) % 1000;
     if (length >= 15) {
-        return str.sprintf("%s(%d)", text, (end - start) / 100);
+        str.sprintf("%s(%d)", text, length);
+    } else {
+        kUnderTextHeight = 0.6;
     }
-    return str;
+    AutoCAD.DrawText(str,
+                     kUnderTextHeight * UnderTextHeight,
+                     acAlignmentBottomCenter,
+                     centerPoint.x,
+                     -ScaleY*centerPoint.y,
+                     angle);
+    float kPositionMarksHeight = kUnderTextHeight * 0.75;
+    if (length >= 15 && start != 0 && start != 1000 && start != iStep / 100) {
+        AutoCAD.DrawText(IntToStr(start),
+                         kPositionMarksHeight * UnderTextHeight,
+                         acAlignmentMiddleLeft,
+                         pStart.x,
+                         -ScaleY*pStart.y + UnderTextYOffset * kEdgeLines,
+                         angle + M_PI_2);
+    }
+    /*if (length >= 15 && end != 0 && end != 1000 && start != iStep / 100) {
+        AutoCAD.DrawText(IntToStr(end),
+                         kPositionMarksHeight * UnderTextHeight,
+                         acAlignmentMiddleLeft,
+                         pEnd.x,
+                         -ScaleY*pEnd.y + UnderTextYOffset * kEdgeLines,
+                         angle + M_PI_2);
+    }*/
+    return "";
 }
 
 // Миша, взять код разметки можно так
@@ -1652,7 +1680,7 @@ int iRow, int line, AutoCADTable *table)
             if (Max - Min < 750) {
                 kUnderTextHeight = 0.6;
             }
-            DrawTextOverPoly(Poly, label_under_mark, RoadMarkTextPrepare);
+            DrawTextOverPoly(Poly, label_under_mark, RoadMarkTextDraw);
 
             // no need to draw, as Petya asked : D
             // but
