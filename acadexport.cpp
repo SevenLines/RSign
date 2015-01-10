@@ -1608,17 +1608,19 @@ AnsiString TAcadExport::RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint 
     } else {
         kUnderTextHeight = 0.6;
     }
+    float kPositionMarksHeight = kUnderTextHeight * 0.75;
+
     AutoCAD.DrawText(str,
                      kUnderTextHeight * UnderTextHeight,
-                     acAlignmentBottomCenter,
+                     centerPoint.y > 0 ? acAlignmentBottomCenter : acAlignmentTopCenter,
                      centerPoint.x,
                      -ScaleY*centerPoint.y,
                      angle);
-    float kPositionMarksHeight = kUnderTextHeight * 0.75;
+
     if (length >= 15 && start != 0 && start != 1000 && start != iStep / 100) {
         AutoCAD.DrawText(IntToStr(start),
                          kPositionMarksHeight * UnderTextHeight,
-                         acAlignmentTopLeft,
+                         centerPoint.y > 0 ? acAlignmentTopLeft : acAlignmentBottomLeft,
                          pStart.x + 100,
                          -ScaleY*pStart.y + UnderTextYOffset * kEdgeLines,
                          M_PI_2);
