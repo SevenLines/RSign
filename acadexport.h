@@ -73,7 +73,7 @@ class TAcadExport {
       int iStep;   //шаг в сантиметрах   
 
       AutoCADTable tableTop,tableBottom, tableGraphic;
-      float ScaleY;
+      float ScaleY, ScaleYBlock;
       int SlopeMax,SlopeMin, SlopeCur, SlopeHeight, SlopeLastFase;
       int UnderTextYOffset;
       int UnderTextHeight;
@@ -178,14 +178,26 @@ class TAcadExport {
 
 
       void __fastcall DrawGrid(int step);
-      void DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName);
+      AcadBlockReferencePtr DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName, double scale=1);
 
       AcadPolylinePtr DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes = true, bool fLockGaps = false,
                         void(*lineEditFunction)(AcadPolylinePtr&, void* data)=0, void* data=0);
                         
       AcadPolylinePtr DrawPolyLine(vector<double> &points);
+
+      void __fastcall DrawTextUnderLine(TPoint p1, TPoint p2, AnsiString text);
+
+      void __fastcall DrawTextOverPoly(TExtPolyline *Poly, AnsiString text,
+              AnsiString(__closure *textControlFunction)(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle)=0);
+
+      TPoint __fastcall GetCenterOnPolyline(TExtPolyline *p, int minx, int maxx, float* out_angle=0,
+                                        int* width_of_sector=0, TPoint* pointStart=0, TPoint* pointEnd=0);
+
+      AnsiString RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle);
+
       AcadPolylinePtr DrawRoadMark(TExtPolyline *Poly, AnsiString name,
-                                 int iRow, int line, AutoCADTable *table);
+                                 int iRow, int line, AutoCADTable *table, bool dontDrawPolyLine=false);
+
       float GetAngle(TPoint &p1, TPoint &p2, float *length = 0);
       AcadBlockReferencePtr DrawBorder(vector<TPoint> &points, AnsiString blockname, bool fExist);
       AcadBlockReferencePtr DrawBarrier(vector<TPoint> &points, AnsiString blockname, bool fFlip, bool fExist, bool fOpenLeft = false,int *fLastVisible = 0);

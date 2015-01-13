@@ -200,6 +200,8 @@ __published:	// IDE-managed Components
     TEdit *edtLineWidth;
     TLabel *Label19;
     TLabel *Label25;
+    TEdit *edtScaleYBlock;
+    TLabel *Label29;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
@@ -312,6 +314,7 @@ public:		// User declarations
         MPROPERTY6(Step);
         MPROPERTY6(GridStep);
         MPROPERTY6(ScaleY);
+        MPROPERTY6(ScaleYBlock);        
         MPROPERTY6(LineWidth);
 
         __property int ExportTo = {read  = getExportTo};

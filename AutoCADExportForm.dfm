@@ -575,10 +575,10 @@ object FAutoCADExport: TFAutoCADExport
         Top = 60
         Width = 509
         Height = 490
-        ActivePage = TabSheet1
+        ActivePage = TabSheet3
         Align = alClient
         MultiLine = True
-        TabIndex = 1
+        TabIndex = 2
         TabOrder = 1
         object TabSheet2: TTabSheet
           Caption = #1086#1073#1097#1080#1077
@@ -936,6 +936,13 @@ object FAutoCADExport: TFAutoCADExport
             Width = 168
             Height = 16
             Caption = #1089#1088#1077#1076#1085#1085#1103' '#1096#1080#1088#1080#1085#1072'  '#1089#1080#1084#1074#1086#1083#1072
+          end
+          object Label29: TLabel
+            Left = 336
+            Top = 172
+            Width = 73
+            Height = 16
+            Caption = #1076#1083#1103' '#1073#1083#1086#1082#1086#1074
           end
           object GroupBox7: TGroupBox
             Left = 0
@@ -1308,7 +1315,7 @@ object FAutoCADExport: TFAutoCADExport
           object edtScaleY: TEdit
             Left = 256
             Top = 167
-            Width = 228
+            Width = 65
             Height = 24
             TabOrder = 6
             OnClick = edtBottomAddRowsClick
@@ -1320,6 +1327,15 @@ object FAutoCADExport: TFAutoCADExport
             Width = 228
             Height = 24
             TabOrder = 7
+            OnClick = edtBottomAddRowsClick
+            OnDblClick = edtTopAddRowsDblClick
+          end
+          object edtScaleYBlock: TEdit
+            Left = 416
+            Top = 167
+            Width = 65
+            Height = 24
+            TabOrder = 8
             OnClick = edtBottomAddRowsClick
             OnDblClick = edtTopAddRowsDblClick
           end
