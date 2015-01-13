@@ -1030,7 +1030,8 @@ private:
 // Рамка дороги по ширине
 __int32 FXMin,FXMax;
 __int32 FOutYMin,FOutYMax,FOutXMin,FOutXMax;
-__int32 FFrameLMin,FFrameLMax,FFrameXMin,FFrameXMax;
+// Границы дороги в окне FrameLPos положение маркера
+__int32 FFrameLMin,FFrameLMax,FFrameXMin,FFrameXMax,FFrameLPos;
 __int32 FZMin,FZMax;
 double FKx,FKl;
 __int32 FGeoXMin,FGeoXMax,FGeoYMin,FGeoYMax;
@@ -1054,13 +1055,15 @@ TPolyline LeftBound;    // Граница укрепленной части дороги с учетом перекрестко
 TPolyline RightBound;   // Граница укрепленной части дороги с учетом перекрестков
 
 TCurvePlan CurvePlan;   // Схематический план дороги
+// Находим координаты точек на схематическом плане дороги
+void __fastcall CalcCurvePlanPoints(void);
 
 TRoadGeometry Geometry; // Продольный профиль дороги
 bool GeometryMoved;     // true после редактирования геометрических параметров
 __fastcall TRoad(__int32 id,__int32 code):TBandRoadObject(id,code)
         {GeometryMoved=false;/*FConvertMethod=pc2d;*/}
 void __fastcall SetBound(__int32 minx,__int32 maxx,__int32 miny,__int32 maxy);
-void __fastcall SetFrame(__int32 lmin,__int32 lmax,__int32 xmin,__int32 xmax,TPlanKind pk,TPlanDirect dr);
+void __fastcall SetFrame(__int32 lmin,__int32 lmax,__int32 lcur,__int32 xmin,__int32 xmax,TPlanKind pk,TPlanDirect dr);
 void __fastcall SetOutBound(__int32 lmin,__int32 lmax,__int32 xmin,__int32 xmax);
 void __fastcall ConvertPoint(__int32 L,__int32 X,__int32 &PX,__int32 &PY);
 void __fastcall RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX);
@@ -1095,6 +1098,7 @@ __property TPlanDirect PlDirect={read=FPlDirect};
 __property TPtConvertMethod ConvertMethod={read=FConvertMethod,write=FConvertMethod};
 __property __int32 FrameLMin={read=FFrameLMin};
 __property __int32 FrameLMax={read=FFrameLMax};
+__property __int32 FrameLPos={read=FFrameLPos};
 __property __int32 FrameXMin={read=FFrameXMin};
 __property __int32 FrameXMax={read=FFrameXMax};
 

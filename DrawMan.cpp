@@ -596,10 +596,16 @@ delete[] Prior;
 
 void __fastcall TDrawManager::PrepareMetric(TDrawContents *Cont,RECT *OutRect)
 {
-Road=new TRoad(FVisSet->MetricSource->Road,Cont->L1,Cont->L2);
+/* Здесь заплатка для нахождения границ отображаемой части дороги
+  при двумерном отображении */
+if (FVisSet->MetricSource->Road->ConvertMethod==pc2d) {
+    __int32 DL=Cont->L2-Cont->L1;
+    Road=new TRoad(FVisSet->MetricSource->Road,Cont->CL-DL,Cont->CL+DL);
+} else
+    Road=new TRoad(FVisSet->MetricSource->Road,Cont->L1,Cont->L2);
 if (FVisSet->MetricSource->ProfilKind&1)
     Road->CalcMinMaxZ();
-Road->SetFrame(Cont->L1,Cont->L2,Cont->X1,Cont->X2,FPlanKind,FPlanDirect);
+Road->SetFrame(Cont->L1,Cont->L2,Cont->CL,Cont->X1,Cont->X2,FPlanKind,FPlanDirect);
 Road->SetOutBound(OutRect->left,OutRect->right,OutRect->top,OutRect->bottom);
 Polys=new TExtPolyline*[ObjCount];
 int dir=FPlanKind==pkGorizontal ? 0 :2;
@@ -623,7 +629,7 @@ TObjList<TDrwParamRec> *DrPar=Dict->DrwParams;
 TObjList<TDrwClassesRec> *DrCl=Dict->DrwClasses;
 TRoad *SRoad=new TRoad(FVisSet->MetricSource->Road,Cont->L1,Cont->L2);
 // Устанавливаем параметры так, чтобы точка соответствоовала 0.1 мм в масштабе вывода
-SRoad->SetFrame(Cont->L1,Cont->L2,SRoad->XMin,SRoad->XMax,pkGorizontal,pdDirect);
+SRoad->SetFrame(Cont->L1,Cont->L2,Cont->CL,SRoad->XMin,SRoad->XMax,pkGorizontal,pdDirect);
 SRoad->SetOutBound(0,(Cont->L2-Cont->L1)*100/FBaseScaleL,(SRoad->XMin*100)/FBaseScaleP,(SRoad->XMax*100)/FBaseScaleP);
 SignsMan.NewSession(ObjCount,0);
 int GostLabelSize=FFontSize*254*FBaseScaleX/(72*FBaseScaleP);

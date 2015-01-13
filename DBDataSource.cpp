@@ -1058,8 +1058,16 @@ while (!DB->Eof) // Читаем данные из файлов
     TVideoTime *VT=new TVideoTime;
     switch (dir)
         {
-        case 1: {FDirVideoId=VT->Id=FDirVideoTime->Count;FDirVideoTime->Add(VT);}break;
-        case 2: {FUnDirVideoId=VT->Id=FUnDirVideoTime->Count;FUnDirVideoTime->Add(VT);}break;
+        case 1: {
+           VT->Id=FDirVideoTime->Count;
+           FDirVideoId=VT->Id;
+           FDirVideoTime->Add(VT);
+           } break;
+        case 2: {
+           VT->Id=FUnDirVideoTime->Count;
+           FUnDirVideoId=VT->Id;
+           FUnDirVideoTime->Add(VT);
+           }break;
         }
     if (!VT)
         break;

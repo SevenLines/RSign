@@ -102,14 +102,14 @@ object SignForm: TSignForm
     Left = 0
     Top = 33
     Width = 688
-    Height = 420
+    Height = 413
     Align = alClient
     TabOrder = 1
     object Image1: TImage
       Left = 0
       Top = 0
       Width = 684
-      Height = 416
+      Height = 409
       Align = alClient
       Center = True
     end

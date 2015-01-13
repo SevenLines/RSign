@@ -79,7 +79,7 @@ DrwMan->Shared=MainForm->Shared;
 DrwMan->BaseScaleX=1000;
 TDrawContents *DrwCont=new TDrawBitmap();
 DrwCont->SetSize(bmp->Width,bmp->Height);
-DrwCont->SetParam(0,1,0,1);
+DrwCont->SetParam(0,1,0,0,1);
 int pid=Dict->FindPropId(SIGNGOSTCODE+Code[1]-'1',Code);
 int drwcls=Dict->SelectDrwParam(SGNCODE+Code[1]-'0',pid,1);
 if (drwcls)
