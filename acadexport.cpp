@@ -575,6 +575,8 @@ bool __fastcall TAcadExport::ExportTables(TFAutoCADExport *form)
     smallGridMarkHeight = form->SmallGridMarkHeight;
 
     ScaleY = (float)form->ScaleY/100;
+    ScaleYBlock = (float)form->ScaleYBlock/100;
+    if (ScaleYBlock <= 0) ScaleYBlock = ScaleY;   
 
     profileHeight = form->RowHeight;
 
@@ -936,7 +938,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         return true;
     }
 
-    double scale = ScaleY*50;
+    double scale = ScaleYBlock*50;
 	int signSpotOffset = 19;
 
     /// создавать новый объект signspot сильно нарпяжно, так что создадим его один раз
@@ -963,6 +965,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 	AnsiString signsPair[][2] = {
 		{"5.19.1", "5.19.2"},
 		{"5.16", "5.16"},
+        {"5.17", "5.17"},
 		{"5.21", "5.22"}
 	};
 	int signsPairCount = sizeof(signsPair)/sizeof(signsPair[0]);
@@ -1337,16 +1340,17 @@ void TAcadExport::DrawSign(
     block->set_Rotation(rotationHandle);
 
     // чтобы за край не уходили
+    float posOffset = 0.25 * ScaleY;
     if (!fUnderRoad) {
-      if(_pos <= 30){
-          tyOffset += (rotationHandle==-M_PI/2)?3000:-3000;
-      }else if(_pos >= 970){
-          tyOffset += (rotationHandle==-M_PI/2)?-3000:3000;
+      if(_pos <= 30 * posOffset){
+          tyOffset += (rotationHandle==-M_PI/2)?3000 * posOffset:-3000 * posOffset;
+      }else if( 1000 - _pos <= 30 * posOffset ){
+          tyOffset += (rotationHandle==-M_PI/2)?-3000 * posOffset:3000 * posOffset;
       }
     }
 	
 	if (fUnderRoad) {
-	    tyOffset -= 300;	
+	    tyOffset -= 300 * posOffset;	
 	}
 
     // пересчитываем положение знака, так как он у нас
@@ -1609,20 +1613,21 @@ AnsiString TAcadExport::RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint 
         kUnderTextHeight = 0.6;
     }
     float kPositionMarksHeight = kUnderTextHeight * 0.75;
+    float scale = ScaleYBlock / 4;
 
     AutoCAD.DrawText(str,
-                     kUnderTextHeight * UnderTextHeight,
+                     kUnderTextHeight * UnderTextHeight * scale,
                      centerPoint.y > 0 ? acAlignmentBottomCenter : acAlignmentTopCenter,
                      centerPoint.x,
-                     -ScaleY*centerPoint.y,
+                     -ScaleY*centerPoint.y + (centerPoint.y > 0 ? scale : -scale) * UnderTextYOffset * kEdgeLines,
                      angle);
 
     if (length >= 15 && start != 0 && start != 1000 && start != iStep / 100) {
         AutoCAD.DrawText(IntToStr(start),
-                         kPositionMarksHeight * UnderTextHeight,
-                         centerPoint.y > 0 ? acAlignmentTopLeft : acAlignmentBottomLeft,
-                         pStart.x + 100,
-                         -ScaleY*pStart.y + UnderTextYOffset * kEdgeLines,
+                         kPositionMarksHeight * UnderTextHeight * ScaleYBlock / 3.5,
+                         centerPoint.y > 0 ? acAlignmentTopLeft : acAlignmentTopRight,
+                         pStart.x + 100 * scale,
+                         -ScaleY*pStart.y + (centerPoint.y > 0 ? scale : -scale) * UnderTextYOffset * kEdgeLines,
                          M_PI_2);
     }
     /*if (length >= 15 && end != 0 && end != 1000 && start != iStep / 100) {
@@ -1687,9 +1692,9 @@ AcadPolylinePtr TAcadExport::DrawRoadMark(TExtPolyline *Poly, AnsiString name,
 
             AnsiString label_under_mark = name;
 
-            float kUnderTextHeight = 1;
+            float kUnderTextHeight = ScaleY / 3.5;
             if (Max - Min < 750) {
-                kUnderTextHeight = 0.6;
+                kUnderTextHeight = 0.6 * ScaleY / 3.5;
             }
             DrawTextOverPoly(Poly, label_under_mark, RoadMarkTextDraw);
 
@@ -1735,14 +1740,14 @@ float TAcadExport::GetAngle(TPoint &p1, TPoint &p2, float *length) {
 }
 
 
-void TAcadExport::DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName)
+AcadBlockReferencePtr TAcadExport::DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName, double scale)
 {
     float yoffset = -ScaleY*(p2.y - p1.y);
     float xoffset = p2.x - p1.x;
     float angle = xoffset!=0?atan(yoffset/xoffset):yoffset<0?-M_PI_2:M_PI_2;
     if(xoffset<0)angle+=M_PI;
     float length = sqrt(yoffset*yoffset + xoffset*xoffset);
-    AcadBlockReferencePtr block = AutoCAD.DrawBlock(blockName, p1.x, -ScaleY*p1.y,angle);
+    AcadBlockReferencePtr block = AutoCAD.DrawBlock(blockName, p1.x, -ScaleY*p1.y,angle, scale);
     if(block.IsBound()) {
         vector<AnsiString> props;
         Utils::split(lengthPropName, " ,", props);
@@ -1760,6 +1765,7 @@ void TAcadExport::DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String
             }
         }
     }
+    return block;
 }
 
 bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int line,String code, bool fEnd) {
@@ -1995,12 +2001,12 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
             case ma14_2:/*пешеход*/
             case ma14_3:
                 for(int i=0;i<count-1;i++){
-                    DrawBlockOnLine("r_1.14.1", Poly->Points[i], Poly->Points[i+1], "Width");
+                    DrawBlockOnLine("r_1.14.1", Poly->Points[i], Poly->Points[i+1], "Width", ScaleYBlock / 4);
                 }
                 break;
             case ma14_1e:
                 for(int i=0;i<count-1;i++){
-                    DrawBlockOnLine("r_1.14.1_e", Poly->Points[i], Poly->Points[i+1], "Width");
+                    DrawBlockOnLine("r_1.14.1_e", Poly->Points[i], Poly->Points[i+1], "Width", ScaleYBlock / 4);
                 }
                 break;
 
@@ -2044,27 +2050,27 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma17: /*Обозначение остановок маршрутных транспортных средств*/
-                DrawBlockOnLine("r_1.17", Poly->Points[0], Poly->Points[count-1], "Length");
+                block = DrawBlockOnLine("r_1.17", Poly->Points[0], Poly->Points[count-1], "Length", ScaleYBlock / 4);
                 //tableBottom.DrawRepeatTextInterval(0,"1.17",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
             case ma18l: /*Направление движения(налево)*/
                 angle = GetAngle(Poly->Points[0], Poly->Points[count-1]);
-                block = AutoCAD.DrawBlock("r_1.18_3",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
+                block = AutoCAD.DrawBlock("r_1.18_3",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle, ScaleYBlock / 4);
                 AutoCAD.SetPropertyList(block, "Flip", 1);
                 break;
             case ma18p: /*Направление движения(прямо)*/
                 angle = GetAngle(Poly->Points[0], Poly->Points[count-1]);
-                block = AutoCAD.DrawBlock("r_1.18_1",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
+                block = AutoCAD.DrawBlock("r_1.18_1",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle, ScaleYBlock / 4);
                 break;
             case ma18pl: /*Направление движения(прямо,налево)*/
                 angle = GetAngle(Poly->Points[0], Poly->Points[count-1]);
-                block = AutoCAD.DrawBlock("r_1.18_2",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
+                block = AutoCAD.DrawBlock("r_1.18_2",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle, ScaleYBlock / 4);
                 AutoCAD.SetPropertyList(block, "Flip", 1);
                 break;
             case ma18pr: /*Направление движения(прямо,направо)*/
                 angle = GetAngle(Poly->Points[0], Poly->Points[count-1]);
-                block = AutoCAD.DrawBlock("r_1.18_2",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
+                block = AutoCAD.DrawBlock("r_1.18_2",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle, ScaleYBlock / 4);
                 break;
             case ma18prl: /*Направление движения(прямо,направо,налево)*/
                 BUILDER_ERROR("Разметка 1.8prl не реализована");
@@ -2072,7 +2078,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
 
             case ma18r: /*Направление движения(направо)*/
                 angle = GetAngle(Poly->Points[0], Poly->Points[count-1]);
-                block = AutoCAD.DrawBlock("r_1.18_3",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
+                block = AutoCAD.DrawBlock("r_1.18_3",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle, ScaleYBlock / 4);
                 break;
             case ma18rl: /*Направление движения(направо,налево)*/
                 BUILDER_ERROR("Разметка 1.8rl не реализована");
@@ -2081,18 +2087,18 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
 
             case ma19_1:  /*Направление перестроения(направо)*/
                 angle = GetAngle(Poly->Points[0], Poly->Points[count-1]);
-                block = AutoCAD.DrawBlock("r_1.19",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
+                block = AutoCAD.DrawBlock("r_1.19",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle, ScaleYBlock / 4);
                 break;
             case ma19_2:  /*Направление перестроения(налево)*/
                 angle = GetAngle(Poly->Points[0], Poly->Points[count-1]);
-                block = AutoCAD.DrawBlock("r_1.19",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
+                block = AutoCAD.DrawBlock("r_1.19",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle, ScaleYBlock / 4);
                 AutoCAD.SetPropertyList(block, "Flip", 1);
                 //tableBottom.DrawRepeatTextInterval(0,"1.19",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
             case ma20: /*Приближение к поперечной линии 1.13*/
                 angle = GetAngle(Poly->Points[0], Poly->Points[count-1]);
-                block = AutoCAD.DrawBlock("r_1.20",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle);
+                block = AutoCAD.DrawBlock("r_1.20",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,angle, ScaleYBlock / 4);
                 break;
 
             case ma21: /*Приближение к поперечной линии 1.12*/
@@ -2106,7 +2112,11 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma23:  /*Обозначение полосы движения только для маршрутных транспортных средств*/
-                block = AutoCAD.DrawBlock("r_1.23",Poly->Points[0].x,-ScaleY*Poly->Points[0].y,m->Direction==roDirect?0:M_PI, ScaleY / 2);
+                block = AutoCAD.DrawBlock("r_1.23",
+                    Poly->Points[0].x,
+                    -ScaleY*Poly->Points[0].y,
+                    m->Direction==roDirect?0:M_PI,
+                    ScaleYBlock / 4);
                 //tableBottom.DrawRepeatTextInterval(0,"1.23",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
@@ -2130,7 +2140,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 }else{
                     rot = -M_PI/2;
                 }
-                block = AutoCAD.DrawBlock("r_1.25",x,-ScaleY*y,rot,1);
+                block = AutoCAD.DrawBlock("r_1.25",x,-ScaleY*y,rot, ScaleYBlock / 4);
                 AutoCAD.SetPropertyDouble(block, "Width", height);
                 break;
             default:
@@ -3104,9 +3114,9 @@ bool __fastcall TAcadExport::ExportLighting(TExtPolyline *Poly,TRoadLighting *s,
 
     AcadBlockReferencePtr block;
     if(s->Placement == rsRight) {
-        block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y, M_PI, ScaleY / 2);
+        block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y, M_PI, ScaleYBlock / 2);
     } else {
-        block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y, 0, ScaleY / 2);
+        block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y, 0, ScaleYBlock / 2);
     }
     if(block.IsBound()){
         switch(s->Kind){
@@ -3676,7 +3686,7 @@ bool __fastcall TAcadExport::ExportCommunication(TExtPolyline *p, TCommunication
         }*/
         if (pl.IsBound()) {
             pl->set_Linetype(WideString("trainpath"));
-            pl->set_LinetypeScale(20);
+            pl->set_LinetypeScale(ScaleY / 0.2);
         }
         break;
     default:
@@ -3715,7 +3725,7 @@ bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, vector<TTraffic
         case trlkTR: blockKind = "TR"; break;
         }
 
-        float scale = ScaleY / 2;
+        float scale = ScaleYBlock / 2;
         AcadBlockReferencePtr block
             = AutoCAD.DrawBlock("light", p->Points[0].x, -ScaleY*p->Points[0].y,rotation, scale);
         if(block.IsBound()){

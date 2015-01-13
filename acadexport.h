@@ -73,7 +73,7 @@ class TAcadExport {
       int iStep;   //шаг в сантиметрах   
 
       AutoCADTable tableTop,tableBottom, tableGraphic;
-      float ScaleY;
+      float ScaleY, ScaleYBlock;
       int SlopeMax,SlopeMin, SlopeCur, SlopeHeight, SlopeLastFase;
       int UnderTextYOffset;
       int UnderTextHeight;
@@ -178,7 +178,7 @@ class TAcadExport {
 
 
       void __fastcall DrawGrid(int step);
-      void DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName);
+      AcadBlockReferencePtr DrawBlockOnLine(String blockName, TPoint p1, TPoint p2, String lengthPropName, double scale=1);
 
       AcadPolylinePtr DrawPolyPoints(TExtPolyline *Poly, bool fUseCodes = true, bool fLockGaps = false,
                         void(*lineEditFunction)(AcadPolylinePtr&, void* data)=0, void* data=0);

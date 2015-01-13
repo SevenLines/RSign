@@ -55,6 +55,7 @@ void TFAutoCADExport::SetupTEdits()
    ONLYNUMBERS(edtStart)
    ONLYNUMBERS(edtEnd)
    ONLYNUMBERS(edtScaleY)
+   ONLYNUMBERS(edtScaleYBlock)   
    ONLYNUMBERS(edtAutoShrinkOneLetterWidth)
    ONLYNUMBERS(edtUseVerticalTextIfLess)
    ONLYNUMBERS(edtSmallGridMarkHeight)
@@ -151,6 +152,7 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
    ini->WriteString("AutoCAD","TableHatch",edtTableHatch->Text);
    ini->WriteInteger("AutoCAD", "HeaderTextHeight", HeaderTextHeight);
    ini->WriteInteger("AutoCAD","ScaleY",ScaleY);
+   ini->WriteInteger("AutoCAD","ScaleYBlock",ScaleYBlock);   
 
    try{ini->WriteInteger("AutoCAD", "SidewalksHatchScale", StrToInt(edtSidewalksHatchScale->Text.c_str()));}catch(...){}
    try{ini->WriteInteger("AutoCAD", "ProfileHatchScale", StrToInt(edtProfileHatchScale->Text.c_str()));}catch(...){}
@@ -216,6 +218,7 @@ void TFAutoCADExport::LoadIni(TIniFile *ini)
    edtUnderTextYOffset->Text =  ini->ReadInteger("AutoCAD","UnderTextYOffset",300);
    edtHeaderWidth->Text = ini->ReadInteger("AutoCAD","HeaderWidth",20000);
    edtScaleY->Text = ini->ReadInteger("AutoCAD","ScaleY",600);
+   edtScaleYBlock->Text = ini->ReadInteger("AutoCAD","ScaleYBlock",0);   
    edtStart->Text = ini->ReadInteger("AutoCAD","iStart",-1);
    edtEnd->Text = ini->ReadInteger("AutoCAD","iEnd",-1);
    edtLineWidth->Text = ini->ReadInteger("AutoCAD","LineWidth",0);
