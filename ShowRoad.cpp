@@ -247,7 +247,7 @@ void __fastcall TRoadFrm::OpenView(__int32 RoadId,__int32 ViewId,TDictSource *di
 		FCurPage=1;
 		PageSet->ItemIndex=0;
 		RefreshPlan();
-		ShowAll();    
+		ShowAll();
 	}
 	LoadRegistry();
 	PostAction();
@@ -422,7 +422,7 @@ void __fastcall TRoadFrm::ScaleByRect(void)
 		MinY=CRectPos.y;
 		MaxY=SRectPos.y;
 	}
-	FMetricData->Road->SetFrame(FPMinL,FPMaxL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
+	FMetricData->Road->SetFrame(FPMinL,FPMaxL,FMarkerL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
 	FMetricData->Road->SetOutBound(0,PBox->Width,0,PBox->Height);
 	if (((MaxX-MinX)<5) && ((MaxY-MinY)<5))
 	{
@@ -853,7 +853,7 @@ void __fastcall TRoadFrm::MakeBmpPage(TDrawContents* Cont,int minl,int maxl,int 
 	}
 	// Рисуем план дороги
 	TRect OutRect(cx-hpix/2,cy-vpix/2,cx+hpix/2,cy+vpix/2);
-	Cont->SetParam(minl,maxl,FMinX,FMaxX);
+	Cont->SetParam(minl,maxl,(minl+maxl)/2,FMinX,FMaxX);
 	Cont->SetSize(w,h);
 	Cont->PrepareUpdating();
 	FOutMan->SetDefaults(FDrawMan);
@@ -887,7 +887,7 @@ void __fastcall TRoadFrm::MakePreViewPage(TDrawContents* Cont,int minl,int maxl,
 		w=hsize;
 		h=vsize;
 	}
-	Cont->SetParam(minl,maxl,FMinX,FMaxX);
+	Cont->SetParam(minl,maxl,(minl+maxl)/2,FMinX,FMaxX);
 	Cont->SetSize((double)w*wdpi*ms/2540,(double)h*wdpi*ms/2540);
 	Cont->PrepareUpdating();
 	FOutMan->SetDefaults(FDrawMan);
@@ -957,7 +957,7 @@ void __fastcall TRoadFrm::Print(int minl,int maxl,int plen,int scll,int sclx,int
 			cy=(cy*pdpi)/254;
 		}
 		TRect OutRect(cx-hpix/2-hofs,cy-vpix/2-vofs,cx+hpix/2-hofs,cy+vpix/2-vofs);
-		prncont->SetParam(minl,minl+plen,FMinX,FMaxX);
+		prncont->SetParam(minl,minl+plen,minl+plen/2,FMinX,FMaxX);
 		prncont->PrepareUpdating();
 		FOutMan->SetDefaults(FDrawMan);
 		FOutMan->FillCont(prncont);
@@ -1022,7 +1022,7 @@ void __fastcall TRoadFrm::AcadPrint(void){
 
 	TRoad *R=new TRoad(MetricData->Road,L1,L2);
 	R->SetBound(L1,L2,-DX,DX);
-	R->SetFrame(L1,L2,-DX,DX,pkGorizontal,pdDirect);
+	R->SetFrame(L1,L2,MarkerL,-DX,DX,pkGorizontal,pdDirect);
 	R->SetOutBound(L1,L2,-DX,DX);
 
 	if(!aexp->BindToCurrentDocument(R)){
@@ -1054,7 +1054,7 @@ void __fastcall TRoadFrm::AcadExport(void) {
     /*R->SetBound(L1,L2,-DX,DX);
     R->SetFrame(L1,L2,-DX,DX,pkGorizontal,pdDirect);
     R->SetOutBound(L1,L2,-DX,DX);*/
-    R->SetFrame(FPMinL,FPMaxL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
+    R->SetFrame(FPMinL,FPMaxL,MarkerL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
     R->SetOutBound(FPMinL,FPMaxL,FPMinX, FPMaxX);
 	AcadExportThread *thread = new AcadExportThread(true, R);
 
@@ -1711,8 +1711,14 @@ void __fastcall TRoadFrm::DrawPoly(void)
 		void *dc=PBox->Canvas->Handle;
 		void *pen1=CreatePen(PS_SOLID,2,clBlue);
 		void *pen2=CreatePen(PS_DOT,1,clBlue);
-		FVector->DrawPoly(dc,pen1,pen2);
-		SelectObject(dc,pen1);
+        if (FMetricData && FMetricData->Road->ConvertMethod==pc2d) {
+            TExtPolyline *evec=new TExtPolyline;
+            FMetricData->Road->ConvertPolyline(*FPoly,*evec);
+            evec->DrawPoly(dc,pen1,pen2);
+        } else {
+    		FVector->DrawPoly(dc,pen1,pen2);
+        }
+   		SelectObject(dc,pen1);
 		POINT *p=FVector->Points;
 		for (int i=0;i<n;i++)
 		if (FVector->Flags[i]&1)
@@ -1898,7 +1904,7 @@ void __fastcall TRoadFrm::PrepareDressCont(void)
 		w=PvBox->Width,h=PBox->Height;
 
 		FDressCont->SetSize(w,h);
-		FDressCont->SetParam(FVMinL,FVMaxL,FPMinX,FPMaxX);
+		FDressCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX);
 		FDressCont->PrepareUpdating();
 		FDrawMan->FillCont(FDressCont);
 		TRect r(0,0,w,h);
@@ -1930,7 +1936,7 @@ void __fastcall TRoadFrm::PrepareSlopesCont(void)
 		w=PrBox->Width,h=PBox->Height;
 
 		FSlopesCont->SetSize(w,h);
-		FSlopesCont->SetParam(FVMinL,FVMaxL,FPMinX,FPMaxX);
+		FSlopesCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX);
 		FSlopesCont->PrepareUpdating();
 		FDrawMan->FillCont(FSlopesCont);
 		TRect r(0,0,w,h);
@@ -1958,7 +1964,7 @@ void __fastcall TRoadFrm::PrepareVisCont(void) {
 		else
 		w=PvisBox->Width,h=PBox->Height;
 		FVisCont->SetSize(w,h);
-		FVisCont->SetParam(FVMinL,FVMaxL,FPMinX,FPMaxX);
+		FVisCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX);
 		FVisCont->PrepareUpdating();
 		FDrawMan->FillCont(FVisCont);
 		TRect r(0,0,w,h);
@@ -1986,7 +1992,7 @@ void __fastcall TRoadFrm::PrepareLayersCont(void) {
 		else
 		w=PlayerBox->Width,h=PBox->Height;
 		FLayersCont->SetSize(w,h);
-		FLayersCont->SetParam(FVMinL,FVMaxL,FPMinX,FPMaxX);
+		FLayersCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX);
 		FLayersCont->PrepareUpdating();
 		FDrawMan->FillCont(FLayersCont);
 		TRect r(0,0,w,h);
@@ -2026,7 +2032,7 @@ void __fastcall TRoadFrm::PrepareDrawCont(void)
 	if (NeedRepDraw&&FReadyForDrawing)
 	{
 		FDrawCont->SetSize(PBox->Width,PBox->Height);
-		FDrawCont->SetParam(FVMinL,FVMaxL,FPMinX,FPMaxX);
+		FDrawCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX);
 		RECT r;
 		r.left=0;
 		r.top=0;
@@ -2820,7 +2826,7 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 	if (FInsertingObj)
 	{
 		int CL,CX,RX;
-		FMetricData->Road->SetFrame(FPMinL,FPMaxL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
+		FMetricData->Road->SetFrame(FPMinL,FPMaxL,MarkerL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
 		FMetricData->Road->SetOutBound(0,PBox->Width,0,PBox->Height);
 		FMetricData->Road->RConvertPoint(X,Y,CL,RX);
         CX=RX;
@@ -2952,7 +2958,7 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 void __fastcall TRoadFrm::EchoCursorPosition(int X,int Y)
 {
 	int CL,CX;
-	FMetricData->Road->SetFrame(FPMinL,FPMaxL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
+	FMetricData->Road->SetFrame(FPMinL,FPMaxL,MarkerL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
 	FMetricData->Road->SetOutBound(0,PBox->Width,0,PBox->Height);
 	FMetricData->Road->RConvertPoint(X,Y,CL,CX);
 	StatusBar->Panels->Items[0]->Text=String("L=")+String((CL+50)/100)+String("; X=")+String((double)CX/100);
@@ -3352,7 +3358,7 @@ int X, int Y)
 	if (FPlanKind==pkGorizontal)
 	{
 		int CL,CX;
-		FMetricData->Road->SetFrame(FPMinL,FPMaxL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
+		FMetricData->Road->SetFrame(FPMinL,FPMaxL,MarkerL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
 		FMetricData->Road->SetOutBound(0,PBox->Width,0,PBox->Height);
 		FMetricData->Road->RConvertPoint(X,Y,CL,CX);
 		HRuler->Marker=(CL-FRelativeNull)/100;
@@ -3361,7 +3367,7 @@ int X, int Y)
 	else
 	{
 		int CL,CX;
-		FMetricData->Road->SetFrame(FPMinL,FPMaxL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
+		FMetricData->Road->SetFrame(FPMinL,FPMaxL,MarkerL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
 		FMetricData->Road->SetOutBound(0,PBox->Width,0,PBox->Height);
 		FMetricData->Road->RConvertPoint(X,Y,CL,CX);
 		HRuler->Marker=CX/100;
@@ -4420,6 +4426,15 @@ void __fastcall TRoadFrm::PlayerBoxPaint(TObject *Sender)
 		dl=PBox->Top;
 	}
 	DrawMarker(PlayerBox,dl);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TRoadFrm::SpeedButton21Click(TObject *Sender)
+{
+if (FMetricData) {
+    FMetricData->Road->ConvertMethod=(SpeedButton21->Down ? pc2d : pc1d);
+    RefreshPlan();
+}
 }
 //---------------------------------------------------------------------------
 

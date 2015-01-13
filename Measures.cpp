@@ -237,3 +237,22 @@ PartCount=n;
 return Parts;
 */
 }
+
+
+void __fastcall TVideoTime::SetDescription(String s) {
+      int a=s.Pos("[");
+      int b=s.Pos(",");
+      int c=s.Pos("]");
+      if (a>=0 && a+1<b && b+1<c) {
+         try {
+           FRow=StrToInt(s.SubString(a+1,b-a-1));
+           FCol=StrToInt(s.SubString(b+1,c-b-1));
+           FDescription=s.SubString(0,a-1)+s.SubString(c+1,1000);
+         } catch(...) {
+           FDescription=s;
+         }
+
+      }
+      else
+         FDescription=s;
+}

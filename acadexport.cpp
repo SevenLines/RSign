@@ -36,7 +36,27 @@ inline float GetAngle(TPoint vec1, TPoint vec2)
 
 bool compareSigns(const TRoadSign* s1, const TRoadSign* s2)
 {
-    return s1->OldTitle < s2->OldTitle;
+/*    return s1->OldTitle < s2->OldTitle;*/
+    int order[] = {
+       2, 1, 5, 3, 4, 6, 7, 8
+    };
+
+    int signNum1;
+    int signNum2;
+    if (TryStrToInt(s1->OldTitle.SubString(0,1), signNum1)
+        && TryStrToInt(s2->OldTitle.SubString(0,1), signNum2)) {
+        if (s1->OldTitle.Pos("8.13") && signNum2!=2) {
+            return true;
+        }
+        if (signNum1!=2 && s2->OldTitle.Pos("8.13")) {
+            return false;
+        }
+        if (order[signNum1-1] == order[signNum2-1]) {
+            return s1->OldTitle < s2->OldTitle;
+        }
+        return order[signNum1-1] < order[signNum2-1];
+    }
+    return false;
 }
 
 TPoint operator -(TPoint pt1,TPoint pt2)
@@ -1806,9 +1826,9 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
             case ma16_3: /*Обозначение островков в местах слияния транспортных потоков*/
 
                 switch(m->Kind){
-                case  ma16_1:str = "16.1";break;
-                case  ma16_2:str = "16.2";break;
-                case  ma16_3:str = "16.3";break;
+                case  ma16_1:str = "1.16.1";break;
+                case  ma16_2:str = "1.16.2";break;
+                case  ma16_3:str = "1.16.3";break;
                 }
                 p.y = 0;
                 p.x = 0;
@@ -1821,12 +1841,17 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 p.x /= Poly->Count;
                 p.y /= Poly->Count;
 
-
-                text = AutoCAD.DrawText(str,UnderTextHeight,acAlignmentMiddleCenter, p.x,p.y);
-
+                //text = AutoCAD.DrawText(str,UnderTextHeight,acAlignmentMiddleCenter, p.x,p.y);
                 pl[0] = DrawPolyPoints(Poly, false, true);
                 hatch = AutoCAD.FillArea((IDispatch**)pl,1,0,L"ANSI31");
                 hatch->PatternScale = 50;
+                pl[0]->Delete();
+
+                block = AutoCAD.DrawBlock("r_label",p.x, p.y);
+                if (block.IsBound()) {
+                    AutoCAD.SetAttribute(block, "Label", str);
+                }
+
                 //tableBottom.DrawRepeatTextInterval(0,"1.16",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
@@ -2083,7 +2108,7 @@ void StyleDrawBarrierUndefined(AcadPolylinePtr& pl, void* data)
 void StyleDrawBarrierCivil(AcadPolylinePtr& pl, void* data)
 {
     BarrierDrawStyleParameters* params = (BarrierDrawStyleParameters*)data;
-    pl->set_Lineweight(params->lineWeight);
+    pl->set_Lineweight(acLnWt070);
     pl->set_LinetypeScale(params->lineTypeScale*6);
     pl->set_Linetype(WideString("perila"));
     pl->color = 20;
@@ -2276,7 +2301,10 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
             int step = points[i].x / iStep;
             if (step != lastStep
                 || (i == points.size()-1 && abs(points.front().x - points.back().x) > 10000)) {
-                AutoCAD.DrawBlock("r_2.5", points[i].x, points[i].y*-ScaleY, 0, 1);
+                block = AutoCAD.DrawBlock("r_label", points[i].x, points[i].y*-ScaleY, 0, 1);
+                if(block.IsBound()) {
+                    AutoCAD.SetAttribute(block, "Label", "2.5");
+                }
             }
             lastStep = step;
         }
@@ -2290,6 +2318,7 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
     case br117:
         str = "Перила";
         barrierName = "barCivil";
+        params.lineTypeScale = lineTypeScale * 2;
         DrawPolyPoints(Poly, true, false, StyleDrawBarrierCivil, &params);
         break;
 

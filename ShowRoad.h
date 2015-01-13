@@ -180,6 +180,7 @@ __published:    // IDE-managed Components
         TMenuItem *N12;
         TPaintBox *PlayerBox;
         TSplitter *Splitter2;
+    TSpeedButton *SpeedButton21;
     void __fastcall FormActivate(TObject *Sender);
     void __fastcall PaintRoad(TObject *Sender);
     void __fastcall SpeedButton1Click(TObject *Sender);
@@ -244,6 +245,7 @@ __published:    // IDE-managed Components
           TShiftState Shift, int X, int Y);
         void __fastcall N12Click(TObject *Sender);
         void __fastcall PlayerBoxPaint(TObject *Sender);
+    void __fastcall SpeedButton21Click(TObject *Sender);
 private:        // User declarations
        /* ָּ״ְ */
        TObjPlacement lPlace;

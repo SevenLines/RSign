@@ -2096,14 +2096,17 @@ FXMin=minx;
 FXMax=maxx;
 }
 
-void __fastcall TRoad::SetFrame(__int32 lmin,__int32 lmax,__int32 xmin,__int32 xmax,TPlanKind pk,TPlanDirect pd)
+void __fastcall TRoad::SetFrame(__int32 lmin,__int32 lmax,__int32 lcur,__int32 xmin,__int32 xmax,TPlanKind pk,TPlanDirect pd)
 {
 FPlKind=pk;
 FPlDirect=pd;
 FFrameLMin=lmin;
 FFrameLMax=lmax;
+FFrameLPos=lcur;
 FFrameXMin=xmin;
 FFrameXMax=xmax;
+if (ConvertMethod==pc2d)
+   CalcCurvePlanPoints();
 }
 
 void __fastcall TRoad::CalcConvertion(void)
@@ -2187,38 +2190,131 @@ inline void Calc2D(double &X,double &Y, double &A,double L,double BR1,double BR2
   }
 }
 
+void __fastcall TRoad::CalcCurvePlanPoints(void) {
+    int k;
+    for (k=0;FrameLPos>CurvePlan.L[k];++k); // Ищем участок плана с позицией маркера
+    double CX=0,CY=0,CA=0; // Координаты в системе карты повернутые
+    double PL;
+    TCurvePoint CR(0.0),TR(0.0);
+    // CX,CY - координаты точки осевой линии на расстоянии L
+    // CA - угол поворота осевой линии на расстоянии A.
+    // PL - точка отсчета осевой линии
+    // TR - радиус кривизны а точке FrameLPos
+    if (k==0)  // Точка до начала плана
+       TR=CurvePlan.Values[0];
+    else if (k==CurvePlan.Count)
+       TR=CurvePlan.Values[k-1];
+    else
+       TR.Extrapolate(CurvePlan.Values[k-1],CurvePlan.Values[k],FrameLMin,CurvePlan.L[k-1],CurvePlan.L[k]);
+    //Бежим назад от нуля
+    CR=TR;
+    PL=FrameLPos;
+    for (int i=k-1;i>=0;i--) {
+            Calc2D(CX,CY,CA,CurvePlan.L[i]-PL,CR.bR,CurvePlan.Values[i].bR);
+            CR=CurvePlan.Values[i];
+            PL=CurvePlan.L[i];
+            CurvePlan.Values[i].X=CX;
+            CurvePlan.Values[i].Y=CY;
+            CurvePlan.Values[i].A=CA;
+    }
+    //Бежим вперед от нуля
+    CX=CY=CA=0;
+    CR=TR;
+    PL=FrameLPos;
+    for (int i=k;i<CurvePlan.Count;i++) {
+            Calc2D(CX,CY,CA,CurvePlan.L[i]-PL,CR.bR,CurvePlan.Values[i].bR);
+            CR=CurvePlan.Values[i];
+            PL=CurvePlan.L[i];
+            CurvePlan.Values[i].X=CX;
+            CurvePlan.Values[i].Y=CY;
+            CurvePlan.Values[i].A=CA;
+    }
+}
+
 void __fastcall TRoad::ConvertPoint(__int32 L,__int32 X,__int32 &PX,__int32 &PY)
 {
 if (FConvertMethod==pc2d) {
     int k;
-    for (k=0;FrameLMin>CurvePlan.L[k];++k); // Ищем участок плана где начинается окно
+    double CX=0,CY=0,CA=0; // Координаты в системе карты повернутые
+/*  Это старая версия. Если все работает то стереть
+    for (k=0;FrameLPos>=CurvePlan.L[k];++k); // Ищем участок плана с позицией маркера
+
     double CX=0,CY=0,CA=0; // Координаты в системе карты повернутые
     double PL;
     TCurvePoint CR(0.0);
+    // CX,CY - координаты точки осевой линии на расстоянии L
+    // CA - угол поворота осевой линии на расстоянии A.
+    // PL - точка отсчета осевой линии
     if (k==0) {// FrameLMin<=L[0] {
         Calc2D(CX,CY,CA,CurvePlan.L[0]-FrameLMin,0.0,0.0);
         k=1;
         PL=CurvePlan.L[0];
         CR=CurvePlan.Values[0];
-    } else {   //FrameLMin<=L[k],k>0
+    } else {   //FrameLMin<=L[k],k>0  // Этот ELSE кажется никогда не работает (А теперь работает)
         CR.Extrapolate(CurvePlan.Values[k-1],CurvePlan.Values[k],FrameLMin,CurvePlan.L[k-1],CurvePlan.L[k]);
-        PL=FrameLMin;
+        PL=FrameLPos;
     }
-    for (;k<CurvePlan.Count && L>CurvePlan.L[k];k++) {
-        Calc2D(CX,CY,CA,CurvePlan.L[k]-PL,CR.bR,CurvePlan.Values[k].bR);
-        CR=CurvePlan.Values[k];
-        PL=CurvePlan.L[k];
+    // Точка до текущей позиции. Идем по плану назад
+    if (L<PL) {
+        for (;k>=0 && L<CurvePlan.L[k];--k) {
+            Calc2D(CX,CY,CA,CurvePlan.L[k]-PL,CR.bR,CurvePlan.Values[k].bR);
+            CR=CurvePlan.Values[k];
+            PL=CurvePlan.L[k];
+        }
+        // Последний участок
+        if (k>=0) {
+            TCurvePoint TR;
+            TR.Extrapolate(CurvePlan.Values[k],CurvePlan.Values[k+1],L,CurvePlan.L[k],CurvePlan.L[k+1]);
+            Calc2D(CX,CY,CA,L-PL,CR.bR,TR.bR);
+            TR.bR=0;
+        } else { //
+            Calc2D(CX,CY,CA,L-PL,0,0);
+        }
+//        CA=acos(0)*2-CA; // Все зеркалим относительно оси Y
+//        CX*=-1;
+//        X*=-1;
     }
-    if (k<CurvePlan.Count) { // L<=CurvePlan.L[k] && k>0
-        TCurvePoint TR;
-        TR.Extrapolate(CurvePlan.Values[k-1],CurvePlan.Values[k],LMin,CurvePlan.L[k-1],CurvePlan.L[k]);
-        Calc2D(CX,CY,CA,L-PL,CR.bR,TR.bR);
-        TR.bR=0;
-    } else //ТОчка после окончания плана
-        Calc2D(CX,CY,CA,L-PL,0,0);
+    else {// Точка после текущей позиции. Идем по плану вперед
+        for (;k<CurvePlan.Count && L>CurvePlan.L[k];k++) {
+            Calc2D(CX,CY,CA,CurvePlan.L[k]-PL,CR.bR,CurvePlan.Values[k].bR);
+            CR=CurvePlan.Values[k];
+            PL=CurvePlan.L[k];
+        }
+        // Последний участок
+        if (k<CurvePlan.Count) { // L<=CurvePlan.L[k] && k>0
+            TCurvePoint TR;
+            TR.Extrapolate(CurvePlan.Values[k-1],CurvePlan.Values[k],L,CurvePlan.L[k-1],CurvePlan.L[k]);
+            Calc2D(CX,CY,CA,L-PL,CR.bR,TR.bR);
+            TR.bR=0;
+        } else //Точка после окончания плана (такого не должно быть, считаем что прямая вставка)
+            Calc2D(CX,CY,CA,L-PL,0,0);
+    }
+*/
+//  А теперь новый вариант
+    //int k;
+    for (k=0;k<CurvePlan.Count && L>=CurvePlan.L[k];++k); // Ищем участок плана с позицией маркера
+    if (k==0) {// Точка до начала плана
+       CX=CurvePlan.Values[0].X;
+       CY=CurvePlan.Values[0].Y;
+       CA=CurvePlan.Values[0].A;
+       Calc2D(CX,CY,CA,CurvePlan.L[0]-L,0,0);
+    } else if (k==CurvePlan.Count) {// Точка после окончания плана
+       CX=CurvePlan.Values[k-1].X;
+       CY=CurvePlan.Values[k-1].Y;
+       CA=CurvePlan.Values[k-1].A;
+       Calc2D(CX,CY,CA,L-CurvePlan.L[k-1],0,0);
+    } else { // Точка внутри плана
+       CX=CurvePlan.Values[k-1].X;
+       CY=CurvePlan.Values[k-1].Y;
+       CA=CurvePlan.Values[k-1].A;
+       TCurvePoint TR;
+       TR.Extrapolate(CurvePlan.Values[k-1],CurvePlan.Values[k],L,CurvePlan.L[k-1],CurvePlan.L[k]);
+       Calc2D(CX,CY,CA,L-CurvePlan.L[k-1],CurvePlan.Values[k-1].bR,TR.bR);
+    }
+//  Учитываем полярные координаты
     CX-=X*sin(CA);
     CY+=X*cos(CA);
-    PX=FOutXMin+(CX)*FKl;
+    PX=(FOutXMin+FOutXMax)/2+(CX)*FKl;
     PY=FOutYMin+(CY-FFrameXMin)*FKx;//FKx; Масштаб всегда одинаковый
 }
 else {
@@ -2643,6 +2739,35 @@ for (int i=0;i<n;i++)
 
 void __fastcall TRoad::RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX)
 {
+  if (FConvertMethod==pc2d) {
+
+      double CX=(X-(FOutXMin+FOutXMax)/2)/FKl;
+      double CY=(Y-FOutYMin)/FKx+FrameXMin;
+
+      // Цикл по всем участкам
+      double minDS=1e10;
+      for (int k=1;k<CurvePlan.Count;k++) {
+          // Для отрезков прямых надо проверить что CX,CY проецируется на них
+          if (CurvePlan.Values[k-1].bR==0 && CurvePlan.Values[k].bR==0) {
+                double DX=CurvePlan.Values[k].X-CurvePlan.Values[k-1].X;
+                double DY=CurvePlan.Values[k].Y-CurvePlan.Values[k-1].Y;
+                double DL=sqrt(DX*DX+DY*DY);
+                double DS=((CurvePlan.Values[k].X-CX)*(CurvePlan.Values[k-1].Y-CY)-
+                          (CurvePlan.Values[k].Y-CY)*(CurvePlan.Values[k-1].X-CX))/DL;
+                double TX=CX-DY*DS/DL;
+                double TY=CY+DX*DS/DL;
+                double DX1=TX-CurvePlan.Values[k-1].X;
+                double DY1=TY-CurvePlan.Values[k-1].Y;
+                if (TX<=max(CurvePlan.Values[k].X,CurvePlan.Values[k-1].X) && TX>=min(CurvePlan.Values[k].X,CurvePlan.Values[k-1].X) ||
+                    TY<=max(CurvePlan.Values[k].Y,CurvePlan.Values[k-1].Y) && TY>=min(CurvePlan.Values[k].Y,CurvePlan.Values[k-1].Y )) {
+                    if (fabs(DS)<minDS)
+                       minDS=fabs(DS),PL=CurvePlan.L[k-1]+sqrt(DX1*DX1+DY1*DY1),PX=-DS;
+                }
+          }
+      }
+
+}
+  else {
     if (FPlKind==pkGorizontal)
         {
         if (FPlDirect==pdDirect)
@@ -2669,12 +2794,13 @@ void __fastcall TRoad::RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX
             PX=FFrameXMin+(FOutXMax-X)/FKx;
             }
         }
+  }
 }
 
 void __fastcall TRoad::ConvertPolyline(TPolyline &src,TExtPolyline &dst) {
 if (FConvertMethod==pc2d) {
     dst.ReSize(0);
-    double stepl=100000; // Пока будем ставить точки через 10 метров.
+    double stepl=100; // Пока будем ставить точки через 1 метров.
     // Еще в будущем надо учитывать что не все точки соеденены отрезками
     int n=src.Count+src.Points[0].Code.VisCon(); // Для замыкания полигона
     __int32 x,y,k=0;

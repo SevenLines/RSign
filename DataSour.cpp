@@ -524,7 +524,7 @@ __fastcall TDtaSource::TDtaSource(void)
 FId=0;
 FRefCount=0;
 FOnError=NULL;
-FMetricsSource=0;
+FMetricsSource=1;
 FProfilKind=0;
 FProfilMinLen=100;
 FProfilMaxDev=20;
