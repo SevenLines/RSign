@@ -713,10 +713,22 @@ bool __fastcall TAcadExport::FindPlacement(drect &r,char dir,bool store,TRoadObj
 }
 
 
+void __fastcall TAcadExport::SetLayerOrder(AnsiString LayerName, AnsiString order)
+{
+    AutoCAD.ActiveDocument->SendCommand(WideString("(setq ss (ssget \"x\" (list (cons 8 \"" + LayerName + "\"))))\n"));
+    AutoCAD.ActiveDocument->SendCommand(WideString("(command \"_draworder\" ss \"\" \""+ order + "\")\n"));
+}
+
 void __fastcall TAcadExport::EndDocument() {
     rectmap.clear();
     //AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME " + IntToStr(iAutoSaveInterval) + "\n"));
     //AutoCAD.Application->ZoomAll();
+    SetLayerOrder("RoadMark", "_back");
+    SetLayerOrder("Borders", "_back");
+    SetLayerOrder("RoadSidewalks", "_back");
+    SetLayerOrder("RoadPlan", "_back");
+    SetLayerOrder("RoadTrafficLights", "_front");
+
     AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
 
     AnsiString strMessage="";
@@ -2050,7 +2062,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma17: /*Обозначение остановок маршрутных транспортных средств*/
-                block = DrawBlockOnLine("r_1.17", Poly->Points[0], Poly->Points[count-1], "Length", ScaleYBlock / 4);
+                block = DrawBlockOnLine("r_1.17", Poly->Points[0], Poly->Points[count-1], "Length Length2", ScaleYBlock / 4);
                 //tableBottom.DrawRepeatTextInterval(0,"1.17",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
