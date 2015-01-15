@@ -83,6 +83,7 @@ class TAcadExport {
       bool fFillProfile;
       bool fShowAttachmentComments;
       bool fDrawTable, fTopAddRowsWithoutData, fBottomAddRowsWithoutData, fGraphicAddRowsWithoutData;
+      bool fDrawMap;
       TRoad *curRoad;
 
       int M_ROWPOS(0),M_ROWPOS(Slopes),M_ROWPOS(Barriers),M_ROWPOS(MoundH),M_ROWPOS(Curves),
