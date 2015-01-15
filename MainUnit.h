@@ -204,6 +204,7 @@ private:	// User declarations
     TRoadFrm *FActiveRoad;
     int FCurAttachDesigner;
     bool HaveInit;
+    unsigned long gdiplusToken;
 
     TRect lastRoadWindowPosition;
     TRect lastVideoWindowPosition;

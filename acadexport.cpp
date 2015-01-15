@@ -919,7 +919,6 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly,TRoadAttach *a, boo
 
 
     // вывод названия примыкания
-
     if (a->Name != "") {
       AutoCAD.DrawText(a->Name,
                   UnderTextHeight,

@@ -39,6 +39,12 @@
 #pragma message("Program is compiled without AutoCAD!")
 #endif
 
+// для GDI+
+#include <algorithm>
+using std::min;
+using std::max;
+#include <gdiplus.h>
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -2154,9 +2160,23 @@ void __fastcall TRoadFrm::PaintRoad(TObject *Sender)
 		VRuler->SetMinMax(!dir,(double)(FPMinL-FRelativeNull)/100,(double)(FPMaxL-FRelativeNull)/100,P.y+PY1,PY2-PY1);
 		HRuler->SetMinMax(dir,(double)FPMinX/100,(double)FPMaxX/100,0,PBox->Width);
 	}
-	if (FEditMetric)
-	DrawPoly();
+	if (FEditMetric) DrawPoly();
 	PostAction();
+
+    //PAINTSTRUCT ps;
+//    BeginPaint(PBox->Canvas->Handle, &ps);
+    Gdiplus::Graphics* g = Gdiplus::Graphics::FromHDC(PBox->Canvas->Handle, FALSE);
+    Gdiplus::SolidBrush b(Gdiplus::Color(128,0,128,200));
+
+    Gdiplus::FontFamily  fontFamily(L"Times New Roman");
+    Gdiplus::Font font(&fontFamily, 24, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+
+    g->RotateTransform(45);
+    g->TranslateTransform(10, 10, Gdiplus::MatrixOrderAppend);
+    g->DrawString(L"Это надпись на GDI+, код в функции TRoadFrm::PaintRoad", -1, &font, Gdiplus::PointF(0, 0), &b);
+
+    delete g;
+//    EndPaint(PBox->Canvas->Handle, &ps);
 }
 
 
