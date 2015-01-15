@@ -1559,7 +1559,7 @@ void __fastcall TAcadExport::DrawTextUnderLine(TPoint p1, TPoint p2, AnsiString 
 }
 
 void __fastcall TAcadExport::DrawTextOverPoly(TExtPolyline *Poly, AnsiString text,
-        AnsiString(__closure *textControlFunction)(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle, int lmin, int lmax), int LMin, int LMax)
+        AnsiString(__closure *textControlFunction)(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle, void* data), void* data)
 {
     int lastStep, curStep;
     float angle;
@@ -1581,7 +1581,7 @@ void __fastcall TAcadExport::DrawTextOverPoly(TExtPolyline *Poly, AnsiString tex
               if (centerPoint.x != -1) {
                   str = text;
                   if (textControlFunction) {
-                      str = textControlFunction(text, pStart, pEnd, centerPoint, angle, LMin, LMax);
+                      str = textControlFunction(text, pStart, pEnd, centerPoint, angle, data);
                   }
                   if (!str.IsEmpty()) {
                       AutoCAD.DrawText(str,
@@ -1603,7 +1603,7 @@ void __fastcall TAcadExport::DrawTextOverPoly(TExtPolyline *Poly, AnsiString tex
     if (centerPoint.x != -1) {
         str = text;
         if (textControlFunction) {
-            str = textControlFunction(text, pStart, pEnd, centerPoint, angle, LMin, LMax);
+            str = textControlFunction(text, pStart, pEnd, centerPoint, angle, data);
         }
         if (!str.IsEmpty()) {
             AutoCAD.DrawText(str,
@@ -1616,15 +1616,16 @@ void __fastcall TAcadExport::DrawTextOverPoly(TExtPolyline *Poly, AnsiString tex
     }
 }
 
-AnsiString TAcadExport::RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle, int LMin, int LMax) 
+AnsiString TAcadExport::RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle, void* data) 
 {
     AnsiString str = text;
     float kUnderTextHeight = 1, kEdgeLines = 0.5;
+    TRoadMark* m = (TRoadMark*)data;
 
     int start, end;
-    if (fDrawMap) {
-      start = LMin / 100;
-      end = LMax / 100;  
+    if (fDrawMap && m) {
+      start = m->LMin / 100;
+      end = m->LMax / 100;  
     } else {
       start = (pStart.x / 100) % 1000;
       end = (pEnd.x / 100) % 1000;
@@ -1656,7 +1657,7 @@ AnsiString TAcadExport::RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint 
                          centerPoint.y > 0 ? acAlignmentTopLeft : acAlignmentTopRight,
                          pStart.x + 100 * scale,
                          -ScaleY*pStart.y + (centerPoint.y > 0 ? scale : -scale) * UnderTextYOffset * kEdgeLines,
-                         M_PI_2);
+                         M_PI_2 + angle);
     }
     /*if (length >= 15 && end != 0 && end != 1000 && start != iStep / 100) {
         AutoCAD.DrawText(IntToStr(end),
@@ -1726,7 +1727,7 @@ AcadPolylinePtr TAcadExport::DrawRoadMark(TRoadMark *m, TExtPolyline *Poly, Ansi
             if (Max - Min < 750) {
                 kUnderTextHeight = 0.6 * ScaleY / 3.5;
             }
-            DrawTextOverPoly(Poly, label_under_mark, RoadMarkTextDraw, m->LMin, m->LMax);
+            DrawTextOverPoly(Poly, label_under_mark, RoadMarkTextDraw, m);
 
         } else { // if we draw road mark on attachments
             AcadTextPtr text;
@@ -1746,13 +1747,18 @@ AcadPolylinePtr TAcadExport::DrawRoadMark(TRoadMark *m, TExtPolyline *Poly, Ansi
             } else {
                 Max += 0.5*UnderTextYOffset;
             }
-            DrawTextOverPoly(Poly, name, RoadMarkTextDraw, m->LMin, m->LMax);
+            DrawTextOverPoly(Poly, name, RoadMarkTextDraw, m);
         }
         if (Max - Min >= 1000) {
-          AutoCAD.DrawLine(Poly->Points[0].x,-ScaleY*(Poly->Points[0].y) - UnderTextYOffset * kEdgeLines,
+          AcadLinePtr line = AutoCAD.DrawLine(Poly->Points[0].x,-ScaleY*(Poly->Points[0].y) - UnderTextYOffset * kEdgeLines,
                           Poly->Points[0].x,-ScaleY*(Poly->Points[0].y) + UnderTextYOffset * kEdgeLines);
-          AutoCAD.DrawLine(Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y) - UnderTextYOffset * kEdgeLines,
+          line->Rotate(AutoCAD.cadPoint(Poly->Points[0].x, -ScaleY*Poly->Points[0].y, 0),
+                      GetAngle(Poly->Points[0], Poly->Points[1]));
+
+          line = AutoCAD.DrawLine(Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y) - UnderTextYOffset * kEdgeLines,
                           Poly->Points[Poly->Count-1].x,-ScaleY*(Poly->Points[Poly->Count-1].y) + UnderTextYOffset * kEdgeLines);
+          line->Rotate(AutoCAD.cadPoint(Poly->Points[Poly->Count-1].x, -ScaleY*Poly->Points[Poly->Count-1].y, 0),
+                       GetAngle(Poly->Points[Poly->Count-2], Poly->Points[Poly->Count-1]));
         }
     }
     
@@ -1974,8 +1980,12 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
             case ma11r:  /*Движение с одной стороны (прерывистая справа)*/
                 for(int i=0;i<count-1;i++){
                     block = DrawBlockOnLine("r_1.11", Poly->Points[i], Poly->Points[i+1], "Length");
+                    int px =  Poly->Points[i+1].x - Poly->Points[i].x;
+                    int py =  Poly->Points[i+1].y - Poly->Points[i].y;
+                    length = sqrt(px*px + py*py*ScaleY*ScaleY);
                     if (block.IsBound() ) {
                         float lengthScale = 0.1;
+                        AutoCAD.SetPropertyDouble(block, "Length", length / lengthScale);
                         block->set_XScaleFactor(lengthScale);
                         if((m->Kind == ma11r&&m->Direction==roDirect)|| (m->Kind == ma11l&&m->Direction==roUnDirect)){
                                 AutoCAD.SetPropertyList(block, "Flip", 1);
