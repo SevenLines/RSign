@@ -189,14 +189,15 @@ class TAcadExport {
       void __fastcall DrawTextUnderLine(TPoint p1, TPoint p2, AnsiString text);
 
       void __fastcall DrawTextOverPoly(TExtPolyline *Poly, AnsiString text,
-              AnsiString(__closure *textControlFunction)(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle)=0);
+              AnsiString(__closure *textControlFunction)(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle, int lmin, int lmax)=0,
+              int LMin=-1, int LMax=-1);
 
       TPoint __fastcall GetCenterOnPolyline(TExtPolyline *p, int minx, int maxx, float* out_angle=0,
                                         int* width_of_sector=0, TPoint* pointStart=0, TPoint* pointEnd=0);
 
-      AnsiString RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle);
+      AnsiString RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle, int LMin, int LMax);
 
-      AcadPolylinePtr DrawRoadMark(TExtPolyline *Poly, AnsiString name,
+      AcadPolylinePtr DrawRoadMark(TRoadMark *m, TExtPolyline *Poly, AnsiString name,
                                  int iRow, int line, AutoCADTable *table, bool dontDrawPolyLine=false);
 
       float GetAngle(TPoint &p1, TPoint &p2, float *length = 0);
