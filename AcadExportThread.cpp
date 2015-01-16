@@ -232,6 +232,8 @@ int __fastcall AcadExportThread::ExportRoadSideObjects(TDtaSource* data, TAcadEx
 
 int __fastcall AcadExportThread::ExportCommunications(TDtaSource* data, TAcadExport* aexp) 
 {
+    int lastStep = R->Step;
+    R->Step = 500;
 	SET_PROGRESS_FORM_POSITION(0;)
 	aexp->AddLayer("RoadCommunication");
 	for (int i=0;i<data->Objects->Count;i++) {
@@ -246,6 +248,7 @@ int __fastcall AcadExportThread::ExportCommunications(TDtaSource* data, TAcadExp
 			}
 		}
 	}
+    R->Step = lastStep;
 	return 0;
 }
 
@@ -589,6 +592,12 @@ int __fastcall AcadExportThread::ExportRoadMark(TDtaSource* data, TAcadExport* a
 	SET_PROGRESS_FORM_POSITION(0);
 	aexp->AddLayer("RoadMark");
 
+    /* Так надо делать чтобы изменить расстояние между точками на линиях в
+       двумерной графике.  Расстояние указывается в сантиметрах. (Костя)
+    */
+    int lastStep = R->Step;
+    R->Step = 1000;
+
     bool onlyCountLines = (leftMax != 0) & (rightMax != 0);
     if (onlyCountLines) {
       *leftMax = 0;
@@ -695,6 +704,11 @@ int __fastcall AcadExportThread::ExportRoadMark(TDtaSource* data, TAcadExport* a
 			}
 		}
 	}
+    /* Так надо делать чтобы изменить расстояние между точками на линиях в
+       двумерной графике.  Расстояние указывается в сантиметрах. (Костя)
+    */
+    R->Step = lastStep;
+
     if (!onlyCountLines)
 	    aexp->ExportRoadMark(0,0,0,0,true);
 	return 0;
@@ -771,7 +785,10 @@ int __fastcall AcadExportThread::ExportSignal(vector<pair<int,wpbar> > &data, TA
 {
 	SET_PROGRESS_FORM_POSITION(0)
 	aexp->AddLayer("RoadSignals");
-	
+
+	int lastStep = R->Step;
+    R->Step = 1000;
+    
 	for (vector<pair<int,wpbar> >::iterator i=data.begin();i!=data.end();i++) {
 		if (Terminated) return -1;
 		SET_PROGRESS_FORM_POSITION((i - data.begin()));
@@ -786,6 +803,9 @@ int __fastcall AcadExportThread::ExportSignal(vector<pair<int,wpbar> > &data, TA
 		}
 	}
     aexp->ExportBarrier(0,0,0,true);
+
+    R->Step = lastStep;
+
 	return 0;
 }
 
@@ -794,7 +814,10 @@ int __fastcall AcadExportThread::ExportSidewalks(vector<pair<int,wpbar> > &data,
 {
 	SET_PROGRESS_FORM_POSITION(0)
 	aexp->AddLayer("RoadSidewalks");
-	
+
+    int lastStep = R->Step;
+    R->Step = 1000;
+
     vector<KromkaObject> sidewalks;
 	vector<KromkaObjectGroup> sidewalksGroups;
     // формируем массив тротуаров, чтобы убрать пересечения
@@ -836,6 +859,8 @@ int __fastcall AcadExportThread::ExportSidewalks(vector<pair<int,wpbar> > &data,
 	}*/
 	
 	aexp->ExportSidewalk(0,true);
+
+    R->Step = lastStep;
     
 	return 0;
 }
@@ -1223,7 +1248,7 @@ export_end:
         if (!fWickedErrorWas) {
             ShowMessage("Во время исполнения были обнаружены небольшие ошибки. Рекомендуется ознакомиться с журналом.");
         } else {
-            ShowMessage("Во время исполнения были обнаружены серьезные ошибки. Возможно что некотороые строки не были выведены.\nРекомендуется ознакомиться с журналом.");
+            ShowMessage("Во время исполнения были обнаружены серьезные ошибки. Возможно что некоторые строки не были выведены.\nРекомендуется ознакомиться с журналом.");
         }
     }
     aexp->EndDocument();

@@ -75,6 +75,10 @@ class TRoad;
 class TObjFrm;
 class TDictSource;
 
+enum TPlanKind {pkGorizontal,pkVertical};
+enum TPlanDirect {pdDirect,pdUndirect};
+enum TPtConvertMethod {pc1d,pc2d};
+
 //Класс характеристика
 class TCharacter
 {
@@ -964,6 +968,10 @@ void __fastcall SetAutoDescription(String s)
 public:
 __fastcall TRoadSign():TDescreetDirRoadObject() {}
 __fastcall TRoadSign(__int32 id,__int32 code):TDescreetDirRoadObject(id,code) {}
+// Функция находит ориентацию знака
+// 0 - без поворота 3 - 90 гр по часовой стрелке
+// 2 - 180 гр. 1 - 90 гр против часовой стрелки
+virtual int __fastcall GetSignDirection(TPlanKind pk,TPlanDirect pd);
 virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 void __fastcall SetAutoTest(TSignTest Tst,String note)
     {FTest=Tst;
@@ -1021,9 +1029,6 @@ TPolyline RightLine; // правая кромка дороги
 };
 
 //Дорога целиком
-enum TPlanKind {pkGorizontal,pkVertical};
-enum TPlanDirect {pdDirect,pdUndirect};
-enum TPtConvertMethod {pc1d,pc2d};
 class TRoad :public TBandRoadObject
 {
 private:
@@ -1033,6 +1038,8 @@ __int32 FOutYMin,FOutYMax,FOutXMin,FOutXMax;
 // Границы дороги в окне FrameLPos положение маркера
 __int32 FFrameLMin,FFrameLMax,FFrameXMin,FFrameXMax,FFrameLPos;
 __int32 FZMin,FZMax;
+// Расстояние между соседними точками в см при аппроксимации
+__int32 FStep;
 double FKx,FKl;
 __int32 FGeoXMin,FGeoXMax,FGeoYMin,FGeoYMax;
 double FGeoKx,FGeoKy;
@@ -1061,7 +1068,7 @@ void __fastcall CalcCurvePlanPoints(void);
 TRoadGeometry Geometry; // Продольный профиль дороги
 bool GeometryMoved;     // true после редактирования геометрических параметров
 __fastcall TRoad(__int32 id,__int32 code):TBandRoadObject(id,code)
-        {GeometryMoved=false;/*FConvertMethod=pc2d;*/}
+        {GeometryMoved=false;FStep=100;}
 void __fastcall SetBound(__int32 minx,__int32 maxx,__int32 miny,__int32 maxy);
 void __fastcall SetFrame(__int32 lmin,__int32 lmax,__int32 lcur,__int32 xmin,__int32 xmax,TPlanKind pk,TPlanDirect dr);
 void __fastcall SetOutBound(__int32 lmin,__int32 lmax,__int32 xmin,__int32 xmax);
@@ -1101,6 +1108,7 @@ __property __int32 FrameLMax={read=FFrameLMax};
 __property __int32 FrameLPos={read=FFrameLPos};
 __property __int32 FrameXMin={read=FFrameXMin};
 __property __int32 FrameXMax={read=FFrameXMax};
+__property __int32 Step={read=FStep,write=FStep};
 
 };
 

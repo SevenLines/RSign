@@ -205,6 +205,8 @@ private:	// User declarations
     int FCurAttachDesigner;
     bool HaveInit;
 
+    unsigned long gdiplusToken;
+
     TRect lastRoadWindowPosition;
     TRect lastVideoWindowPosition;
     bool blockShowRoadSizeEventProcessor;

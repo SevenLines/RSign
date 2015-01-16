@@ -53,6 +53,7 @@ USEFORM("MoveForm.cpp", moveDialog);
 USEFORM("AddRowsDescription.cpp", FAddRowDescription);
 USEFORM("ItemSelectDialog.cpp", ItemSelectDialogForm);
 USEFORM("ConnectionFormUnit.cpp", ConnectionForm);
+USEFORM("VideoBar.cpp", frmVideoBar);
 //---------------------------------------------------------------------------
 #ifndef WITHOUT_AUTOCAD
 USEFORM("AutoCADPrintForm.cpp", FAutoCADPrint);
@@ -117,6 +118,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
          Application->CreateForm(__classid(TDumpDialog), &DumpDialog);
          Application->CreateForm(__classid(TProgressForm), &ProgressForm);
          Application->CreateForm(__classid(TfrmCrvPlan), &frmCrvPlan);
+         Application->CreateForm(__classid(TfrmVideoBar), &frmVideoBar);
          Application->CreateForm(__classid(TfrmVideoForm), &frmVideoForm);
          Application->CreateForm(__classid(TSaveViewFrm), &SaveViewFrm);
          Application->CreateForm(__classid(TOpenViewFrm), &OpenViewFrm);

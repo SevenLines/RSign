@@ -242,12 +242,14 @@ return Parts;
 void __fastcall TVideoTime::SetDescription(String s) {
       int a=s.Pos("[");
       int b=s.Pos(",");
-      int c=s.Pos("]");
-      if (a>=0 && a+1<b && b+1<c) {
+      int c=s.Pos(";");
+      int d=s.Pos("]");
+      if (a>=0 && a+1<b && b+1<c && c+1<d) {
          try {
            FRow=StrToInt(s.SubString(a+1,b-a-1));
            FCol=StrToInt(s.SubString(b+1,c-b-1));
-           FDescription=s.SubString(0,a-1)+s.SubString(c+1,1000);
+           FIcon=StrToInt(s.SubString(c+1,d-c-1));
+           FDescription=s.SubString(0,a-1)+s.SubString(d+1,1000);
          } catch(...) {
            FDescription=s;
          }

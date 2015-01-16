@@ -1044,6 +1044,40 @@ pl->Points[0].Code=0;
 return pl;
 }
 
+int __fastcall TRoadSign::GetSignDirection(TPlanKind pk,TPlanDirect pd) {
+int Result=0;
+bool dr=Placement==spRight;
+if (Direction==roUnDirect)
+    dr=!dr;
+bool b=Direction==roDirect;
+if (pd==pdUndirect)
+    b=!b,dr=!dr;
+if (OnAttach==saIn) // Виден при въезде на дорогу
+    {
+    if (pk!=pkGorizontal)
+        Result=1;
+    if (!dr) Result+=2;
+    }
+else if (OnAttach==saOut)  //Виден при выезде с дороги
+    {
+    if (pk!=pkGorizontal)
+        Result=1;
+    if (dr) Result+=2;
+    }
+else
+    {
+    if (pk==pkGorizontal)
+        {
+        Result=1;
+        if (b)
+            Result+=2;
+        }
+    else if (!b)
+        Result=2;
+    }
+return Result;
+}
+
 TExtPolyline* __fastcall TRoadSign::GetDefMetric(TRoad *Road)
 {
 __int32 cx;
@@ -1063,11 +1097,21 @@ if (cx<Road->XMin)
         cx=Road->XMin;
 if (cx>Road->XMax)
         cx=Road->XMax;
-TExtPolyline *Res=new TExtPolyline(1,0);
+TExtPolyline *Res=new TExtPolyline(2,0);
 int x,y;
 Road->ConvertPoint(FL,cx,x,y);
 Res->Points[0].x=x;
 Res->Points[0].y=y;
+__int32 dl=0,dx=0; // Направление знака.
+switch (GetSignDirection(pkGorizontal,pdDirect)) {
+  case 0: dx=-500;break;
+  case 1: dl=-500;break;
+  case 2: dx=500;break;
+  case 3: dl=500;break;
+}
+Road->ConvertPoint(FL+dl,cx+dx,x,y);
+Res->Points[1].x=x;
+Res->Points[1].y=y;
 return Res;
 }
 
@@ -2086,6 +2130,7 @@ CurvePlan.CopyAndCut(&(Rd->CurvePlan),L1,L2);
 
 FXMin=Rd->XMin;
 FXMax=Rd->XMax;
+FStep=Rd->Step;
 }
 
 void __fastcall TRoad::SetBound(__int32 minl,__int32 maxl,__int32 minx,__int32 maxx)
@@ -2192,7 +2237,7 @@ inline void Calc2D(double &X,double &Y, double &A,double L,double BR1,double BR2
 
 void __fastcall TRoad::CalcCurvePlanPoints(void) {
     int k;
-    for (k=0;FrameLPos>CurvePlan.L[k];++k); // Ищем участок плана с позицией маркера
+    for (k=0;k<CurvePlan.Count && FrameLPos>CurvePlan.L[k];++k); // Ищем участок плана с позицией маркера
     double CX=0,CY=0,CA=0; // Координаты в системе карты повернутые
     double PL;
     TCurvePoint CR(0.0),TR(0.0);
@@ -2297,7 +2342,7 @@ if (FConvertMethod==pc2d) {
        CX=CurvePlan.Values[0].X;
        CY=CurvePlan.Values[0].Y;
        CA=CurvePlan.Values[0].A;
-       Calc2D(CX,CY,CA,CurvePlan.L[0]-L,0,0);
+       Calc2D(CX,CY,CA,L-CurvePlan.L[0],0,0);
     } else if (k==CurvePlan.Count) {// Точка после окончания плана
        CX=CurvePlan.Values[k-1].X;
        CY=CurvePlan.Values[k-1].Y;
@@ -2747,6 +2792,48 @@ void __fastcall TRoad::RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX
       // Цикл по всем участкам
       double minDS=1e10;
       for (int k=1;k<CurvePlan.Count;k++) {
+          // Для каждого фрагмента проверяем, что точка проецируется на этот фрагмент
+          // Берем перпендикуляр к касательной в начальной точке по часовой стрелки
+          // Проецируемые точки слева от перпендикуляра
+          double X0=CurvePlan.Values[k-1].X;
+          double Y0=CurvePlan.Values[k-1].Y;
+          double A0=CurvePlan.Values[k-1].A;
+          double D0=sin(A0)*(CY-Y0)+cos(A0)*(CX-X0);
+
+          // Берем перпендикуляр к касательной по часовой стрелке
+          // Проецируемые точки справа
+          double X1=CurvePlan.Values[k].X;
+          double Y1=CurvePlan.Values[k].Y;
+          double A1=CurvePlan.Values[k].A;
+          double D1=sin(A1)*(CY-Y1)+cos(A1)*(CX-X1);
+          if (D0>=0 && D1 <=0) { // Дальше двоичный поиск
+             double L1=CurvePlan.L[k-1];
+             double L2=CurvePlan.L[k];
+             for (int i=0;i<25;i++) {// 25 раз должно хватить для точности в 1 см
+                double CL=(L1+L2)/2;
+                X0=CurvePlan.Values[k-1].X;
+                Y0=CurvePlan.Values[k-1].Y;
+                A0=CurvePlan.Values[k-1].A;
+                Calc2D(X0,Y0,A0,CL-CurvePlan.L[k-1],CurvePlan.Values[k-1].bR,CurvePlan.Values[k].bR);
+                D0=sin(A0)*(CY-Y0)+cos(A0)*(CX-X0);
+                if (D0>=0)
+                  L1=CL;
+                else
+                  L2=CL;
+             }
+             double DS=sqrt((CX-X0)*(CX-X0)+(CY-Y0)*(CY-Y0));
+             if (DS<minDS) {
+                minDS=DS;PL=L1;PX=DS;
+                if (cos(A0)*(CY-Y0)-sin(A0)*(CX-X0)<0) // Учитываем расположение относительно касательной в точке
+                    PX*=-1;
+             }
+          }
+      }
+
+/*
+
+
+
           // Для отрезков прямых надо проверить что CX,CY проецируется на них
           if (CurvePlan.Values[k-1].bR==0 && CurvePlan.Values[k].bR==0) {
                 double DX=CurvePlan.Values[k].X-CurvePlan.Values[k-1].X;
@@ -2763,9 +2850,25 @@ void __fastcall TRoad::RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX
                     if (fabs(DS)<minDS)
                        minDS=fabs(DS),PL=CurvePlan.L[k-1]+sqrt(DX1*DX1+DY1*DY1),PX=-DS;
                 }
+          // Для дуг надо проверить что точка находится в секторе дуги
+          // Поворот налево радиус отрицательный, направо - положительный
+          } else if (CurvePlan.Values[k-1].bR==CurvePlan.Values[k].bR==0) {
+                // Берем перпендикуляр к касательной (Точка должна быть справа
+                double X0=CurvePlan.Values[k-1].X;
+                double Y0=CurvePlan.Values[k-1].Y;
+                double X1=X0-sin(CurvePlan.Values[k-1].A);
+                double Y1=Y0+cos(CurvePlan.Values[k-1].A);
+
+                double X2=CurvePlan.Values[k].X;
+                double Y2=CurvePlan.Values[k].Y;
+                // Берем перпендикуляр к касательной в обратную сторону (Точка справа
+                double X3=X2+sin(CurvePlan.Values[k-1].A);
+                double Y3=Y2-cos(CurvePlan.Values[k-1].A);
+                // Отсюда писать завтра
+
           }
       }
-
+*/
 }
   else {
     if (FPlKind==pkGorizontal)
@@ -2800,7 +2903,7 @@ void __fastcall TRoad::RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX
 void __fastcall TRoad::ConvertPolyline(TPolyline &src,TExtPolyline &dst) {
 if (FConvertMethod==pc2d) {
     dst.ReSize(0);
-    double stepl=100; // Пока будем ставить точки через 1 метров.
+    double stepl=FStep; //Настройка частоты установки точек
     // Еще в будущем надо учитывать что не все точки соеденены отрезками
     int n=src.Count+src.Points[0].Code.VisCon(); // Для замыкания полигона
     __int32 x,y,k=0;

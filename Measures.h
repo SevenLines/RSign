@@ -256,15 +256,17 @@ class TVideoTime : public TRoadMeasure<TVideoTimeVal>
 private:
    String FDescription;
    int FId;
-   int FCol,FRow; // Схема камеры
+   int FCol,FRow; // Схема камеры в виде положения кнопки
+   int FIcon;     // Номер изображения на кнопке
    void __fastcall SetDescription(String s);
 public :
-  __fastcall TVideoTime(void) : TRoadMeasure<TVideoTimeVal>(),FId(0),FRow(0),FCol(0) {}
+  __fastcall TVideoTime(void) : TRoadMeasure<TVideoTimeVal>(),FId(0),FRow(0),FCol(0), FIcon(0) {}
   int __fastcall FindPosition(int Time,int &Position);
   __property String Description={read=FDescription,write=SetDescription};
   __property int Id={read=FId,write=FId};
   __property int Row={read=FRow,write=FRow};
   __property int Col={read=FCol,write=FCol};
+  __property int Icon={read=FIcon,write=FIcon};
 
 };
 
@@ -435,7 +437,8 @@ if (FCount>0)
 
 class TCurvePoint {
 public :
-   double bR; // Обратный радиус кривизны в точке
+   double bR; // Обратный радиус кривизны в точке           
+              // Поворот налево радиус отрицательный, направо - положительный
    double X,Y;// Относительные координаты точки (используются при двумерном выводе)
    double A;//Угол касательной в данной точке
    __fastcall TCurvePoint() : bR(0) {}

@@ -15,21 +15,17 @@
 #include <OleCtrls.hpp>
 #include <Menus.hpp>
 #include <Dialogs.hpp>
+#include <ImgList.hpp>
 //---------------------------------------------------------------------------
 #define VIDEOEDITCOUNT 10
+#define ROWBUT 2
+#define COLBUT 5
 
 class TfrmVideoForm : public TForm
 {
 __published:	// IDE-managed Components
     TPanel *Panel1;
     TTimer *Timer;
-    TSMediaPlayer *MPlayer;
-    TPanel *Panel2;
-    TScrollBar *ScrollBar;
-    TPanel *Panel3;
-    TSpeedButton *cmdPlay;
-    TSpeedButton *cmdPause;
-    TSpeedButton *cmdStop;
     TPopupMenu *PopMenu;
     TMenuItem *N1;
     TMenuItem *N2;
@@ -41,6 +37,14 @@ __published:	// IDE-managed Components
     TMenuItem *N8;
     TMenuItem *N9;
     TMenuItem *N10;
+    TImageList *ImgDirection;
+    TPanel *Panel4;
+    TSMediaPlayer *MPlayer;
+    TScrollBar *ScrollBar;
+    TPanel *Panel3;
+    TSpeedButton *cmdPlay;
+    TSpeedButton *cmdPause;
+    TSpeedButton *cmdStop;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall MPlayerPlayStateChange(TObject *Sender, long OldState,
           long NewState);
@@ -56,6 +60,14 @@ __published:	// IDE-managed Components
     void __fastcall PosEditKeyPress(TObject *Sender, char &Key);
     void __fastcall ScrollBarChange(TObject *Sender);
     void __fastcall FormResize(TObject *Sender);
+    void __fastcall MPlayerMouseMove(TObject *Sender, TShiftState Shift,
+          int X, int Y);
+    void __fastcall Panel4MouseMove(TObject *Sender, TShiftState Shift,
+          int X, int Y);
+    void __fastcall Panel4MouseDown(TObject *Sender, TMouseButton Button,
+          TShiftState Shift, int X, int Y);
+    void __fastcall MPlayerMouseUp(TObject *Sender, TMouseButton Button,
+          TShiftState Shift, int X, int Y);
 private:	// User declarations
     TDtaSource *FData;
 
@@ -81,11 +93,15 @@ private:	// User declarations
     bool VParams[VIDEOEDITCOUNT];
     TEdit* FEdits[VIDEOEDITCOUNT];
     TLabel * FLabels[VIDEOEDITCOUNT];
+    TSpeedButton* DirBut[ROWBUT][COLBUT],*UnDirBut[ROWBUT][COLBUT];
     void __fastcall CreateEdits(void);
     void __fastcall AlignEdits(void);
+    void __fastcall AlignButtons(void);
     void __fastcall SetMenu(void);
     int __fastcall CalcFormHeight(int wd);
+    int __fastcall CalcBarTop(int wd);
     String __fastcall FindFile(String S);
+    void __fastcall butVideoClick(TObject *Sender);    
 public:		// User declarations
     __fastcall TfrmVideoForm(TComponent* Owner);
     void __fastcall InitVideo(TDtaSource *data,int Dir);
@@ -111,3 +127,4 @@ END_MESSAGE_MAP(TForm);
 extern PACKAGE TfrmVideoForm *frmVideoForm;
 //---------------------------------------------------------------------------
 #endif
+
