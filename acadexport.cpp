@@ -839,7 +839,7 @@ bool __fastcall TAcadExport::ExportRoadMetric(TExtPolyline *Poly,TMetricsKind ki
     //   Poly->Codes[i]&1   од видимости до i-той точки 1 - видимый, 0 - невидимый
     //    оординаты целые в сантиметрах!
     if(fEnd){
-        if(smallGridMarkHeight!=0) {
+        if(smallGridMarkHeight!=0 && !fDrawMap) {
             int step = 10000;
             for(int i=(curRoad->LMin / step) * step;i<curRoad->LMax;i+=step) {
                 AutoCAD.DrawLine(i,-smallGridMarkHeight/2,i,smallGridMarkHeight/2);
@@ -1232,6 +1232,31 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         }
     }
 
+    if (fDrawMap) {
+      if (Poly->Count==2) {
+          double angle = GetAngle(Poly->Points[0], Poly->Points[1]);
+          rotationHandle = angle - M_PI_2;
+          rotation += angle;
+
+          switch (signs[0]->Direction) {
+          case roUnDirect:
+              rotation += M_PI;
+              break;
+          }
+
+          switch (signs[0]->OnAttach) {
+          case saIn:
+              rotation -= M_PI_2;
+              rotationHandle -= M_PI_2;
+              break;
+          case saOut:
+              rotation += M_PI_2;
+              rotationHandle += M_PI_2;
+              break;
+          }
+      }
+    }
+
     AnsiString sEmpty = "";
 
     try{
@@ -1241,6 +1266,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                     signs[0]->OldTitle+(signs[0]->ViewKind==0?sEmpty:AnsiString("."+IntToStr(signs[0]->ViewKind))),
                     signs[0]->Label,
                     AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
+                    signs[0]->L,
                     signSpotOffset,
                     0,
                     rotation,
@@ -1264,6 +1290,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                 DrawSign(block->Name,
                   "",
                   AutoCADPoint(Poly->Points[0].x,-ScaleY*Poly->Points[0].y),
+                  signs[0]->L,
                   signSpotOffset,
                   0,
                   rotation,
@@ -1309,6 +1336,7 @@ void TAcadExport::DrawSign(
   AnsiString Name,
   AnsiString label,
   AutoCADPoint pos,
+  int LPos,
   int xoffset,
   int yoffset,
   double rotation,
@@ -1326,25 +1354,29 @@ void TAcadExport::DrawSign(
     xoffset*=scale;
     yoffset*=scale;
 
-    if(Name == "6.13"){
-        int sPos;
-        sPos = label.Pos("-");
-        sPos = sPos==0?label.Length()+1:sPos;
-        if(fAuto6_13){
-            if(TryStrToInt(label.SubString(1,sPos-1),sPos)){
-                pos.x = sPos*100000;
-            }else{
-                pos.x = RoundTo((float)pos.x/100000,0)*100000;
-            }
-            _pos = 0;
-        }else{
-            _pos = (int)pos.x%100000/100;
-        }
-        if(fLeftValueOnly6_13){
-            label = label.SubString(1,sPos-1);
-        }
-    }else{
-        _pos = (int)pos.x%100000/100;
+    if (fDrawMap) {
+      _pos = LPos / 100;
+    } else {
+      if(Name == "6.13"){
+          int sPos;
+          sPos = label.Pos("-");
+          sPos = sPos==0?label.Length()+1:sPos;
+          if(fAuto6_13){
+              if(TryStrToInt(label.SubString(1,sPos-1),sPos)){
+                  pos.x = sPos*100000;
+              }else{
+                  pos.x = RoundTo((float)pos.x/100000,0)*100000;
+              }
+              _pos = 0;
+          }else{
+              _pos = (int)LPos%100000/100;
+          }
+          if(fLeftValueOnly6_13){
+              label = label.SubString(1,sPos-1);
+          }
+      }else{
+          _pos = (int)LPos%100000/100;
+      }
     }
 
     txOffset = xoffset;
@@ -3147,11 +3179,19 @@ bool __fastcall TAcadExport::ExportLighting(TExtPolyline *Poly,TRoadLighting *s,
     }   
 
     AcadBlockReferencePtr block;
-    if(s->Placement == rsRight) {
-        block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y, M_PI, ScaleYBlock / 2);
+    
+    double angle;
+    if (Poly->Count == 2) {
+        angle = GetAngle(Poly->Points[0], Poly->Points[1]);
     } else {
-        block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y, 0, ScaleYBlock / 2);
+      if(s->Placement == rsRight) {
+          angle = M_PI;
+      } else {
+          angle = 0;
+      }
     }
+
+    block = AutoCAD.DrawBlock("lamp",Poly->Points[0].x,-ScaleY*Poly->Points[0].y, angle, ScaleYBlock / 2);
     if(block.IsBound()){
         switch(s->Kind){
         case lkOnce:
@@ -3519,7 +3559,7 @@ void __fastcall TAcadExport::DrawGrid(int step)
     for(int i=0;i<curRoad->LMax;i+=step) {
         AutoCAD.DrawLine(i,-RCenter-tableBottom.TableHeight,i,RCenter+tableTop.TableHeight);
         AutoCAD.DrawText(IntToStr((i/100)%1000),3*UnderTextHeight, 0,
-        i+UnderTextYOffset,RCenter - UnderTextYOffset - 3*UnderTextHeight);
+                         i+UnderTextYOffset,RCenter - UnderTextYOffset - 3*UnderTextHeight);
     }
 
 }

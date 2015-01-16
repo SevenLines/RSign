@@ -209,6 +209,7 @@ class TAcadExport {
           AnsiString Name,
           AnsiString label,
           AutoCADPoint pos,
+          int LPos,
           int xoffset,
           int yoffset,
           double rotation,
