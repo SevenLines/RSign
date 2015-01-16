@@ -37,6 +37,8 @@
 #include "ItemSelectDialog.h"
 #include "ConnectionFormUnit.h"
 
+#include "GdiPlusInclude.h"
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -47,11 +49,15 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 : TForm(Owner)
 {
 	PrepareMinireports();
+    // инициализация GDI+
+    Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+    Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 }
 __fastcall TMainForm::~TMainForm(void)
 {
-	if (HelpLib)
-	FreeLibrary(HelpLib);
+	if (HelpLib) FreeLibrary(HelpLib);
+    // деинициализация GDI+
+    Gdiplus::GdiplusShutdown(gdiplusToken);
 }
 
 void __fastcall TMainForm::PrepareMinireports()

@@ -1880,7 +1880,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
             case ma1_park: /*сплошная на парковке*/
                 for(int i=0;i<count-1;i++){
-                    DrawBlockOnLine("r_1.1_park", Poly->Points[i+1], Poly->Points[i], "Length");
+                    DrawBlockOnLine("r_1.1_park", Poly->Points[i+1], Poly->Points[i], "Length", ScaleYBlock / 4);
                 }
                 break;
 
@@ -2348,9 +2348,11 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
     static bool fOpenLeft;
 
 
-    if(fEnd && !fDrawMap){
-        if(~iTopBarriers)tableTop.FillLastGaps(iStep,iTopBarriers);
-        if(~iBottomBarriers)tableBottom.FillLastGaps(iStep,iBottomBarriers);
+    if(fEnd){
+        if (!fDrawMap) {
+          if(~iTopBarriers)tableTop.FillLastGaps(iStep,iTopBarriers);
+          if(~iBottomBarriers)tableBottom.FillLastGaps(iStep,iBottomBarriers);
+        }
         return true;
     }   
 
@@ -2602,8 +2604,10 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool
     static AnsiString str;
 
     if(fEnd){
-        if(~iTopBarriers)tableTop.FillLastGaps(iStep,iTopBarriers);
-        if(~iBottomBarriers)tableBottom.FillLastGaps(iStep,iBottomBarriers);
+        if (!fDrawMap) {
+          if(~iTopBarriers)tableTop.FillLastGaps(iStep,iTopBarriers);
+          if(~iBottomBarriers)tableBottom.FillLastGaps(iStep,iBottomBarriers);
+        }
         return true;
     }
 
@@ -3018,9 +3022,11 @@ bool __fastcall TAcadExport::ExportRestZone(TExtPolyline *Poly,TSquareRoadSideOb
 
 bool __fastcall TAcadExport::ExportSidewalk(KromkaObjectGroup *sidewalksGroup, bool fEnd) {
 
-    if(fEnd && !fDrawMap){
-        if(~iTopSidewalks)tableTop.FillLastGaps(iStep,iTopSidewalks);
-        if(~iBottomSidewalks)tableBottom.FillLastGaps(iStep,iBottomSidewalks);
+    if(fEnd){
+        if (!fDrawMap) {
+          if(~iTopSidewalks)tableTop.FillLastGaps(iStep,iTopSidewalks);
+          if(~iBottomSidewalks)tableBottom.FillLastGaps(iStep,iBottomSidewalks);
+        }
         return true;
     }
 

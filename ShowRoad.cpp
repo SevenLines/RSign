@@ -39,6 +39,8 @@
 #pragma message("Program is compiled without AutoCAD!")
 #endif
 
+#include "GdiPlusInclude.h"
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
@@ -2157,6 +2159,21 @@ void __fastcall TRoadFrm::PaintRoad(TObject *Sender)
 	if (FEditMetric)
 	DrawPoly();
 	PostAction();
+
+    // тест GDI+
+    Gdiplus::Graphics* g = Gdiplus::Graphics::FromHDC(PBox->Canvas->Handle, FALSE);
+    Gdiplus::SolidBrush b(Gdiplus::Color(255,0,0,0));
+    Gdiplus::FontFamily fontFamily(L"Times New Roman");
+    Gdiplus::Font font(&fontFamily, 20, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+
+    g->RotateTransform(90);
+    g->TranslateTransform(PBox->Width, 10, Gdiplus::MatrixOrderAppend);
+    g->FillRectangle(&Gdiplus::SolidBrush(Gdiplus::Color(64,240,128,0)),
+                    0, 0, PBox->Height, 24);
+    g->DrawString(L"Тест GDI+ находится в функции TRoadFrm::PaintRoad", -1, &font, Gdiplus::PointF(0, 0), &b);
+
+    delete g;
+    // конец теста GDI+
 }
 
 
