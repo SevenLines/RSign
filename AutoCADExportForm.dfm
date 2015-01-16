@@ -244,6 +244,14 @@ object FAutoCADExport: TFAutoCADExport
         TabOrder = 2
         OnClick = Button3Click
       end
+      object chkDrawMap: TCheckBox
+        Left = 8
+        Top = 144
+        Width = 257
+        Height = 17
+        Caption = #1088#1077#1078#1080#1084' '#1082#1072#1088#1090#1099
+        TabOrder = 3
+      end
     end
   end
   object pnlLeft: TPanel
@@ -575,10 +583,10 @@ object FAutoCADExport: TFAutoCADExport
         Top = 60
         Width = 509
         Height = 490
-        ActivePage = TabSheet3
+        ActivePage = TabSheet1
         Align = alClient
         MultiLine = True
-        TabIndex = 2
+        TabIndex = 1
         TabOrder = 1
         object TabSheet2: TTabSheet
           Caption = #1086#1073#1097#1080#1077

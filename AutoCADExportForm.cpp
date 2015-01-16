@@ -108,6 +108,7 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
    ini->WriteBool("AutoCAD","ExportAddRowsWithoutData",chkTopAddRowsWithoutData->Checked);
    ini->WriteBool("AutoCAD","HideAutoCAD", chkHideAutoCAD->Checked);
    ini->WriteBool("AutoCAD","ShowAttachmentComments", chkShowAttachmentComments->Checked);
+   ini->WriteBool("AutoCAD","DrawMap", chkDrawMap->Checked);   
    ini->WriteInteger("AutoCAD","ExportTo",rgOut->ItemIndex);
    ini->WriteInteger("AutoCAD","NotExistsColor",NotExistsColor);
 
@@ -208,7 +209,7 @@ void TFAutoCADExport::LoadIni(TIniFile *ini)
    chkGraphic->Checked = ini->ReadBool("AutoCAD","chkGraphic",false);
    chkGridStep->Checked = ini->ReadBool("AutoCAD","chkGridStep",false);
    chkRuler->Checked = ini->ReadBool("AutoCAD","chkRuler",false);
-
+   chkDrawMap->Checked = ini->ReadBool("AutoCAD","DrawMap", false);
 
    edtStep->Text = ini->ReadInteger("AutoCAD","Step",100000);
 

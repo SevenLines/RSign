@@ -202,6 +202,7 @@ __published:	// IDE-managed Components
     TLabel *Label25;
     TEdit *edtScaleYBlock;
     TLabel *Label29;
+    TCheckBox *chkDrawMap;
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
         void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
@@ -278,6 +279,7 @@ public:		// User declarations
         MPROPERTY1(Ruler);
         MPROPERTY1(Section);
         MPROPERTY1(Graphic);
+        MPROPERTY1(DrawMap);
 
         __property bool ExportAddRows = {read = get_ExportAddRows};\
         bool get_ExportAddRows(){

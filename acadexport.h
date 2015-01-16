@@ -83,6 +83,7 @@ class TAcadExport {
       bool fFillProfile;
       bool fShowAttachmentComments;
       bool fDrawTable, fTopAddRowsWithoutData, fBottomAddRowsWithoutData, fGraphicAddRowsWithoutData;
+      bool fDrawMap;
       TRoad *curRoad;
 
       int M_ROWPOS(0),M_ROWPOS(Slopes),M_ROWPOS(Barriers),M_ROWPOS(MoundH),M_ROWPOS(Curves),
@@ -188,14 +189,15 @@ class TAcadExport {
       void __fastcall DrawTextUnderLine(TPoint p1, TPoint p2, AnsiString text);
 
       void __fastcall DrawTextOverPoly(TExtPolyline *Poly, AnsiString text,
-              AnsiString(__closure *textControlFunction)(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle)=0);
+              AnsiString(__closure *textControlFunction)(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle, void* data)=0,
+              void* data=0);
 
       TPoint __fastcall GetCenterOnPolyline(TExtPolyline *p, int minx, int maxx, float* out_angle=0,
                                         int* width_of_sector=0, TPoint* pointStart=0, TPoint* pointEnd=0);
 
-      AnsiString RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle);
+      AnsiString RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint pEnd, TPoint centerPoint, float angle, void* data);
 
-      AcadPolylinePtr DrawRoadMark(TExtPolyline *Poly, AnsiString name,
+      AcadPolylinePtr DrawRoadMark(TRoadMark *m, TExtPolyline *Poly, AnsiString name,
                                  int iRow, int line, AutoCADTable *table, bool dontDrawPolyLine=false);
 
       float GetAngle(TPoint &p1, TPoint &p2, float *length = 0);
@@ -219,6 +221,7 @@ class TAcadExport {
 
       void ExportRuler(int iStart, int iEnd, bool fEnd);
 
+      void __fastcall TAcadExport::SetLayerOrder(AnsiString LayerName, AnsiString order);
       void SetAttributes(AcadBlockReferencePtr block, AnsiString labels);
       void Print();
       // столбы освещения
