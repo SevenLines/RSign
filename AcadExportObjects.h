@@ -13,7 +13,6 @@ struct KromkaObject{
     bool exist;
 };
 
-
 struct BarrierDrawStyleParameters {
     TPoint *pMin;
     TPoint *pMax;
