@@ -20,7 +20,7 @@
       AutoCADExportForm.obj unSignalsInsert.obj AcadExportThread.obj 
       AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj 
       MiniReports.obj ItemSelectDialog.obj TConnectionFormThreadUnit.obj 
-      ConnectionFormUnit.obj"/>
+      ConnectionFormUnit.obj VideoBar.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -34,7 +34,8 @@
       OpenViewForm.dfm NewView.dfm MacrosForm.dfm ConstHelp.dfm BuildSlopes.dfm 
       BuildWidePart.dfm RoadMark.dfm ErrorObjectDlg.dfm AutoCADPrintForm.dfm 
       AutoCADExportForm.dfm unSignalsInsert.dfm AttachForm.dfm MoveForm.dfm 
-      AddRowsDescription.dfm ItemSelectDialog.dfm ConnectionFormUnit.dfm"/>
+      AddRowsDescription.dfm ItemSelectDialog.dfm ConnectionFormUnit.dfm 
+      VideoBar.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="vclnp.lib dclusr.lib bcbsmp.lib MyActiveX.lib vclx.lib vcldb.lib 
       adortl.lib dbrtl.lib vcl.lib rtl.lib"/>
@@ -160,6 +161,7 @@
       <FILE FILENAME="ItemSelectDialog.cpp" FORMNAME="ItemSelectDialogForm" UNITNAME="ItemSelectDialog" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="TConnectionFormThreadUnit.cpp" FORMNAME="" UNITNAME="TConnectionFormThreadUnit" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ConnectionFormUnit.cpp" FORMNAME="ConnectionForm" UNITNAME="ConnectionFormUnit" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="VideoBar.cpp" FORMNAME="frmVideoBar" UNITNAME="VideoBar" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

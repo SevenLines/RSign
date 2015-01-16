@@ -5,6 +5,7 @@
 
 #include "VideoForm.h"
 #include "MainUnit.h"
+#include "VideoBar.h"
 
 #include <math.h>"
 
@@ -22,12 +23,56 @@ TfrmVideoForm *frmVideoForm;
 __fastcall TfrmVideoForm::TfrmVideoForm(TComponent* Owner)
     : TForm(Owner)
 {
+frmVideoBar->Align=alNone;
+frmVideoBar->Left=0;
+frmVideoBar->Width=Panel4->ClientWidth;
+frmVideoBar->Height=40;
+frmVideoBar->Top=CalcFormHeight(ClientWidth)-40;
+frmVideoBar->Parent=this;
+frmVideoBar->Show();
 Timer->Interval=1000;
 Timer->Enabled=false;
 FData=NULL;
 FNumRoad=0;
 FDirection=0;
 CreateEdits();
+Panel3->Left=(frmVideoBar->Width-Panel3->Width)/2;
+Panel3->Top=cmdPlay->Height+1;
+Panel3->Parent=frmVideoBar;
+ScrollBar->Left=cmdPlay->Width*COLBUT;
+ScrollBar->Width=frmVideoBar->Width-2*cmdPlay->Width*COLBUT;
+ScrollBar->Top=0;
+ScrollBar->Height=cmdPlay->Height;
+ScrollBar->Parent=frmVideoBar;
+for (int i=0;i<ROWBUT;i++)
+    for (int j=0;j<COLBUT;j++) {
+        DirBut[i][j]=new TSpeedButton(Panel1);
+        DirBut[i][j]->Visible=true;
+        DirBut[i][j]->Enabled=true;
+        DirBut[i][j]->Width=cmdPlay->Width;
+        DirBut[i][j]->Height=cmdPlay->Height;
+        DirBut[i][j]->Top=cmdPlay->Top+(i)*cmdPlay->Height+1;
+        DirBut[i][j]->Left=Panel1->ClientWidth-(j+1)*cmdPlay->Width;
+        DirBut[i][j]->Anchors.Clear();
+        DirBut[i][j]->Anchors<<akRight<<akTop;
+        DirBut[i][j]->GroupIndex=2;
+        DirBut[i][j]->OnClick=butVideoClick;
+        DirBut[i][j]->AllowAllUp=false;
+        DirBut[i][j]->Parent=frmVideoBar;
+        UnDirBut[i][j]=new TSpeedButton(Panel1);
+        UnDirBut[i][j]->Visible=true;
+        UnDirBut[i][j]->Enabled=true;
+        UnDirBut[i][j]->Width=cmdPlay->Width;
+        UnDirBut[i][j]->Height=cmdPlay->Height;
+        UnDirBut[i][j]->Top=cmdPlay->Top+(i)*cmdPlay->Height+1;
+        UnDirBut[i][j]->Left=j*cmdPlay->Width;
+        UnDirBut[i][j]->Anchors.Clear();
+        UnDirBut[i][j]->Anchors<<akLeft<<akTop;
+        UnDirBut[i][j]->GroupIndex=2;
+        UnDirBut[i][j]->OnClick=butVideoClick;
+        UnDirBut[i][j]->AllowAllUp=false;
+        UnDirBut[i][j]->Parent=frmVideoBar;
+    }
 }
 //---------------------------------------------------------------------------
 
@@ -59,9 +104,66 @@ else
     return Height-ClientHeight+Panel1->Height+(2*wd)/3;
 }
 
+int __fastcall TfrmVideoForm::CalcBarTop(int wd)
+{
+if (MPlayer->ImageSourceWidth)
+    return (MPlayer->ImageSourceHeight*wd)/MPlayer->ImageSourceWidth;
+else
+    return (2*wd)/3;
+}
+
+void __fastcall TfrmVideoForm::AlignButtons(void) {
+  for (int i=0;i<ROWBUT;i++)
+     for (int j=0;j<COLBUT;j++) {
+        DirBut[i][j]->Visible=false;
+        UnDirBut[i][j]->Visible=false;
+     }
+  int height=2;
+  if (Data) {
+     int maxrow=0;
+     int dmaxcol=0,umaxcol=0;
+     for (int i=0;i<Data->DirVideoTime->Count;i++) {
+        maxrow=max(maxrow,Data->DirVideoTime->Items[i]->Row);
+        dmaxcol=max(dmaxcol,Data->DirVideoTime->Items[i]->Col);
+     }
+     for (int i=0;i<Data->UnDirVideoTime->Count;i++) {
+        maxrow=max(maxrow,Data->UnDirVideoTime->Items[i]->Row);
+        umaxcol=max(umaxcol,Data->DirVideoTime->Items[i]->Col);
+     }
+     maxrow=max(2,min(maxrow,ROWBUT));
+     dmaxcol=min(dmaxcol,COLBUT);
+     umaxcol=min(umaxcol,COLBUT);
+     height+=maxrow*cmdPlay->Height;
+     frmVideoBar->Height=height;
+     frmVideoBar->Top=CalcBarTop(Width)-height;
+     for (int i=0;i<Data->DirVideoTime->Count;i++) {
+        TVideoTime *T=Data->DirVideoTime->Items[i];
+        if (T->Row>0 && T->Row<=ROWBUT && T->Col>0 && T->Col<=COLBUT) {
+            DirBut[T->Row-1][T->Col-1]->Tag=i+1;
+            DirBut[T->Row-1][T->Col-1]->Visible=true;
+            if (T->Icon>0 && T->Icon<=ImgDirection->Count)
+               ImgDirection->GetBitmap(T->Icon-1,DirBut[T->Row-1][T->Col-1]->Glyph);
+            if (T->Id==Data->DirVideoId && Direction==1)
+               DirBut[T->Row-1][T->Col-1]->Down=true;
+        }
+     }
+     for (int i=0;i<Data->UnDirVideoTime->Count;i++) {
+        TVideoTime *T=Data->UnDirVideoTime->Items[i];
+        if (T->Row>0 && T->Row<=ROWBUT && T->Col>0 && T->Col<=COLBUT) {
+            UnDirBut[T->Row-1][T->Col-1]->Tag=-(i+1);
+            UnDirBut[T->Row-1][T->Col-1]->Visible=true;
+            if (T->Icon>0 && T->Icon<=ImgDirection->Count)
+               ImgDirection->GetBitmap(T->Icon-1,UnDirBut[T->Row-1][T->Col-1]->Glyph);
+            if (T->Id==Data->UnDirVideoId && Direction==2)
+               UnDirBut[T->Row-1][T->Col-1]->Down=true;
+        }
+     }
+  }
+}
+
 void __fastcall TfrmVideoForm::AlignEdits(void)
 {
-int top=Panel2->Height+4;
+int top=4;
 int space=2;
 int lbleft=10;
 int edleft=20;
@@ -118,6 +220,7 @@ FCurHighIndex=-1;
 FStatus=0;
 SetMenu();
 Caption=FData->RoadName;
+AlignButtons();
 //MPlayer->DisplayMode=1; //Это что-то непонятное
 }
 
@@ -127,6 +230,7 @@ FData=0;
 StopVideo();
 FNumRoad=0;
 FDirection=0;
+AlignButtons();
 }
 
 void __fastcall TfrmVideoForm::PostChangeStatus(void)
@@ -499,6 +603,8 @@ void __fastcall TfrmVideoForm::FormCanResize(TObject *Sender,
 {
 if ((MPlayer->ImageSourceHeight!=0)&&(MPlayer->ImageSourceWidth!=0))
     NewHeight=CalcFormHeight(NewWidth);
+Panel3->Left=(frmVideoBar->Width-Panel3->Width)/2;
+frmVideoBar->Top=CalcBarTop(NewWidth)-frmVideoBar->Height;
 }
 //---------------------------------------------------------------------------
 
@@ -583,6 +689,8 @@ void __fastcall TfrmVideoForm::FormResize(TObject *Sender)
     if (OnFormGeometryChange) {
         OnFormGeometryChange(TRect(Left, Top, Left + Width, Top + Height));
     }
+    Panel3->Left=(frmVideoBar->Width-Panel3->Width)/2;
+    frmVideoBar->Top=CalcBarTop(Width)-frmVideoBar->Height;
 }
 //---------------------------------------------------------------------------
 void TfrmVideoForm::RecalculatePosition(TWMMove message)
@@ -591,3 +699,48 @@ void TfrmVideoForm::RecalculatePosition(TWMMove message)
         OnFormGeometryChange(TRect(Left, Top, Left + Width, Top + Height));
     }
 }
+
+void __fastcall TfrmVideoForm::butVideoClick(TObject *Sender)
+{
+    TSpeedButton *sb=(TSpeedButton*)Sender;
+    if (sb->Tag>0) {
+       Data->DirVideoId=sb->Tag-1;
+       InitVideo(Data,1);
+       SetPosition(Position);
+       //ShowVideo();
+    }
+    else if (sb->Tag<0) {
+       Data->UnDirVideoId=-sb->Tag-1;
+       InitVideo(Data,2);
+       SetPosition(Position);
+       //ShowVideo();
+    }
+}
+void __fastcall TfrmVideoForm::MPlayerMouseMove(TObject *Sender,
+      TShiftState Shift, int X, int Y)
+{
+frmVideoBar->Visible=Y>frmVideoBar->Top;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmVideoForm::Panel4MouseMove(TObject *Sender,
+      TShiftState Shift, int X, int Y)
+{
+frmVideoBar->Visible=Y>frmVideoBar->Top;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmVideoForm::Panel4MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+frmVideoBar->Visible=Y>frmVideoBar->Top;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmVideoForm::MPlayerMouseUp(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+frmVideoBar->Visible=Y>frmVideoBar->Top;
+}
+//---------------------------------------------------------------------------
+

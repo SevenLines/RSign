@@ -677,7 +677,7 @@ for (int i=0;i<ObjCount;i++) {
         int x=pl->Points[0].x;
         int y=pl->Points[0].y;
         delete pl;
-        int dir=GetSignDirection(sign,pkGorizontal,pdDirect);
+        int dir=sign->GetSignDirection(pkGorizontal,pdDirect);
         int plc=sign->Placement!=spLeft? 0 : 1;
         int plc2=sign->Placement==spUp ? (sign->Direction!=roDirect ? 1 : -1) :0;
         if (sign->Direction!=roDirect)
@@ -1217,41 +1217,6 @@ return NULL;
 }
 
 
-int __fastcall TDrawManager::GetSignDirection(TRoadSign *sign,TPlanKind pk,TPlanDirect pd)
-{
-int Result=0;
-bool dr=sign->Placement==spRight;
-if (sign->Direction==roUnDirect)
-    dr=!dr;
-bool b=sign->Direction==roDirect;
-if (pd==pdUndirect)
-    b=!b,dr=!dr;
-if (sign->OnAttach==saIn) // Виден при въезде на дорогу
-    {
-    if (pk!=pkGorizontal)
-        Result=1;
-    if (!dr) Result+=2;
-    }
-else if (sign->OnAttach==saOut)  //Виден при выезде с дороги
-    {
-    if (pk!=pkGorizontal)
-        Result=1;
-    if (dr) Result+=2;
-    }
-else
-    {
-    if (pk==pkGorizontal)
-        {
-        Result=1;
-        if (b)
-            Result+=2;
-        }
-    else if (!b)
-        Result=2;
-    }
-return Result;
-}
-
 void __fastcall TDrawManager::CalcMetaRect(POINT *p,TDrwParamRec3 *par,RECT* rct,int dir,bool data)
 {
 if (par)
@@ -1372,7 +1337,7 @@ if ((dc)&&(sign))
     TExtRect *erect=SignsMan.Rects+ObjNum;
     int SignX,SignY; // Точка отображения метафайла
     Road->ConvertPoint(erect->RoadL,erect->RoadX,SignX,SignY);
-    int direction=GetSignDirection(sign,FPlanKind,FPlanDirect);
+    int direction=sign->GetSignDirection(FPlanKind,FPlanDirect);
 
     SelectObject(dc,CreatePen(PS_SOLID,FDpsm/100+0.5,0));
     SelectObject(dc,GetStockObject(WHITE_BRUSH));
@@ -1382,6 +1347,21 @@ if ((dc)&&(sign))
     LineTo(dc,SignX,SignY);
     Ellipse(dc,p[0].x-ElRad,p[0].y-ElRad,p[0].x+ElRad,p[0].y+ElRad);
     MoveToEx(dc,p[0].x,p[0].y,NULL);
+    // Новая версия. Рисуем стрелочку в направлении второй точки
+    double dx=p[1].x-p[0].x;
+    double dy=p[1].y-p[0].y;
+    double ds=sqrt(dx*dx+dy*dy);
+    if (ds>0) { //Стрелочку рисуем только при увеличении
+    dx/=ds;
+    dy/=ds;
+    LineTo(dc,p[0].x+ArLen*dx,p[0].y+ArLen*dy);
+    LineTo(dc,p[0].x+ArLen*(dx/2-dy/3),p[0].y+ArLen*(dy/2+dx/3));
+    MoveToEx(dc,p[0].x+ArLen*dx,p[0].y+ArLen*dy,NULL);
+    LineTo(dc,p[0].x+ArLen*(dx/2+dy/3),p[0].y+ArLen*(dy/2-dx/3));
+    }
+
+
+/*
     // Рисуем стрелочку в зависимости от направления знака
     switch (direction)
         {
@@ -1410,6 +1390,7 @@ if ((dc)&&(sign))
              LineTo(dc,p[0].x+(ArLen>>1),p[0].y-ArLen/3);
             }break;
         }
+*/
     DeleteObject(SelectObject(dc,GetStockObject(BLACK_PEN)));
     }
 }
@@ -1422,7 +1403,7 @@ if ((dc)&&(sign)) {
     TDrwClassesRec *ClRec=Dict->DrwClasses->Items[drclass];
     TDrwParamRec3 *DrwRec=dynamic_cast<TDrwParamRec3*>(Dict->DrwParams->Items[ClRec->DrwParamId[0]]);
     if (DrwRec && (sign->Color==scOrange || sign->Color==scGreenYellow))  {
-        int direction=GetSignDirection(sign,FPlanKind,FPlanDirect);
+        int direction=sign->GetSignDirection(FPlanKind,FPlanDirect);
         TExtRect *erect=SignsMan.Rects+ObjNum;
         int SignX,SignY;
         Road->ConvertPoint(erect->RoadL,erect->RoadX,SignX,SignY);
@@ -1459,7 +1440,7 @@ if ((dc)&&(sign))
     TDrwParamRec3 *DrwRec=dynamic_cast<TDrwParamRec3*>(Dict->DrwParams->Items[ClRec->DrwParamId[0]]);
     if (DrwRec)
         {
-        int direction=GetSignDirection(sign,FPlanKind,FPlanDirect);
+        int direction=sign->GetSignDirection(FPlanKind,FPlanDirect);
         TExtRect *erect=SignsMan.Rects+ObjNum;
         int SignX,SignY;
         Road->ConvertPoint(erect->RoadL,erect->RoadX,SignX,SignY);
@@ -1570,7 +1551,7 @@ if (dc)
             bool b=sign->Direction==roDirect;
             if (FPlanDirect==pdUndirect)
                 b=!b,dr=!dr;
-            dir[i]=GetSignDirection(sign,FPlanKind,FPlanDirect);
+            dir[i]=sign->GetSignDirection(FPlanKind,FPlanDirect);
             plc[i]=0;
             if (FPlanKind==pkGorizontal)
                 {

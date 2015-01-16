@@ -2246,8 +2246,7 @@ void __fastcall TRoadFrm::AddNewSign(String Code,int Variation=0)
 	if (FEditedData)
 	if (!FEditedData->ReadOnly)
 	{
-		//TRoadSign *NewSign=FEditedData->CreateManSign(FDictSour,roDirect,spRight,0,0,Code,"","");
-        TRoadSign *NewSign=FEditedData->CreateManSign(FDictSour,0,0,0,0,Code,"","");
+        TRoadSign *NewSign=FEditedData->CreateManSign(FDictSour,roEmpty,spEmpty,0,0,Code,"","");
 		if (NewSign) {
 			NewSign->ViewKind=Variation;
 			MainForm->SignPanel->AddButton(Dict,Code.Trim());

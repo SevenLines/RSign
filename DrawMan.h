@@ -212,10 +212,12 @@ void __fastcall DrawFigure(TDrawContents *Cont,POINT pt,double dirx,double diry,
 //POINT * __fastcall BuildEqvi(POINT *Sour,int count,double shift,double Ex,int &n);
 void __fastcall DrawLabel(TDrawContents *Cont,TPlanLabel *l);
 void __fastcall DrawSignLabel(TDrawContents *Cont,int dir,RECT *r,String Caption);
+/*
 // Функция находит ориентацию знака
 // 0 - без поворота 3 - 90 гр по часовой стрелке
 // 2 - 180 гр. 1 - 90 гр против часовой стрелки
 int __fastcall GetSignDirection(TRoadSign *sign,TPlanKind pk,TPlanDirect pd);
+*/
 void __fastcall CalcRect(TExtPolyline*,RECT *r);
 // Функции отображения
 /* 1 */ void __fastcall DrawArea(TDrawContents *Cont,TExtPolyline *Poly,TDrwParamRec1 *par);

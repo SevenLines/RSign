@@ -589,6 +589,15 @@ int __fastcall AcadExportThread::ExportRoadMark(TDtaSource* data, TAcadExport* a
 	SET_PROGRESS_FORM_POSITION(0);
 	aexp->AddLayer("RoadMark");
 
+    /* Так надо делать чтобы изменить расстояние между точками на линиях в
+       двумерной графике.  Расстояние указывается в сантиметрах. (Костя)
+    */
+    R->Step=500;
+    /* С этого момента оно 5 метров.
+    */
+
+
+
     bool onlyCountLines = (leftMax != 0) & (rightMax != 0);
     if (onlyCountLines) {
       *leftMax = 0;
@@ -695,6 +704,12 @@ int __fastcall AcadExportThread::ExportRoadMark(TDtaSource* data, TAcadExport* a
 			}
 		}
 	}
+    /* Так надо делать чтобы изменить расстояние между точками на линиях в
+       двумерной графике.  Расстояние указывается в сантиметрах. (Костя)
+    */
+    R->Step=100;
+    /* С этого момента оно опять 1 метр.
+    */
     if (!onlyCountLines)
 	    aexp->ExportRoadMark(0,0,0,0,true);
 	return 0;

@@ -156,7 +156,7 @@ enum TLampKind {lkOnce=2385222,lkDouble=2385223};
 
 // Направление расположения объекта (прямое - обратное)
 //#define DIRCODE 3
-enum TRoadDirection {roDirect=246,roUnDirect=247};
+enum TRoadDirection {roEmpty=0,roDirect=246,roUnDirect=247};
 
 //#define ROADSIDECODE 5
 enum TRoadSide {rsLeft=257,rsRight=258};
@@ -181,7 +181,7 @@ enum TAttachWildness {awDefault=0,awWild=2385038,awCulture=2385039,awNeedCulture
 
 // Расположение знака : слева, справа, на разделительной полосе, над дорогой
 //#define PLSGNCODE 8
-enum TRoadSignPlacement {spLeft=257,spRight=258,spBetween=259,spUp=260};
+enum TRoadSignPlacement {spEmpty=0,spLeft=257,spRight=258,spBetween=259,spUp=260};
 
 enum TRoadSignalKind {skStolb=181,skTumba1=182,skTumba2=183,skOstrov=184};
 
