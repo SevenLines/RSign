@@ -15,7 +15,7 @@ __fastcall TfrmVideoBar::TfrmVideoBar(TComponent* Owner)
 }
 void __fastcall TfrmVideoBar::CreateParams(TCreateParams &Params) {
   TForm::CreateParams(Params);
-  Params.Style=(Params.Style) & ~WS_CAPTION;
+  //Params.Style=(Params.Style) & ~WS_CAPTION;
   
 }
 //---------------------------------------------------------------------------

@@ -128,7 +128,7 @@ void __fastcall TfrmVideoForm::AlignButtons(void) {
      }
      for (int i=0;i<Data->UnDirVideoTime->Count;i++) {
         maxrow=max(maxrow,Data->UnDirVideoTime->Items[i]->Row);
-        umaxcol=max(umaxcol,Data->DirVideoTime->Items[i]->Col);
+        umaxcol=max(umaxcol,Data->UnDirVideoTime->Items[i]->Col);
      }
      maxrow=max(2,min(maxrow,ROWBUT));
      dmaxcol=min(dmaxcol,COLBUT);

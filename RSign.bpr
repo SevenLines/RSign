@@ -56,7 +56,7 @@
     <MAINSOURCE value="RSign.cpp"/>
     <INCLUDEPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;&quot;C:\Program Files\Borland\CBuilder6\Imports&quot;;&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;"/>
     <LIBPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files\Borland\CBuilder6\Imports&quot;"/>
-    <WARNINGS value="-w-par -w-8027 -w-8026"/>
+    <WARNINGS value="-w-par -w-8030 -w-8027 -w-8026"/>
     <WARNOPTSTR value=""/>
     <OTHERFILES value=""/>
   </MACROS>

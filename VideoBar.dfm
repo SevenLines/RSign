@@ -3,19 +3,19 @@ object frmVideoBar: TfrmVideoBar
   Top = 692
   Anchors = [akLeft, akTop, akRight]
   BorderIcons = []
-  BorderStyle = bsSingle
+  BorderStyle = bsNone
   Caption = 'frmVideoBar'
-  ClientHeight = 87
-  ClientWidth = 571
-  Color = clWindow
+  ClientHeight = 71
+  ClientWidth = 464
+  Color = clBtnShadow
   Ctl3D = False
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -14
+  Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
-  PixelsPerInch = 120
-  TextHeight = 16
+  PixelsPerInch = 96
+  TextHeight = 13
 end
