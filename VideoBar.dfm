@@ -3,11 +3,11 @@ object frmVideoBar: TfrmVideoBar
   Top = 692
   Anchors = [akLeft, akTop, akRight]
   BorderIcons = []
-  BorderStyle = bsSingle
+  BorderStyle = bsNone
   Caption = 'frmVideoBar'
   ClientHeight = 71
   ClientWidth = 464
-  Color = clBtnFace
+  Color = clBtnShadow
   Ctl3D = False
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
