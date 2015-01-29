@@ -28,10 +28,13 @@ using namespace std;
 inline float GetAngle(TPoint vec1, TPoint vec2)
 {
     float temp = (float)(vec1.x*vec2.x+vec1.y*vec2.y)/(sqrt(vec1.x*vec1.x + vec1.y*vec1.y)*
-    sqrt(vec2.x*vec2.x + vec2.y*vec2.y)); 
-    if(temp<-1) return M_PI;
-    else if(temp>1) return 0;
-    else return acos(temp);
+          sqrt(vec2.x*vec2.x + vec2.y*vec2.y));
+    if(temp<-1)
+       return M_PI;
+    else if(temp>1)
+       return 0;
+    else
+       return acos(temp);
 }
 
 // функция для сортировки знаков 
@@ -731,6 +734,7 @@ void __fastcall TAcadExport::EndDocument() {
     SetLayerOrder("RoadSidewalks", "_back");
     SetLayerOrder("RoadPlan", "_back");
     SetLayerOrder("RoadTrafficLights", "_front");
+    SetLayerOrder("RoadMetrics", "_back");
 
     AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
 
@@ -842,7 +846,9 @@ bool __fastcall TAcadExport::ExportRoadMetric(TExtPolyline *Poly,TMetricsKind ki
         if(smallGridMarkHeight!=0 && !fDrawMap) {
             int step = 10000;
             for(int i=(curRoad->LMin / step) * step;i<curRoad->LMax;i+=step) {
-                AutoCAD.DrawLine(i,-smallGridMarkHeight/2,i,smallGridMarkHeight/2);
+                AcadLinePtr line = AutoCAD.DrawLine(i,-smallGridMarkHeight/2,i,smallGridMarkHeight/2);
+                line->color = 8;
+                line->set_Lineweight(acLnWt030);
             }
         }
         return true;
@@ -1107,140 +1113,230 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     int i;
     AnsiString strings[4];
     AcadBlockPtr block;
-    AcadBlockReferencePtr signspot;
+    AcadBlockReferencePtr signspot = SignSpot1;
     double rotation=0, rotationHandle=0;
-
-    // настраиваем корректный поворот знаков
-    switch (signs[0]->Direction) {
-    case roDirect:
-        switch (signs[0]->Placement) {
-        case spRight:
-            switch(signs[0]->OnAttach) {
-            case saIn:
-                rotationHandle = -M_PI/2;
-                rotation = 0;                
-                signspot = SignSpot2;
-                fOnAttachment = true;
-                break;
-            case saOut:
-                rotationHandle = M_PI/2;
-                rotation = M_PI;
-                signspot = SignSpot2;
-                fOnAttachment = true;
-                break;
-            default:
-                rotationHandle = -M_PI/2;
-                rotation = -M_PI/2;
-                signspot = SignSpot1;
-            }
-            break;
-        case spBetween:
-        case spUp:
-        case spLeft:
-            switch(signs[0]->OnAttach) {
-            case saIn:
-                rotationHandle = M_PI/2;
-                rotation = M_PI;
-                signspot = SignSpot2;
-                fOnAttachment = true;
-                break;
-            case saOut:
-                rotationHandle = -M_PI/2;
-                rotation = 0;
-                signspot = SignSpot2;
-                fOnAttachment = true;
-                break;
-            default:
-                rotationHandle = M_PI/2;
-                rotation = -M_PI/2;
-                signspot = SignSpot1_m;
-            }
-            break;
-        default:
-             BUILDER_ERROR("Не могу определить угол поворота знака " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x);
-        }
-        break;
-    case roUnDirect:
-        switch (signs[0]->Placement) {
-        case spRight:
-            switch(signs[0]->OnAttach) {
-            case saIn:
-                rotationHandle = M_PI/2;
-                rotation = M_PI;
-                signspot = SignSpot2;
-                fOnAttachment = true;
-                break;
-            case saOut:
-                rotationHandle = -M_PI/2;
-                rotation = 0;
-                signspot = SignSpot2;
-                fOnAttachment = true;
-                break;
-            default:
-                rotationHandle = M_PI/2;
-                rotation = M_PI/2;
-                signspot = SignSpot1;
-            }
-            break;
-        case spBetween:
-        case spUp:
-        case spLeft:
-            switch(signs[0]->OnAttach) {
-            case saIn:
-                rotationHandle = -M_PI/2;
-                rotation = 0;
-                signspot = SignSpot2;
-                fOnAttachment = true;
-                break;
-            case saOut:
-                rotationHandle = M_PI/2;
-                rotation = M_PI;
-                signspot = SignSpot2;
-                fOnAttachment = true;
-                break;
-            default:
-                rotationHandle = -M_PI/2;
-                rotation = M_PI/2;
-                signspot = SignSpot1_m;
-            }
-            break;
-        default:
-             BUILDER_ERROR("Не могу определить угол поворота знака " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x);
-        }
-        break;
-    }
+    if (true) {
+      // настраиваем корректный поворот знаков
+      switch (signs[0]->Direction) {
+      case roDirect:
+          switch (signs[0]->Placement) {
+          case spRight:
+              switch(signs[0]->OnAttach) {
+              case saIn:
+                  rotationHandle = -M_PI/2;
+                  rotation = 0;                
+                  signspot = SignSpot2;
+                  fOnAttachment = true;
+                  break;
+              case saOut:
+                  rotationHandle = M_PI/2;
+                  rotation = M_PI;
+                  signspot = SignSpot2;
+                  fOnAttachment = true;
+                  break;
+              default:
+                  rotationHandle = -M_PI/2;
+                  rotation = -M_PI/2;
+                  signspot = SignSpot1;
+              }
+              break;
+          case spBetween:
+          case spUp:
+          case spLeft:
+              switch(signs[0]->OnAttach) {
+              case saIn:
+                  rotationHandle = M_PI/2;
+                  rotation = M_PI;
+                  signspot = SignSpot2;
+                  fOnAttachment = true;
+                  break;
+              case saOut:
+                  rotationHandle = -M_PI/2;
+                  rotation = 0;
+                  signspot = SignSpot2;
+                  fOnAttachment = true;
+                  break;
+              default:
+                  rotationHandle = M_PI/2;
+                  rotation = -M_PI/2;
+                  signspot = SignSpot1_m;
+              }
+              break;
+          default:
+               BUILDER_ERROR("Не могу определить угол поворота знака " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x);
+          }
+          break;
+      case roUnDirect:
+          switch (signs[0]->Placement) {
+          case spRight:
+              switch(signs[0]->OnAttach) {
+              case saIn:
+                  rotationHandle = M_PI/2;
+                  rotation = M_PI;
+                  signspot = SignSpot2;
+                  fOnAttachment = true;
+                  break;
+              case saOut:
+                  rotationHandle = -M_PI/2;
+                  rotation = 0;
+                  signspot = SignSpot2;
+                  fOnAttachment = true;
+                  break;
+              default:
+                  rotationHandle = M_PI/2;
+                  rotation = M_PI/2;
+                  signspot = SignSpot1;
+              }
+              break;
+          case spBetween:
+          case spUp:
+          case spLeft:
+              switch(signs[0]->OnAttach) {
+              case saIn:
+                  rotationHandle = -M_PI/2;
+                  rotation = 0;
+                  signspot = SignSpot2;
+                  fOnAttachment = true;
+                  break;
+              case saOut:
+                  rotationHandle = M_PI/2;
+                  rotation = M_PI;
+                  signspot = SignSpot2;
+                  fOnAttachment = true;
+                  break;
+              default:
+                  rotationHandle = -M_PI/2;
+                  rotation = M_PI/2;
+                  signspot = SignSpot1_m;
+              }
+              break;
+          default:
+               BUILDER_ERROR("Не могу определить угол поворота знака " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x);
+          }
+          break;
+      }
 	
 	
 	
-    switch (signs[0]->Placement) {
-        case spBetween:
-        case spUp:
-            switch(signs[0]->OnAttach) {
-            case saIn:
-            case saOut:
-                break;
-            default:
-                rotationHandle *= -1;
-                if (signs[0]->Placement == spUp) {
-                    signspot = SignSpot2;
-                    rotationHandle -= M_PI/2;
-					signSpotOffset = 9;
-                } else {
-                    signspot = SignSpot1;
-                }
-            break;
-        }
+      switch (signs[0]->Placement) {
+          case spBetween:
+          case spUp:
+              switch(signs[0]->OnAttach) {
+              case saIn:
+              case saOut:
+                  break;
+              default:
+                  rotationHandle *= -1;
+                  if (signs[0]->Placement == spUp) {
+                      signspot = SignSpot2;
+                      rotationHandle -= M_PI/2;
+                      signSpotOffset = 9;
+                  } else {
+                      signspot = SignSpot1;
+                  }
+              break;
+          }
+      }
     }
 
     if (fDrawMap) {
       if (Poly->Count==2) {
           double angle = GetAngle(Poly->Points[0], Poly->Points[1]);
-          rotationHandle = angle - M_PI_2;
+
+          /*TPoint vec(Poly->Points[1].x - Poly->Points[0].x,
+                     Poly->Points[1].y - Poly->Points[0].y);
+          double cosangle2 = (double)vec.x / sqrt(vec.x * vec.x + vec.y * vec.y);
+          angle = acos(cosangle2);
+          if (vec.y < 0 ) {
+             angle = 2*M_PI - angle;
+          } 
+          rotationHandle += angle;
           rotation += angle;
 
+          switch (signs[0]->OnAttach) {
+                 case saIn:
+                 case saOut:
+                      fOnAttachment = true;
+                      signspot = SignSpot2;
+                      rotation += M_PI_2;
+                      if (signs[0]->OnAttach == saOut) {
+                         rotationHandle -= M_PI;
+                      }
+                      break;
+                 default:
+                      rotationHandle -= M_PI_2;
+                      rotation -= M_PI_2;
+                      switch(signs[0]->Direction) {
+                      case roUnDirect:
+                           switch(signs[0]->Placement) {
+                           case spLeft:
+                                signspot = SignSpot1_m;
+                                rotationHandle -= M_PI;
+                                break;
+                           }
+                           break;
+                      case roDirect:
+                           switch(signs[0]->Placement) {
+                           case spLeft:
+                                signspot = SignSpot1_m;
+                                rotationHandle -= M_PI;
+                                break;
+                           }
+                           break;
+                      }
+          }
+
+          switch(signs[0]->Placement) {
+          case spUp:
+               signspot = SignSpot2;
+               rotationHandle -= M_PI/2;
+               signSpotOffset = 9;
+               break;
+          }*/
+
+
+
+          /*switch (signs[0]->Direction) {
+          case roUnDirect:
+               switch (signs[0]->OnAttach) {
+               case saIn:
+
+                    break;
+               case saOut:
+                    break;
+               default:;
+               }
+               rotationHandle += M_PI;
+               rotation += M_PI;
+               break;
+          case roDirect:
+               switch (signs[0]->OnAttach) {
+               case saIn:
+                    rotationHandle -= 90;
+                    break;
+               case saOut:
+                    break;
+               default:;
+               }
+          }*/
+          rotationHandle += angle;
+          rotation += angle;
+          
           switch (signs[0]->Direction) {
           case roUnDirect:
               rotation += M_PI;
+              switch (signs[0]->Placement) {
+                case spLeft:
+                    rotationHandle += M_PI;
+                    break;      
+              }
+              break;
+          case roDirect:
+              switch (signs[0]->Placement) {
+                case spLeft:
+                    rotationHandle -= M_PI;
+                    break;      
+              }
               break;
           }
 
@@ -1250,8 +1346,22 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
               rotationHandle -= M_PI_2;
               break;
           case saOut:
-              rotation += M_PI_2;
-              rotationHandle += M_PI_2;
+              switch (signs[0]->Direction) {
+              case roUnDirect:
+                rotation -= M_PI_2;
+                break;
+              case roDirect:
+                rotation += M_PI_2;
+                rotationHandle += M_PI_2;
+                break;
+              }
+
+              break;
+          }
+
+          switch (signs[0]->Placement) {
+          case spUp:
+              rotationHandle -= M_PI_2;
               break;
           }
       }

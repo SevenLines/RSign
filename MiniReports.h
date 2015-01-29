@@ -27,6 +27,7 @@ public:
 private:
     AnsiString _directory;
     AnsiString _sqltotxt;
+    AnsiString _sql2docx;    
     AnsiString _applicationDir;
     AnsiString _lastOutputDir;
 
@@ -37,7 +38,9 @@ public:
     AnsiString ScriptsDirectory();
     void setApplicationDir(AnsiString ApplicationDir);
     vector<AnsiString> GetReports();
+    vector<AnsiString> GetDocXReports();
     void GenReport(AnsiString reportName, map<AnsiString, AnsiString> &params, Credentials &credentials);
+    void GenDocxReport(AnsiString reportName, map<AnsiString, AnsiString> &params, Credentials &credentials);
     void ExecuteScript(AnsiString appPath, AnsiString script, Credentials &credentials);
 
     void LoadIni(TIniFile* ini);

@@ -565,13 +565,14 @@ int __fastcall AcadExportThread::ExportRoadSigns(TDtaSource* data, TAcadExport* 
         }
 
         signsGroup.clear();
+
         for (int j=0;j<sgrp.size();++j) {
             signsGroup.push_back(sgrp[j].second);
         }
 
         //sort(signsGroup.begin(), signsGroup.end(), funcSignsGroupSort);
 
-        aexp->ExportSigns(signs[i].p,signsGroup.begin(),signsGroup.size());
+        aexp->ExportSigns(sgrp.begin()->first,signsGroup.begin(),signsGroup.size());
 
         SET_PROGRESS_FORM_POSITION(progressCounter);
 

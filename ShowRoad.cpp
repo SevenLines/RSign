@@ -3119,6 +3119,7 @@ void __fastcall TRoadFrm::PostChangeFocus(void)
 	MainForm->N14->Enabled=true;
 	MainForm->N70->Enabled=true;
 	MainForm->ItemMiniReports->Enabled=true;
+    MainForm->ItemDocxReport->Enabled=true;
 	for (int i=MainForm->N13->Count-1;i>=0;i--) {
 		if (MainForm->N13->Items[i]->Tag>=100 && MainForm->N13->Items[i]->Tag<200)
 		delete MainForm->N13->Items[i];

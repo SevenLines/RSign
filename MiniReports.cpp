@@ -47,6 +47,7 @@ void MiniReports::Credentials::FromConnectionString(AnsiString s)
 MiniReports::MiniReports() :
 _directory("AutoCAD\\Scripts\\")
 ,_sqltotxt("sqltotxt.exe")
+,_sql2docx("sql2docx.exe")
 {
 	_applicationDir = GetCurrentDir();
 }
@@ -68,7 +69,7 @@ AnsiString MiniReports::ScriptsDirectory()
 
 vector<AnsiString> MiniReports::GetReports()
 {
-	AnsiString reportsDir = ScriptsDirectory() + "*";
+	AnsiString reportsDir = ScriptsDirectory() + "minireports\\*";
 
 	TSearchRec sr;
 	vector<AnsiString> dirs;
@@ -77,7 +78,7 @@ vector<AnsiString> MiniReports::GetReports()
 	{
 		do
 		{
-			if ((sr.Attr & iAttributes) == sr.Attr)
+			if ((sr.Attr & iAttributes) == iAttributes)
 			{
 				if (sr.Name != "." && sr.Name != "..") {
 					dirs.push_back(sr.Name);
@@ -89,18 +90,76 @@ vector<AnsiString> MiniReports::GetReports()
 	return dirs;
 }
 
+vector<AnsiString> MiniReports::GetDocXReports()
+{
+	AnsiString reportsDir = ScriptsDirectory() + "docx\\*.docx";
+
+	TSearchRec sr;
+	vector<AnsiString> dirs;
+	int iAttributes = 0;
+	if (FindFirst(reportsDir, iAttributes, sr) == 0)
+	{
+		do
+		{
+            if (sr.Name != "." && sr.Name != "..") {
+                dirs.push_back(sr.Name);
+            }
+		} while (FindNext(sr) == 0);
+		FindClose(sr);
+	}
+	return dirs;
+}
+
+void MiniReports::GenDocxReport(AnsiString reportName, map<AnsiString, AnsiString> &params,
+         Credentials &credentials)
+{
+    AnsiString docxReportPath = ScriptsDirectory() + "docx\\" + reportName;
+    TSaveDialog *saveDialog = new TSaveDialog(NULL);
+
+    saveDialog->Title = "Выберите файл куда сохранится результат";
+    saveDialog->FileName = params["RoadName"];
+	saveDialog->Filter = "docx | *.docx";
+    saveDialog->DefaultExt = ".docx";
+	if(!saveDialog->Execute()) {
+       delete saveDialog;
+       return;
+    }
+
+    AnsiString exe = ScriptsDirectory() + "sql2docx.exe";
+    AnsiString script;
+	script.sprintf("\"%s\" -i \"%s\" -o \"%s\"",
+					exe,
+                    docxReportPath,
+                    saveDialog->FileName);
+
+    if (params.size() > 0) {
+		script += " -p";
+		map<AnsiString, AnsiString>::iterator it;
+		for(it = params.begin(); it!=params.end(); ++it) {
+			script += " " + it->first + "=\"" + it->second + "\"";
+		}
+	}
+
+    ExecuteScript(exe, script, credentials);
+
+    delete saveDialog; 
+}
+
 void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> &params,
          Credentials &credentials)
 {
 	AnsiString exe = ScriptsDirectory() + _sqltotxt;
-	AnsiString inputDir = ScriptsDirectory() + reportName;
+	AnsiString inputDir = ScriptsDirectory() + "\\minireports\\" + reportName;
 
 	TOpenDialog *openDialog = new TOpenDialog(NULL);
 	openDialog->InitialDir = _lastOutputDir;
 	openDialog->FileName = "this path is fine";
 	openDialog->Options << ofNoValidate;
 	openDialog->Filter = "Folder | *.";
-	if(!openDialog->Execute()) return;
+	if(!openDialog->Execute()) {
+       delete openDialog;
+       return;
+    }
 
 	_lastOutputDir = ExcludeTrailingPathDelimiter(ExtractFileDir(openDialog->FileName));
 

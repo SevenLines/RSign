@@ -5,17 +5,17 @@ object frmVideoBar: TfrmVideoBar
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'frmVideoBar'
-  ClientHeight = 71
-  ClientWidth = 464
-  Color = clBtnFace
+  ClientHeight = 87
+  ClientWidth = 571
+  Color = clWindow
   Ctl3D = False
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -14
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
-  PixelsPerInch = 96
-  TextHeight = 13
+  PixelsPerInch = 120
+  TextHeight = 16
 end

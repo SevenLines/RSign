@@ -66,9 +66,18 @@ void __fastcall TMainForm::PrepareMinireports()
 	ItemMiniReports->Clear();
 	for(int i=0; i<reports.size(); ++i) {
 		TMenuItem *item = new TMenuItem(this);
-		item->Caption = reports[i];
 		item->OnClick = ItemMiniReportsClick;
 		ItemMiniReports->Add(item);
+        item->Caption = reports[i];
+	}
+
+    reports = MiniReportsSingleton.GetDocXReports();
+	ItemDocxReport->Clear();
+	for(int i=0; i<reports.size(); ++i) {
+		TMenuItem *item = new TMenuItem(this);
+		item->OnClick = ItemDocxReportClick;
+		ItemDocxReport->Add(item);
+        item->Caption = reports[i];
 	}
 }
 
@@ -102,11 +111,61 @@ void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
         }
 
         MiniReports::Credentials credentials(Connection->ConnectionString);
+        String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
+		MiniReportsSingleton.GenReport(report_name, params, credentials);
+	}
+
+}
+//---------------------------------------------------------------------------
+
+String ToKMString(int position)
+{
+  int d0 = position / 1000;
+  int d1 = position % 1000;
+  return String().sprintf("%i+%03i", d0, d1);
+}
+
+void __fastcall TMainForm::ItemDocxReportClick(TObject *Sender)
+{
+     if (FActiveRoad) {
+		TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
+		if (!item) return;
+		std::map<AnsiString, AnsiString> params;
+		params["NumRoad"] = FActiveRoad->RoadId;
+        params["RoadName"] = FActiveRoad->RoadName;
+        params["RoadBegin"] = IntToStr(int(FActiveRoad->RoadMinL / 100));
+        params["RoadEnd"] = IntToStr(int(FActiveRoad->RoadMaxL / 100));
+        params["RoadBegin_km"] = ToKMString(FActiveRoad->RoadMinL / 100);
+        params["RoadEnd_km"] = ToKMString(FActiveRoad->RoadMaxL / 100);
+        params["DistrictName"] = FActiveRoad->DistrictName;
+
+        map<AnsiString, AnsiString> sources;
+		for (int i=0,j=0;i<ResManager->DataCount;i++) {
+			TDtaSource *Dta=MainForm->ResManager->Data[i];
+			if (Dta && Dta->Id == FActiveRoad->RoadId) {
+                sources[Dta->SourceName] = Dta->DataClass;
+                break;
+			}	
+		}
+        if (sources.size() > 1) {
+            ItemSelectDialogForm->setOptions(sources, "¬ыбирете необходимый источник");
+            if (ItemSelectDialogForm->ShowModal() != mrOk) return;
+            params["NumDataSource"] = ItemSelectDialogForm->selectedItem();
+        } else if (sources.size() > 0) {
+            params["NumDataSource"] = sources.begin()->second;
+        } else {
+            ShowMessage("Ќе было найдено источников, честно говор€, вообще не пон€тно как вы дорогу открыли");
+            return;
+        }
+
+        MiniReports::Credentials credentials(Connection->ConnectionString);
         //MiniReportsSingleton.SetCredentials();
 
-		MiniReportsSingleton.GenReport(item->Caption, params, credentials);
+        String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
+		MiniReportsSingleton.GenDocxReport(report_name, params, credentials);
 	}
 }
+//---------------------------------------------------------------------------
 
 void __fastcall TMainForm::AppShortCut(TWMKey &Key, bool &Handled)
 {
@@ -274,6 +333,7 @@ void __fastcall TMainForm::SetActiveRoad(TRoadFrm *R)
 			N63->Enabled=false;
 			N70->Enabled=false;
 			ItemMiniReports->Enabled=false;
+            ItemDocxReport->Enabled=false;
 			N71->Enabled=false;
 			N76->Enabled=false;
 		}
@@ -1307,3 +1367,5 @@ void __fastcall TMainForm::PrepareShowRoadSize(TRoadFrm* frm)
     frm->OnFormGeometryChange = ShowRoadFormGeometryChange;
     frm->OnVideoFormGeometryChange = VideoFormGeometryChange;
 }
+
+
