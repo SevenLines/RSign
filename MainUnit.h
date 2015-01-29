@@ -21,6 +21,7 @@
 #include <DB.hpp>
 #include <Dialogs.hpp>
 #include <ExtCtrls.hpp>
+#include <map>
 //---------------------------------------------------------------------------
 class TMainForm : public TForm
 {
@@ -258,6 +259,7 @@ public:		// User declarations
     void __fastcall SaveIni(void);
     void __fastcall SendBroadCastMessage(int Command,int Wpar,int Lpar);
     void __fastcall PostBroadCastMessage(int Command,int Wpar,int Lpar);
+    std::map<AnsiString, AnsiString> GetActiveRoadParamsForMiniReport();
 
     void __fastcall PrepareShowRoadSize(TRoadFrm* frm);
 

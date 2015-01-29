@@ -51,7 +51,7 @@ USEFORM("unSignalsInsert.cpp", frmSignalsInsert);
 USEFORM("AttachForm.cpp", frmAttachParams);
 USEFORM("MoveForm.cpp", moveDialog);
 USEFORM("AddRowsDescription.cpp", FAddRowDescription);
-USEFORM("ItemSelectDialog.cpp", Form1);
+USEFORM("ItemSelectDialog.cpp", ItemSelectDialogForm);
 USEFORM("ConnectionFormUnit.cpp", ConnectionForm);
 USEFORM("VideoBar.cpp", frmVideoBar);
 //---------------------------------------------------------------------------
@@ -140,13 +140,11 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
          Application->CreateForm(__classid(TFAutoCADExport), &FAutoCADExport);
          Application->CreateForm(__classid(TfrmSignalsInsert), &frmSignalsInsert);
          Application->CreateForm(__classid(TfrmAttachParams), &frmAttachParams);
-         Application->CreateForm(__classid(TfrmAttachParams), &frmAttachParams);
          Application->CreateForm(__classid(TmoveDialog), &moveDialog);
          Application->CreateForm(__classid(TmoveDialog), &moveDialog);
          Application->CreateForm(__classid(TFAddRowDescription), &FAddRowDescription);
-         Application->CreateForm(__classid(TFAddRowDescription), &FAddRowDescription);
          Application->CreateForm(__classid(TConnectionForm), &ConnectionForm);
-         Application->CreateForm(__classid(TConnectionForm), &ConnectionForm);
+         Application->CreateForm(__classid(TItemSelectDialogForm), &ItemSelectDialogForm);
          Application->CreateForm(__classid(TfrmVideoBar), &frmVideoBar);
          Application->Run();
     }

@@ -21,6 +21,7 @@ __published:	// IDE-managed Components
     TPanel *Panel2;
     TComboBox *cmbOptions;
     TLabel *lblMessage;
+    TPanel *Panel3;
 private:	// User declarations
     map<AnsiString, AnsiString> params;
 public:		// User declarations
