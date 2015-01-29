@@ -116,8 +116,11 @@ void MiniReports::GenDocxReport(AnsiString reportName, map<AnsiString, AnsiStrin
     AnsiString docxReportPath = ScriptsDirectory() + "docx\\" + reportName;
     TSaveDialog *saveDialog = new TSaveDialog(NULL);
 
+    TReplaceFlags flags;
+    flags << rfReplaceAll;
+
     saveDialog->Title = "Выберите файл куда сохранится результат";
-    saveDialog->FileName = params["RoadName"];
+    saveDialog->FileName = StringReplace(params["RoadName"], "\"", "", flags);
 	saveDialog->Filter = "docx | *.docx";
     saveDialog->DefaultExt = ".docx";
 	if(!saveDialog->Execute()) {
