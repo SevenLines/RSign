@@ -89,9 +89,8 @@ String ToKMString(int position)
   return String().sprintf("%i+%03i", d0, d1);
 }
 
-std::map<AnsiString, AnsiString> TMainForm::GetActiveRoadParamsForMiniReport()
+bool TMainForm::GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString> &params)
 {
-    std::map<AnsiString, AnsiString> params;
     params["NumRoad"] = FActiveRoad->RoadId;
     params["RoadName"] = FActiveRoad->RoadName;
     params["RoadBegin"] = IntToStr(int(FActiveRoad->RoadMinL / 100));
@@ -111,12 +110,14 @@ std::map<AnsiString, AnsiString> TMainForm::GetActiveRoadParamsForMiniReport()
         ItemSelectDialogForm->setOptions(sources, "Выберите источник");
         if (ItemSelectDialogForm->ShowModal() == mrOk) {
             params["NumDataSource"] = ItemSelectDialogForm->selectedItem();
+        } else {
+            return false;
         }
     } else if (sources.size() > 0) {
         params["NumDataSource"] = sources.begin()->second;
     }
     
-    return params;
+    return true;
 }
 
 void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
@@ -125,9 +126,12 @@ void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
 		TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
 		if (!item) return;
 
+        std::map<AnsiString, AnsiString> params;
+        if (!GetActiveRoadParamsForMiniReport(params)) return;
+        
         MiniReports::Credentials credentials(Connection->ConnectionString);
         String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
-		MiniReportsSingleton.GenReport(report_name, GetActiveRoadParamsForMiniReport(), credentials);
+		MiniReportsSingleton.GenReport(report_name, params, credentials);
 	}
 
 }
@@ -140,11 +144,13 @@ void __fastcall TMainForm::ItemDocxReportClick(TObject *Sender)
 		TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
 		if (!item) return;
 
+        std::map<AnsiString, AnsiString> params;
+        if (!GetActiveRoadParamsForMiniReport(params)) return;
+
         MiniReports::Credentials credentials(Connection->ConnectionString);
-        //MiniReportsSingleton.SetCredentials();
 
         String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
-		MiniReportsSingleton.GenDocxReport(report_name, GetActiveRoadParamsForMiniReport(), credentials);
+		MiniReportsSingleton.GenDocxReport(report_name, params, credentials);
 	}
 }
 //---------------------------------------------------------------------------

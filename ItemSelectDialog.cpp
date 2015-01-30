@@ -35,3 +35,14 @@ AnsiString TItemSelectDialogForm::selectedItem()
    AnsiString key = cmbOptions->Items->Strings[cmbOptions->ItemIndex];
    return params[key];
 }
+void __fastcall TItemSelectDialogForm::FormKeyPress(TObject *Sender,
+      char &Key)
+{
+   switch(Key) {
+   case VK_ESCAPE:
+       ModalResult = mrCancel;
+       break;
+   }
+}
+//---------------------------------------------------------------------------
+

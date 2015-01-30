@@ -4,7 +4,7 @@ object ItemSelectDialogForm: TItemSelectDialogForm
   AutoSize = True
   BorderStyle = bsDialog
   BorderWidth = 4
-  Caption = 'ItemSelectDialogForm'
+  Caption = #1044#1080#1072#1083#1086#1075' '#1074#1099#1073#1086#1088#1072
   ClientHeight = 106
   ClientWidth = 337
   Color = clBtnFace
@@ -13,8 +13,10 @@ object ItemSelectDialogForm: TItemSelectDialogForm
   Font.Height = -13
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnKeyPress = FormKeyPress
   PixelsPerInch = 120
   TextHeight = 16
   object Panel1: TPanel

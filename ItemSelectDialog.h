@@ -22,6 +22,7 @@ __published:	// IDE-managed Components
     TComboBox *cmbOptions;
     TLabel *lblMessage;
     TPanel *Panel3;
+    void __fastcall FormKeyPress(TObject *Sender, char &Key);
 private:	// User declarations
     map<AnsiString, AnsiString> params;
 public:		// User declarations
