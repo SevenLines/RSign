@@ -259,7 +259,7 @@ public:		// User declarations
     void __fastcall SaveIni(void);
     void __fastcall SendBroadCastMessage(int Command,int Wpar,int Lpar);
     void __fastcall PostBroadCastMessage(int Command,int Wpar,int Lpar);
-    bool GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString> &params);
+    bool GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString> &params, String title);
 
     void __fastcall PrepareShowRoadSize(TRoadFrm* frm);
 

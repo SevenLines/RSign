@@ -58,7 +58,7 @@ private:	// User declarations
     void updateServerList(AnsiString serverName);
     void restoreComboItemPosition(AnsiString itemText, TComboBox *cmb);
 
-    WideString getConnectionString();
+
     WideString getConnectionString(bool withoutDataBase);
     WideString getConnectionItem(WideString key, WideString value, WideString def="");
     void setInitConnection(TADOConnection *connection);
@@ -68,6 +68,8 @@ public:		// User declarations
     __fastcall TConnectionForm(TComponent* Owner);
     void loadIni(TIniFile *ini);
     void saveIni(TIniFile *ini);
+
+    WideString getConnectionString();
 
     bool testConnection(bool checkDatabaseList=false, bool async=true);
     void fillSchemasList(TADOConnection *connection);

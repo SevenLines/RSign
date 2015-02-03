@@ -89,7 +89,7 @@ String ToKMString(int position)
   return String().sprintf("%i+%03i", d0, d1);
 }
 
-bool TMainForm::GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString> &params)
+bool TMainForm::GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString> &params, String title)
 {
     params["NumRoad"] = FActiveRoad->RoadId;
     params["RoadName"] = FActiveRoad->RoadName;
@@ -108,6 +108,7 @@ bool TMainForm::GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString
     }
     if (sources.size() > 1) {
         ItemSelectDialogForm->setOptions(sources, "Выберите источник");
+        ItemSelectDialogForm->Caption = title;
         if (ItemSelectDialogForm->ShowModal() == mrOk) {
             params["NumDataSource"] = ItemSelectDialogForm->selectedItem();
         } else {
@@ -127,9 +128,9 @@ void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
 		if (!item) return;
 
         std::map<AnsiString, AnsiString> params;
-        if (!GetActiveRoadParamsForMiniReport(params)) return;
-        
-        MiniReports::Credentials credentials(Connection->ConnectionString);
+        if (!GetActiveRoadParamsForMiniReport(params, "")) return;
+
+        MiniReports::Credentials credentials(ConnectionForm->ConnectionString);
         String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
 		MiniReportsSingleton.GenReport(report_name, params, credentials);
 	}
@@ -145,11 +146,9 @@ void __fastcall TMainForm::ItemDocxReportClick(TObject *Sender)
 		if (!item) return;
 
         std::map<AnsiString, AnsiString> params;
-        if (!GetActiveRoadParamsForMiniReport(params)) return;
-
-        MiniReports::Credentials credentials(Connection->ConnectionString);
-
         String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
+        if (!GetActiveRoadParamsForMiniReport(params, report_name)) return;
+        MiniReports::Credentials credentials(ConnectionForm->ConnectionString);
 		MiniReportsSingleton.GenDocxReport(report_name, params, credentials);
 	}
 }

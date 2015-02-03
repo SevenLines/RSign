@@ -46,7 +46,7 @@ object ConnectionForm: TConnectionForm
       Left = 112
       Top = 25
       Width = 247
-      Height = 21
+      Height = 24
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 1
     end
@@ -54,7 +54,7 @@ object ConnectionForm: TConnectionForm
       Left = 112
       Top = 57
       Width = 247
-      Height = 21
+      Height = 24
       Anchors = [akLeft, akTop, akRight]
       PasswordChar = '*'
       TabOrder = 2
