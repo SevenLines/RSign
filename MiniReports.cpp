@@ -34,8 +34,12 @@ void MiniReports::Credentials::FromConnectionString(AnsiString s)
     if (str.Pos("Initial Catalog=")) {
         InitialCatalog = str.Delete(1, strlen("Initial Catalog="));
     }
-    if (str.Pos("UserId=")) {
-        UserId = str.Delete(1, strlen("UserId="));
+    if (str.Pos("UserId=") || str.Pos("User ID=") || str.Pos("UserID=")) {
+        int eqPos = str.Pos("=");
+        UserId = str.Delete(1, eqPos);
+    }
+    if (str.Pos("Password=")) {
+        Password = str.Delete(1, strlen("Password="));
     }
     if (str.Pos("Data Source=")) {
         str = str.Delete(1, strlen("Data Source="));
@@ -207,12 +211,14 @@ void MiniReports::ExecuteScript(AnsiString appPath, AnsiString script, Credentia
     while(!feof(credentialsFile)) {
         char s[256];
         fgets(s, 256, credentialsFile);
-        if (AnsiString(s).Pos("UserID") || AnsiString(s).Pos("Password") ) {
+        /*if (AnsiString(s).Pos("UserID") || AnsiString(s).Pos("Password") ) {
             output += AnsiString(s);
-        }
+        }*/
     }
     fclose(credentialsFile);
     credentialsFile = fopen(credentialsPath.c_str(), "w");
+    output += "UserID: " + credentials.UserId + "\n";
+    output += "Password: " + credentials.Password + "\n";
     output += "DataSource: " + credentials.DataSource + "\n";
     output += "InitialCatalog: " + credentials.InitialCatalog + "\n";
     fprintf(credentialsFile, output.c_str());
