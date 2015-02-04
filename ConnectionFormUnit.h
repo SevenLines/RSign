@@ -58,7 +58,7 @@ private:	// User declarations
     void updateServerList(AnsiString serverName);
     void restoreComboItemPosition(AnsiString itemText, TComboBox *cmb);
 
-    WideString getConnectionString();
+
     WideString getConnectionString(bool withoutDataBase);
     WideString getConnectionItem(WideString key, WideString value, WideString def="");
     void setInitConnection(TADOConnection *connection);
@@ -74,6 +74,7 @@ public:		// User declarations
     void __fastcall ThreadOnTerminate(TObject *object);
     void __fastcall ConnectComplete(TADOConnection* Connection,
         const _di_Error Error, TEventStatus &EventStatus);
+    WideString getConnectionString();
 
     void toggleConnectButtons(bool enable=true);
     void toggleComboInitialCatalog(bool enable=true);

@@ -66,7 +66,7 @@ void __fastcall TMainForm::PrepareMinireports()
 	ItemMiniReports->Clear();
 	for(int i=0; i<reports.size(); ++i) {
 		TMenuItem *item = new TMenuItem(this);
-		item->OnClick = ItemMiniReportsClick;
+		item->OnClick = ItemMiniReportsItemClick;
 		ItemMiniReports->Add(item);
         item->Caption = reports[i];
 	}
@@ -75,7 +75,7 @@ void __fastcall TMainForm::PrepareMinireports()
 	ItemDocxReport->Clear();
 	for(int i=0; i<reports.size(); ++i) {
 		TMenuItem *item = new TMenuItem(this);
-		item->OnClick = ItemDocxReportClick;
+		item->OnClick = ItemDocxReportItemClick;
 		ItemDocxReport->Add(item);
         item->Caption = reports[i];
 	}
@@ -120,7 +120,7 @@ bool TMainForm::GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString
     return true;
 }
 
-void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
+void __fastcall TMainForm::ItemMiniReportsItemClick(TObject *Sender)
 {
 	if (FActiveRoad) {
 		TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
@@ -129,7 +129,7 @@ void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
         std::map<AnsiString, AnsiString> params;
         if (!GetActiveRoadParamsForMiniReport(params)) return;
         
-        MiniReports::Credentials credentials(Connection->ConnectionString);
+        MiniReports::Credentials credentials(ConnectionForm->ConnectionString);
         String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
 		MiniReportsSingleton.GenReport(report_name, params, credentials);
 	}
@@ -138,7 +138,7 @@ void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
 //---------------------------------------------------------------------------
 
 
-void __fastcall TMainForm::ItemDocxReportClick(TObject *Sender)
+void __fastcall TMainForm::ItemDocxReportItemClick(TObject *Sender)
 {
      if (FActiveRoad) {
 		TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
@@ -147,7 +147,7 @@ void __fastcall TMainForm::ItemDocxReportClick(TObject *Sender)
         std::map<AnsiString, AnsiString> params;
         if (!GetActiveRoadParamsForMiniReport(params)) return;
 
-        MiniReports::Credentials credentials(Connection->ConnectionString);
+        MiniReports::Credentials credentials(ConnectionForm->ConnectionString);
 
         String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
 		MiniReportsSingleton.GenDocxReport(report_name, params, credentials);
@@ -173,7 +173,6 @@ void __fastcall TMainForm::AppShortCut(TWMKey &Key, bool &Handled)
 	FActiveRoad->RoadKeyPress(Key);
 }
 
-
 void __fastcall TMainForm::ReadIni(TIniFile *ini)
 {
     ConnectionForm->loadIni(ini);
@@ -194,6 +193,7 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
                 }
             }
         }
+        strConnectionString = connectionString;
   	    Connection->ConnectionString = connectionString;
         Connection->Open();
         ConnectionForm->Connection = Connection;
