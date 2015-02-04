@@ -72,12 +72,25 @@ void __fastcall TMainForm::PrepareMinireports()
 	}
 
     reports = MiniReportsSingleton.GetDocXReports();
-	ItemDocxReport->Clear();
+    for (int i=0;i<ItemDocxReport->Count; ++i) {
+        TMenuItem *item = ItemDocxReport->Items[i];
+        if (item != ItemDocxReportUpdateFile) {
+            ItemDocxReport->Remove(item);
+            --i;
+        }
+    }
+	//ItemDocxReport->Clear();
 	for(int i=0; i<reports.size(); ++i) {
+        if (i == 0) {
+            TMenuItem *item = new TMenuItem(this);
+            item->Caption = "-";
+            ItemDocxReport->Add(item);
+        }
 		TMenuItem *item = new TMenuItem(this);
 		item->OnClick = ItemDocxReportClick;
 		ItemDocxReport->Add(item);
         item->Caption = reports[i];
+        item->Enabled = false;
 	}
 }
 
@@ -153,6 +166,23 @@ void __fastcall TMainForm::ItemDocxReportClick(TObject *Sender)
 	}
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TMainForm::ItemDocxReportUpdateFileClick(TObject *Sender)
+{
+//     if (FActiveRoad) {
+		TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
+		if (!item) return;
+
+        std::map<AnsiString, AnsiString> params;
+        String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
+        //if (!GetActiveRoadParamsForMiniReport(params, report_name)) return;
+        if (FActiveRoad) {
+            GetActiveRoadParamsForMiniReport(params, report_name);
+        }
+        MiniReports::Credentials credentials(ConnectionForm->ConnectionString);
+		MiniReportsSingleton.UpdateDocxReport(report_name, params, credentials);
+//	}
+}
 
 void __fastcall TMainForm::AppShortCut(TWMKey &Key, bool &Handled)
 {
@@ -320,7 +350,12 @@ void __fastcall TMainForm::SetActiveRoad(TRoadFrm *R)
 			N63->Enabled=false;
 			N70->Enabled=false;
 			ItemMiniReports->Enabled=false;
-            ItemDocxReport->Enabled=false;
+            for(int i=0;i<MainForm->ItemDocxReport->Count;++i) {
+                TMenuItem* item = MainForm->ItemDocxReport->Items[i];
+                if (item != ItemDocxReportUpdateFile) {
+                   item->Enabled=false;
+                }
+            }
 			N71->Enabled=false;
 			N76->Enabled=false;
 		}
@@ -1355,4 +1390,6 @@ void __fastcall TMainForm::PrepareShowRoadSize(TRoadFrm* frm)
     frm->OnVideoFormGeometryChange = VideoFormGeometryChange;
 }
 
+
+//---------------------------------------------------------------------------
 

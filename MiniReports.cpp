@@ -146,10 +146,50 @@ void MiniReports::GenDocxReport(AnsiString reportName, map<AnsiString, AnsiStrin
 			script += " " + it->first + "=\"" + it->second + "\"";
 		}
 	}
+    script += " -q";
 
     ExecuteScript(exe, script, credentials);
 
     delete saveDialog; 
+}
+
+void MiniReports::UpdateDocxReport(AnsiString reportName, map<AnsiString, AnsiString> &params,
+         Credentials &credentials)
+{
+    AnsiString docxReportPath = ScriptsDirectory() + "docx\\" + reportName;
+    TOpenDialog *openDialog = new TSaveDialog(NULL);
+
+    TReplaceFlags flags;
+    flags << rfReplaceAll;
+
+    openDialog->Title = "Выберите файл для обновления";
+    openDialog->FileName = "";
+	openDialog->Filter = "docx | *.docx";
+    openDialog->DefaultExt = ".docx";
+	if(!openDialog->Execute()) {
+       delete openDialog;
+       return;
+    }
+
+    AnsiString exe = ScriptsDirectory() + "sql2docx.exe";
+    AnsiString script;
+	script.sprintf("\"%s\" -i \"%s\" -o \"%s\"",
+					exe,
+                    openDialog->FileName,
+                    openDialog->FileName);
+
+    if (params.size() > 0) {
+		script += " -p";
+		map<AnsiString, AnsiString>::iterator it;
+		for(it = params.begin(); it!=params.end(); ++it) {
+			script += " " + it->first + "=\"" + it->second + "\"";
+		}
+	}
+    script += " -u -q";
+
+    ExecuteScript(exe, script, credentials);
+
+    delete openDialog; 
 }
 
 void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> &params,
