@@ -69,8 +69,6 @@ public:		// User declarations
     void loadIni(TIniFile *ini);
     void saveIni(TIniFile *ini);
 
-    WideString getConnectionString();
-
     bool testConnection(bool checkDatabaseList=false, bool async=true);
     void fillSchemasList(TADOConnection *connection);
     void __fastcall ThreadOnTerminate(TObject *object);
