@@ -66,18 +66,31 @@ void __fastcall TMainForm::PrepareMinireports()
 	ItemMiniReports->Clear();
 	for(int i=0; i<reports.size(); ++i) {
 		TMenuItem *item = new TMenuItem(this);
-		item->OnClick = ItemMiniReportsItemClick;
+		item->OnClick = ItemMiniReportsClick;
 		ItemMiniReports->Add(item);
         item->Caption = reports[i];
 	}
 
     reports = MiniReportsSingleton.GetDocXReports();
-	ItemDocxReport->Clear();
+    for (int i=0;i<ItemDocxReport->Count; ++i) {
+        TMenuItem *item = ItemDocxReport->Items[i];
+        if (item != ItemDocxReportUpdateFile) {
+            ItemDocxReport->Remove(item);
+            --i;
+        }
+    }
+	//ItemDocxReport->Clear();
 	for(int i=0; i<reports.size(); ++i) {
+        if (i == 0) {
+            TMenuItem *item = new TMenuItem(this);
+            item->Caption = "-";
+            ItemDocxReport->Add(item);
+        }
 		TMenuItem *item = new TMenuItem(this);
-		item->OnClick = ItemDocxReportItemClick;
+		item->OnClick = ItemDocxReportClick;
 		ItemDocxReport->Add(item);
         item->Caption = reports[i];
+        item->Enabled = false;
 	}
 }
 
@@ -89,7 +102,7 @@ String ToKMString(int position)
   return String().sprintf("%i+%03i", d0, d1);
 }
 
-bool TMainForm::GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString> &params)
+bool TMainForm::GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString> &params, String title)
 {
     params["NumRoad"] = FActiveRoad->RoadId;
     params["RoadName"] = FActiveRoad->RoadName;
@@ -108,6 +121,7 @@ bool TMainForm::GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString
     }
     if (sources.size() > 1) {
         ItemSelectDialogForm->setOptions(sources, "Выберите источник");
+        ItemSelectDialogForm->Caption = title;
         if (ItemSelectDialogForm->ShowModal() == mrOk) {
             params["NumDataSource"] = ItemSelectDialogForm->selectedItem();
         } else {
@@ -120,15 +134,15 @@ bool TMainForm::GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString
     return true;
 }
 
-void __fastcall TMainForm::ItemMiniReportsItemClick(TObject *Sender)
+void __fastcall TMainForm::ItemMiniReportsClick(TObject *Sender)
 {
 	if (FActiveRoad) {
 		TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
 		if (!item) return;
 
         std::map<AnsiString, AnsiString> params;
-        if (!GetActiveRoadParamsForMiniReport(params)) return;
-        
+        if (!GetActiveRoadParamsForMiniReport(params, "")) return;
+
         MiniReports::Credentials credentials(ConnectionForm->ConnectionString);
         String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
 		MiniReportsSingleton.GenReport(report_name, params, credentials);
@@ -138,22 +152,37 @@ void __fastcall TMainForm::ItemMiniReportsItemClick(TObject *Sender)
 //---------------------------------------------------------------------------
 
 
-void __fastcall TMainForm::ItemDocxReportItemClick(TObject *Sender)
+void __fastcall TMainForm::ItemDocxReportClick(TObject *Sender)
 {
      if (FActiveRoad) {
 		TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
 		if (!item) return;
 
         std::map<AnsiString, AnsiString> params;
-        if (!GetActiveRoadParamsForMiniReport(params)) return;
-
-        MiniReports::Credentials credentials(ConnectionForm->ConnectionString);
-
         String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
+        if (!GetActiveRoadParamsForMiniReport(params, report_name)) return;
+        MiniReports::Credentials credentials(ConnectionForm->ConnectionString);
 		MiniReportsSingleton.GenDocxReport(report_name, params, credentials);
 	}
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TMainForm::ItemDocxReportUpdateFileClick(TObject *Sender)
+{
+//     if (FActiveRoad) {
+		TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
+		if (!item) return;
+
+        std::map<AnsiString, AnsiString> params;
+        String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
+        //if (!GetActiveRoadParamsForMiniReport(params, report_name)) return;
+        if (FActiveRoad) {
+            GetActiveRoadParamsForMiniReport(params, report_name);
+        }
+        MiniReports::Credentials credentials(ConnectionForm->ConnectionString);
+		MiniReportsSingleton.UpdateDocxReport(report_name, params, credentials);
+//	}
+}
 
 void __fastcall TMainForm::AppShortCut(TWMKey &Key, bool &Handled)
 {
@@ -172,6 +201,7 @@ void __fastcall TMainForm::AppShortCut(TWMKey &Key, bool &Handled)
 	if (FActiveRoad->Active)
 	FActiveRoad->RoadKeyPress(Key);
 }
+
 
 void __fastcall TMainForm::ReadIni(TIniFile *ini)
 {
@@ -193,7 +223,6 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
                 }
             }
         }
-        strConnectionString = connectionString;
   	    Connection->ConnectionString = connectionString;
         Connection->Open();
         ConnectionForm->Connection = Connection;
@@ -321,7 +350,12 @@ void __fastcall TMainForm::SetActiveRoad(TRoadFrm *R)
 			N63->Enabled=false;
 			N70->Enabled=false;
 			ItemMiniReports->Enabled=false;
-            ItemDocxReport->Enabled=false;
+            for(int i=0;i<MainForm->ItemDocxReport->Count;++i) {
+                TMenuItem* item = MainForm->ItemDocxReport->Items[i];
+                if (item != ItemDocxReportUpdateFile) {
+                   item->Enabled=false;
+                }
+            }
 			N71->Enabled=false;
 			N76->Enabled=false;
 		}
@@ -1356,4 +1390,6 @@ void __fastcall TMainForm::PrepareShowRoadSize(TRoadFrm* frm)
     frm->OnVideoFormGeometryChange = VideoFormGeometryChange;
 }
 
+
+//---------------------------------------------------------------------------
 

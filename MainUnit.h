@@ -129,6 +129,7 @@ __published:	// IDE-managed Components
     TMenuItem *N85;
     TMenuItem *ItemDocxReport;
     TMenuItem *N61;
+    TMenuItem *ItemDocxReportUpdateFile;
   void __fastcall OpenRoad(TObject *Sender);
   void __fastcall FormCreate(TObject *Sender);
   void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
@@ -197,10 +198,11 @@ __published:	// IDE-managed Components
    void __fastcall N76Click(TObject *Sender);
     void __fastcall N80Click(TObject *Sender);
         void __fastcall N81Click(TObject *Sender);
-    void __fastcall ItemMiniReportsItemClick(TObject *Sender);
+    void __fastcall ItemMiniReportsClick(TObject *Sender);
     void __fastcall N83Click(TObject *Sender);
     void __fastcall N85Click(TObject *Sender);
-    void __fastcall ItemDocxReportItemClick(TObject *Sender);
+    void __fastcall ItemDocxReportClick(TObject *Sender);
+    void __fastcall ItemDocxReportUpdateFileClick(TObject *Sender);
 
 
 private:	// User declarations
@@ -208,7 +210,6 @@ private:	// User declarations
     TRoadFrm *FActiveRoad;
     int FCurAttachDesigner;
     bool HaveInit;
-    String strConnectionString;
 
     unsigned long gdiplusToken;
 
@@ -260,8 +261,7 @@ public:		// User declarations
     void __fastcall SaveIni(void);
     void __fastcall SendBroadCastMessage(int Command,int Wpar,int Lpar);
     void __fastcall PostBroadCastMessage(int Command,int Wpar,int Lpar);
-    bool GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString> &params);
-
+    bool GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString> &params, String title);
 
     void __fastcall PrepareShowRoadSize(TRoadFrm* frm);
 
