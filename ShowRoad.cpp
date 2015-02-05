@@ -2161,7 +2161,7 @@ void __fastcall TRoadFrm::PaintRoad(TObject *Sender)
 	PostAction();
 
     // тест GDI+
-    Gdiplus::Graphics* g = Gdiplus::Graphics::FromHDC(PBox->Canvas->Handle, FALSE);
+    /*Gdiplus::Graphics* g = Gdiplus::Graphics::FromHDC(PBox->Canvas->Handle, FALSE);
     Gdiplus::SolidBrush b(Gdiplus::Color(255,0,0,0));
     Gdiplus::FontFamily fontFamily(L"Times New Roman");
     Gdiplus::Font font(&fontFamily, 20, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
@@ -2172,7 +2172,7 @@ void __fastcall TRoadFrm::PaintRoad(TObject *Sender)
                     0, 0, PBox->Height, 24);
     g->DrawString(L"Тест GDI+ находится в функции TRoadFrm::PaintRoad", -1, &font, Gdiplus::PointF(0, 0), &b);
 
-    delete g;
+    delete g; */
     // конец теста GDI+
 }
 
