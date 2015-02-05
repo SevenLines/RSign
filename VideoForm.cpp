@@ -23,7 +23,7 @@ TfrmVideoForm *frmVideoForm;
 __fastcall TfrmVideoForm::TfrmVideoForm(TComponent* Owner)
     : TForm(Owner)
 {
-frmVideoBar->Align=alNone;
+frmVideoBar->Align=alBottom;
 frmVideoBar->Left=0;
 frmVideoBar->Width=Panel4->ClientWidth;
 frmVideoBar->Height=40;
