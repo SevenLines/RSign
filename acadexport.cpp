@@ -2165,6 +2165,11 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                     DrawBlockOnLine("r_1.14.1_e", Poly->Points[i], Poly->Points[i+1], "Width", ScaleYBlock / 4);
                 }
                 break;
+            case ma14_2e:
+                for(int i=0;i<count-1;i++){
+                    DrawBlockOnLine("r_1.14.2_e", Poly->Points[i], Poly->Points[i+1], "Width", ScaleYBlock / 4);
+                }
+                break;
 
             case ma15: /*Обозначение переезда для велосипедистов*/
                 BUILDER_ERROR("Разметка 1.15 не реализована");
