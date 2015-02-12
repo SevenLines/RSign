@@ -20,7 +20,7 @@
       AutoCADExportForm.obj unSignalsInsert.obj AcadExportThread.obj 
       AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj 
       MiniReports.obj ItemSelectDialog.obj TConnectionFormThreadUnit.obj 
-      ConnectionFormUnit.obj VideoBar.obj"/>
+      ConnectionFormUnit.obj VideoBar.obj ActiveX\MyActiveX.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -44,7 +44,7 @@
     <PACKAGES value="vclx.bpi rtl.bpi vcl.bpi dbrtl.bpi vcldb.bpi bcbsmp.bpi dclocx.bpi 
       qrpt.bpi teeui.bpi vclsmp.bpi teedb.bpi tee.bpi ibsmp.bpi dss.bpi 
       nmfast.bpi inetdb.bpi inet.bpi adortl.bpi"/>
-    <PATHCPP value=".;"/>
+    <PATHCPP value=".;ActiveX"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -54,19 +54,17 @@
     <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS;_BCB_ATL_DEBUG"/>
     <MAINSOURCE value="RSign.cpp"/>
-    <INCLUDEPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;&quot;C:\Program Files\Borland\CBuilder6\Imports&quot;;&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;"/>
-    <LIBPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;&quot;C:\Program Files\Borland\CBuilder6\Imports&quot;"/>
+    <INCLUDEPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;$(BCB)\Imports"/>
+    <LIBPATH value="ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;$(BCB)\Imports"/>
     <WARNINGS value="-w-par -w-8030 -w-8027 -w-8026"/>
     <WARNOPTSTR value=""/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; 
-      -I..\..\Borland\CBuilder6\Projects -IActiveX -I$(BCB)\include 
-      -I$(BCB)\include\vcl -I$(BCB)\include\atl 
-      -I&quot;C:\Program Files\Borland\CBuilder6\Imports&quot; 
-      -I&quot;C:\Program Files\Borland\CBuilder6\Projects&quot; -src_suffix cpp 
-      -DNO_PROMPT_ON_ASSERTE_FAILURE -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -boa"/>
+    <IDLCFLAGS value="-I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; -IActiveX 
+      -I$(BCB)\include -I$(BCB)\include\vcl -I$(BCB)\include\atl 
+      -I$(BCB)\Imports -src_suffix cpp -DNO_PROMPT_ON_ASSERTE_FAILURE 
+      -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -boa"/>
     <CFLAG1 value="-Od -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; -Hc -Vx -Ve 
       -Tkh30000 -X- -r- -a8 -b -k -y -v -vi- -c -tW -tWM"/>
     <CFLAG2 value=""/>
@@ -162,6 +160,7 @@
       <FILE FILENAME="TConnectionFormThreadUnit.cpp" FORMNAME="" UNITNAME="TConnectionFormThreadUnit" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ConnectionFormUnit.cpp" FORMNAME="ConnectionForm" UNITNAME="ConnectionFormUnit" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="VideoBar.cpp" FORMNAME="frmVideoBar" UNITNAME="VideoBar" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ActiveX\MyActiveX.cpp" FORMNAME="" UNITNAME="MyActiveX" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
@@ -194,27 +193,34 @@ ProductName=
 ProductVersion=1.0.0.0
 Comments=
 
+[Excluded Packages]
+c:\program files (x86)\borland\cbuilder6\Bin\dclite60.bpl=Borland Integrated Translation Environment
+
 [HistoryLists\hlIncludePath]
-Count=8
-Item0=C:\Program Files (x86)\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files\Borland\CBuilder6\Imports;C:\Program Files\Borland\CBuilder6\Projects
-Item1=C:\Program Files (x86)\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
-Item2=..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
-Item3=ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
-Item4=ActiveX;C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
-Item5=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
-Item6=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
-Item7=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl
+Count=10
+Item0=C:\Program Files (x86)\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;$(BCB)\Imports
+Item1=C:\Program Files (x86)\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;$(BCB)\Imports;$(BCB)\Projects
+Item2=C:\Program Files (x86)\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files\Borland\CBuilder6\Imports;C:\Program Files\Borland\CBuilder6\Projects
+Item3=C:\Program Files (x86)\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item4=..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item5=ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item6=ActiveX;C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
+Item7=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
+Item8=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;C:\CBPRJ\asudor\EhLib
+Item9=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl
 
 [HistoryLists\hlLibraryPath]
-Count=8
-Item0=C:\Program Files\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files\Borland\CBuilder6\Imports
-Item1=C:\Program Files (x86)\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
-Item2=..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
-Item3=ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
-Item4=ActiveX;C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
-Item5=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
-Item6=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
-Item7=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib
+Count=10
+Item0=ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;$(BCB)\Imports
+Item1=ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;$(BCB)\Imports;C:\Program Files\Borland\CBuilder6\Projects
+Item2=C:\Program Files\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files\Borland\CBuilder6\Imports
+Item3=C:\Program Files (x86)\Borland\CBuilder6\Projects;..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item4=..\..\Borland\CBuilder6\Projects;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item5=ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;C:\Program Files (x86)\Borland\CBuilder6\Imports
+Item6=ActiveX;C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
+Item7=C:\Program Files\Borland\CBuilder6\Imports;SaveCursor;$(BCB)\Projects\Lib;C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
+Item8=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib;C:\CBPRJ\asudor\EhLib
+Item9=C:\CBPRJ\asudor;E:\Program Files\borland\CBuilder6\Projects;C:\Program Files\Borland\CBuilder6\Projects;..\..\program files\borland\cbuilder3\projects;..\..\projects;$(BCB)\lib\obj;$(BCB)\lib
 
 [HistoryLists\hlDebugSourcePath]
 Count=1
@@ -252,10 +258,5 @@ LinkCGLIB=0
 AddServerUnit=1
 AddClientUnit=1
 PrecompiledHeaders=1
-
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
   </IDEOPTIONS>
 </PROJECT>
