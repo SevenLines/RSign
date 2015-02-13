@@ -2959,8 +2959,8 @@ bool __fastcall TAcadExport::ExportCurve(TDangerCurve *c, bool fEnd) {
                     AutoCAD.SetPropertyList(block,"Flip",1);
                 }
             }
-            tableTop.DrawRepeatTextIntervalRoadMark(iTopCurves,"R="+IntToStr(c->Radius),c->LMin,c->LMax,0,iStep,false,0.33);
-            tableBottom.DrawRepeatTextIntervalRoadMark(iBottomCurves,"R="+IntToStr(c->Radius),c->LMin,c->LMax,0,iStep,false,0.33);
+            tableTop.DrawRepeatTextIntervalRoadMark(iTopCurves,"R="+IntToStr((int)c->Radius),c->LMin,c->LMax,0,iStep,false,0.33);
+            tableBottom.DrawRepeatTextIntervalRoadMark(iBottomCurves,"R="+IntToStr((int)c->Radius),c->LMin,c->LMax,0,iStep,false,0.33);
             break;
 
         case ckLeftCurve:

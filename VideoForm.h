@@ -68,6 +68,7 @@ __published:	// IDE-managed Components
           TShiftState Shift, int X, int Y);
     void __fastcall MPlayerMouseUp(TObject *Sender, TMouseButton Button,
           TShiftState Shift, int X, int Y);
+    void __fastcall ItemSetTopMostClick(TObject *Sender);
 private:	// User declarations
     TDtaSource *FData;
 

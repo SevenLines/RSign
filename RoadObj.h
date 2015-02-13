@@ -769,7 +769,7 @@ virtual TExtPolyline* __fastcall GetDefMetric(TRoad *Road);
 const char DangerCurveInfo[]="";
 class TDangerCurve : public TDangerPart
 {
-DEFPROPERTYRW(__int32, Radius)
+DEFPROPERTYRW(double, Radius)
 DEFPROPERTYRW(TCurveKind, Kind)
 DEFPROPERTYRW(TPermiss, Permissible)
 public:

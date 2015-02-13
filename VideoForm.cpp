@@ -744,3 +744,11 @@ frmVideoBar->Visible=Y>frmVideoBar->Top;
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TfrmVideoForm::ItemSetTopMostClick(TObject *Sender)
+{
+    /*ItemSetTopMost->Checked = !ItemSetTopMost->Checked;
+    this->FormStyle = ItemSetTopMost->Checked ? fsStayOnTop : fsNormal;
+    PostChangeStatus(); */
+}
+//---------------------------------------------------------------------------
+
