@@ -1115,6 +1115,14 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     AcadBlockPtr block;
     AcadBlockReferencePtr signspot = SignSpot1;
     double rotation=0, rotationHandle=0;
+
+    switch(signs[0]->OnAttach) {
+    case saIn:
+    case saOut:
+        signSpotOffset = 10;
+        break;
+    }
+
     if (true) {
       // настраиваем корректный поворот знаков
       switch (signs[0]->Direction) {
@@ -1129,7 +1137,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                   fOnAttachment = true;
                   break;
               case saOut:
-                  rotationHandle = M_PI/2;
+                  rotationHandle = -M_PI/2;
                   rotation = M_PI;
                   signspot = SignSpot2;
                   fOnAttachment = true;
@@ -1151,7 +1159,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                   fOnAttachment = true;
                   break;
               case saOut:
-                  rotationHandle = -M_PI/2;
+                  rotationHandle = M_PI/2;
                   rotation = 0;
                   signspot = SignSpot2;
                   fOnAttachment = true;
@@ -1177,7 +1185,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                   fOnAttachment = true;
                   break;
               case saOut:
-                  rotationHandle = -M_PI/2;
+                  rotationHandle = M_PI/2;
                   rotation = 0;
                   signspot = SignSpot2;
                   fOnAttachment = true;
@@ -1199,7 +1207,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                   fOnAttachment = true;
                   break;
               case saOut:
-                  rotationHandle = M_PI/2;
+                  rotationHandle = -M_PI/2;
                   rotation = M_PI;
                   signspot = SignSpot2;
                   fOnAttachment = true;
@@ -1508,8 +1516,8 @@ void TAcadExport::DrawSign(
       }
     }
 	
-	if (fUnderRoad) {
-	    tyOffset -= 300 * posOffset;	
+	if (fUnderRoad || fOnAttachment) {
+	    tyOffset += 500 * posOffset;	
 	}
 
     // пересчитываем положение знака, так как он у нас
