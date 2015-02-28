@@ -2782,7 +2782,7 @@ for (int i=0;i<n;i++)
 
 */
 
-void __fastcall TRoad::RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX)
+bool __fastcall TRoad::RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX)
 {
   if (FConvertMethod==pc2d) {
 
