@@ -136,7 +136,7 @@ if (drwcls>0)
       int w=Rect.Right-Rect.Left-64;
       int h=Rect.Bottom-Rect.Top-4;
       Cont->SetSize(w,h);
-      Cont->SetParam(0,1,0,0,1);
+      Cont->SetParam(0,1,0,0,1,0,1);
       SetBkMode(dc,TRANSPARENT);
       TExtPolyline Poly(2,0);
       Poly[0].x=2;

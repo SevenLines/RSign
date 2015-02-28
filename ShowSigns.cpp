@@ -126,7 +126,7 @@ if (Pat)
         int pdpi=300;
         TDrawBitmap *bitcont=new TDrawBitmap;
         bitcont->SetSize((double)(w*pdpi)/25.4,(double)(h*pdpi)/25.4);
-        bitcont->SetParam(0,100000,50000,-10000,10000);
+        bitcont->SetParam(0,100000,50000,-10000,10000,0,100000);
         DrawPat(Pat,bitcont,(double)pdpi/254,0,0);
         Graphics::TBitmap *bmp=new Graphics::TBitmap;
         bmp->Handle=bitcont->Bitmap;
@@ -154,7 +154,7 @@ if (Pat)
     int hofs=GetDeviceCaps(dc,PHYSICALOFFSETX);
     int vofs=GetDeviceCaps(dc,PHYSICALOFFSETY);
     TPrintContents *PCont=new TPrintContents;
-    PCont->SetParam(0,100000,50000,-10000,10000);
+    PCont->SetParam(0,100000,50000,-10000,10000,0,100000);
     DrawPat(Pat,PCont,(double)pdpi/254,-hofs,-vofs);
     delete PCont;
     delete Pat;
@@ -164,7 +164,7 @@ if (Pat)
 void __fastcall TSignForm::FormCreate(TObject *Sender)
 {
 BCont=new TDrawBitmap;
-BCont->SetParam(0,100000,50000,-10000,10000);
+BCont->SetParam(0,100000,50000,-10000,10000,0,100000);
 }
 //---------------------------------------------------------------------------
 

@@ -135,7 +135,7 @@ IMPPROPERTY(TDangerSlope,int,Radius)
 IMPPROPERTY(TDangerSlope,int,Promille)
 IMPPROPERTY(TDangerSlope,TPermiss,Permissible)
 
-IMPPROPERTY(TDangerCurve,int,Radius)
+IMPPROPERTY(TDangerCurve,double,Radius)
 IMPPROPERTY(TDangerCurve,TCurveKind,Kind)
 IMPPROPERTY(TDangerCurve,TPermiss, Permissible)
 
