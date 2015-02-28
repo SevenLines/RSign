@@ -855,7 +855,9 @@ void __fastcall TRoadFrm::MakeBmpPage(TDrawContents* Cont,int minl,int maxl,int 
 	}
 	// Рисуем план дороги
 	TRect OutRect(cx-hpix/2,cy-vpix/2,cx+hpix/2,cy+vpix/2);
-	Cont->SetParam(minl,maxl,(minl+maxl)/2,FMinX,FMaxX);
+    __int32 p1,p2;
+    GetVisibleBound(p1,p2);
+	Cont->SetParam(minl,maxl,(minl+maxl)/2,FMinX,FMaxX,p1,p2);
 	Cont->SetSize(w,h);
 	Cont->PrepareUpdating();
 	FOutMan->SetDefaults(FDrawMan);
@@ -889,7 +891,9 @@ void __fastcall TRoadFrm::MakePreViewPage(TDrawContents* Cont,int minl,int maxl,
 		w=hsize;
 		h=vsize;
 	}
-	Cont->SetParam(minl,maxl,(minl+maxl)/2,FMinX,FMaxX);
+    __int32 p1,p2;
+    GetVisibleBound(p1,p2);
+	Cont->SetParam(minl,maxl,(minl+maxl)/2,FMinX,FMaxX,p1,p2);
 	Cont->SetSize((double)w*wdpi*ms/2540,(double)h*wdpi*ms/2540);
 	Cont->PrepareUpdating();
 	FOutMan->SetDefaults(FDrawMan);
@@ -959,7 +963,9 @@ void __fastcall TRoadFrm::Print(int minl,int maxl,int plen,int scll,int sclx,int
 			cy=(cy*pdpi)/254;
 		}
 		TRect OutRect(cx-hpix/2-hofs,cy-vpix/2-vofs,cx+hpix/2-hofs,cy+vpix/2-vofs);
-		prncont->SetParam(minl,minl+plen,minl+plen/2,FMinX,FMaxX);
+        __int32 p1,p2;
+        GetVisibleBound(p1,p2);
+		prncont->SetParam(minl,minl+plen,minl+plen/2,FMinX,FMaxX,p1,p2);
 		prncont->PrepareUpdating();
 		FOutMan->SetDefaults(FDrawMan);
 		FOutMan->FillCont(prncont);
@@ -1906,7 +1912,9 @@ void __fastcall TRoadFrm::PrepareDressCont(void)
 		w=PvBox->Width,h=PBox->Height;
 
 		FDressCont->SetSize(w,h);
-		FDressCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX);
+        __int32 p1,p2;
+        GetVisibleBound(p1,p2);
+		FDressCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX,p1,p2);
 		FDressCont->PrepareUpdating();
 		FDrawMan->FillCont(FDressCont);
 		TRect r(0,0,w,h);
@@ -1938,7 +1946,9 @@ void __fastcall TRoadFrm::PrepareSlopesCont(void)
 		w=PrBox->Width,h=PBox->Height;
 
 		FSlopesCont->SetSize(w,h);
-		FSlopesCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX);
+        __int32 p1,p2;
+        GetVisibleBound(p1,p2);
+		FSlopesCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX,p1,p2);
 		FSlopesCont->PrepareUpdating();
 		FDrawMan->FillCont(FSlopesCont);
 		TRect r(0,0,w,h);
@@ -1966,7 +1976,9 @@ void __fastcall TRoadFrm::PrepareVisCont(void) {
 		else
 		w=PvisBox->Width,h=PBox->Height;
 		FVisCont->SetSize(w,h);
-		FVisCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX);
+        __int32 p1,p2;
+        GetVisibleBound(p1,p2);
+		FVisCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX,p1,p2);
 		FVisCont->PrepareUpdating();
 		FDrawMan->FillCont(FVisCont);
 		TRect r(0,0,w,h);
@@ -1994,7 +2006,9 @@ void __fastcall TRoadFrm::PrepareLayersCont(void) {
 		else
 		w=PlayerBox->Width,h=PBox->Height;
 		FLayersCont->SetSize(w,h);
-		FLayersCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX);
+        __int32 p1,p2;
+        GetVisibleBound(p1,p2);
+		FLayersCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX,p1,p2);
 		FLayersCont->PrepareUpdating();
 		FDrawMan->FillCont(FLayersCont);
 		TRect r(0,0,w,h);
@@ -2034,7 +2048,9 @@ void __fastcall TRoadFrm::PrepareDrawCont(void)
 	if (NeedRepDraw&&FReadyForDrawing)
 	{
 		FDrawCont->SetSize(PBox->Width,PBox->Height);
-		FDrawCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX);
+        __int32 p1,p2;
+        GetVisibleBound(p1,p2);
+		FDrawCont->SetParam(FVMinL,FVMaxL,MarkerL,FPMinX,FPMaxX,p1,p2);
 		RECT r;
 		r.left=0;
 		r.top=0;

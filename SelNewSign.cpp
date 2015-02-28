@@ -192,7 +192,7 @@ if (drwcls>0)
           int w=60;
           int h=Rect.Bottom-Rect.Top-4;
           Cont->SetSize(w,h);
-          Cont->SetParam(0,1,0,0,1);
+          Cont->SetParam(0,1,0,0,1,0,1);
           SetBkMode(dc,TRANSPARENT);
 
           TRect MRect;
@@ -254,7 +254,7 @@ if (Drw->DrwParamId[0]>0)
     int h=Rect.Bottom-Rect.Top-4;
     int w=Rect.Right-Rect.Left-12;
     Cont->SetSize(w,h);
-    Cont->SetParam(0,1,0,0,1);
+    Cont->SetParam(0,1,0,0,1,0,1);
     SetBkMode(dc,TRANSPARENT);
     TRect MRect;
     TExtPolyline Poly(1,1);
