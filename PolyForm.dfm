@@ -510,6 +510,14 @@ object PolyFrm: TPolyFrm
         Caption = #1042#1080#1076#1080#1084#1099#1081
         TabOrder = 12
       end
+      object cbSleek: TCheckBox
+        Left = 168
+        Top = 16
+        Width = 97
+        Height = 17
+        Caption = #1054#1090#1088#1077#1079#1086#1082
+        TabOrder = 13
+      end
     end
   end
   object PatMenu: TPopupMenu

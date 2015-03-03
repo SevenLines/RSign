@@ -2784,6 +2784,7 @@ for (int i=0;i<n;i++)
 
 bool __fastcall TRoad::RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX)
 {
+  bool res=true;
   if (FConvertMethod==pc2d) {
 
       double CX=(X-(FOutXMin+FOutXMax)/2)/FKl;
@@ -2898,6 +2899,7 @@ bool __fastcall TRoad::RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX
             }
         }
   }
+  return res;
 }
 
 void __fastcall TRoad::ConvertPolyline(TPolyline &src,TExtPolyline &dst) {
@@ -2919,7 +2921,7 @@ if (FConvertMethod==pc2d) {
        double dl=src.Points[cind].L-CL;
        double dx=src.Points[cind].X-CX;
        double ds=sqrt(dl*dl+dx*dx);
-       if (ds>stepl)  { // Добавляем точку
+       if (ds>stepl&&src.Points[cind].Code.Sleek()==0)  { // Добавляем точку
           CL+=stepl*dl/ds;
           CX+=stepl*dx/ds;
        } else {         // Переходим к следующей точке
