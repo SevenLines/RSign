@@ -121,7 +121,7 @@ object MainForm: TMainForm
           Height = 21
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
-          ItemHeight = 13
+          ItemHeight = 0
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
@@ -150,7 +150,7 @@ object MainForm: TMainForm
           Height = 21
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 3
         end
         object CharList: TCheckListBox
@@ -286,7 +286,7 @@ object MainForm: TMainForm
           Width = 156
           Height = 21
           Style = csDropDownList
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 3
         end
         object Button2: TButton
