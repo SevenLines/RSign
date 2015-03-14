@@ -1721,6 +1721,8 @@ void __fastcall TRoadFrm::DrawPoly(void)
 		void *pen2=CreatePen(PS_DOT,1,clBlue);
         if (FMetricData && FMetricData->Road->ConvertMethod==pc2d) {
             TExtPolyline *evec=new TExtPolyline;
+    		FMetricData->Road->SetFrame(FPMinL,FPMaxL,MarkerL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
+    		FMetricData->Road->SetOutBound(0,PBox->Width,0,PBox->Height);
             FMetricData->Road->ConvertPolyline(*FPoly,*evec);
             evec->DrawPoly(dc,pen1,pen2);
         } else {
