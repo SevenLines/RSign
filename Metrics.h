@@ -60,6 +60,7 @@
 Фиксация параметра 2 (DX или расстояние)  (18)
     0 -- нет
     1 -- есть
+Вид соединения       (Отрезок или гладкая кривая) 19
 */
 struct TPointCode
 {
@@ -98,6 +99,10 @@ bool BaseFixed1(void)
     {return (Val>>17)&1;}
 bool BaseFixed2(void)
     {return (Val>>18)&1;}
+int Sleek(void)
+    {return (Val>>19)&1;}
+void SetSleek(int n)
+    { Val=(Val&0xFFF7FFFF)|((n&1)<<19);}
 bool Undepended(void)
     {return (Leep()<7)&&(LBase()!=3)&&(LBase()!=4)&&(XBase()<7);}
 bool DependPred(void)
@@ -107,7 +112,7 @@ bool DependNext(void)
 void Set(int vis,int con,int leep)
     {Val=(Val&0xFFFFFF00)|((leep&15)<<4)|((con&7)<<1)|(vis&1);}
 void SetBase(int lbase,int xbase,int polar,int fix1,int fix2)
-    {Val=(Val&0xFF)|((lbase&15)<<8)|((xbase&15)<<12)|((polar&1)<<16)|((fix1&1)<<17)|((fix2&1)<<18);}
+    {Val=(Val&0xFFF800FF)|((lbase&15)<<8)|((xbase&15)<<12)|((polar&1)<<16)|((fix1&1)<<17)|((fix2&1)<<18);}
 };
 
 class TPolyline;

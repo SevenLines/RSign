@@ -596,13 +596,7 @@ delete[] Prior;
 
 void __fastcall TDrawManager::PrepareMetric(TDrawContents *Cont,RECT *OutRect)
 {
-/* Здесь заплатка для нахождения границ отображаемой части дороги
-  при двумерном отображении */
-if (FVisSet->MetricSource->Road->ConvertMethod==pc2d) {
-    __int32 DL=Cont->L2-Cont->L1;
-    Road=new TRoad(FVisSet->MetricSource->Road,Cont->CL-DL,Cont->CL+DL);
-} else
-    Road=new TRoad(FVisSet->MetricSource->Road,Cont->L1,Cont->L2);
+Road=new TRoad(FVisSet->MetricSource->Road,Cont->PL1,Cont->PL2);
 if (FVisSet->MetricSource->ProfilKind&1)
     Road->CalcMinMaxZ();
 Road->SetFrame(Cont->L1,Cont->L2,Cont->CL,Cont->X1,Cont->X2,FPlanKind,FPlanDirect);
@@ -627,7 +621,7 @@ void __fastcall TDrawManager::FindSignsPlacement(TDrawContents *Cont)
 {
 TObjList<TDrwParamRec> *DrPar=Dict->DrwParams;
 TObjList<TDrwClassesRec> *DrCl=Dict->DrwClasses;
-TRoad *SRoad=new TRoad(FVisSet->MetricSource->Road,Cont->L1,Cont->L2);
+TRoad *SRoad=new TRoad(FVisSet->MetricSource->Road,Cont->PL1,Cont->PL2);
 // Устанавливаем параметры так, чтобы точка соответствоовала 0.1 мм в масштабе вывода
 SRoad->SetFrame(Cont->L1,Cont->L2,Cont->CL,SRoad->XMin,SRoad->XMax,pkGorizontal,pdDirect);
 SRoad->SetOutBound(0,(Cont->L2-Cont->L1)*100/FBaseScaleL,(SRoad->XMin*100)/FBaseScaleP,(SRoad->XMax*100)/FBaseScaleP);
@@ -732,9 +726,10 @@ for (int i=0;i<ObjCount;i++) {
                 case 3:{py=r.top+DrwDX;px=r.right-DrwDY;}break;
                 }
             int RL,RX;
-            SRoad->RConvertPoint(px,py,RL,RX);
-            SignsMan.Rects[i].RoadL=RL;
-            SignsMan.Rects[i].RoadX=RX;
+            if (SRoad->RConvertPoint(px,py,RL,RX)) {
+                SignsMan.Rects[i].RoadL=RL;
+                SignsMan.Rects[i].RoadX=RX;
+                }
             }
         }
     }
@@ -3259,7 +3254,7 @@ FreeHash();
 if (FVisSet)
     if (FVisSet->MetricSource)
         {
-        SelectObjects(codes,Mask,Cont->L1,Cont->L2);
+        SelectObjects(codes,Mask,Cont->PL1,Cont->PL2);
         SortObjects();
         PrepareMetric(Cont,OutRect);
         FindSignsPlacement(Cont);

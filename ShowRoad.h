@@ -477,7 +477,14 @@ public:         // User declarations
     void __fastcall ShowDressLayers(void);    
     void __fastcall ShowVisPlan(void);
     void __fastcall ShowMapPlan(void);
-
+    // ‘ункци€ определ€ет границу дороги дл€ просмотра.
+    // ¬ одномерном режиме это VMinL, VMaxL, в двумерном пока заплатка сдвиг на 1000 метров
+    void __fastcall GetVisibleBound(__int32 &l1,__int32 &l2) {
+       if (VisSet->MetricSource && VisSet->MetricSource->Road->ConvertMethod==pc2d)
+          l1=FVMinL-1000000,l2=FVMaxL+1000000;
+       else
+          l1=FVMinL,l2=FVMaxL;
+    }
 // показывает кадр на видео
     void __fastcall SynchronizeVideo(void);
     void __fastcall ShowVideo(int Direction,int id);

@@ -468,7 +468,7 @@ if (Rec)
       int w=Rect.Right-Rect.Left-48;
       int h=Rect.Bottom-Rect.Top-4;
       Cont->SetSize(w,h);
-      Cont->SetParam(0,1,0,1);
+      Cont->SetParam(0,1,0,0,1,0,1);
       SetBkMode(dc,TRANSPARENT);
       TExtPolyline * Poly;
       if (Rec->ProcId==1)
@@ -597,7 +597,7 @@ if (CurrentDrw->ObjClassId>0)
             {
             TDrawContents *Cont=new TDrawBitmap();
             Cont->SetSize(R.Right,R.Bottom);
-            Cont->SetParam(0,1,0,1);
+            Cont->SetParam(0,1,0,0,1,0,1);
             FDrawMan->BaseScaleL=2000;
             FDrawMan->BaseScaleX=500;
             Cont->PrepareUpdating();
