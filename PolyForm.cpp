@@ -188,6 +188,7 @@ BasePar1->Text=P.BasePar1;
 BasePar2->Text=P.BasePar2;
 BaseFixed1->Checked=P.Code.BaseFixed1();
 BaseFixed2->Checked=P.Code.BaseFixed2();
+cbSleek->Checked=P.Code.Sleek();
 }
 
 void __fastcall TPolyFrm::UpdatePoly(TExtPolyline *vec)
@@ -223,6 +224,7 @@ TPointCode __fastcall TPolyFrm::GetCode(void)
 TPointCode Code;
 Code.Set(Visible->Checked,Connection->ItemIndex,Leep->ItemIndex);
 Code.SetBase(LBase->ItemIndex,XBase->ItemIndex,Polar->ItemIndex,BaseFixed1->Checked,BaseFixed2->Checked);
+Code.SetSleek(cbSleek->Checked);
 return Code;
 }
 

@@ -12,7 +12,7 @@ enum TContentStatus {csEmpty,csDrawing,csEnabled};
 class TDrawContents
 {
 protected:
-__int32 FL1,FL2,FCL,FX1,FX2;
+__int32 FL1,FL2,FCL,FX1,FX2,FPL1,FPL2;
 __int32 FWidth,FHeight;
 TContentStatus FStatus;
 public:
@@ -32,12 +32,16 @@ void virtual __fastcall SetSize(__int32 w,__int32 h)
 //Отображает содержимое хранилища
 void virtual __fastcall DrawTo(TCanvas*,int,int) {}
 //Изменяет параметры отображаемого участка
-void __fastcall SetParam(__int32 NL1, __int32 NL2,__int32 NCL,__int32 NX1,__int32 NX2)
-    {FL1=NL1;FL2=NL2;FCL=NCL;FX1=NX1;FX2=NX2;}
+void __fastcall SetParam(__int32 NL1, __int32 NL2,__int32 NCL,__int32 NX1,__int32 NX2,__int32 _FPL1,__int32 _FPL2)
+    {FL1=NL1;FL2=NL2;FCL=NCL;FX1=NX1;FX2=NX2;FPL1=_FPL1;FPL2=_FPL2;}
 //void __fastcall ConvertPoint(__int32 L,__int32 X,__int32 &PX,__int32 &PY);
 //void __fastcall ConvertPoly(__int32 n, TRoadPoint *in, POINT *out);
+//Границы отображаемой части дороги при одномерном отображении
 __property __int32 L1={read=FL1};
 __property __int32 L2={read=FL2};
+//Границы отбора объектов
+__property __int32 PL1={read=FPL1};
+__property __int32 PL2={read=FPL2};
 __property __int32 CL={read=FCL};
 __property __int32 X1={read=FX1};
 __property __int32 X2={read=FX2};

@@ -1132,19 +1132,18 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
               switch(signs[0]->OnAttach) {
               case saIn:
                   rotationHandle = -M_PI/2;
-                  rotation = 0;                
+                  rotation = M_PI/2;
                   signspot = SignSpot2;
                   fOnAttachment = true;
                   break;
               case saOut:
                   rotationHandle = -M_PI/2;
-                  rotation = M_PI;
+                  rotation = -M_PI/2;
                   signspot = SignSpot2;
                   fOnAttachment = true;
                   break;
               default:
                   rotationHandle = -M_PI/2;
-                  rotation = -M_PI/2;
                   signspot = SignSpot1;
               }
               break;
@@ -1154,19 +1153,19 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
               switch(signs[0]->OnAttach) {
               case saIn:
                   rotationHandle = M_PI/2;
-                  rotation = M_PI;
+                  rotation = M_PI/2;
                   signspot = SignSpot2;
                   fOnAttachment = true;
                   break;
               case saOut:
                   rotationHandle = M_PI/2;
-                  rotation = 0;
+                  rotation = -M_PI/2;
                   signspot = SignSpot2;
                   fOnAttachment = true;
                   break;
               default:
                   rotationHandle = M_PI/2;
-                  rotation = -M_PI/2;
+                  rotation = M_PI;
                   signspot = SignSpot1_m;
               }
               break;
@@ -1180,19 +1179,18 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
               switch(signs[0]->OnAttach) {
               case saIn:
                   rotationHandle = M_PI/2;
-                  rotation = M_PI;
+                  rotation = M_PI/2;
                   signspot = SignSpot2;
                   fOnAttachment = true;
                   break;
               case saOut:
                   rotationHandle = M_PI/2;
-                  rotation = 0;
+                  rotation = -M_PI/2;
                   signspot = SignSpot2;
                   fOnAttachment = true;
                   break;
               default:
                   rotationHandle = M_PI/2;
-                  rotation = M_PI/2;
                   signspot = SignSpot1;
               }
               break;
@@ -1202,19 +1200,19 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
               switch(signs[0]->OnAttach) {
               case saIn:
                   rotationHandle = -M_PI/2;
-                  rotation = 0;
+                  rotation = M_PI/2;
                   signspot = SignSpot2;
                   fOnAttachment = true;
                   break;
               case saOut:
                   rotationHandle = -M_PI/2;
-                  rotation = M_PI;
+                  rotation = -M_PI/2;
                   signspot = SignSpot2;
                   fOnAttachment = true;
                   break;
               default:
                   rotationHandle = -M_PI/2;
-                  rotation = M_PI/2;
+                  rotation = M_PI;
                   signspot = SignSpot1_m;
               }
               break;
@@ -1238,6 +1236,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                   if (signs[0]->Placement == spUp) {
                       signspot = SignSpot2;
                       rotationHandle -= M_PI/2;
+                      rotation -= M_PI/2;
                       signSpotOffset = 9;
                   } else {
                       signspot = SignSpot1;
@@ -1251,92 +1250,16 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
       if (Poly->Count==2) {
           double angle = GetAngle(Poly->Points[0], Poly->Points[1]);
 
-          /*TPoint vec(Poly->Points[1].x - Poly->Points[0].x,
-                     Poly->Points[1].y - Poly->Points[0].y);
-          double cosangle2 = (double)vec.x / sqrt(vec.x * vec.x + vec.y * vec.y);
-          angle = acos(cosangle2);
-          if (vec.y < 0 ) {
-             angle = 2*M_PI - angle;
-          } 
           rotationHandle += angle;
-          rotation += angle;
-
-          switch (signs[0]->OnAttach) {
-                 case saIn:
-                 case saOut:
-                      fOnAttachment = true;
-                      signspot = SignSpot2;
-                      rotation += M_PI_2;
-                      if (signs[0]->OnAttach == saOut) {
-                         rotationHandle -= M_PI;
-                      }
-                      break;
-                 default:
-                      rotationHandle -= M_PI_2;
-                      rotation -= M_PI_2;
-                      switch(signs[0]->Direction) {
-                      case roUnDirect:
-                           switch(signs[0]->Placement) {
-                           case spLeft:
-                                signspot = SignSpot1_m;
-                                rotationHandle -= M_PI;
-                                break;
-                           }
-                           break;
-                      case roDirect:
-                           switch(signs[0]->Placement) {
-                           case spLeft:
-                                signspot = SignSpot1_m;
-                                rotationHandle -= M_PI;
-                                break;
-                           }
-                           break;
-                      }
-          }
-
-          switch(signs[0]->Placement) {
-          case spUp:
-               signspot = SignSpot2;
-               rotationHandle -= M_PI/2;
-               signSpotOffset = 9;
-               break;
-          }*/
-
-
-
-          /*switch (signs[0]->Direction) {
-          case roUnDirect:
-               switch (signs[0]->OnAttach) {
-               case saIn:
-
-                    break;
-               case saOut:
-                    break;
-               default:;
-               }
-               rotationHandle += M_PI;
-               rotation += M_PI;
-               break;
-          case roDirect:
-               switch (signs[0]->OnAttach) {
-               case saIn:
-                    rotationHandle -= 90;
-                    break;
-               case saOut:
-                    break;
-               default:;
-               }
-          }*/
-          rotationHandle += angle;
-          rotation += angle;
+          //rotation += angle;
           
           switch (signs[0]->Direction) {
           case roUnDirect:
-              rotation += M_PI;
+              //rotation += M_PI;
               switch (signs[0]->Placement) {
-                case spLeft:
+                case spRight:
                     rotationHandle += M_PI;
-                    break;      
+                    break;
               }
               break;
           case roDirect:
@@ -1350,17 +1273,14 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 
           switch (signs[0]->OnAttach) {
           case saIn:
-              rotation -= M_PI_2;
+              //rotation -= M_PI_2;
               rotationHandle -= M_PI_2;
               break;
           case saOut:
               switch (signs[0]->Direction) {
               case roUnDirect:
-                rotation -= M_PI_2;
-                break;
-              case roDirect:
-                rotation += M_PI_2;
-                rotationHandle += M_PI_2;
+                //rotation += M_PI_2;
+                //rotationHandle += M_PI_2;
                 break;
               }
 
@@ -1369,7 +1289,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
 
           switch (signs[0]->Placement) {
           case spUp:
-              rotationHandle -= M_PI_2;
+              //rotationHandle -= M_PI_2;
               break;
           }
       }
@@ -1499,7 +1419,10 @@ void TAcadExport::DrawSign(
 
     txOffset = xoffset;
     tyOffset = yoffset;
-	
+
+    IAcadSelectionSet *set = AutoCAD.ActiveDocument->ActiveSelectionSet;
+    set->Clear();
+
 	// копируем сноску
     block = signspot->Copy();
     AutoCAD.SetAttribute(block,"LABEL",AnsiString(_pos));
@@ -1508,45 +1431,43 @@ void TAcadExport::DrawSign(
 
     // чтобы за край не уходили
     float posOffset = 0.25 * ScaleY;
-    if (!fUnderRoad) {
-      if(_pos <= 30 * posOffset){
+    if (!fUnderRoad && !fDrawMap) {
+      int framePos = (LPos/100) % (iStep/100);
+      if(framePos <= 30 * posOffset){
           tyOffset += (rotationHandle==-M_PI/2)?3000 * posOffset:-3000 * posOffset;
-      }else if( 1000 - _pos <= 30 * posOffset ){
+      }else if( (iStep/100) - framePos <= 30 * posOffset ){
           tyOffset += (rotationHandle==-M_PI/2)?-3000 * posOffset:3000 * posOffset;
       }
     }
 	
-	if (fUnderRoad || fOnAttachment) {
-	    tyOffset += 500 * posOffset;	
-	}
-
-    // пересчитываем положение знака, так как он у нас
-    //  рисуется отдельно от сноски
-    newPos.x = pos.x + txOffset*cos(rotationHandle)- tyOffset*sin(rotationHandle);
-    newPos.y = pos.y + tyOffset*cos(rotationHandle)+ txOffset*sin(rotationHandle);
-
+	//if (fUnderRoad || fOnAttachment) {
+	//    tyOffset += 500 * posOffset;
+	//}
     // чтобы не было наложений, наложенные знаки сдивгаем вправо
     int countOfSignsNearCurrent;
-    while((countOfSignsNearCurrent = findSignSuperposition(TPoint(newPos.x, newPos.y) , 400)) > 0) {
+    countOfSignsNearCurrent = findSignSuperposition(TPoint(pos.x, pos.y) , 1000 * posOffset);
+    if ( countOfSignsNearCurrent > 0 ) {
         if (fOnAttachment) {
-            txOffset -= 1000;
+            txOffset -= 1000 * countOfSignsNearCurrent * posOffset;
         } else {
-            tyOffset += 1000;
+            tyOffset += 1000 * countOfSignsNearCurrent * posOffset;
         }
-        // пересчитаем положение знака еще раз
-        newPos.x = pos.x + txOffset*cos(rotationHandle)- tyOffset*sin(rotationHandle);
-        newPos.y = pos.y + tyOffset*cos(rotationHandle)+ txOffset*sin(rotationHandle);
     }
-    
+
     // запомним положение знака
-    SignsPositions.push_back(TPoint(newPos.x, newPos.y) );
+    SignsPositions.push_back(TPoint(pos.x, pos.y) );
+
     // поставим сноску и сдвинем ее хвостик
 	//AutoCAD.SetPropertyDouble(block,"Length",1200);
     block->set_InsertionPoint(AutoCAD.cadPoint(int(pos.x),int(pos.y)));
     AutoCAD.SetPropertyPoint(block,"pHand",AutoCADPoint(txOffset,tyOffset));
 
     // собственно рисуем знак
-    block = AutoCAD.DrawBlock(Name,int(newPos.x),int(newPos.y),rotation,scale);
+    //block = AutoCAD.DrawBlock(Name,int(newPos.x),int(newPos.y),rotation,scale);
+    block = AutoCAD.DrawBlock(Name,int(txOffset),int(tyOffset), rotation,scale);
+    // поворачиваем блок относительно центра
+    block->Rotate(AutoCAD.cadPoint(0, 0), rotationHandle);
+    block->Move(AutoCAD.cadPoint(0, 0), AutoCAD.cadPoint(int(pos.x),int(pos.y)));
     if(block.IsBound()) {
         SetAttributes(block,SignLabelParser(Name,label));
         if(Name.Pos("6.10.1") || Name.Pos("6.10.2") || Name.Pos("6.9.1") || Name.Pos("6.9.2")) {

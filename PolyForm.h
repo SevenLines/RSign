@@ -57,6 +57,7 @@ __published:	// IDE-managed Components
    TSpeedButton *SpeedButton3;
    TPopupMenu *PatMenu;
    TMenuItem *N1;
+    TCheckBox *cbSleek;
     void __fastcall PolyListClick(TObject *Sender);
     void __fastcall Button1Click(TObject *Sender);
     void __fastcall Button2Click(TObject *Sender);

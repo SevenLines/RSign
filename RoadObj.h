@@ -1073,7 +1073,7 @@ void __fastcall SetBound(__int32 minx,__int32 maxx,__int32 miny,__int32 maxy);
 void __fastcall SetFrame(__int32 lmin,__int32 lmax,__int32 lcur,__int32 xmin,__int32 xmax,TPlanKind pk,TPlanDirect dr);
 void __fastcall SetOutBound(__int32 lmin,__int32 lmax,__int32 xmin,__int32 xmax);
 void __fastcall ConvertPoint(__int32 L,__int32 X,__int32 &PX,__int32 &PY);
-void __fastcall RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX);
+bool __fastcall RConvertPoint(__int32 X,__int32 Y,__int32 &PL,__int32 &PX);
 void __fastcall ConvertPointsArray(__int32 n, TRoadPoint *in, POINT *out);
 void __fastcall ConvertPolyline(TPolyline &src,TExtPolyline &dst);
 // Вычисляет значения точек в интервале от head до tale включительно
