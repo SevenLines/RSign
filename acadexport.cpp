@@ -1265,7 +1265,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
           case roDirect:
               switch (signs[0]->Placement) {
                 case spLeft:
-                    //rotationHandle -= M_PI;
+                    rotationHandle -= M_PI;
                     break;      
               }
               break;
@@ -1280,12 +1280,8 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
               switch (signs[0]->Direction) {
               case roUnDirect:
                 //rotation += M_PI_2;
-                rotationHandle += M_PI_2;
+                //rotationHandle += M_PI_2;
                 break;
-              /*case roDirect:
-                rotation += M_PI_2;
-                rotationHandle += M_PI_2;
-                break;*/
               }
 
               break;
@@ -1435,7 +1431,7 @@ void TAcadExport::DrawSign(
 
     // чтобы за край не уходили
     float posOffset = 0.25 * ScaleY;
-    if (!fUnderRoad) {
+    if (!fUnderRoad && !fDrawMap) {
       int framePos = (LPos/100) % (iStep/100);
       if(framePos <= 30 * posOffset){
           tyOffset += (rotationHandle==-M_PI/2)?3000 * posOffset:-3000 * posOffset;
@@ -1447,27 +1443,19 @@ void TAcadExport::DrawSign(
 	//if (fUnderRoad || fOnAttachment) {
 	//    tyOffset += 500 * posOffset;
 	//}
-
-    // пересчитываем положение знака, так как он у нас
-    //  рисуется отдельно от сноски
-    newPos.x = pos.x + txOffset*cos(rotationHandle)- tyOffset*sin(rotationHandle);
-    newPos.y = pos.y + tyOffset*cos(rotationHandle)+ txOffset*sin(rotationHandle);
-
     // чтобы не было наложений, наложенные знаки сдивгаем вправо
     int countOfSignsNearCurrent;
-    while((countOfSignsNearCurrent = findSignSuperposition(TPoint(newPos.x, newPos.y) , 2000 * posOffset)) > 0) {
+    countOfSignsNearCurrent = findSignSuperposition(TPoint(pos.x, pos.y) , 1000 * posOffset);
+    if ( countOfSignsNearCurrent > 0 ) {
         if (fOnAttachment) {
-            txOffset -= 1000 * posOffset;
+            txOffset -= 1000 * countOfSignsNearCurrent * posOffset;
         } else {
-            tyOffset += 1000 * posOffset;
+            tyOffset += 1000 * countOfSignsNearCurrent * posOffset;
         }
-        // пересчитаем положение знака еще раз
-        newPos.x = pos.x + txOffset*cos(rotationHandle)- tyOffset*sin(rotationHandle);
-        newPos.y = pos.y + tyOffset*cos(rotationHandle)+ txOffset*sin(rotationHandle);
     }
 
     // запомним положение знака
-    SignsPositions.push_back(TPoint(newPos.x, newPos.y) );
+    SignsPositions.push_back(TPoint(pos.x, pos.y) );
 
     // поставим сноску и сдвинем ее хвостик
 	//AutoCAD.SetPropertyDouble(block,"Length",1200);
