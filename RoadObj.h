@@ -1109,6 +1109,8 @@ __property __int32 FrameLPos={read=FFrameLPos};
 __property __int32 FrameXMin={read=FFrameXMin};
 __property __int32 FrameXMax={read=FFrameXMax};
 __property __int32 Step={read=FStep,write=FStep};
+__property double Kx={read=FKx};
+__property double Kl={read=FKl};
 
 };
 

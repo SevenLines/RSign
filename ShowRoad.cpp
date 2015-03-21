@@ -1725,6 +1725,7 @@ void __fastcall TRoadFrm::DrawPoly(void)
     		FMetricData->Road->SetOutBound(0,PBox->Width,0,PBox->Height);
             FMetricData->Road->ConvertPolyline(*FPoly,*evec);
             evec->DrawPoly(dc,pen1,pen2);
+            delete evec;
         } else {
     		FVector->DrawPoly(dc,pen1,pen2);
         }
@@ -2140,7 +2141,30 @@ void __fastcall TRoadFrm::PaintRoad(TObject *Sender)
 	DrawGrid();
 	DrawMarkerPart();
 	CPVisible=false;  // Точка не видна
-	if (FPlanKind==pkGorizontal)
+    if (FMetricData && FMetricData->Road && FMetricData->Road->ConvertMethod==pc2d)  {
+		TPoint P1,P2,P3;
+		P1.x=P1.y=0;
+        P2.x=PBox->ClientWidth,P2.y=0;
+		TPoint Q1=PBox->ClientToScreen(P1);
+		P1=HRuler->ScreenToClient(Q1);
+		Q1=PBox->ClientToScreen(P2);
+		P2=HRuler->ScreenToClient(Q1);
+        double dx=P2.x-P1.x;
+        __int32 px,py;
+        FDrawMan->Road->ConvertPoint(FMarkerL,0,px,py);
+        P3.x=px,P3.y=py;
+		Q1=PBox->ClientToScreen(P3);
+		P3=HRuler->ScreenToClient(Q1);
+        double lnup=FMarkerL+(P2.x-P3.x)/FMetricData->Road->Kl;//FSclL;
+        double lndn=FMarkerL+(P1.x-P3.x)/FMetricData->Road->Kl;//FSclL;
+        double xup=(0-py)/FMetricData->Road->Kx;
+        double xdn=(PBox->Height-py)/FMetricData->Road->Kx;
+        HRuler->SetMinMax(true,lndn/100,lnup/100,P1.x,P2.x-P1.x);
+		VRuler->SetMinMax(true,xup/100,xdn/100,0,PBox->Height);
+//		VRuler->SetMinMax(true,0,xdn/100,py,PBox->Height-py);
+
+    }
+	else if (FPlanKind==pkGorizontal)
 	{
 		TPoint P;
 		P.x=P.y=0;
@@ -2152,9 +2176,9 @@ void __fastcall TRoadFrm::PaintRoad(TObject *Sender)
 		FDrawMan->Road->ConvertPoint(FPMaxL,0,PX2,PY2);
 		bool dir=FPlanDirect==pdDirect;
 		if (dir)
-		HRuler->SetMinMax(dir,(double)(FPMinL-FRelativeNull)/100,(double)(FPMaxL-FRelativeNull)/100,P.x+PX1,PX2-PX1);
+    		HRuler->SetMinMax(dir,(double)(FPMinL-FRelativeNull)/100,(double)(FPMaxL-FRelativeNull)/100,P.x+PX1,PX2-PX1);
 		else
-		HRuler->SetMinMax(dir,(double)(FPMinL-FRelativeNull)/100,(double)(FPMaxL-FRelativeNull)/100,HRuler->Width-P.x-PX1,PX1-PX2);
+    		HRuler->SetMinMax(dir,(double)(FPMinL-FRelativeNull)/100,(double)(FPMaxL-FRelativeNull)/100,HRuler->Width-P.x-PX1,PX1-PX2);
 		VRuler->SetMinMax(dir,(double)FPMinX/100,(double)FPMaxX/100,0,PBox->Height);
 	}
 	else
