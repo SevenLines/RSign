@@ -65,8 +65,8 @@
       -I$(BCB)\include -I$(BCB)\include\vcl -I$(BCB)\include\atl 
       -I$(BCB)\Imports -src_suffix cpp -DNO_PROMPT_ON_ASSERTE_FAILURE 
       -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -boa"/>
-    <CFLAG1 value="-Od -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; -Hc -Vx -Ve 
-      -Tkh30000 -X- -r- -a8 -b -k -y -v -vi- -c -tW -tWM"/>
+    <CFLAG1 value="-vGc -vGt -vGd -Od -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; 
+      -Hc -Vx -Ve -Tkh30000 -X- -r- -a8 -b -k -y -v -vi- -c -tW -tWM"/>
     <CFLAG2 value=""/>
     <CFLAG3 value=""/>
     <PFLAGS value="-$Y+ -$W -$O- -$A8 -v -M -JPHNE"/>
@@ -79,7 +79,7 @@
   <LINKER>
     <ALLOBJ value="c0w32.obj sysinit.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
-    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib"/>
+    <ALLLIB value="cg32.lib $(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib"/>
     <OTHERFILES value=""/>
   </LINKER>
   <FILELIST>
@@ -193,9 +193,6 @@ ProductName=
 ProductVersion=1.0.0.0
 Comments=
 
-[Excluded Packages]
-c:\program files (x86)\borland\cbuilder6\Bin\dclite60.bpl=Borland Integrated Translation Environment
-
 [HistoryLists\hlIncludePath]
 Count=10
 Item0=C:\Program Files (x86)\Borland\CBuilder6\Projects;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;$(BCB)\Imports
@@ -252,11 +249,16 @@ RemoteDebug=0
 [Compiler]
 ShowInfoMsgs=0
 LinkDebugVcl=0
-LinkCGLIB=0
+LinkCGLIB=1
 
 [CORBA]
 AddServerUnit=1
 AddClientUnit=1
 PrecompiledHeaders=1
+
+[Language]
+ActiveLang=
+ProjectLang=
+RootDir=
   </IDEOPTIONS>
 </PROJECT>
