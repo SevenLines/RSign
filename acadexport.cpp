@@ -3846,7 +3846,7 @@ bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, vector<TTraffic
         case tlkTr: blockKind = "T_r"; break;
         case tlkTrl: blockKind = "T_rl"; break;
         case tlkP: blockKind = "TP"; break;
-        case trlkTR: blockKind = "TR"; break;
+        case trlkTR: blockKind = "TR"; break;  //2385256
         }
 
         float scale = ScaleYBlock / 2;
