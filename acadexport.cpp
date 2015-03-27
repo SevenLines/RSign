@@ -1165,7 +1165,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                   break;
               default:
                   rotationHandle = M_PI/2;
-                  rotation = M_PI;
+                  rotation = 0;
                   signspot = SignSpot1_m;
               }
               break;
@@ -1212,7 +1212,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                   break;
               default:
                   rotationHandle = -M_PI/2;
-                  rotation = M_PI;
+                  rotation = 0;
                   signspot = SignSpot1_m;
               }
               break;
@@ -1236,7 +1236,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                   if (signs[0]->Placement == spUp) {
                       signspot = SignSpot2;
                       rotationHandle -= M_PI/2;
-                      rotation -= M_PI/2;
+                      rotation += M_PI/2;
                       signSpotOffset = 9;
                   } else {
                       signspot = SignSpot1;
