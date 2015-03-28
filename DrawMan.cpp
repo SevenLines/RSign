@@ -269,8 +269,8 @@ for (int i=0;i<FCount;i++)
                 ends=new int [memsize];
                 memcpy(starts,oldst,n*sizeof(int));
                 memcpy(ends,olden,n*sizeof(int));
-                delete oldst;
-                delete olden;
+                delete[] oldst;
+                delete[] olden;
                 }
             if (param)
                 {

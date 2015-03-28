@@ -282,6 +282,7 @@ private:        // User declarations
     bool FMaxCanMove;  //true если можно перемещать большую направляющую
     bool FEditMetric;  //true если редактирование метрики
     bool FShowProfil;  //true если ожидаем выбора точки для отображения профиля
+    bool FEqualScale;  //true если включен режим равенства масштабов
     TPolyline *FPoly;  //Полилиния для редактирования
     TExtPolyline *FVector;   //Вектор из точек в координатах экрана
     int FActivePoint;  //Номер активной точки
