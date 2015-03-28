@@ -1,330 +1,66 @@
-Error 00041. 0x130C10 (Thread 0x0A6C):
+Error 00053. 0x130C10 (Thread 0x0B1C):
 Method called on illegally casted object: Attempt to access 608 byte(s) at
- 0x011B6724. The 'this' pointer points to heap block 0x011B6724 which is only
+ 0x025B632C. The 'this' pointer points to heap block 0x025B632C which is only
  604 bytes long.
 Call Tree:
-   0x00421A74(=RSign.exe:0x01:020A74) c:\program files\borland\cbuilder6\include\vcl\ADODB.hpp#965
-   0x0041BF62(=RSign.exe:0x01:01AF62) D:\Projects\RSign\DBDataSource.h#71
-   0x0041BB79(=RSign.exe:0x01:01AB79) D:\Projects\RSign\MainUnit.cpp#540
-   0x006A157B(=RSign.exe:0x01:2A057B)
-   0x006A11EE(=RSign.exe:0x01:2A01EE)
-   0x00415789(=RSign.exe:0x01:014789) c:\program files\borland\cbuilder6\include\vcl\Forms.hpp#930
+   0x00421A74(=RSign.exe:0x01:020A74) c:\program files (x86)\borland\cbuilder6\include\vcl\ADODB.hpp#965
+   0x0041BF62(=RSign.exe:0x01:01AF62) E:\Projects\RSign\DBDataSource.h#71
+   0x0041BB79(=RSign.exe:0x01:01AB79) E:\Projects\RSign\MainUnit.cpp#540
+   0x00690A03(=RSign.exe:0x01:28FA03)
+   0x00690676(=RSign.exe:0x01:28F676)
+   0x00415789(=RSign.exe:0x01:014789) c:\program files (x86)\borland\cbuilder6\include\vcl\Forms.hpp#930
 
-The memory block (0x011B6724) [size: 604 bytes] was allocated with SysGetMem
+The memory block (0x025B632C) [size: 604 bytes] was allocated with SysGetMem
 Call Tree:
-   0x0070F1BB(=RSign.exe:0x01:30E1BB)
-   0x0041BF62(=RSign.exe:0x01:01AF62) D:\Projects\RSign\DBDataSource.h#71
-   0x0041BB79(=RSign.exe:0x01:01AB79) D:\Projects\RSign\MainUnit.cpp#540
-   0x006A157B(=RSign.exe:0x01:2A057B)
-   0x006A11EE(=RSign.exe:0x01:2A01EE)
-   0x00415789(=RSign.exe:0x01:014789) c:\program files\borland\cbuilder6\include\vcl\Forms.hpp#930
+   0x006FE643(=RSign.exe:0x01:2FD643)
+   0x0041BF62(=RSign.exe:0x01:01AF62) E:\Projects\RSign\DBDataSource.h#71
+   0x0041BB79(=RSign.exe:0x01:01AB79) E:\Projects\RSign\MainUnit.cpp#540
+   0x00690A03(=RSign.exe:0x01:28FA03)
+   0x00690676(=RSign.exe:0x01:28F676)
+   0x00415789(=RSign.exe:0x01:014789) c:\program files (x86)\borland\cbuilder6\include\vcl\Forms.hpp#930
 
 ------------------------------------------
-Error 00052. 0x130C10 (Thread 0x0A6C):
+Error 00077. 0x130C10 (Thread 0x0B1C):
 Method called on illegally casted object: Attempt to access 224 byte(s) at
- 0x011B35CC. The 'this' pointer points to heap block 0x011B35CC which is only
+ 0x025B3B58. The 'this' pointer points to heap block 0x025B3B58 which is only
  220 bytes long.
 Call Tree:
-   0x0041957A(=RSign.exe:0x01:01857A) c:\program files\borland\cbuilder6\include\vcl\ADODB.hpp#277
-   0x00418979(=RSign.exe:0x01:017979) D:\Projects\RSign\MainUnit.cpp#227
-   0x0041A095(=RSign.exe:0x01:019095) D:\Projects\RSign\MainUnit.cpp#278
-   0x0041DFE6(=RSign.exe:0x01:01CFE6) D:\Projects\RSign\MainUnit.cpp#910
-   0x006A1CBB(=RSign.exe:0x01:2A0CBB)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
+   0x0041957A(=RSign.exe:0x01:01857A) c:\program files (x86)\borland\cbuilder6\include\vcl\ADODB.hpp#277
+   0x00418979(=RSign.exe:0x01:017979) E:\Projects\RSign\MainUnit.cpp#227
+   0x0041A095(=RSign.exe:0x01:019095) E:\Projects\RSign\MainUnit.cpp#278
+   0x0041DFE6(=RSign.exe:0x01:01CFE6) E:\Projects\RSign\MainUnit.cpp#910
+   0x00691143(=RSign.exe:0x01:290143)
+   0x006A776B(=RSign.exe:0x01:2A676B)
 
-The memory block (0x011B35CC) [size: 220 bytes] was allocated with SysGetMem
+The memory block (0x025B3B58) [size: 220 bytes] was allocated with SysGetMem
 Call Tree:
-   0x0070F1BB(=RSign.exe:0x01:30E1BB)
-   0x006F35E6(=RSign.exe:0x01:2F25E6)
-   0x006F3832(=RSign.exe:0x01:2F2832)
-   0x006F3771(=RSign.exe:0x01:2F2771)
-   0x006F7ECA(=RSign.exe:0x01:2F6ECA)
-   0x006A17C6(=RSign.exe:0x01:2A07C6)
+   0x006FE643(=RSign.exe:0x01:2FD643)
+   0x006E2A6E(=RSign.exe:0x01:2E1A6E)
+   0x006E2CBA(=RSign.exe:0x01:2E1CBA)
+   0x006E2BF9(=RSign.exe:0x01:2E1BF9)
+   0x006E7352(=RSign.exe:0x01:2E6352)
+   0x00690C4E(=RSign.exe:0x01:28FC4E)
 
 ------------------------------------------
-Error 00111. 0x300010 (Thread 0x0A6C):
-Resource leak: The object (0x29540E0) was never deleted
-
-The object (0x029540E0) [size: 24 bytes] was created with new
+Error 00103. 0x130C10 (r) (Thread 0x08D8):
+Method called on illegally casted object: Attempt to access 608 byte(s) at
+ 0x0268C570. The 'this' pointer points to heap block 0x0268C570 which is only
+ 604 bytes long.
 Call Tree:
-   0x0049A420(=RSign.exe:0x01:099420) D:\Projects\RSign\ShowRoad.cpp#1723
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-   0x006B80B3(=RSign.exe:0x01:2B70B3)
-   0x006BB677(=RSign.exe:0x01:2BA677)
+   0x00421A74(=RSign.exe:0x01:020A74) c:\program files (x86)\borland\cbuilder6\include\vcl\ADODB.hpp#965
+   0x006022E8(=RSign.exe:0x01:2012E8) E:\Projects\RSign\TConnectionFormThreadUnit.cpp#45
+   0x006024EF(=RSign.exe:0x01:2014EF) E:\Projects\RSign\TConnectionFormThreadUnit.cpp#81
+   0x006E6A7F(=RSign.exe:0x01:2E5A7F)
+   0x0070060A(=RSign.exe:0x01:2FF60A)
+   0x77023677(=kernel32.dll:0x01:003677)
 
-------------------------------------------
-Error 00112. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x2EB0044) was never deleted
-
-The object array (0x02EB0044) [size: 96 bytes] was created with new[]
+The memory block (0x0268C570) [size: 604 bytes] was allocated with SysGetMem
 Call Tree:
-   0x00452A7F(=RSign.exe:0x01:051A7F) D:\Projects\RSign\Metrics.cpp#144
-   0x0044F927(=RSign.exe:0x01:04E927) D:\Projects\RSign\RoadObj.cpp#2912
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00113. 0x300010 (Thread 0x0A6C):
-Resource leak: The object (0x29540FC) was never deleted
-
-The object (0x029540FC) [size: 24 bytes] was created with new
-Call Tree:
-   0x0049A420(=RSign.exe:0x01:099420) D:\Projects\RSign\ShowRoad.cpp#1723
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-   0x006B80B3(=RSign.exe:0x01:2B70B3)
-   0x006BB677(=RSign.exe:0x01:2BA677)
-
-------------------------------------------
-Error 00114. 0x300010 (Thread 0x0A6C):
-Resource leak: The object (0x29700F4) was never deleted
-
-The object (0x029700F4) [size: 24 bytes] was created with new
-Call Tree:
-   0x0049A420(=RSign.exe:0x01:099420) D:\Projects\RSign\ShowRoad.cpp#1723
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-   0x006B80B3(=RSign.exe:0x01:2B70B3)
-   0x006BB677(=RSign.exe:0x01:2BA677)
-
-------------------------------------------
-Error 00115. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x2E5A04C) was never deleted
-
-The object array (0x02E5A04C) [size: 208 bytes] was created with new[]
-Call Tree:
-   0x00452A7F(=RSign.exe:0x01:051A7F) D:\Projects\RSign\Metrics.cpp#144
-   0x0044FBDA(=RSign.exe:0x01:04EBDA) D:\Projects\RSign\RoadObj.cpp#2932
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00116. 0x300010 (Thread 0x0A6C):
-Resource leak: The object (0x29500C8) was never deleted
-
-The object (0x029500C8) [size: 24 bytes] was created with new
-Call Tree:
-   0x0049A420(=RSign.exe:0x01:099420) D:\Projects\RSign\ShowRoad.cpp#1723
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-   0x006B80B3(=RSign.exe:0x01:2B70B3)
-   0x006BB677(=RSign.exe:0x01:2BA677)
-
-------------------------------------------
-Error 00117. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x2E50074) was never deleted
-
-The object array (0x02E50074) [size: 96 bytes] was created with new[]
-Call Tree:
-   0x00452A7F(=RSign.exe:0x01:051A7F) D:\Projects\RSign\Metrics.cpp#144
-   0x0044F927(=RSign.exe:0x01:04E927) D:\Projects\RSign\RoadObj.cpp#2912
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00118. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x299C074) was never deleted
-
-The object array (0x0299C074) [size: 104 bytes] was created with new[]
-Call Tree:
-   0x00452AC6(=RSign.exe:0x01:051AC6) D:\Projects\RSign\Metrics.cpp#146
-   0x0044FBDA(=RSign.exe:0x01:04EBDA) D:\Projects\RSign\RoadObj.cpp#2932
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00119. 0x300010 (Thread 0x0A6C):
-Resource leak: The object (0x29540C4) was never deleted
-
-The object (0x029540C4) [size: 24 bytes] was created with new
-Call Tree:
-   0x0049A420(=RSign.exe:0x01:099420) D:\Projects\RSign\ShowRoad.cpp#1723
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-   0x006B80B3(=RSign.exe:0x01:2B70B3)
-   0x006BB677(=RSign.exe:0x01:2BA677)
-
-------------------------------------------
-Error 00120. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x2ED406C) was never deleted
-
-The object array (0x02ED406C) [size: 240 bytes] was created with new[]
-Call Tree:
-   0x00452A7F(=RSign.exe:0x01:051A7F) D:\Projects\RSign\Metrics.cpp#144
-   0x0044FBDA(=RSign.exe:0x01:04EBDA) D:\Projects\RSign\RoadObj.cpp#2932
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00121. 0x300010 (Thread 0x0A6C):
-Resource leak: The object (0x29540A8) was never deleted
-
-The object (0x029540A8) [size: 24 bytes] was created with new
-Call Tree:
-   0x0049A420(=RSign.exe:0x01:099420) D:\Projects\RSign\ShowRoad.cpp#1723
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-   0x006B80B3(=RSign.exe:0x01:2B70B3)
-   0x006BB677(=RSign.exe:0x01:2BA677)
-
-------------------------------------------
-Error 00122. 0x300010 (Thread 0x0A6C):
-Resource leak: The object (0x29500AC) was never deleted
-
-The object (0x029500AC) [size: 24 bytes] was created with new
-Call Tree:
-   0x0049A420(=RSign.exe:0x01:099420) D:\Projects\RSign\ShowRoad.cpp#1723
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-   0x006B80B3(=RSign.exe:0x01:2B70B3)
-   0x006BB677(=RSign.exe:0x01:2BA677)
-
-------------------------------------------
-Error 00123. 0x300010 (Thread 0x0A6C):
-Resource leak: The object (0x2EA60A4) was never deleted
-
-The object (0x02EA60A4) [size: 24 bytes] was created with new
-Call Tree:
-   0x0049A420(=RSign.exe:0x01:099420) D:\Projects\RSign\ShowRoad.cpp#1723
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-   0x006B80B3(=RSign.exe:0x01:2B70B3)
-   0x006BB677(=RSign.exe:0x01:2BA677)
-
-------------------------------------------
-Error 00124. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x29A6000) was never deleted
-
-The object array (0x029A6000) [size: 48 bytes] was created with new[]
-Call Tree:
-   0x00452AC6(=RSign.exe:0x01:051AC6) D:\Projects\RSign\Metrics.cpp#146
-   0x0044F927(=RSign.exe:0x01:04E927) D:\Projects\RSign\RoadObj.cpp#2912
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00125. 0x300010 (Thread 0x0A6C):
-Resource leak: The object (0x293E0B8) was never deleted
-
-The object (0x0293E0B8) [size: 24 bytes] was created with new
-Call Tree:
-   0x0049A420(=RSign.exe:0x01:099420) D:\Projects\RSign\ShowRoad.cpp#1723
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-   0x006B80B3(=RSign.exe:0x01:2B70B3)
-   0x006BB677(=RSign.exe:0x01:2BA677)
-
-------------------------------------------
-Error 00126. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x2984004) was never deleted
-
-The object array (0x02984004) [size: 144 bytes] was created with new[]
-Call Tree:
-   0x00452AC6(=RSign.exe:0x01:051AC6) D:\Projects\RSign\Metrics.cpp#146
-   0x0044F927(=RSign.exe:0x01:04E927) D:\Projects\RSign\RoadObj.cpp#2912
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00127. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x2EE4004) was never deleted
-
-The object array (0x02EE4004) [size: 240 bytes] was created with new[]
-Call Tree:
-   0x00452A7F(=RSign.exe:0x01:051A7F) D:\Projects\RSign\Metrics.cpp#144
-   0x0044FBDA(=RSign.exe:0x01:04EBDA) D:\Projects\RSign\RoadObj.cpp#2932
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00128. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x2E5A004) was never deleted
-
-The object array (0x02E5A004) [size: 24 bytes] was created with new[]
-Call Tree:
-   0x00452AC6(=RSign.exe:0x01:051AC6) D:\Projects\RSign\Metrics.cpp#146
-   0x0044F927(=RSign.exe:0x01:04E927) D:\Projects\RSign\RoadObj.cpp#2912
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00129. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x299C008) was never deleted
-
-The object array (0x0299C008) [size: 104 bytes] was created with new[]
-Call Tree:
-   0x00452AC6(=RSign.exe:0x01:051AC6) D:\Projects\RSign\Metrics.cpp#146
-   0x0044FBDA(=RSign.exe:0x01:04EBDA) D:\Projects\RSign\RoadObj.cpp#2932
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00130. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x29A6034) was never deleted
-
-The object array (0x029A6034) [size: 24 bytes] was created with new[]
-Call Tree:
-   0x00452AC6(=RSign.exe:0x01:051AC6) D:\Projects\RSign\Metrics.cpp#146
-   0x0044F927(=RSign.exe:0x01:04E927) D:\Projects\RSign\RoadObj.cpp#2912
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00131. 0x300010 (Thread 0x0A6C):
-Resource leak: The object array (0x2970020) was never deleted
-
-The object array (0x02970020) [size: 208 bytes] was created with new[]
-Call Tree:
-   0x00452A7F(=RSign.exe:0x01:051A7F) D:\Projects\RSign\Metrics.cpp#144
-   0x0044FBDA(=RSign.exe:0x01:04EBDA) D:\Projects\RSign\RoadObj.cpp#2932
-   0x0049A5BC(=RSign.exe:0x01:0995BC) D:\Projects\RSign\ShowRoad.cpp#1726
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-
-------------------------------------------
-Error 00132. 0x300010 (Thread 0x0A6C):
-Resource leak: The object (0x29A6090) was never deleted
-
-The object (0x029A6090) [size: 24 bytes] was created with new
-Call Tree:
-   0x0049A420(=RSign.exe:0x01:099420) D:\Projects\RSign\ShowRoad.cpp#1723
-   0x0049E16C(=RSign.exe:0x01:09D16C) D:\Projects\RSign\ShowRoad.cpp#2201
-   0x006AC2BA(=RSign.exe:0x01:2AB2BA)
-   0x006B82E3(=RSign.exe:0x01:2B72E3)
-   0x006B80B3(=RSign.exe:0x01:2B70B3)
-   0x006BB677(=RSign.exe:0x01:2BA677)
+   0x006FE643(=RSign.exe:0x01:2FD643)
+   0x006022E8(=RSign.exe:0x01:2012E8) E:\Projects\RSign\TConnectionFormThreadUnit.cpp#45
+   0x006024EF(=RSign.exe:0x01:2014EF) E:\Projects\RSign\TConnectionFormThreadUnit.cpp#81
+   0x006E6A7F(=RSign.exe:0x01:2E5A7F)
+   0x0070060A(=RSign.exe:0x01:2FF60A)
+   0x77023677(=kernel32.dll:0x01:003677)
 
 ------------------------------------------

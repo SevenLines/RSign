@@ -2131,7 +2131,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 hatch->PatternScale = 50;
                 pl[0]->Delete();
 
-                block = AutoCAD.DrawBlock("r_label",p.x, p.y);
+                block = AutoCAD.DrawBlock("r_label",p.x, p.y, 0, ScaleYBlock / 4);
                 if (block.IsBound()) {
                     AutoCAD.SetAttribute(block, "Label", str);
                 }
@@ -2593,7 +2593,7 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly,TRoadBarrier *b, b
             int step = points[i].x / iStep;
             if (step != lastStep
                 || (i == points.size()-1 && abs(points.front().x - points.back().x) > 10000)) {
-                block = AutoCAD.DrawBlock("r_label", points[i].x, points[i].y*-ScaleY, 0, 1);
+                block = AutoCAD.DrawBlock("r_label", points[i].x, points[i].y*-ScaleY, 0, ScaleYBlock / 4);
                 if(block.IsBound()) {
                     AutoCAD.SetAttribute(block, "Label", "2.5");
                 }
