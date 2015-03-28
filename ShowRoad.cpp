@@ -91,6 +91,7 @@ __fastcall TRoadFrm::TRoadFrm(TComponent* Owner)
 	FRectVisible=false;
 	FEditMetric=false;
 	FShowProfil=false;
+    FEqualScale=false;
 	FPlanKind=pkGorizontal;
 	FPlanDirect=pdDirect;
 	ZoomStatus=zsNone;
@@ -426,41 +427,52 @@ void __fastcall TRoadFrm::ScaleByRect(void)
 	}
 	FMetricData->Road->SetFrame(FPMinL,FPMaxL,FMarkerL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
 	FMetricData->Road->SetOutBound(0,PBox->Width,0,PBox->Height);
-	if (((MaxX-MinX)<5) && ((MaxY-MinY)<5))
-	{
-		int DPX=(FPMaxX-FPMinX)>>2;
-		int DPL=(FPMaxL-FPMinL)>>2;
-		int CX,CL;
-		FMetricData->Road->RConvertPoint((MinX+MaxX)>>1,(MinY+MaxY)>>1,CL,CX);
-		FPMinX=CX-DPX;
-		FPMaxX=CX+DPX;
-		FPMinL=CL-DPL;
-		FPMaxL=CL+DPL;
-	}
-	else
-	{
-		if (FPlanKind==pkGorizontal)
-		{
-			FMetricData->Road->RConvertPoint(MinX,MinY,FPMinL,FPMinX);
-			FMetricData->Road->RConvertPoint(MaxX,MaxY,FPMaxL,FPMaxX);
-		}
-		else
-		{
-			FMetricData->Road->RConvertPoint(MaxX,MaxY,FPMinL,FPMaxX);
-			FMetricData->Road->RConvertPoint(MinX,MinY,FPMaxL,FPMinX);
-		}
-		if (FPMinL>FPMaxL)
-		{
-			__int32 t=FPMinL;
-			FPMinL=FPMaxL;
-			FPMaxL=t;
-		}
-		if (FPMinX>FPMaxX)
-		{
-			__int32 t=FPMinX;
-			FPMinX=FPMaxX;
-			FPMaxX=t;
-		}
+    if (FMetricData->Road->ConvertMethod==pc2d) {
+    		int CX,CL;
+            int DPL=(FPMaxL-FPMinL)*(MaxX-MinX)/(2*PBox->Width);
+            int DPX=(FPMaxX-FPMinX)*(MaxY-MinY)/(2*PBox->Height);
+    		FMetricData->Road->RConvertPoint((MinX+MaxX)>>1,(MinY+MaxY)>>1,CL,CX);
+    		FPMinX=CX-DPX;
+    		FPMaxX=CX+DPX;
+    		FPMinL=CL-DPL;
+    		FPMaxL=CL+DPL;
+    } else {
+    	if (((MaxX-MinX)<5) && ((MaxY-MinY)<5))
+    	{
+    		int DPX=(FPMaxX-FPMinX)>>2;
+    		int DPL=(FPMaxL-FPMinL)>>2;
+    		int CX,CL;
+    		FMetricData->Road->RConvertPoint((MinX+MaxX)>>1,(MinY+MaxY)>>1,CL,CX);
+    		FPMinX=CX-DPX;
+    		FPMaxX=CX+DPX;
+    		FPMinL=CL-DPL;
+    		FPMaxL=CL+DPL;
+    	}
+    	else
+    	{
+    		if (FPlanKind==pkGorizontal)
+    		{
+    			FMetricData->Road->RConvertPoint(MinX,MinY,FPMinL,FPMinX);
+    			FMetricData->Road->RConvertPoint(MaxX,MaxY,FPMaxL,FPMaxX);
+    		}
+    		else
+    		{
+    			FMetricData->Road->RConvertPoint(MaxX,MaxY,FPMinL,FPMaxX);
+    			FMetricData->Road->RConvertPoint(MinX,MinY,FPMaxL,FPMinX);
+    		}
+    		if (FPMinL>FPMaxL)
+    		{
+    			__int32 t=FPMinL;
+    			FPMinL=FPMaxL;
+    			FPMaxL=t;
+    		}
+    		if (FPMinX>FPMaxX)
+    		{
+    			__int32 t=FPMinX;
+    			FPMinX=FPMaxX;
+    			FPMaxX=t;
+    		}
+        }
 	}
 	SetMarkerPos((FPMinL+FPMaxL)>>1);
 	ShowScale();
@@ -3121,6 +3133,9 @@ void __fastcall TRoadFrm::PostAction(void)
 	SpeedButton18->Down=v_en&&(frmVideoForm->Direction==1);
 	SpeedButton19->Down=v_en&&(frmVideoForm->Direction==2);
 	SpeedButton20->Down=FPartVisible;
+    SpeedButton4->Down=FEqualScale;
+    SpeedButton21->Enabled=FMetricData!=0;
+    SpeedButton21->Down=FMetricData!=0 && FMetricData->Road->ConvertMethod==pc2d;
 	ShowStatus();
 }
 
@@ -3377,6 +3392,10 @@ void __fastcall TRoadFrm::N21Click(TObject *Sender)
 void __fastcall TRoadFrm::SpeedButton4Click(TObject *Sender)
 {
 	double DL;
+	if (SpeedButton4->Down)
+        FEqualScale=true;
+    else
+        FEqualScale=false;    
 	if (FPlanKind==pkGorizontal)
 	DL=(FPMaxX-FPMinX)/(double)PBox->Height*PBox->Width;
 	else
