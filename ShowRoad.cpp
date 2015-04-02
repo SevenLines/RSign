@@ -55,6 +55,7 @@ __fastcall TRoadFrm::TRoadFrm(TComponent* Owner)
     FInsertingPoly=new TPolyline(2);
 	FRoadId=0;
 	FViewId=0;
+    FHashSize=0;
 	FPan1Vis=false;
 	FPan2Vis=false;
 	FPan3Vis=false;
@@ -161,6 +162,7 @@ void __fastcall TRoadFrm::SaveRegistry(void)
 	if (FMetricData->Road)
 	reg->WriteInteger("ObjectMaxX",FMetricData->Road->XMax/100);
 	reg->WriteInteger("FontSize",FDrawMan->FontSize);
+	reg->WriteInteger("HashSize",FHashSize);
 	delete reg;
 }
 
@@ -182,6 +184,9 @@ void __fastcall TRoadFrm::LoadRegistry(void)
 		int obx=reg->ReadInteger("ObjectMaxX");
 		if (bx&&obx)
 		SetXBounds(bx*100,obx*100);
+        int hs=reg->ReadInteger("HashSize");
+        if (hs)
+            FHashSize=hs;
 	}
 	catch (...)
 	{}
@@ -428,9 +433,13 @@ void __fastcall TRoadFrm::ScaleByRect(void)
 	FMetricData->Road->SetFrame(FPMinL,FPMaxL,FMarkerL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
 	FMetricData->Road->SetOutBound(0,PBox->Width,0,PBox->Height);
     if (FMetricData->Road->ConvertMethod==pc2d) {
-    		int CX,CL;
-            int DPL=(FPMaxL-FPMinL)*(MaxX-MinX)/(2*PBox->Width);
-            int DPX=(FPMaxX-FPMinX)*(MaxY-MinY)/(2*PBox->Height);
+    		int CX,CL,DPL,DPX;
+            DPL=(FPMaxL-FPMinL)*(MaxX-MinX)/(2*PBox->Width);
+            if (FEqualScale) {
+                DPX=DPL*(PBox->Height+1)/(PBox->Width+1);
+            } else {
+                DPX=(FPMaxX-FPMinX)*(MaxY-MinY)/(2*PBox->Height);
+            }
     		FMetricData->Road->RConvertPoint((MinX+MaxX)>>1,(MinY+MaxY)>>1,CL,CX);
     		FPMinX=CX-DPX;
     		FPMaxX=CX+DPX;
@@ -501,6 +510,20 @@ void __fastcall TRoadFrm::ScaleL(double K)
 			FPMinL-=FPMaxL-FMaxL;
 			FPMaxL=FMaxL;
 		}
+        if (FMetricData->Road->ConvertMethod==pc2d && SpeedButton4->Down) {
+            int DX=(FPMaxL-FPMinL)*(PBox->Height+1)/(PBox->Width+1);
+            int CX=(FPMaxX+FPMinX)/2;
+            FPMinX=CX-DX/2;
+            FPMaxX=CX+DX/2;
+            if (FPMinX<FMinX)
+                FPMaxX+=FMinX-FPMinX,FPMinX=FMinX;
+            if (FPMaxX>FMaxX)
+                FPMinX-=FPMaxX-FMaxX,FPMaxX=FMaxX;
+            if (FPMaxX>FMaxX)
+                FPMaxX=FMaxX;
+            if (FPMinX<FMinX)
+                FPMinX=FMinX;
+        }
 		ShowScale();
 		InvalidateBoxes();
 	}
@@ -2256,6 +2279,7 @@ void __fastcall TRoadFrm::ShowParam(void)
 	DrwSetFrm->KmInPage=FKmInPage;
 	DrwSetFrm->MetricsSource=FMetricData->MetricsSource;
 	DrwSetFrm->ProfilKind=FProfilData->ProfilKind;
+    DrwSetFrm->HashFrameSize=FHashSize;
 	if (DrwSetFrm->ShowModal()==mrOk)
 	{
 		FDrawMan->DelVis=DrwSetFrm->DelVis;
@@ -2268,6 +2292,7 @@ void __fastcall TRoadFrm::ShowParam(void)
 		FProfilData->ProfilKind=DrwSetFrm->ProfilKind;
 		SetXBounds(DrwSetFrm->BoundX*100,DrwSetFrm->ObjX*100);
 		FKmInPage=DrwSetFrm->KmInPage;
+        FHashSize=DrwSetFrm->HashFrameSize;
 		BuildKmSet(FKmInPage);
 		RefreshPlan();
 		ShowScale();
@@ -3389,26 +3414,6 @@ void __fastcall TRoadFrm::N21Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TRoadFrm::SpeedButton4Click(TObject *Sender)
-{
-	double DL;
-	if (SpeedButton4->Down)
-        FEqualScale=true;
-    else
-        FEqualScale=false;    
-	if (FPlanKind==pkGorizontal)
-	DL=(FPMaxX-FPMinX)/(double)PBox->Height*PBox->Width;
-	else
-	DL=(FPMaxX-FPMinX)/(double)PBox->Width*PBox->Height;
-	__int32 CL=(FPMaxL+FPMinL)>>1;
-	DL/=2;
-	FPMaxL=CL+DL;
-	FPMinL=CL-DL;
-	ShowScale();
-	InvalidateBoxes();
-	PostAction();
-}
-//---------------------------------------------------------------------------
 
 void __fastcall TRoadFrm::MoveCurrentPoint(int X,int Y)
 {
@@ -4487,7 +4492,7 @@ TMouseButton Button, TShiftState Shift, int X, int Y)
 	}
 
 
-	
+
 }
 //---------------------------------------------------------------------------
 
@@ -4518,6 +4523,46 @@ if (FMetricData) {
     FMetricData->Road->ConvertMethod=(SpeedButton21->Down ? pc2d : pc1d);
     RefreshPlan();
 }
+}
+//---------------------------------------------------------------------------
+
+long sp4time;
+void __fastcall TRoadFrm::SpeedButton4MouseDown(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+   sp4time=time(0);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TRoadFrm::SpeedButton4MouseUp(TObject *Sender,
+      TMouseButton Button, TShiftState Shift, int X, int Y)
+{
+  sp4time=time(0)-sp4time;
+  if (sp4time>=2) {
+    if (!SpeedButton4->Down) {
+       SpeedButton4->GroupIndex=11;
+       SpeedButton4->Down=true;
+    } else {
+       SpeedButton4->GroupIndex=0;
+       SpeedButton4->Down=false;
+    }
+  }
+	double DL;
+	if (SpeedButton4->Down)
+        FEqualScale=true;
+    else
+        FEqualScale=false;
+	if (FPlanKind==pkGorizontal)
+	DL=(FPMaxX-FPMinX)/(double)PBox->Height*PBox->Width;
+	else
+	DL=(FPMaxX-FPMinX)/(double)PBox->Width*PBox->Height;
+	__int32 CL=(FPMaxL+FPMinL)>>1;
+	DL/=2;
+	FPMaxL=CL+DL;
+	FPMinL=CL-DL;
+	ShowScale();
+	InvalidateBoxes();
+	PostAction();
 }
 //---------------------------------------------------------------------------
 

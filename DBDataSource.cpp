@@ -744,6 +744,12 @@ if (!FConnection)
                             int n=Fld_Count->AsInteger;
                             TMemoryStream *Mem=new TMemoryStream;
                             dynamic_cast<TBlobField*>(Fld_Points)->SaveToStream(Mem);
+                            int n1=Mem->Size/24;
+                            if (n1<n) {
+                                ShowMessage("Ошибка в базе даннных при чтении объекта "+Meta->Title+
+                                ". Количество точек не равно указанному. Id="+IntToStr(id_));
+                                n=n1;
+                            }
                             Obj->Poly=new TPolyline(n);
                             Obj->Poly->LoadFromStream(Mem);
                             delete Mem;

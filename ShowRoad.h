@@ -189,7 +189,6 @@ __published:    // IDE-managed Components
     void __fastcall HScrollChange(TObject *Sender);
     void __fastcall N11Click(TObject *Sender);
     void __fastcall N21Click(TObject *Sender);
-    void __fastcall SpeedButton4Click(TObject *Sender);
     void __fastcall PBoxMouseMove(TObject *Sender, TShiftState Shift,
           int X, int Y);
     void __fastcall PBoxMouseUp(TObject *Sender, TMouseButton Button,
@@ -246,6 +245,10 @@ __published:    // IDE-managed Components
         void __fastcall N12Click(TObject *Sender);
         void __fastcall PlayerBoxPaint(TObject *Sender);
     void __fastcall SpeedButton21Click(TObject *Sender);
+    void __fastcall SpeedButton4MouseDown(TObject *Sender,
+          TMouseButton Button, TShiftState Shift, int X, int Y);
+    void __fastcall SpeedButton4MouseUp(TObject *Sender,
+          TMouseButton Button, TShiftState Shift, int X, int Y);
 private:        // User declarations
        /* МИША */
        TObjPlacement lPlace;
@@ -321,6 +324,8 @@ private:        // User declarations
     __int32 FVMinL,FVMaxL;
     //Положение маркера
     __int32 FMarkerL;
+    //Увеличение размер окна для выбора объектов в двумерном режиме
+    __int32 FHashSize;
     //
     __int32 FRelativeNull;
 
@@ -482,7 +487,7 @@ public:         // User declarations
     // В одномерном режиме это VMinL, VMaxL, в двумерном пока заплатка сдвиг на 1000 метров
     void __fastcall GetVisibleBound(__int32 &l1,__int32 &l2) {
        if (VisSet->MetricSource && VisSet->MetricSource->Road->ConvertMethod==pc2d)
-          l1=FVMinL-1000000,l2=FVMaxL+1000000;
+          l1=FVMinL-FHashSize*100,l2=FVMaxL+FHashSize*100;
        else
           l1=FVMinL,l2=FVMaxL;
     }

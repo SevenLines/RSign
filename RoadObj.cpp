@@ -1529,20 +1529,22 @@ else
     offs=-FOffset;
     }
 TRoadPoint *p=pl->Points;
-int n=pl->Count;
-for (__int32 i=0;i<n;i++)
-    p[i].X=(p[i].X*FK)/1000+offs,p[i].Code=1;
-p[0].Code=0;
 TExtPolyline *Res=new TExtPolyline;
-Road->ConvertPolyline(*pl,*Res);
-if (FDirection==roUnDirect)
-    {
-    int i,j=Res->Count;
-    for (i=0,j=Res->Count-1;i<j;i++,j--)
+int n=pl->Count;
+if (n>0) {
+    for (__int32 i=0;i<n;i++)
+        p[i].X=(p[i].X*FK)/1000+offs,p[i].Code=1;
+    p[0].Code=0;
+    Road->ConvertPolyline(*pl,*Res);
+    if (FDirection==roUnDirect)
         {
-        POINT tmp=Res->Points[i];
-        Res->Points[i]=Res->Points[j];
-        Res->Points[j]=tmp;
+        int i,j=Res->Count;
+        for (i=0,j=Res->Count-1;i<j;i++,j--)
+            {
+            POINT tmp=Res->Points[i];
+            Res->Points[i]=Res->Points[j];
+            Res->Points[j]=tmp;
+            }
         }
     }
 delete pl;

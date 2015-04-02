@@ -39,9 +39,15 @@ __published:	// IDE-managed Components
     TComboBox *ComboScaleP;
     TGroupBox *GroupBox9;
     TComboBox *ComboFontSize;
+    TGroupBox *GroupBox6;
+    TEdit *Edit2;
+    TUpDown *HashSizeUpDown;
+    TLabel *Label2;
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall ComboScaleXKeyPress(TObject *Sender, char &Key);
 private:	// User declarations
+    void __fastcall SetHashFrameSize(int);
+    int __fastcall GetHashFrameSize(void);
     void __fastcall SetScaleL(int);
     int __fastcall GetScaleL(void);
     void __fastcall SetScaleX(int);
@@ -67,7 +73,7 @@ private:	// User declarations
     void __fastcall SetMetSource(int);
     int __fastcall GetMetSource(void);
     void __fastcall SetProfilKind(int);
-    int __fastcall GetProfilKind(void);    
+    int __fastcall GetProfilKind(void);
 public:		// User declarations
     __fastcall TDrwSetFrm(TComponent* Owner);
     __property int ScaleL={read=GetScaleL,write=SetScaleL};
@@ -79,8 +85,9 @@ public:		// User declarations
     __property bool DelVis={read=GetDelVis,write=SetDelVis};
     __property bool ProVis={read=GetProVis,write=SetProVis};
     __property int MetricsSource={read=GetMetSource,write=SetMetSource};
-    __property int ProfilKind={read=GetProfilKind,write=SetProfilKind};    
+    __property int ProfilKind={read=GetProfilKind,write=SetProfilKind};
     __property int FontSize={read=GetFontSize,write=SetFontSize};
+    __property int HashFrameSize={read=GetHashFrameSize,write=SetHashFrameSize};
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TDrwSetFrm *DrwSetFrm;

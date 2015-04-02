@@ -168,6 +168,14 @@ int __fastcall TDrwSetFrm::GetKmInPage(void)
 return KmUpDown->Position;
 }
 
+void __fastcall TDrwSetFrm::SetHashFrameSize(int n) {
+HashSizeUpDown->Position=n;
+}
+
+int __fastcall TDrwSetFrm::GetHashFrameSize(void) {
+return HashSizeUpDown->Position;
+}
+
 void __fastcall TDrwSetFrm::ComboScaleXKeyPress(TObject *Sender, char &Key)
 {
 if (((Key<'0') || (Key>'9'))&&(Key!=8))
