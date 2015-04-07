@@ -37,6 +37,13 @@ inline float GetAngle(TPoint vec1, TPoint vec2)
        return acos(temp);
 }
 
+inline float GetLength(TPoint p1, TPoint p2, float ScaleY)
+{
+    float yoffset = -ScaleY*(p2.y - p1.y);
+    float xoffset = p2.x - p1.x;
+    return sqrt(yoffset*yoffset + xoffset*xoffset);
+}
+
 // функция для сортировки знаков 
 bool compareSigns(const TRoadSign* s1, const TRoadSign* s2)
 {
@@ -2140,7 +2147,19 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly,TRoadMark *m,int 
                 break;
 
             case ma17: /*Обозначение остановок маршрутных транспортных средств*/
-                block = DrawBlockOnLine("r_1.17", Poly->Points[0], Poly->Points[count-1], "Length Length2", ScaleYBlock / 4);
+                {
+                    float scale = ScaleYBlock / 4;
+                    block = DrawBlockOnLine("r_1.17", Poly->Points[0], Poly->Points[count-1], "Length Length2", scale);
+
+                    // чтобы выводить разметку так чтобы правая ножка не отрывалась от общего контура
+                    // в случае изменения размеров блока разметки, надо поменять значение 582 на значение шага повторения
+                    float blockDefaultLength = 582 * scale;
+                    float length = GetLength(Poly->Points[0], Poly->Points[count-1], ScaleY);
+                    int realLength = ((int)length / (int)blockDefaultLength) * blockDefaultLength;
+                    AutoCAD.SetPropertyDouble(block, "Length",  realLength);
+                    AutoCAD.SetPropertyDouble(block, "Length2", realLength);
+
+                }
                 //tableBottom.DrawRepeatTextInterval(0,"1.17",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 

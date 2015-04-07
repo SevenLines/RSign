@@ -62,6 +62,16 @@ __fastcall TFAutoCADPrint::~TFAutoCADPrint()
 
 void TFAutoCADPrint::CheckViewports()
 {
+    // КОСТЫЛЬ во избежание ошибок при переключении лэйаутов
+    // без него helper->ActiveDocument->PaperSpace выдает ошибку
+    {
+      AcadLayoutPtr layout = helper->ActiveDocument->Layouts->Item(Variant(0));
+      AcadLayoutPtr currentLayout = helper->ActiveDocument->ActiveLayout;
+      helper->ActiveDocument->set_ActiveLayout(layout);
+      helper->ActiveDocument->set_ActiveLayout(currentLayout);
+    }
+    // конец КОСТЫЛЯ
+
 	int count = helper->ActiveDocument->PaperSpace->Count;
 	iSelected = -1;
 	AcadEntityPtr e;
@@ -723,6 +733,7 @@ void __fastcall TFAutoCADPrint::Button2Click(TObject *Sender)
 		edtPattern->Text = gTemplate;
 	}
 	lblActiveName->Hint = lblActiveName->Caption;
+
 	CheckViewports();
 	DrawViewports();
 
