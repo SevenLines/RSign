@@ -795,7 +795,8 @@ void AutoCADHelper::SetBACKGROUNDPLOT_ZERO()
 
 void AutoCADHelper::SelectPaperSpace()
 {
-   cadActiveDocument->set_ActiveSpace(acPaperSpace); 
+   //cadActiveDocument->set_ActiveSpace(acPaperSpace);
+   SendCommand("_TILEMODE 0 ");
 }
 
 void AutoCADHelper::SendCommand(WideString command)
