@@ -363,8 +363,10 @@ void __fastcall TFAutoCADPrint::cmdPrintClick(TObject *Sender)
 		return;
 	}
 
-	FileName = SaveDialog1->FileName;
+    // убираем расширение у имени файла
+	FileName = ChangeFileExt(SaveDialog1->FileName, "");
 
+    // печатаем
 	Print();
 
 	TIniFile *ini = new TIniFile(strIniFileName);
@@ -525,7 +527,6 @@ bool TFAutoCADPrint::PauseLastFramePrint(std::list<AnsiString> &fileNames)
             AnsiString currentDir = GetCurrentDir();
             SetCurrentDir(FileName + "_src");
             ShellExecute(0, 0, batName.c_str(), 0, 0 , SW_SHOW );
-			//WinExec( batName.c_str(), SW_SHOW );
             SetCurrentDir(currentDir);
 		}
 		return true;
@@ -553,12 +554,12 @@ bool TFAutoCADPrint::SetFrame(int position, int width)
             /*AutoCAD.ActiveDocument->SendCommand(WideString(
                 AnsiString().sprintf("_.zoom _f %i,%i %i,%i\n", position, yCenter, position+width, yCenter)
             ));*/
-            BUILDER_INFO("Вид " << IntToStr(i).c_str());
+            //BUILDER_INFO("Вид " << IntToStr(i).c_str());
             Variant left = helper->cadPoint(position,yCenter);
             Variant right = helper->cadPoint(position+width,yCenter);
-            BUILDER_INFO("Рассчитал точки");
+            //BUILDER_INFO("Рассчитал точки");
             helper->Application->ZoomWindow(left, right);
-            BUILDER_INFO("Сдвинул вид");
+            //BUILDER_INFO("Сдвинул вид");
             //AutoCAD.ActiveDocument->SendCommand(L"_.PSPACE\n");
             //helper->ActiveDocument->MSpace = false;
 		}
