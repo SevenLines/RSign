@@ -154,7 +154,7 @@ object FAutoCADPrint: TFAutoCADPrint
       Left = 61
       Top = 28
       Width = 65
-      Height = 24
+      Height = 21
       TabOrder = 1
       Text = '42250'
       OnEnter = edtStepEnter
@@ -163,7 +163,7 @@ object FAutoCADPrint: TFAutoCADPrint
       Left = 61
       Top = 122
       Width = 217
-      Height = 24
+      Height = 21
       TabOrder = 2
       Text = '100000'
       OnEnter = edtStepEnter
@@ -173,7 +173,7 @@ object FAutoCADPrint: TFAutoCADPrint
       Left = 61
       Top = 147
       Width = 217
-      Height = 24
+      Height = 21
       TabOrder = 3
       Text = '0'
       OnEnter = edtStepEnter
@@ -183,7 +183,7 @@ object FAutoCADPrint: TFAutoCADPrint
       Left = 61
       Top = 61
       Width = 65
-      Height = 24
+      Height = 21
       TabOrder = 4
       Text = '0'
       OnEnter = edtStepEnter
@@ -192,7 +192,7 @@ object FAutoCADPrint: TFAutoCADPrint
       Left = 61
       Top = 170
       Width = 217
-      Height = 24
+      Height = 21
       TabOrder = 5
       Text = '100000'
       OnEnter = edtStepEnter
@@ -202,7 +202,7 @@ object FAutoCADPrint: TFAutoCADPrint
       Left = 61
       Top = 92
       Width = 65
-      Height = 24
+      Height = 21
       TabOrder = 6
       Text = '-42250'
       OnEnter = edtStepEnter
@@ -246,7 +246,7 @@ object FAutoCADPrint: TFAutoCADPrint
       Left = 61
       Top = 200
       Width = 169
-      Height = 24
+      Height = 21
       TabOrder = 11
       Text = '%i-%i '#1082#1084'.'
     end
@@ -254,14 +254,14 @@ object FAutoCADPrint: TFAutoCADPrint
       Left = 88
       Top = 262
       Width = 49
-      Height = 24
+      Height = 21
       TabOrder = 12
     end
     object edtPDFBinder: TEdit
       Left = 88
       Top = 288
       Width = 161
-      Height = 24
+      Height = 21
       TabOrder = 13
     end
     object Button8: TButton
@@ -340,7 +340,7 @@ object FAutoCADPrint: TFAutoCADPrint
         Left = 152
         Top = 18
         Width = 89
-        Height = 24
+        Height = 21
         ReadOnly = True
         TabOrder = 0
         Text = '0'
@@ -360,7 +360,7 @@ object FAutoCADPrint: TFAutoCADPrint
         Left = 40
         Top = 18
         Width = 81
-        Height = 24
+        Height = 21
         TabOrder = 2
         Text = '0'
         OnChange = edtPosChange
