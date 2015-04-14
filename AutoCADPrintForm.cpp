@@ -644,7 +644,7 @@ void TFAutoCADPrint::Print(PrintType printType)
 			case ptPDF:
                 // если у нас последний шаг, то делаем паузу
                 if (!chkOnly->Checked && j == tbPos->Max) {
-                    helper->SendCommand(L"_UNDO Mark ");
+                    helper->SendCommand(L"_UNDO _Mark ");
                     ShowMessage("Это пауза в течении которой вы можете успеть\n"
                                 "отредактировать текущую страницу в AutoCAD");
                 }
@@ -654,7 +654,7 @@ void TFAutoCADPrint::Print(PrintType printType)
                 // если у нас последний шаг, запрос на формирование pdf
                 if (!chkOnly->Checked && j == tbPos->Max) {
                    PauseLastFramePrint(fileNames);
-                   helper->SendCommand(L"_UNDO Back ");
+                   helper->SendCommand(L"_UNDO _Back ");
                 }
 				break;
 			}
