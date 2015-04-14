@@ -25,7 +25,7 @@ void __fastcall TFAutoCADPrint::OnDocClose(TObject *Sender)
 
 //---------------------------------------------------------------------------
 __fastcall TFAutoCADPrint::TFAutoCADPrint(TComponent* Owner)
-: TForm(Owner)
+	: TForm(Owner)
 {
 	vcTop = 42250;
 	vcCenter = 0;
@@ -35,7 +35,7 @@ __fastcall TFAutoCADPrint::TFAutoCADPrint(TComponent* Owner)
 	curState = 0;
 	ePos = vStep;
 	//SaveDialog1->InitialDir = ExtractFileDir(Application->ExeName) + "\\AutoCAD";
-	strIniFileName = ChangeFileExt(Application->ExeName,".ini");
+	strIniFileName = ChangeFileExt(Application->ExeName, ".ini");
 
 	Image1->Hint = "Выбери мышкой прямоугольник соответствующий\n\
 видовому экрану в пространстве листа AutoCAD.\n\
@@ -62,15 +62,15 @@ __fastcall TFAutoCADPrint::~TFAutoCADPrint()
 
 void TFAutoCADPrint::CheckViewports()
 {
-    // КОСТЫЛЬ во избежание ошибок при переключении лэйаутов
-    // без него helper->ActiveDocument->PaperSpace выдает ошибку
-    {
-      AcadLayoutPtr layout = helper->ActiveDocument->Layouts->Item(Variant(0));
-      AcadLayoutPtr currentLayout = helper->ActiveDocument->ActiveLayout;
-      helper->ActiveDocument->set_ActiveLayout(layout);
-      helper->ActiveDocument->set_ActiveLayout(currentLayout);
-    }
-    // конец КОСТЫЛЯ
+	// КОСТЫЛЬ во избежание ошибок при переключении лэйаутов
+	// без него helper->ActiveDocument->PaperSpace выдает ошибку
+	{
+		AcadLayoutPtr layout = helper->ActiveDocument->Layouts->Item(Variant(0));
+		AcadLayoutPtr currentLayout = helper->ActiveDocument->ActiveLayout;
+		helper->ActiveDocument->set_ActiveLayout(layout);
+		helper->ActiveDocument->set_ActiveLayout(currentLayout);
+	}
+	// конец КОСТЫЛЯ
 
 	int count = helper->ActiveDocument->PaperSpace->Count;
 	iSelected = -1;
@@ -80,46 +80,46 @@ void TFAutoCADPrint::CheckViewports()
 	Variant center;
 	_Left = _Right = _Top = _Bottom = 0;
 	Rects->Clear();
-	float left,right,top,bottom;
-	float width,height;
+	float left, right, top, bottom;
+	float width, height;
 	bool ffirst = true;
-	for(int i=0;i<count;i++){
+	for (int i = 0; i < count; i++) {
 		e = helper->ActiveDocument->PaperSpace->Item(Variant(i));
-		if(e->EntityType == acPViewport){
-			if(ffirst){
+		if (e->EntityType == acPViewport) {
+			if (ffirst) {
 				ffirst = false;
 				continue;
 			}
 			pv = e;
-			width = pv->Width/2;
-			height = pv->Height/2;
+			width = pv->Width / 2;
+			height = pv->Height / 2;
 			pv->get_Center(center);
-			left = center.GetElement(0)-width;
-			top = center.GetElement(1)-height;
-			right = center.GetElement(0)+width;
-			bottom = center.GetElement(1)+height;
-			
-			if(_Left>left) _Left = left;
-			if(_Right<right) _Right = right;
-			if(_Top>top) _Top = top;
-			if(_Bottom<bottom) _Bottom = bottom;
+			left = center.GetElement(0) - width;
+			top = center.GetElement(1) - height;
+			right = center.GetElement(0) + width;
+			bottom = center.GetElement(1) + height;
 
-			Rects->Add(new TRect(left,top,right,bottom));
+			if (_Left > left) _Left = left;
+			if (_Right < right) _Right = right;
+			if (_Top > top) _Top = top;
+			if (_Bottom < bottom) _Bottom = bottom;
+
+			Rects->Add(new TRect(left, top, right, bottom));
 		}
 	}
 	xOffset = -_Left;
 	yOffset = -_Top;
 
 	_Width = _Right - _Left;
-	if(_Width) kWidth = (float)(Image1->Width)/_Width;
+	if (_Width) kWidth = (float)(Image1->Width) / _Width;
 	_Height = _Bottom - _Top;
-	if(_Height) kHeight = (float)Image1->Height/_Height;    
+	if (_Height) kHeight = (float)Image1->Height / _Height;
 }
 
 bool TFAutoCADPrint::BindViewports()
 {
-    BUILDER_INFO("Подсоединяю виды");
-    bool ffirst = true;
+	BUILDER_INFO("Подсоединяю виды");
+	bool ffirst = true;
 	AcadEntityPtr e;
 	vpTop.Unbind();
 	vpCenter.Unbind();
@@ -129,54 +129,54 @@ bool TFAutoCADPrint::BindViewports()
 	page_max.Unbind();
 	roadName.Unbind();
 
-	if(!helper->ActiveDocument.IsBound()) {
-        BUILDER_INFO("Активные документ недоступен, не могу подключить виды");
-        return false;
-    }
+	if (!helper->ActiveDocument.IsBound()) {
+		BUILDER_INFO("Активные документ недоступен, не могу подключить виды");
+		return false;
+	}
 	helper->ActiveDocument->Activate();
 
-	bool finfo = chkInfo->Checked;   
+	bool finfo = chkInfo->Checked;
 	int cur = 0;
 	int count = helper->ActiveDocument->PaperSpace->Count;
-	for(int i=0;i<count;i++){
+	for (int i = 0; i < count; i++) {
 		e = helper->ActiveDocument->PaperSpace->Item(Variant(i));
-		if(e->EntityType == acPViewport){
-			if(ffirst){
+		if (e->EntityType == acPViewport) {
+			if (ffirst) {
 				ffirst = false;
 				continue;
 			}
-			if(cur==iTop){
+			if (cur == iTop) {
 				vpTop = e;
 				// recalculate zoom positions for top vp
-				float kTop = vStep/vpTop->Width;
-				vcTop = iOffset+(vpTop->Height*kTop)/2;
+				float kTop = vStep / vpTop->Width;
+				vcTop = iOffset + (vpTop->Height * kTop) / 2;
 			}
-			if(cur==iCenter){
+			if (cur == iCenter) {
 				vpCenter = e;
 			}
-			if(cur==iBottom){
+			if (cur == iBottom) {
 				vpBottom = e;
 				// recalculate zoom positions for bottom vp
-				float kBottom = vStep/vpBottom->Width;
-				vcBottom = -iOffset-(vpBottom->Height*kBottom)/2;                                                                  
+				float kBottom = vStep / vpBottom->Width;
+				vcBottom = -iOffset - (vpBottom->Height * kBottom) / 2;
 			}
 			cur++;
-		}else if(finfo&&e->EntityType==acText){
-			if(!wcscmp(e->Layer,L"@info")){
+		} else if (finfo && e->EntityType == acText) {
+			if (!wcscmp(e->Layer, L"@info")) {
 				text = e;
 			}
-			if(!wcscmp(e->Layer,L"@page")){
+			if (!wcscmp(e->Layer, L"@page")) {
 				page = e;
 			}
-			if(!wcscmp(e->Layer,L"@page_max")){
+			if (!wcscmp(e->Layer, L"@page_max")) {
 				page_max = e;
 			}
-			if(!wcscmp(e->Layer,L"@roadName")){
+			if (!wcscmp(e->Layer, L"@roadName")) {
 				roadName = e;
 			}
 		}
 	}
-    BUILDER_INFO("Успешно подсоединил виды");
+	BUILDER_INFO("Успешно подсоединил виды");
 	return true;
 
 
@@ -189,112 +189,112 @@ void TFAutoCADPrint::DrawViewports()
 	AnsiString str;
 	Image1->Canvas->Font->Size = 8;
 	Image1->Canvas->Brush->Color = clWhite;
-	Image1->Canvas->FillRect(TRect(0,0,Image1->Width,Image1->Height));
-	for(int i=0;i<Rects->Count;i++){
+	Image1->Canvas->FillRect(TRect(0, 0, Image1->Width, Image1->Height));
+	for (int i = 0; i < Rects->Count; i++) {
 		TRect *rect = (TRect*)Rects->Items[i];
-		Image1->Canvas->Pen->Color = i==iSelected?clRed:clBlack;
-		rct=TRect((rect->Left+xOffset)*kWidth,
-		(-rect->Top-yOffset+_Height)*kHeight,
-		(rect->Right+xOffset)*kWidth,
-		(-rect->Bottom-yOffset+_Height)*kHeight);
+		Image1->Canvas->Pen->Color = i == iSelected ? clRed : clBlack;
+		rct = TRect((rect->Left + xOffset) * kWidth,
+		            (-rect->Top - yOffset + _Height) * kHeight,
+		            (rect->Right + xOffset) * kWidth,
+		            (-rect->Bottom - yOffset + _Height) * kHeight);
 
 		Image1->Canvas->Rectangle(rct);
-		str = AnsiString(i==iTop?"1":"") + AnsiString(i==iCenter?"2":"") + AnsiString(i==iBottom?"3":"");
-		if(!str.IsEmpty()){
-			DrawText(Image1->Canvas->Handle,str.c_str(),str.Length(),&rct,DT_CENTER|DT_VCENTER|DT_SINGLELINE);
-		}     
+		str = AnsiString(i == iTop ? "1" : "") + AnsiString(i == iCenter ? "2" : "") + AnsiString(i == iBottom ? "3" : "");
+		if (!str.IsEmpty()) {
+			DrawText(Image1->Canvas->Handle, str.c_str(), str.Length(), &rct, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+		}
 	}
 }
 
 void TFAutoCADPrint::SaveIni(TIniFile *ini)
 {
 	ReadValues();
-	ini->WriteFloat("AutoCAD","PViewportTopCenterY",vcTop);
-	ini->WriteFloat("AutoCAD","PViewportMiddleCenterY",vcCenter);
-	ini->WriteFloat("AutoCAD","PViewportBottomCenterY",vcBottom);
-	ini->WriteFloat("AutoCAD","PScaleStep",vStep);
-	ini->WriteInteger("AutoCAD","iTop",iTop);
-	ini->WriteInteger("AutoCAD","iCenter",iCenter);
-	ini->WriteInteger("AutoCAD","iBottom",iBottom);
-	ini->WriteInteger("AutoCAD","PBegin",sPos);
-	ini->WriteInteger("AutoCAD","PEnd",ePos);
-	ini->WriteInteger("AutoCAD","PrintPageNumBegin",iPage);
-	ini->WriteBool("AutoCAD","POnlySelectedInterval",chkOnly->Checked);
+	ini->WriteFloat("AutoCAD", "PViewportTopCenterY", vcTop);
+	ini->WriteFloat("AutoCAD", "PViewportMiddleCenterY", vcCenter);
+	ini->WriteFloat("AutoCAD", "PViewportBottomCenterY", vcBottom);
+	ini->WriteFloat("AutoCAD", "PScaleStep", vStep);
+	ini->WriteInteger("AutoCAD", "iTop", iTop);
+	ini->WriteInteger("AutoCAD", "iCenter", iCenter);
+	ini->WriteInteger("AutoCAD", "iBottom", iBottom);
+	ini->WriteInteger("AutoCAD", "PBegin", sPos);
+	ini->WriteInteger("AutoCAD", "PEnd", ePos);
+	ini->WriteInteger("AutoCAD", "PrintPageNumBegin", iPage);
+	ini->WriteBool("AutoCAD", "POnlySelectedInterval", chkOnly->Checked);
 	//ini->WriteBool("AutoCAD","Synchronize",chkSynchronize->Checked);
-	ini->WriteBool("AutoCAD","ShowMetricsInfo",chkInfo->Checked);
-	ini->WriteString("AutoCAD","PatternString",edtPattern->Text);
-	ini->WriteString("AutoCAD", "PDFBinder",edtPDFBinder->Text );
+	ini->WriteBool("AutoCAD", "ShowMetricsInfo", chkInfo->Checked);
+	ini->WriteString("AutoCAD", "PatternString", edtPattern->Text);
+	ini->WriteString("AutoCAD", "PDFBinder", edtPDFBinder->Text );
 }
 
 void TFAutoCADPrint::LoadIni(TIniFile *ini)
 {
-	edtTopCenter->Text = vcTop = ini->ReadFloat("AutoCAD","PViewportTopCenterY",44000);
-	edtMiddleCenter->Text = vcCenter = ini->ReadFloat("AutoCAD","PViewportMiddleCenterY",0);
-	edtBottomCenter->Text = vcBottom = ini->ReadFloat("AutoCAD","PViewportBottomCenterY",-42250);
-	edtStart->Text = sPos = ini->ReadInteger("AutoCAD","PBegin",0);
-	edtStep->Text = vStep = ini->ReadFloat("AutoCAD","PScaleStep",100000);
-	edtEnd->Text = ePos = ini->ReadInteger("AutoCAD","PEnd",vStep);
+	edtTopCenter->Text = vcTop = ini->ReadFloat("AutoCAD", "PViewportTopCenterY", 44000);
+	edtMiddleCenter->Text = vcCenter = ini->ReadFloat("AutoCAD", "PViewportMiddleCenterY", 0);
+	edtBottomCenter->Text = vcBottom = ini->ReadFloat("AutoCAD", "PViewportBottomCenterY", -42250);
+	edtStart->Text = sPos = ini->ReadInteger("AutoCAD", "PBegin", 0);
+	edtStep->Text = vStep = ini->ReadFloat("AutoCAD", "PScaleStep", 100000);
+	edtEnd->Text = ePos = ini->ReadInteger("AutoCAD", "PEnd", vStep);
 
-	edtPattern->Text = ini->ReadString("AutoCAD","PatternString","%i-%i км.");
-	chkInfo->Checked = ini->ReadBool("AutoCAD","ShowMetricsInfo",true);
-	chkOnly->Checked = ini->ReadBool("AutoCAD","POnlySelectedInterval",false);
+	edtPattern->Text = ini->ReadString("AutoCAD", "PatternString", "%i-%i км.");
+	chkInfo->Checked = ini->ReadBool("AutoCAD", "ShowMetricsInfo", true);
+	chkOnly->Checked = ini->ReadBool("AutoCAD", "POnlySelectedInterval", false);
 	//   chkSynchronize->Checked = ini->ReadBool("AutoCAD","Synchronize",false);
-	edtPage->Text = ini->ReadInteger("AutoCAD","PrintPageNumBegin",3);   
-	iTop =  ini->ReadInteger("AutoCAD","iTop",-1);
-	iCenter =  ini->ReadInteger("AutoCAD","iCenter",-1);
-	iBottom =  ini->ReadInteger("AutoCAD","iBottom",-1);
+	edtPage->Text = ini->ReadInteger("AutoCAD", "PrintPageNumBegin", 3);
+	iTop =  ini->ReadInteger("AutoCAD", "iTop", -1);
+	iCenter =  ini->ReadInteger("AutoCAD", "iCenter", -1);
+	iBottom =  ini->ReadInteger("AutoCAD", "iBottom", -1);
 
 	edtPDFBinder->Text = ini->ReadString("AutoCAD", "PDFBinder",
-	".\\AutoCAD\\PDFBinder\\pdfbinder.exe" );
+	                                     ".\\AutoCAD\\PDFBinder\\pdfbinder.exe" );
 
 	TShiftState ss;
-	edtEndKeyDown(0,VK_RETURN,ss);
+	edtEndKeyDown(0, VK_RETURN, ss);
 }
 
 void __fastcall TFAutoCADPrint::FormKeyDown(TObject *Sender, WORD &Key,
-TShiftState Shift)
+        TShiftState Shift)
 {
-	switch(Key){
+	switch (Key) {
 	case VK_ESCAPE:
-		if(iSelected>=0){
+		if (iSelected >= 0) {
 			iSelected = -1;
 			DrawViewports();
-		}else{
+		} else {
 			ModalResult = mrCancel;
 		}
 		break;
 	case '1':
-		if(Panel1->Focused()&&iSelected>=0){
+		if (Panel1->Focused() && iSelected >= 0) {
 			iTop = iSelected;
-			if(iCenter==iTop) iCenter = -1;
-			if(iBottom==iTop) iBottom = -1;         
+			if (iCenter == iTop) iCenter = -1;
+			if (iBottom == iTop) iBottom = -1;
 			iSelected = -1;
 			DrawViewports();
 		}
 		break;
 	case '2':
-		if(Panel1->Focused()&&iSelected>=0){
+		if (Panel1->Focused() && iSelected >= 0) {
 			iCenter = iSelected;
-			if(iTop==iCenter) iTop = -1;
-			if(iBottom==iCenter) iBottom = -1;           
+			if (iTop == iCenter) iTop = -1;
+			if (iBottom == iCenter) iBottom = -1;
 			iSelected = -1;
 			DrawViewports();
 		}
 		break;
 	case '3':
-		if(Panel1->Focused()&&iSelected>=0){
+		if (Panel1->Focused() && iSelected >= 0) {
 			iBottom = iSelected;
-			if(iTop==iBottom) iTop = -1;
-			if(iCenter==iBottom) iCenter = -1;
+			if (iTop == iBottom) iTop = -1;
+			if (iCenter == iBottom) iCenter = -1;
 			iSelected = -1;
 			DrawViewports();
 		}
 		break;
 	case VK_DELETE:
-		if(Panel1->Focused()&&iSelected>=0){
-			if(iSelected==iBottom) iBottom = -1;
-			if(iTop==iSelected) iTop = -1;
-			if(iCenter==iSelected) iCenter = -1;
+		if (Panel1->Focused() && iSelected >= 0) {
+			if (iSelected == iBottom) iBottom = -1;
+			if (iTop == iSelected) iTop = -1;
+			if (iCenter == iSelected) iCenter = -1;
 			iSelected = -1;
 			DrawViewports();
 		}
@@ -306,45 +306,45 @@ void TFAutoCADPrint::ReadValues()
 {
 	float v;
 	int v2;
-	if(TryStrToFloat(edtTopCenter->Text,v)){
+	if (TryStrToFloat(edtTopCenter->Text, v)) {
 		vcTop = v;
-	}else{
+	} else {
 		edtTopCenter->Text = vcTop;
 	}
 
-	if(TryStrToFloat(edtMiddleCenter->Text,v)){
+	if (TryStrToFloat(edtMiddleCenter->Text, v)) {
 		vcCenter = v;
-	}else{
+	} else {
 		edtMiddleCenter->Text = vcCenter;
 	}
 
-	if(TryStrToFloat(edtBottomCenter->Text,v)){
+	if (TryStrToFloat(edtBottomCenter->Text, v)) {
 		vcBottom = v;
-	}else{
+	} else {
 		edtBottomCenter->Text = vcBottom;
 	}
 
-	if(TryStrToFloat(edtStep->Text,v)){
+	if (TryStrToFloat(edtStep->Text, v)) {
 		vStep = v;
-	}else{
+	} else {
 		edtStep->Text = vStep;
 	}
 
-	if(TryStrToFloat(edtStart->Text,v)){
+	if (TryStrToFloat(edtStart->Text, v)) {
 		sPos = v;
-	}else{
+	} else {
 		edtStart->Text = sPos;
 	}
 
-	if(TryStrToInt(edtPage->Text,v2)){
+	if (TryStrToInt(edtPage->Text, v2)) {
 		iPage = v2;
-	}else{
+	} else {
 		edtPage->Text = v2;
 	}
 
-	if(TryStrToFloat(edtEnd->Text,v)){
+	if (TryStrToFloat(edtEnd->Text, v)) {
 		ePos = v;
-	}else{
+	} else {
 		edtEnd->Text = ePos;
 	}
 
@@ -353,20 +353,20 @@ void TFAutoCADPrint::ReadValues()
 //---------------------------------------------------------------------------
 void __fastcall TFAutoCADPrint::cmdPrintClick(TObject *Sender)
 {
-	if(!helper) return;
+	if (!helper) return;
 	ReadValues();
-	try{
+	try {
 		SaveDialog1->FileName = AutoCAD.ActiveDocument->SummaryInfo->Title;
-        //SaveDialog1->FileName = SaveDialog1->FileName + ".pdf";
-	}catch(...){}
-	if(!SaveDialog1->Execute()){
+		//SaveDialog1->FileName = SaveDialog1->FileName + ".pdf";
+	} catch (...) {}
+	if (!SaveDialog1->Execute()) {
 		return;
 	}
 
-    // убираем расширение у имени файла
+	// убираем расширение у имени файла
 	FileName = ChangeFileExt(SaveDialog1->FileName, "");
 
-    // печатаем
+	// печатаем
 	Print();
 
 	TIniFile *ini = new TIniFile(strIniFileName);
@@ -379,63 +379,63 @@ void __fastcall TFAutoCADPrint::cmdPrintClick(TObject *Sender)
 
 void __fastcall TFAutoCADPrint::Button7Click(TObject *Sender)
 {
-    int lPos = tbPos->Position;
+	int lPos = tbPos->Position;
 	tbPos->Position--;
-    if (lPos == tbPos->Position) { // force update
-        ChangeFramePosition();
-    }
+	if (lPos == tbPos->Position) { // force update
+		ChangeFramePosition();
+	}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TFAutoCADPrint::Button3Click(TObject *Sender)
 {
-    int lPos = tbPos->Position;
+	int lPos = tbPos->Position;
 	tbPos->Position++;
-    if (lPos == tbPos->Position) { // force update
-        ChangeFramePosition();
-    }
+	if (lPos == tbPos->Position) { // force update
+		ChangeFramePosition();
+	}
 }
 //---------------------------------------------------------------------------
 
 void TFAutoCADPrint::ChangeFramePosition()
 {
-    static last = -1;
+	static last = -1;
 	int v;
 
-	if(TryStrToInt(edtStep->Text,v)){
-		edtPos->Text = tbPos->Position*v;
+	if (TryStrToInt(edtStep->Text, v)) {
+		edtPos->Text = tbPos->Position * v;
 		v = tbPos->Position;
 		//if(last!=v){
-        if(!helper) return;
-        AnsiString str;
-        int iMin = tbPos->Position;
-			
-        ReadValues();
+		if (!helper) return;
+		AnsiString str;
+		int iMin = tbPos->Position;
 
-        int km = (iMin*vStep)/100000;
-        int meters = (int(iMin*vStep)/100)%1000;
-        try{
-            str.sprintf(edtPattern->Text.c_str(),km,meters);
-        }catch(...){return;}
+		ReadValues();
 
-        if(!BindViewports()) return;
-			
-        helper->SelectPaperSpace();
-        AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
+		int km = (iMin * vStep) / 100000;
+		int meters = (int(iMin * vStep) / 100) % 1000;
+		try {
+			str.sprintf(edtPattern->Text.c_str(), km, meters);
+		} catch (...) {return;}
 
-        if(text.IsBound()) text->set_TextString(WideString(str));
-        if(roadName.IsBound()) roadName->set_TextString(WideString(strRoadName));
+		if (!BindViewports()) return;
 
-        int j = tbPos->Position;
-        int minPos = tbPos->Min;
-        int diff = tbPos->Max - tbPos->Min;
+		helper->SelectPaperSpace();
+		AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
 
-        if(page.IsBound())
-        page->set_TextString(WideString(iPage+j-minPos));
-        if(page_max.IsBound())
-        page_max->set_TextString(WideString(iPage+diff));
+		if (text.IsBound()) text->set_TextString(WideString(str));
+		if (roadName.IsBound()) roadName->set_TextString(WideString(strRoadName));
 
-        SetFrame(j*vStep, vStep);
+		int j = tbPos->Position;
+		int minPos = tbPos->Min;
+		int diff = tbPos->Max - tbPos->Min;
+
+		if (page.IsBound())
+			page->set_TextString(WideString(iPage + j - minPos));
+		if (page_max.IsBound())
+			page_max->set_TextString(WideString(iPage + diff));
+
+		SetFrame(j * vStep, vStep);
 		//}
 		last = v;
 	}
@@ -444,24 +444,24 @@ void TFAutoCADPrint::ChangeFramePosition()
 
 void __fastcall TFAutoCADPrint::tbPosChange(TObject *Sender)
 {
-    ChangeFramePosition();
+	ChangeFramePosition();
 }
 //---------------------------------------------------------------------------
 
 
 
 void __fastcall TFAutoCADPrint::edtEndKeyDown(TObject *Sender, WORD &Key,
-TShiftState Shift)
+        TShiftState Shift)
 {
-	int v1,v2;
-	switch(Key){
+	int v1, v2;
+	switch (Key) {
 	case VK_RETURN:
-		if(TryStrToInt(edtStep->Text,v2)){
-			if(TryStrToInt(edtStart->Text,v1)){
-				tbPos->Min = v1/v2;
+		if (TryStrToInt(edtStep->Text, v2)) {
+			if (TryStrToInt(edtStart->Text, v1)) {
+				tbPos->Min = v1 / v2;
 			}
-			if(TryStrToInt(edtEnd->Text,v1)){
-				tbPos->Max = v1/v2;/*+(v1%v2==0?0:1);*/
+			if (TryStrToInt(edtEnd->Text, v1)) {
+				tbPos->Max = v1 / v2; /*+(v1%v2==0?0:1);*/
 			}
 		}
 		break;
@@ -473,20 +473,20 @@ TShiftState Shift)
 void __fastcall TFAutoCADPrint::edtStepEnter(TObject *Sender)
 {
 	TEdit *edt  = dynamic_cast<TEdit*>(Sender);
-	if(edt){
+	if (edt) {
 		edt->SelectAll();
 	}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TFAutoCADPrint::edtPosKeyDown(TObject *Sender, WORD &Key,
-TShiftState Shift)
+        TShiftState Shift)
 {
-	int v1,v2;
-	switch(Key){
-		if(TryStrToInt(edtPos->Text,v1)){
-			if(TryStrToInt(edtStep->Text,v2)){
-				tbPos->Position = v1/v2;
+	int v1, v2;
+	switch (Key) {
+		if (TryStrToInt(edtPos->Text, v1)) {
+			if (TryStrToInt(edtStep->Text, v2)) {
+				tbPos->Position = v1 / v2;
 			}
 		}
 	}
@@ -498,49 +498,56 @@ bool TFAutoCADPrint::BeginPrint()
 	return false;
 }
 
-bool TFAutoCADPrint::PauseLastFramePrint(std::list<AnsiString> &fileNames)
+
+
+bool TFAutoCADPrint::PauseLastFramePrint(std::list<AnsiString> &fileNames, bool onlyOneFile)
 {
 	if ( MessageDlg("Объединить все pdf в один файл?", mtConfirmation, TMsgDlgButtons() << mbYes << mbNo, 0) == mrYes) {
-        // имя файла
-		AnsiString argvs = "\"..\\" + ExtractFileName(FileName)+".pdf" + "\"";
-        // список файлов из которых состоит результирующий файл
-		for( list<AnsiString>::iterator it = fileNames.begin(); it!=fileNames.end(); ++it ) {
-			argvs += " ";
-			argvs += "\"" + ExtractFileName(*it) + ".pdf" + "\"";
+		// папка с файлов pdfBinder
+		AnsiString pdfBinderDir = StringReplace(edtPDFBinder->Text, ".\\", ExtractFileDir(Application->ExeName) + "\\", TReplaceFlags());
+		// путь к батнику
+		AnsiString batName =  FileName + "_src\\pdf для " + ExtractFileName(FileName) + ".bat";
+
+		// если не стоит галочка только текущий файл
+		// то необходимо создать батник
+		if (!onlyOneFile) {
+			// имя файла
+			AnsiString argvs = "\"..\\" + ExtractFileName(FileName) + ".pdf" + "\"";
+
+			// список файлов из которых состоит результирующий файл
+			for ( list<AnsiString>::iterator it = fileNames.begin(); it != fileNames.end(); ++it ) {
+				argvs += " ";
+				argvs += "\"" + ExtractFileName(*it) + ".pdf" + "\"";
+			}
+
+			AnsiString cmndLine = "chcp 1251\n\"" + pdfBinderDir + "\" " + argvs + "\n";
+
+			// создаем bat файл
+			FILE *file = fopen( batName.c_str(), "w");
+			fprintf(file, cmndLine.c_str());
+			fclose(file);
 		}
 
-        // путь к программе pdf-merge
-		AnsiString execDir = ExtractFileDir(Application->ExeName);
-		AnsiString pdfBinderDir = StringReplace(edtPDFBinder->Text, ".\\", ExtractFileDir(Application->ExeName) + "\\", TReplaceFlags());    //execDir + "\\AutoCAD\\PDFBinder\\pdfbinder.exe";
-		AnsiString cmndLine = "chcp 1251\n\"" + pdfBinderDir +"\" "+ argvs + "\n";
-
-		AnsiString batName =  FileName + "_src\\pdf для " +
-		                      ExtractFileName(FileName) + ".bat";
-
-        // создаем bat файл
-		FILE *file = fopen( batName.c_str(), "w");
-		fprintf(file, cmndLine.c_str());
-		fclose(file);
-
-        // запускаем bat файл
-		if(FileExists(pdfBinderDir) ) {
-            AnsiString currentDir = GetCurrentDir();
-            SetCurrentDir(FileName + "_src");
-            ShellExecute(0, 0, batName.c_str(), 0, 0 , SW_SHOW );
-            SetCurrentDir(currentDir);
+		// запускаем bat файл
+		if ( FileExists(pdfBinderDir) ) {
+			AnsiString currentDir = GetCurrentDir();
+			SetCurrentDir(FileName + "_src");
+			ShellExecute(0, 0, batName.c_str(), 0, 0 , SW_SHOW );
+			SetCurrentDir(currentDir);
 		}
 		return true;
 	}
 	return false;
 }
 
+
 bool TFAutoCADPrint::SetFrame(int position, int width)
 {
 	AcadPViewportPtr viewport;
-    BUILDER_INFO("Устанавливаю вид");
+	BUILDER_INFO("Устанавливаю вид");
 	int yCenter;
-	for(int i=0;i<3;i++){
-		switch(i){
+	for (int i = 0; i < 3; i++) {
+		switch (i) {
 		case 0: viewport = vpBottom; yCenter = vcBottom; break;
 		case 1: viewport = vpCenter; yCenter = vcCenter; break;
 		case 2: viewport = vpTop; yCenter = vcTop; break;
@@ -549,19 +556,10 @@ bool TFAutoCADPrint::SetFrame(int position, int width)
 		if ( viewport.IsBound() ) {
 			viewport->Display(-1); // -1 is true :D, that is not my idea
 			helper->ActiveDocument->MSpace = true;
-            //AutoCAD.ActiveDocument->SendCommand(L"_.MSPACE\n");
 			helper->ActiveDocument->ActivePViewport = viewport;
-            /*AutoCAD.ActiveDocument->SendCommand(WideString(
-                AnsiString().sprintf("_.zoom _f %i,%i %i,%i\n", position, yCenter, position+width, yCenter)
-            ));*/
-            //BUILDER_INFO("Вид " << IntToStr(i).c_str());
-            Variant left = helper->cadPoint(position,yCenter);
-            Variant right = helper->cadPoint(position+width,yCenter);
-            //BUILDER_INFO("Рассчитал точки");
-            helper->Application->ZoomWindow(left, right);
-            //BUILDER_INFO("Сдвинул вид");
-            //AutoCAD.ActiveDocument->SendCommand(L"_.PSPACE\n");
-            //helper->ActiveDocument->MSpace = false;
+			Variant left = helper->cadPoint(position, yCenter);
+			Variant right = helper->cadPoint(position + width, yCenter);
+			helper->Application->ZoomWindow(left, right);
 		}
 		Application->ProcessMessages();
 	}
@@ -578,13 +576,13 @@ void TFAutoCADPrint::Print(PrintType printType)
 	ProgressForm->showCancel = 1;
 	AnsiString str;
 	AnsiString pattern = edtPattern->Text;
-	float iMax,iMin;
-	float step = (vStep/100000);
+	float iMax, iMin;
+	float step = (vStep / 100000);
 
-	if(!chkOnly->Checked){
+	if (!chkOnly->Checked) {
 		iMin = tbPos->Min;
 		iMax = tbPos->Max;
-	}else{
+	} else {
 		iMin = tbPos->Position;
 		iMax = tbPos->Position;
 	}
@@ -594,75 +592,79 @@ void TFAutoCADPrint::Print(PrintType printType)
 	ProgressForm->Note = "Пробую подключиться к AutoCAD";
 	ProgressForm->SetMinMax(tbPos->Min, tbPos->Max);
 
-	if(!BindViewports()) return;
+	if (!BindViewports()) return;
 
-	str.sprintf(pattern.c_str(),0,1);
-	
+	str.sprintf(pattern.c_str(), 0, 1);
+
 	std::list<AnsiString> fileNames;
-	int iiPage=0;
+	int iiPage = 0;
 
 	AutoCADPrintOutputStyle osPrint = FAutoCADPrint->OutputStyle;
-	
-	switch(osPrint){
+
+	switch (osPrint) {
 	case 0:
-         helper->ActiveDocument->SetVariable(WideString("BACKGROUNDPLOT"),Variant(0));
-         break;
+		helper->ActiveDocument->SetVariable(WideString("BACKGROUNDPLOT"), Variant(0));
+		break;
 	default:
-         return;
+		return;
 	}
 
 	helper->SelectPaperSpace();
 	helper->Application->ZoomAll();
 
-	if(roadName.IsBound()) {
+	if (roadName.IsBound()) {
 		roadName->set_TextString(WideString(strRoadName));
 	}
 	helper->DisableAutoSave();
 	ProgressForm->Show();
 
-    ProgressForm->Position++;
-	for(int j=iMin;j<=iMax;j++){
+	ProgressForm->Position++;
+	for (int j = iMin; j <= iMax; j++) {
 		int km = int(tbPos->Min + j);
 		int meters = vStep;
-		ProgressForm->Note = str.sprintf("%.d/%.d", tbPos->Position - tbPos->Min, tbPos->Max-tbPos->Min-1);
+		ProgressForm->Note = str.sprintf("%.d/%.d", tbPos->Position - tbPos->Min, tbPos->Max - tbPos->Min - 1);
 		ProgressForm->Position = j;
 
-		try{
+		try {
 			tbPos->Position = j;
 
-            AnsiString temp;
-            temp.sprintf("%s_src\\%s[%0.4i+%0.3i]", FileName.c_str(), ExtractFileName(FileName).c_str(), int(j * vStep) / 100000, int(j * vStep) % 100000 / 100 );
-            if (!DirectoryExists(FileName+"_src")) {
-                CreateDir(FileName+"_src");
-            }
-            fileNames.push_back(temp);
+			AnsiString temp;
+			temp.sprintf("%s_src\\%s[%0.4i+%0.3i]", FileName.c_str(), ExtractFileName(FileName).c_str(), int(j * vStep) / 100000, int(j * vStep) % 100000 / 100 );
+			if (!DirectoryExists(FileName + "_src")) {
+				CreateDir(FileName + "_src");
+			}
+			fileNames.push_back(temp);
 
-			switch(printType) {
+			switch (printType) {
 			case ptDWG:
 				helper->ActiveDocument->SaveAs(WideString(temp));
 				break;
 			case ptPDF:
-                // если у нас последний шаг, то делаем паузу
-                if (!chkOnly->Checked && j == tbPos->Max) {
-                    helper->SendCommand(L"_UNDO _Mark ");
-                    ShowMessage("Это пауза в течении которой вы можете успеть\n"
-                                "отредактировать текущую страницу в AutoCAD");
-                }
+				// если у нас последний шаг, то делаем паузу
+				if (!chkOnly->Checked && j == tbPos->Max) {
+					helper->SendCommand(L"_UNDO _Mark ");
+					ShowMessage("Это пауза в течении которой вы можете успеть\n"
+					            "отредактировать текущую страницу в AutoCAD");
+				}
 
 				helper->ActiveDocument->Plot->PlotToFile(WideString(temp));
 
-                // если у нас последний шаг, запрос на формирование pdf
-                if (!chkOnly->Checked && j == tbPos->Max) {
-                   PauseLastFramePrint(fileNames);
-                   helper->SendCommand(L"_UNDO _Back ");
-                }
+				// если у нас последний шаг или мы печатаем только один файл, запрос на формирование pdf
+				if (chkOnly->Checked || j == tbPos->Max) {
+					PauseLastFramePrint(fileNames, chkOnly->Checked);
+				}
+				
+				if (!chkOnly->Checked && j == tbPos->Max) {
+					helper->SendCommand(L"_UNDO _Back ");
+				}
+
 				break;
 			}
-		}catch(...){
+		} catch (...) {
 			TMsgDlgButtons buttons;
 			buttons << mbRetry << mbYes << mbAbort;
-			int value = MessageDlg("Произошел сбой при печати!\nПопробывать перепечатать текущий лист и продолжить печать(Retry).\nПродолжить печать(Ignore).\nПрекратить печать(Abort).",mtWarning,buttons,0);
-			switch(value){
+			int value = MessageDlg("Произошел сбой при печати!\nПопробывать перепечатать текущий лист и продолжить печать(Retry).\nПродолжить печать(Ignore).\nПрекратить печать(Abort).", mtWarning, buttons, 0);
+			switch (value) {
 			case mrRetry:
 				j--;
 				break;
@@ -674,13 +676,13 @@ void TFAutoCADPrint::Print(PrintType printType)
 				break;
 			}
 		}
-		ProgressForm->Position = j-iMin;
+		ProgressForm->Position = j - iMin;
 		Application->ProcessMessages();
-		if(GetKeyState(VK_ESCAPE)&0x0100||ProgressForm->Terminated) {
+		if (GetKeyState(VK_ESCAPE) & 0x0100 || ProgressForm->Terminated) {
 			goto print_end;
 		}
 	}
-	print_end:
+print_end:
 	helper->EnableAutoSave();
 	ProgressForm->Hide();
 }
@@ -690,15 +692,15 @@ void __fastcall TFAutoCADPrint::Button2Click(TObject *Sender)
 {
 	helper = 0;
 
-	if(AutoCAD.BindAutoCAD()){
-		if(!AutoCAD.ActiveDocument){
-			if(!ffirst1)ShowMessage("Не возможно подключиться к активному документу.\n\
+	if (AutoCAD.BindAutoCAD()) {
+		if (!AutoCAD.ActiveDocument) {
+			if (!ffirst1)ShowMessage("Не возможно подключиться к активному документу.\n\
 Убедитесь что открыт хотя бы один документ.");
-			helper = &AutoCAD; 
+			helper = &AutoCAD;
 			return;
 		}
-	}else{
-		if(!ffirst1)ShowMessage("Не возможно подключиться к AutoCAD.\nУбедитесь что он запущен.");
+	} else {
+		if (!ffirst1)ShowMessage("Не возможно подключиться к AutoCAD.\nУбедитесь что он запущен.");
 		return;
 	}
 	helper = &AutoCAD;
@@ -710,22 +712,22 @@ void __fastcall TFAutoCADPrint::Button2Click(TObject *Sender)
 
 	TShiftState ts;
 	//edtEndKeyDown(0,VK_RETURN,ts);
-	if(helper->ActiveDocument.IsBound()){
+	if (helper->ActiveDocument.IsBound()) {
 		lblActiveName->Caption = AnsiString(helper->ActiveDocument->Name)
-		+ "["+AnsiString(helper->ActiveDocument->Path) +"]";
+		                         + "[" + AnsiString(helper->ActiveDocument->Path) + "]";
 	}
 
-	int topTableHeight = 0, bottomTableHeight=0, yOffset = 0, Start = 0, End = 0, Step = 100000;
+	int topTableHeight = 0, bottomTableHeight = 0, yOffset = 0, Start = 0, End = 0, Step = 100000;
 	IAcadSummaryInfoPtr si = AutoCAD.ActiveDocument->SummaryInfo;
 	AnsiString gTemplate = si->Keywords;
-	if(gTemplate.IsEmpty()) gTemplate = "%i км";
+	if (gTemplate.IsEmpty()) gTemplate = "%i км";
 	strRoadName = si->Title;
 	AnsiString comments = si->Comments;
-	if(sscanf(comments.c_str(), "%i\r\n%i\r\n%i\r\n%i\r\n%i\r\n%i",
-				&topTableHeight, &bottomTableHeight, &yOffset, &Start, &End, &Step)) {
+	if (sscanf(comments.c_str(), "%i\r\n%i\r\n%i\r\n%i\r\n%i\r\n%i",
+	           &topTableHeight, &bottomTableHeight, &yOffset, &Start, &End, &Step)) {
 		iOffset = yOffset;
-		edtTopCenter->Text = yOffset + topTableHeight/2;
-		edtBottomCenter->Text = -yOffset - bottomTableHeight/2;
+		edtTopCenter->Text = yOffset + topTableHeight / 2;
+		edtBottomCenter->Text = -yOffset - bottomTableHeight / 2;
 		edtStart->Text = Start;
 		edtEnd->Text = End;
 		edtStep->Text = Step;
@@ -736,14 +738,14 @@ void __fastcall TFAutoCADPrint::Button2Click(TObject *Sender)
 	CheckViewports();
 	DrawViewports();
 
-	int v1,v2;
-	if(TryStrToInt(edtStep->Text,v2)){
-		if(TryStrToInt(edtStart->Text,v1)){
-			if(v1/v2>tbPos->Max) tbPos->Max = v1/v2;
-			tbPos->Min = v1/v2;               
+	int v1, v2;
+	if (TryStrToInt(edtStep->Text, v2)) {
+		if (TryStrToInt(edtStart->Text, v1)) {
+			if (v1 / v2 > tbPos->Max) tbPos->Max = v1 / v2;
+			tbPos->Min = v1 / v2;
 		}
-		if(TryStrToInt(edtEnd->Text,v1)){
-			tbPos->Max = v1/v2;/*+(v1%v2==0?0:1);*/
+		if (TryStrToInt(edtEnd->Text, v1)) {
+			tbPos->Max = v1 / v2; /*+(v1%v2==0?0:1);*/
 		}
 	}
 }
@@ -753,11 +755,11 @@ void __fastcall TFAutoCADPrint::Button2Click(TObject *Sender)
 
 void __fastcall TFAutoCADPrint::edtPosChange(TObject *Sender)
 {
-	int v1,v2;
-	if(TryStrToInt(edtPos->Text,v1)){
-		if(TryStrToInt(edtStep->Text,v2)){
-			tbPos->Position = v1/v2;
-			edtPos2->Text = v1+v2;
+	int v1, v2;
+	if (TryStrToInt(edtPos->Text, v1)) {
+		if (TryStrToInt(edtStep->Text, v2)) {
+			tbPos->Position = v1 / v2;
+			edtPos2->Text = v1 + v2;
 		}
 	}
 }
@@ -765,7 +767,7 @@ void __fastcall TFAutoCADPrint::edtPosChange(TObject *Sender)
 
 
 void __fastcall TFAutoCADPrint::FormClose(TObject *Sender,
-TCloseAction &Action)
+        TCloseAction &Action)
 {
 	helper = 0;
 	TIniFile *ini = new TIniFile(strIniFileName);
@@ -777,17 +779,17 @@ TCloseAction &Action)
 
 void __fastcall TFAutoCADPrint::Button4Click(TObject *Sender)
 {
-	if(!helper) return;
-	Variant var,var2;
+	if (!helper) return;
+	Variant var, var2;
 
-	try{
-		var = helper->cadPoint(0,StrToFloat(edtTopCenter->Text));
+	try {
+		var = helper->cadPoint(0, StrToFloat(edtTopCenter->Text));
 		helper->ActiveDocument->ActiveSpace = acModelSpace;
 		var2 = helper->ActiveDocument->Utility->GetPoint(var);
-	}catch(...){
+	} catch (...) {
 		return;
 	}
-	if(var2.IsArray()){
+	if (var2.IsArray()) {
 		edtTopCenter->Text = var2.GetElement(1);
 	}
 }
@@ -795,18 +797,18 @@ void __fastcall TFAutoCADPrint::Button4Click(TObject *Sender)
 
 void __fastcall TFAutoCADPrint::Button5Click(TObject *Sender)
 {
-	if(!helper) return;
-	Variant var,var2;
+	if (!helper) return;
+	Variant var, var2;
 
 
-	try{
-		var = helper->cadPoint(0,StrToFloat(edtMiddleCenter->Text));
+	try {
+		var = helper->cadPoint(0, StrToFloat(edtMiddleCenter->Text));
 		helper->ActiveDocument->ActiveSpace = acModelSpace;
 		var2 = helper->ActiveDocument->Utility->GetPoint(var);
-	}catch(...){
+	} catch (...) {
 		return;
 	}
-	if(var2.IsArray()){
+	if (var2.IsArray()) {
 		edtMiddleCenter->Text = var2.GetElement(1);
 	}
 }
@@ -814,58 +816,58 @@ void __fastcall TFAutoCADPrint::Button5Click(TObject *Sender)
 
 void __fastcall TFAutoCADPrint::Button6Click(TObject *Sender)
 {
-	if(!helper) return;
-	Variant var,var2;
+	if (!helper) return;
+	Variant var, var2;
 
-	try{
-		var = helper->cadPoint(0,StrToFloat(edtBottomCenter->Text));
+	try {
+		var = helper->cadPoint(0, StrToFloat(edtBottomCenter->Text));
 		helper->ActiveDocument->ActiveSpace = acModelSpace;
 		var2 = helper->ActiveDocument->Utility->GetPoint(var);
-	}catch(...){
+	} catch (...) {
 		return;
 	}
-	if(var2.IsArray()){
+	if (var2.IsArray()) {
 		edtBottomCenter->Text = var2.GetElement(1);
-	}    
+	}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TFAutoCADPrint::Image1MouseDown(TObject *Sender,
-TMouseButton Button, TShiftState Shift, int X, int Y)
+        TMouseButton Button, TShiftState Shift, int X, int Y)
 {
 	Panel1->SetFocus();
-	switch(curState){
-		float x,y;
+	switch (curState) {
+		float x, y;
 		TRect *rect;
-		if(!kHeight||!kWidth) return;
-		x = (float)X/kWidth + xOffset;
-		y = -(float)Y/kHeight + yOffset+_Height;
-		for(int i=0;i<Rects->Count;i++){
+		if (!kHeight || !kWidth) return;
+		x = (float)X / kWidth + xOffset;
+		y = -(float)Y / kHeight + yOffset + _Height;
+		for (int i = 0; i < Rects->Count; i++) {
 			rect = (TRect*)Rects->Items[i];
-			if(rect->Left<=x&&rect->Right>=x&&
-					rect->Top<=y&&rect->Bottom>=y){
+			if (rect->Left <= x && rect->Right >= x &&
+			        rect->Top <= y && rect->Bottom >= y) {
 				iSelected = i;
 				DrawViewports();
 				return;
 			}
 		}
-	}        
+	}
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TFAutoCADPrint::Button8Click(TObject *Sender)
 {
 	/* if(pnlTop->Visible) ClientHeight = GroupBox2->Height;
-else ClientHeight = pnlTop->Height + pnlBottom->Height + GroupBox2->Height;
-pnlTop->Visible = !pnlTop->Visible;
+	else ClientHeight = pnlTop->Height + pnlBottom->Height + GroupBox2->Height;
+	pnlTop->Visible = !pnlTop->Visible;
 
-pnlBottom->Visible = pnlTop->Visible;  */
+	pnlBottom->Visible = pnlTop->Visible;  */
 
 	OpenDialog2->FileName = StringReplace(edtPDFBinder->Text,
-	".\\", ExtractFileDir(Application->ExeName) + "\\", TReplaceFlags());
-	if(!OpenDialog2->Execute()) return;
+	                                      ".\\", ExtractFileDir(Application->ExeName) + "\\", TReplaceFlags());
+	if (!OpenDialog2->Execute()) return;
 	edtPDFBinder->Text = StringReplace(OpenDialog2->FileName,
-	ExtractFileDir(Application->ExeName), ".\\", TReplaceFlags());
+	                                   ExtractFileDir(Application->ExeName), ".\\", TReplaceFlags());
 
 }
 //---------------------------------------------------------------------------
@@ -875,7 +877,7 @@ void __fastcall TFAutoCADPrint::FormShow(TObject *Sender)
 {
 	ffirst1 = true;
 	Button2->Click();
-	ffirst1 = false;        
+	ffirst1 = false;
 }
 //---------------------------------------------------------------------------
 
@@ -883,16 +885,16 @@ void __fastcall TFAutoCADPrint::Button9Click(TObject *Sender)
 {
 	ffirst1 = true;
 	Button2->Click();
-	ffirst1 = false;    
-	if(!helper) return;
+	ffirst1 = false;
+	if (!helper) return;
 
 	ReadValues();
 
 	SaveDialog1->FileName = AutoCAD.ActiveDocument->SummaryInfo->Title;
-	if(!SaveDialog1->Execute()){
+	if (!SaveDialog1->Execute()) {
 		return;
-	}else{
-		FileName = ChangeFileExt(SaveDialog1->FileName,"");
+	} else {
+		FileName = ChangeFileExt(SaveDialog1->FileName, "");
 	}
 
 	AnsiString path = ExtractFilePath(FileName) + ChangeFileExt(ExtractFileName(FileName), "");
@@ -902,7 +904,7 @@ void __fastcall TFAutoCADPrint::Button9Click(TObject *Sender)
 	// создаем базовый файл
 	AutoCAD.ActiveDocument->SaveAs( WideString(baseName) );
 	baseName = AutoCAD.ActiveDocument->FullName;
-	
+
 	// save a copy
 	AutoCAD.ActiveDocument->SaveAs( WideString(tempName) );
 	tempName = AutoCAD.ActiveDocument->FullName;
@@ -917,10 +919,10 @@ void __fastcall TFAutoCADPrint::Button9Click(TObject *Sender)
 
 	// добавляем ссылку на базовый файл
 	AutoCAD.ActiveDocument->ModelSpace->AttachExternalReference(
-	WideString(baseName),
-	WideString("xRef1"),
-	AutoCAD.cadPoint(),
-	1,1,1,0, VARIANT_FALSE
+	    WideString(baseName),
+	    WideString("xRef1"),
+	    AutoCAD.cadPoint(),
+	    1, 1, 1, 0, VARIANT_FALSE
 	);
 	// исправялем ошибки файлов (необходимо) + уменшаем размер файла
 	helper->ActiveDocument->SendCommand(WideString("_.audit _y\n"));
@@ -944,7 +946,7 @@ void __fastcall TFAutoCADPrint::Button9Click(TObject *Sender)
 void __fastcall TFAutoCADPrint::Button12Click(TObject *Sender)
 {
 	pnlTop->Visible = !pnlTop->Visible;
-	Button12->Caption =  pnlTop->Visible?"<--":"-->";
+	Button12->Caption =  pnlTop->Visible ? "<--" : "-->";
 }
 //---------------------------------------------------------------------------
 

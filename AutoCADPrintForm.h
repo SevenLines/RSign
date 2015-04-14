@@ -149,7 +149,7 @@ public:		// User declarations
        void ChangeFramePosition();
        
        bool BeginPrint();
-       bool PauseLastFramePrint(std::list<AnsiString> &fileNames);
+       bool PauseLastFramePrint(std::list<AnsiString> &fileNames, bool onlyOneFile);
        bool SetFrame(int position, int width);
        bool EndPrint();
 
