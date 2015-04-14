@@ -357,13 +357,16 @@ void __fastcall TFAutoCADPrint::cmdPrintClick(TObject *Sender)
 	ReadValues();
 	try{
 		SaveDialog1->FileName = AutoCAD.ActiveDocument->SummaryInfo->Title;
+        //SaveDialog1->FileName = SaveDialog1->FileName + ".pdf";
 	}catch(...){}
 	if(!SaveDialog1->Execute()){
 		return;
-	}else{
-		FileName = SaveDialog1->FileName;
 	}
 
+    // убираем расширение у имени файла
+	FileName = ChangeFileExt(SaveDialog1->FileName, "");
+
+    // печатаем
 	Print();
 
 	TIniFile *ini = new TIniFile(strIniFileName);
@@ -498,26 +501,33 @@ bool TFAutoCADPrint::BeginPrint()
 bool TFAutoCADPrint::PauseLastFramePrint(std::list<AnsiString> &fileNames)
 {
 	if ( MessageDlg("Объединить все pdf в один файл?", mtConfirmation, TMsgDlgButtons() << mbYes << mbNo, 0) == mrYes) {
-		AnsiString argvs = "\"" + ExtractFileName(FileName)+".pdf" + "\"";
+        // имя файла
+		AnsiString argvs = "\"..\\" + ExtractFileName(FileName)+".pdf" + "\"";
+        // список файлов из которых состоит результирующий файл
 		for( list<AnsiString>::iterator it = fileNames.begin(); it!=fileNames.end(); ++it ) {
 			argvs += " ";
 			argvs += "\"" + ExtractFileName(*it) + ".pdf" + "\"";
 		}
 
+        // путь к программе pdf-merge
 		AnsiString execDir = ExtractFileDir(Application->ExeName);
-		AnsiString pdfBinderDir = StringReplace(edtPDFBinder->Text,
-		".\\", ExtractFileDir(Application->ExeName) + "\\", TReplaceFlags());    //execDir + "\\AutoCAD\\PDFBinder\\pdfbinder.exe";
-		AnsiString cmndLine = "chcp 1251\n" + pdfBinderDir +" "+ argvs;
+		AnsiString pdfBinderDir = StringReplace(edtPDFBinder->Text, ".\\", ExtractFileDir(Application->ExeName) + "\\", TReplaceFlags());    //execDir + "\\AutoCAD\\PDFBinder\\pdfbinder.exe";
+		AnsiString cmndLine = "chcp 1251\n\"" + pdfBinderDir +"\" "+ argvs + "\n";
 
-		AnsiString batName =  ExtractFileDir(FileName) + "\\pdf для " +
-		ExtractFileName(FileName) + ".bat";
+		AnsiString batName =  FileName + "_src\\pdf для " +
+		                      ExtractFileName(FileName) + ".bat";
 
+        // создаем bat файл
 		FILE *file = fopen( batName.c_str(), "w");
 		fprintf(file, cmndLine.c_str());
 		fclose(file);
 
+        // запускаем bat файл
 		if(FileExists(pdfBinderDir) ) {
-			WinExec( batName.c_str(), SW_SHOW );
+            AnsiString currentDir = GetCurrentDir();
+            SetCurrentDir(FileName + "_src");
+            ShellExecute(0, 0, batName.c_str(), 0, 0 , SW_SHOW );
+            SetCurrentDir(currentDir);
 		}
 		return true;
 	}
@@ -544,12 +554,12 @@ bool TFAutoCADPrint::SetFrame(int position, int width)
             /*AutoCAD.ActiveDocument->SendCommand(WideString(
                 AnsiString().sprintf("_.zoom _f %i,%i %i,%i\n", position, yCenter, position+width, yCenter)
             ));*/
-            BUILDER_INFO("Вид " << IntToStr(i).c_str());
+            //BUILDER_INFO("Вид " << IntToStr(i).c_str());
             Variant left = helper->cadPoint(position,yCenter);
             Variant right = helper->cadPoint(position+width,yCenter);
-            BUILDER_INFO("Рассчитал точки");
+            //BUILDER_INFO("Рассчитал точки");
             helper->Application->ZoomWindow(left, right);
-            BUILDER_INFO("Сдвинул вид");
+            //BUILDER_INFO("Сдвинул вид");
             //AutoCAD.ActiveDocument->SendCommand(L"_.PSPACE\n");
             //helper->ActiveDocument->MSpace = false;
 		}
@@ -584,9 +594,7 @@ void TFAutoCADPrint::Print(PrintType printType)
 	ProgressForm->Note = "Пробую подключиться к AutoCAD";
 	ProgressForm->SetMinMax(tbPos->Min, tbPos->Max);
 
-
-	if(!BindViewports())
-	return; 
+	if(!BindViewports()) return;
 
 	str.sprintf(pattern.c_str(),0,1);
 	
@@ -596,8 +604,11 @@ void TFAutoCADPrint::Print(PrintType printType)
 	AutoCADPrintOutputStyle osPrint = FAutoCADPrint->OutputStyle;
 	
 	switch(osPrint){
-	case 0: helper->ActiveDocument->SetVariable(WideString("BACKGROUNDPLOT"),Variant(0)); break;
-	default: return;
+	case 0:
+         helper->ActiveDocument->SetVariable(WideString("BACKGROUNDPLOT"),Variant(0));
+         break;
+	default:
+         return;
 	}
 
 	helper->SelectPaperSpace();
@@ -618,45 +629,33 @@ void TFAutoCADPrint::Print(PrintType printType)
 
 		try{
 			tbPos->Position = j;
-			// last frame printing:
-			if ( j == tbPos->Max) {
-				if (!chkOnly->Checked) {
-					ShowMessage("Это пауза в течении которой вы можете успеть\n"
-					"отредактировать текущую страницу в AutoCAD");
-					AnsiString temp;// = FileName+" ["+IntToStr(j/)+"+"+IntToStr(meters)+"]";
-					temp.sprintf("%s[%0.4i+%0.3i]",
-					FileName.c_str(),
-					int(j * vStep) / 100000,
-					int(j * vStep) % 100000 / 100 );
-					// save fileName for PauseLastFramePrint function, which is used to concat pdfs to one
-					fileNames.push_back(temp);
-					// save result
-					switch(printType) {
-					case ptDWG:
-						helper->ActiveDocument->SaveAs(WideString(temp));
-						break;
-					case ptPDF:
-						helper->ActiveDocument->Plot->PlotToFile(WideString(temp));
-						PauseLastFramePrint(fileNames);
-						break;
-					}
-					break;
-				}
-			}
-			AnsiString temp;// = FileName+" ["+IntToStr(j/)+"+"+IntToStr(meters)+"]";
-			temp.sprintf("%s[%0.4i+%0.3i]",
-			FileName.c_str(),
-			int(j * vStep) / 100000,
-			int(j * vStep) % 100000 / 100 );
-			// save fileName for PauseLastFramePrint function, which is used to concat pdfs to one
-			fileNames.push_back(temp);
-			// save result
+
+            AnsiString temp;
+            temp.sprintf("%s_src\\%s[%0.4i+%0.3i]", FileName.c_str(), ExtractFileName(FileName).c_str(), int(j * vStep) / 100000, int(j * vStep) % 100000 / 100 );
+            if (!DirectoryExists(FileName+"_src")) {
+                CreateDir(FileName+"_src");
+            }
+            fileNames.push_back(temp);
+
 			switch(printType) {
 			case ptDWG:
 				helper->ActiveDocument->SaveAs(WideString(temp));
 				break;
 			case ptPDF:
+                // если у нас последний шаг, то делаем паузу
+                if (!chkOnly->Checked && j == tbPos->Max) {
+                    helper->SendCommand(L"_UNDO _Mark ");
+                    ShowMessage("Это пауза в течении которой вы можете успеть\n"
+                                "отредактировать текущую страницу в AutoCAD");
+                }
+
 				helper->ActiveDocument->Plot->PlotToFile(WideString(temp));
+
+                // если у нас последний шаг, запрос на формирование pdf
+                if (!chkOnly->Checked && j == tbPos->Max) {
+                   PauseLastFramePrint(fileNames);
+                   helper->SendCommand(L"_UNDO _Back ");
+                }
 				break;
 			}
 		}catch(...){
