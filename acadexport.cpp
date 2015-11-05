@@ -145,7 +145,12 @@ AnsiString StringConvert(float f1, float f2)
     }
 }
 
-
+void SetObjectColor(IAcadEntity *object, unsigned char R, unsigned char G, unsigned char B)
+{
+    AcadAcCmColor *color =  object->TrueColor;
+    color->SetRGB(R, G, B);
+    object->TrueColor = color;
+}
 
 AnsiString StringConvertSignals(float f1, float f2)
 {
@@ -3798,14 +3803,10 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
 
         AcadHatchPtr hatch;
         hatch = AutoCAD.FillArea((IDispatch**)pl,1,0,"SOLID");
-        AcadAcCmColor *color =  hatch->TrueColor;
-        color->SetRGB(Color[0], Color[1], Color[2]);
-        hatch->TrueColor = color;
+        SetObjectColor(hatch, Color[0], Color[1], Color[2]);
         if(!fillType.IsEmpty()) {
             hatch = AutoCAD.FillArea((IDispatch**)pl,1,0,fillType);
-            color = hatch->TrueColor;
-            color->SetRGB(0,0,0);
-            hatch->TrueColor = color;
+            SetObjectColor(hatch, 0, 0, 0);
             hatch->PatternScale = scale;
             if(rotate) {
                 hatch->set_PatternAngle((float)rotate/180*M_PI);
@@ -3813,6 +3814,22 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
         }
         if(fErasePolyline) pl[0]->Erase();
 
+    } else if (kind == 2385108 || kind == 2385224 || // Линия застройки
+               kind == 2385225 || kind == 2385248 || // Забор деревянный, Забор металлический
+               kind == 2385249 || kind == 2385250) { // Квартал жилой, Квартал нежилой,  Квартал
+        AcadPolylinePtr pl;
+        unsigned char Color[3];
+        
+        if (kind == 2385108) { // Линия застройки
+            Color[0] = 255, Color[1] = 0, Color[2] = 255;
+        } else if (kind == 2385224 || kind == 2385225) { // Забор деревянный, Забор металлический
+            Color[0] = 134, Color[1] = 94, Color[2] = 94;
+        } else if (kind == 2385248 || kind == 2385249 || kind == 2385250) { // Квартал жилой, Квартал нежилой,  Квартал
+            Color[0] = 94, Color[1] = 132, Color[2] = 112;
+        }
+
+        pl = DrawPolyPoints(p, false, false);
+        SetObjectColor(pl, Color[0], Color[1], Color[2]);
     }
     return true;
 }
