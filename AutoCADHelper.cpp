@@ -1958,67 +1958,21 @@ void AutoCADTable::DrawRepeatVerticalTextInterval(int iRow,
                                 float sPos, float ePos,float kyPos,
                                 float step, bool fWithBorders, float kProp)
 {
-   if(step==0){
-     if(gRepeatInterval!=0)
-       step=gRepeatInterval;
-     else
-       return;
-   }
+  int iMin = (int)(sPos/step)+1;
+  int iMax = (int)(ePos/step)+1;
 
-   AnsiString tStr;
-   emptyMin[iRow] = max(max(emptyMin[iRow], sPos),ePos);
-   if(sPos<0) sPos = 0;
-   if(ePos<0||ePos == sPos) return;
+  for (int i = iMin; i < iMax; ++i) {
+    int pos = i * step;
+    int leftValue = pos % 100000 / 100;
+    int rightValue = leftValue == 0 ? 1000 : leftValue;
+    DrawVerticalText(leftValue, iRow, pos, 1 - kyPos, true, kProp);
+    DrawVerticalText(rightValue, iRow, pos, kyPos, false, kProp);
+  }
 
-   int iMax = (int)(ePos/step)+1;
-
-   int temp;
-   int iMin = (int)(sPos/step)+1;
-
-   int count = abs(iMax - iMin)+2;
-   int counter = 1;
-   float *pos = new float[count];
-   pos[0] = sPos;
-   float min,max;
-
-   if(iMin!=iMax){
-     if(sPos<iMin*step){
-         if(int(sPos)%int(step) == 0){
-             DrawVerticalText(0,iRow,sPos,1-kyPos,true,kProp);
-         }
-         temp = iMin*step;
-         DrawVerticalText(1000,iRow,temp,kyPos,false,kProp);
-         pos[counter++] = iMin*step;
-     }
-     for(int i=iMin;i<iMax-1;i++){
-         temp = i*step;
-         DrawVerticalText(0,iRow,temp,1-kyPos,true,kProp);
-         temp = (i+1)*step;
-         DrawVerticalText(1000,iRow,temp,kyPos,false,kProp);
-     }
-     if(ePos>(iMax-1)*step){
-        temp = (iMax-1)*step;
-        DrawVerticalText(0,iRow,temp,1-kyPos,true,kProp);
-        pos[counter++] = ePos;
-        DrawVerticalText(int(ePos)%int(step)/100,iRow,ePos,kyPos,false,kProp);
-     }
-     if(fWithBorders) DrawSnakeBorder(iRow,pos,counter);
-
-   }else{
-     if(int(sPos)%int(step) == 0){
-         DrawVerticalText(0,iRow,sPos,1-kyPos,true,kProp);
-     }
-     if(int(ePos)%int(step)==0){
-       DrawVerticalText(1000,iRow,ePos,1-kyPos,true,kProp);
-     }else{
-       DrawVerticalText(int(ePos)%int(step)/100,iRow,ePos,kyPos,false,kProp);
-     }
-
-     if(fWithBorders)DrawSnakeBorder(iRow,sPos,ePos);
-   }
-
-   RowslEnd[iRow] = ePos;
-   delete[] pos;
+  if (ePos != step * (iMax - 1)) {
+    int value = int(ePos) % 100000 / 100;
+    DrawVerticalText(value, iRow, ePos, kyPos, false, kProp);
+  }
 }
 
 

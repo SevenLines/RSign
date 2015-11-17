@@ -54,19 +54,13 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="TestFiles\ул 2-ая Центральная %28п  Молодёжный%29[0000+000].pdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\ул 2-ая Центральная %28п  Молодёжный%29[0000+250].pdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\ул 2-ая Центральная %28п  Молодёжный%29[0000+500].pdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="pdf_icon_32.ico" />
     <Content Include="pdf_icon_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestFiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

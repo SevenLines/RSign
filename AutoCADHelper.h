@@ -67,8 +67,7 @@ private:
 
         bool gIsHI,*gFillGaps,gAutoShrink, fFirst;
         AutoCADPoint gLeftTop;
-        float *RowslEnd, minS, minE;
-
+        float *RowslEnd;
         float iRowsFullHeight;
 
 
@@ -103,8 +102,6 @@ private:
 
         bool GetFillGaps(int index){return gFillGaps[index];}
 
-
-        
         void SetHeaderWidth(float value){gHeaderWidth = value;};
         void SetTableWidth(float value){gTableWidth = value;};
         void SetLeftTop(AutoCADPoint value){gLeftTop = value;};
@@ -135,9 +132,7 @@ private:
           fFirst = true;
           for(int i=0;i<gRowsCount;i++){
                RowslEnd[i] = gFillGapsBegin;
-          }
-          minS = -1;
-          minE = -1;          
+          }      
         }        
 public:
         inline float RowOffsetY(int i){return i*gRowHeight;}
