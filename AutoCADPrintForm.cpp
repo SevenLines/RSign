@@ -37,12 +37,12 @@ __fastcall TFAutoCADPrint::TFAutoCADPrint(TComponent* Owner)
 	//SaveDialog1->InitialDir = ExtractFileDir(Application->ExeName) + "\\AutoCAD";
 	strIniFileName = ChangeFileExt(Application->ExeName, ".ini");
 
-	Image1->Hint = "Р’С‹Р±РµСЂРё РјС‹С€РєРѕР№ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№\n\
-РІРёРґРѕРІРѕРјСѓ СЌРєСЂР°РЅСѓ РІ РїСЂРѕСЃС‚СЂР°РЅСЃС‚РІРµ Р»РёСЃС‚Р° AutoCAD.\n\
-РќР°Р¶РјРё 1: С‡С‚РѕР±С‹ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р’Р РґР»СЏ РІС‹РІРѕРґР° РІРµСЂС…РЅРµР№ С‚Р°Р±Р»РёС†С‹\n\
-РќР°Р¶РјРё 2: С‡С‚РѕР±С‹ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р’Р РґР»СЏ РІС‹РІРѕРґР° С†РµРЅС‚СЂР°Р»СЊРЅРѕР№ С‚Р°Р±Р»РёС†С‹\n\
-РќР°Р¶РјРё 3: С‡С‚РѕР±С‹ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р’Р РґР»СЏ РІС‹РІРѕРґР° РЅРёР¶РЅРµР№ С‚Р°Р±Р»РёС†С‹\n\
-РќР°Р¶РјРё Delete: С‡С‚РѕР±С‹ РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р’Р";
+	Image1->Hint = "Выбери мышкой прямоугольник соответствующий\n\
+видовому экрану в пространстве листа AutoCAD.\n\
+Нажми 1: чтобы использовать ВИ для вывода верхней таблицы\n\
+Нажми 2: чтобы использовать ВИ для вывода центральной таблицы\n\
+Нажми 3: чтобы использовать ВИ для вывода нижней таблицы\n\
+Нажми Delete: чтобы не использовать ВИ";
 
 	Rects = new TList();
 
@@ -62,15 +62,11 @@ __fastcall TFAutoCADPrint::~TFAutoCADPrint()
 
 void TFAutoCADPrint::CheckViewports()
 {
-	// РљРћРЎРўР«Р›Р¬ РІРѕ РёР·Р±РµР¶Р°РЅРёРµ РѕС€РёР±РѕРє РїСЂРё РїРµСЂРµРєР»СЋС‡РµРЅРёРё Р»СЌР№Р°СѓС‚РѕРІ
-	// Р±РµР· РЅРµРіРѕ helper->ActiveDocument->PaperSpace РІС‹РґР°РµС‚ РѕС€РёР±РєСѓ
-	{
-		AcadLayoutPtr layout = helper->ActiveDocument->Layouts->Item(Variant(0));
-		AcadLayoutPtr currentLayout = helper->ActiveDocument->ActiveLayout;
-		helper->ActiveDocument->set_ActiveLayout(layout);
-		helper->ActiveDocument->set_ActiveLayout(currentLayout);
-	}
-	// РєРѕРЅРµС† РљРћРЎРўР«Р›РЇ
+    VARIANT index = Variant(0);
+    AcadLayoutPtr layout = helper->ActiveDocument->Layouts->Item(index);
+    AcadLayoutPtr currentLayout = helper->ActiveDocument->ActiveLayout;
+    helper->ActiveDocument->set_ActiveLayout(layout);
+    helper->ActiveDocument->set_ActiveLayout(currentLayout);
 
 	int count = helper->ActiveDocument->PaperSpace->Count;
 	iSelected = -1;
@@ -118,7 +114,7 @@ void TFAutoCADPrint::CheckViewports()
 
 bool TFAutoCADPrint::BindViewports()
 {
-	BUILDER_INFO("РџРѕРґСЃРѕРµРґРёРЅСЏСЋ РІРёРґС‹");
+	BUILDER_INFO("Подсоединяю виды");
 	bool ffirst = true;
 	AcadEntityPtr e;
 	vpTop.Unbind();
@@ -130,7 +126,7 @@ bool TFAutoCADPrint::BindViewports()
 	roadName.Unbind();
 
 	if (!helper->ActiveDocument.IsBound()) {
-		BUILDER_INFO("РђРєС‚РёРІРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚ РЅРµРґРѕСЃС‚СѓРїРµРЅ, РЅРµ РјРѕРіСѓ РїРѕРґРєР»СЋС‡РёС‚СЊ РІРёРґС‹");
+		BUILDER_INFO("Активные документ недоступен, не могу подключить виды");
 		return false;
 	}
 	helper->ActiveDocument->Activate();
@@ -176,7 +172,7 @@ bool TFAutoCADPrint::BindViewports()
 			}
 		}
 	}
-	BUILDER_INFO("РЈСЃРїРµС€РЅРѕ РїРѕРґСЃРѕРµРґРёРЅРёР» РІРёРґС‹");
+	BUILDER_INFO("Успешно подсоединил виды");
 	return true;
 
 
@@ -235,7 +231,7 @@ void TFAutoCADPrint::LoadIni(TIniFile *ini)
 	edtStep->Text = vStep = ini->ReadFloat("AutoCAD", "PScaleStep", 100000);
 	edtEnd->Text = ePos = ini->ReadInteger("AutoCAD", "PEnd", vStep);
 
-	edtPattern->Text = ini->ReadString("AutoCAD", "PatternString", "%i-%i РєРј.");
+	edtPattern->Text = ini->ReadString("AutoCAD", "PatternString", "%i-%i км.");
 	chkInfo->Checked = ini->ReadBool("AutoCAD", "ShowMetricsInfo", true);
 	chkOnly->Checked = ini->ReadBool("AutoCAD", "POnlySelectedInterval", false);
 	//   chkSynchronize->Checked = ini->ReadBool("AutoCAD","Synchronize",false);
@@ -363,10 +359,10 @@ void __fastcall TFAutoCADPrint::cmdPrintClick(TObject *Sender)
 		return;
 	}
 
-	// СѓР±РёСЂР°РµРј СЂР°СЃС€РёСЂРµРЅРёРµ Сѓ РёРјРµРЅРё С„Р°Р№Р»Р°
+	// убираем расширение у имени файла
 	FileName = ChangeFileExt(SaveDialog1->FileName, "");
 
-	// РїРµС‡Р°С‚Р°РµРј
+	// печатаем
 	Print();
 
 	TIniFile *ini = new TIniFile(strIniFileName);
@@ -502,19 +498,19 @@ bool TFAutoCADPrint::BeginPrint()
 
 bool TFAutoCADPrint::PauseLastFramePrint(std::list<AnsiString> &fileNames, bool onlyOneFile)
 {
-	if ( MessageDlg("РћР±СЉРµРґРёРЅРёС‚СЊ РІСЃРµ pdf РІ РѕРґРёРЅ С„Р°Р№Р»?", mtConfirmation, TMsgDlgButtons() << mbYes << mbNo, 0) == mrYes) {
-		// РїР°РїРєР° СЃ С„Р°Р№Р»РѕРІ pdfBinder
+	if ( MessageDlg("Объединить все pdf в один файл?", mtConfirmation, TMsgDlgButtons() << mbYes << mbNo, 0) == mrYes) {
+		// папка с файлов pdfBinder
 		AnsiString pdfBinderDir = StringReplace(edtPDFBinder->Text, ".\\", ExtractFileDir(Application->ExeName) + "\\", TReplaceFlags());
-		// РїСѓС‚СЊ Рє Р±Р°С‚РЅРёРєСѓ
-		AnsiString batName =  FileName + "_src\\pdf РґР»СЏ " + ExtractFileName(FileName) + ".bat";
+		// путь к батнику
+		AnsiString batName =  FileName + "_src\\pdf для " + ExtractFileName(FileName) + ".bat";
 
-		// РµСЃР»Рё РЅРµ СЃС‚РѕРёС‚ РіР°Р»РѕС‡РєР° С‚РѕР»СЊРєРѕ С‚РµРєСѓС‰РёР№ С„Р°Р№Р»
-		// С‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ СЃРѕР·РґР°С‚СЊ Р±Р°С‚РЅРёРє
+		// если не стоит галочка только текущий файл
+		// то необходимо создать батник
 		if (!onlyOneFile) {
-			// РёРјСЏ С„Р°Р№Р»Р°
+			// имя файла
 			AnsiString argvs = "\"..\\" + ExtractFileName(FileName) + ".pdf" + "\"";
 
-			// СЃРїРёСЃРѕРє С„Р°Р№Р»РѕРІ РёР· РєРѕС‚РѕСЂС‹С… СЃРѕСЃС‚РѕРёС‚ СЂРµР·СѓР»СЊС‚РёСЂСѓСЋС‰РёР№ С„Р°Р№Р»
+			// список файлов из которых состоит результирующий файл
 			for ( list<AnsiString>::iterator it = fileNames.begin(); it != fileNames.end(); ++it ) {
 				argvs += " ";
 				argvs += "\"" + ExtractFileName(*it) + ".pdf" + "\"";
@@ -522,13 +518,13 @@ bool TFAutoCADPrint::PauseLastFramePrint(std::list<AnsiString> &fileNames, bool 
 
 			AnsiString cmndLine = "chcp 1251\n\"" + pdfBinderDir + "\" " + argvs + "\n";
 
-			// СЃРѕР·РґР°РµРј bat С„Р°Р№Р»
+			// создаем bat файл
 			FILE *file = fopen( batName.c_str(), "w");
 			fprintf(file, cmndLine.c_str());
 			fclose(file);
 		}
 
-		// Р·Р°РїСѓСЃРєР°РµРј bat С„Р°Р№Р»
+		// запускаем bat файл
 		if ( FileExists(pdfBinderDir) ) {
 			AnsiString currentDir = GetCurrentDir();
 			SetCurrentDir(FileName + "_src");
@@ -544,7 +540,7 @@ bool TFAutoCADPrint::PauseLastFramePrint(std::list<AnsiString> &fileNames, bool 
 bool TFAutoCADPrint::SetFrame(int position, int width)
 {
 	AcadPViewportPtr viewport;
-	BUILDER_INFO("РЈСЃС‚Р°РЅР°РІР»РёРІР°СЋ РІРёРґ");
+	BUILDER_INFO("Устанавливаю вид");
 	int yCenter;
 	for (int i = 0; i < 3; i++) {
 		switch (i) {
@@ -587,9 +583,9 @@ void TFAutoCADPrint::Print(PrintType printType)
 		iMax = tbPos->Position;
 	}
 
-	ProgressForm->Caption = "РџРµС‡Р°С‚СЊ РёР· AutoCAD";
+	ProgressForm->Caption = "Печать из AutoCAD";
 	ProgressForm->Position = 0;
-	ProgressForm->Note = "РџСЂРѕР±СѓСЋ РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє AutoCAD";
+	ProgressForm->Note = "Пробую подключиться к AutoCAD";
 	ProgressForm->SetMinMax(tbPos->Min, tbPos->Max);
 
 	if (!BindViewports()) return;
@@ -640,16 +636,16 @@ void TFAutoCADPrint::Print(PrintType printType)
 				helper->ActiveDocument->SaveAs(WideString(temp));
 				break;
 			case ptPDF:
-				// РµСЃР»Рё Сѓ РЅР°СЃ РїРѕСЃР»РµРґРЅРёР№ С€Р°Рі, С‚Рѕ РґРµР»Р°РµРј РїР°СѓР·Сѓ
+				// если у нас последний шаг, то делаем паузу
 				if (!chkOnly->Checked && j == tbPos->Max) {
 					helper->SendCommand(L"_UNDO _Mark ");
-					ShowMessage("Р­С‚Рѕ РїР°СѓР·Р° РІ С‚РµС‡РµРЅРёРё РєРѕС‚РѕСЂРѕР№ РІС‹ РјРѕР¶РµС‚Рµ СѓСЃРїРµС‚СЊ\n"
-					            "РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ С‚РµРєСѓС‰СѓСЋ СЃС‚СЂР°РЅРёС†Сѓ РІ AutoCAD");
+					ShowMessage("Это пауза в течении которой вы можете успеть\n"
+					            "отредактировать текущую страницу в AutoCAD");
 				}
 
 				helper->ActiveDocument->Plot->PlotToFile(WideString(temp));
 
-				// РµСЃР»Рё Сѓ РЅР°СЃ РїРѕСЃР»РµРґРЅРёР№ С€Р°Рі РёР»Рё РјС‹ РїРµС‡Р°С‚Р°РµРј С‚РѕР»СЊРєРѕ РѕРґРёРЅ С„Р°Р№Р», Р·Р°РїСЂРѕСЃ РЅР° С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ pdf
+				// если у нас последний шаг или мы печатаем только один файл, запрос на формирование pdf
 				if (chkOnly->Checked || j == tbPos->Max) {
 					PauseLastFramePrint(fileNames, chkOnly->Checked);
 				}
@@ -663,7 +659,7 @@ void TFAutoCADPrint::Print(PrintType printType)
 		} catch (...) {
 			TMsgDlgButtons buttons;
 			buttons << mbRetry << mbYes << mbAbort;
-			int value = MessageDlg("РџСЂРѕРёР·РѕС€РµР» СЃР±РѕР№ РїСЂРё РїРµС‡Р°С‚Рё!\nРџРѕРїСЂРѕР±С‹РІР°С‚СЊ РїРµСЂРµРїРµС‡Р°С‚Р°С‚СЊ С‚РµРєСѓС‰РёР№ Р»РёСЃС‚ Рё РїСЂРѕРґРѕР»Р¶РёС‚СЊ РїРµС‡Р°С‚СЊ(Retry).\nРџСЂРѕРґРѕР»Р¶РёС‚СЊ РїРµС‡Р°С‚СЊ(Ignore).\nРџСЂРµРєСЂР°С‚РёС‚СЊ РїРµС‡Р°С‚СЊ(Abort).", mtWarning, buttons, 0);
+			int value = MessageDlg("Произошел сбой при печати!\nПопробывать перепечатать текущий лист и продолжить печать(Retry).\nПродолжить печать(Ignore).\nПрекратить печать(Abort).", mtWarning, buttons, 0);
 			switch (value) {
 			case mrRetry:
 				j--;
@@ -694,13 +690,13 @@ void __fastcall TFAutoCADPrint::Button2Click(TObject *Sender)
 
 	if (AutoCAD.BindAutoCAD()) {
 		if (!AutoCAD.ActiveDocument) {
-			if (!ffirst1)ShowMessage("РќРµ РІРѕР·РјРѕР¶РЅРѕ РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє Р°РєС‚РёРІРЅРѕРјСѓ РґРѕРєСѓРјРµРЅС‚Сѓ.\n\
-РЈР±РµРґРёС‚РµСЃСЊ С‡С‚Рѕ РѕС‚РєСЂС‹С‚ С…РѕС‚СЏ Р±С‹ РѕРґРёРЅ РґРѕРєСѓРјРµРЅС‚.");
+			if (!ffirst1)ShowMessage("Не возможно подключиться к активному документу.\n\
+Убедитесь что открыт хотя бы один документ.");
 			helper = &AutoCAD;
 			return;
 		}
 	} else {
-		if (!ffirst1)ShowMessage("РќРµ РІРѕР·РјРѕР¶РЅРѕ РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє AutoCAD.\nРЈР±РµРґРёС‚РµСЃСЊ С‡С‚Рѕ РѕРЅ Р·Р°РїСѓС‰РµРЅ.");
+		if (!ffirst1)ShowMessage("Не возможно подключиться к AutoCAD.\nУбедитесь что он запущен.");
 		return;
 	}
 	helper = &AutoCAD;
@@ -720,7 +716,7 @@ void __fastcall TFAutoCADPrint::Button2Click(TObject *Sender)
 	int topTableHeight = 0, bottomTableHeight = 0, yOffset = 0, Start = 0, End = 0, Step = 100000;
 	IAcadSummaryInfoPtr si = AutoCAD.ActiveDocument->SummaryInfo;
 	AnsiString gTemplate = si->Keywords;
-	if (gTemplate.IsEmpty()) gTemplate = "%i РєРј";
+	if (gTemplate.IsEmpty()) gTemplate = "%i км";
 	strRoadName = si->Title;
 	AnsiString comments = si->Comments;
 	if (sscanf(comments.c_str(), "%i\r\n%i\r\n%i\r\n%i\r\n%i\r\n%i",
@@ -901,7 +897,7 @@ void __fastcall TFAutoCADPrint::Button9Click(TObject *Sender)
 	AnsiString baseName = path + "_base";
 	AnsiString tempName = path + "_temp";
 
-	// СЃРѕР·РґР°РµРј Р±Р°Р·РѕРІС‹Р№ С„Р°Р№Р»
+	// создаем базовый файл
 	AutoCAD.ActiveDocument->SaveAs( WideString(baseName) );
 	baseName = AutoCAD.ActiveDocument->FullName;
 
@@ -910,27 +906,27 @@ void __fastcall TFAutoCADPrint::Button9Click(TObject *Sender)
 	tempName = AutoCAD.ActiveDocument->FullName;
 
 	AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
-	// СѓРґР°Р»СЏРµРј РІСЃРµ РѕР±СЉРµРєС‚С‹ РёР· С‚РµРєСѓС‰РµРіРѕ С„Р°Р№Р»Р°
+	// удаляем все объекты из текущего файла
 	AutoCAD.ActiveDocument->SendCommand(WideString("_ai_selall\n").c_bstr());
 	Sleep(100);
 	AutoCAD.ActiveDocument->SendCommand(WideString("_.erase\n").c_bstr());
 	Sleep(100);
 	AutoCAD.ActiveDocument->PurgeAll();
 
-	// РґРѕР±Р°РІР»СЏРµРј СЃСЃС‹Р»РєСѓ РЅР° Р±Р°Р·РѕРІС‹Р№ С„Р°Р№Р»
+	// добавляем ссылку на базовый файл
 	AutoCAD.ActiveDocument->ModelSpace->AttachExternalReference(
 	    WideString(baseName),
 	    WideString("xRef1"),
 	    AutoCAD.cadPoint(),
 	    1, 1, 1, 0, VARIANT_FALSE
 	);
-	// РёСЃРїСЂР°РІСЏР»РµРј РѕС€РёР±РєРё С„Р°Р№Р»РѕРІ (РЅРµРѕР±С…РѕРґРёРјРѕ) + СѓРјРµРЅС€Р°РµРј СЂР°Р·РјРµСЂ С„Р°Р№Р»Р°
+	// исправялем ошибки файлов (необходимо) + уменшаем размер файла
 	helper->ActiveDocument->SendCommand(WideString("_.audit _y\n"));
 
-	// РїРµС‡Р°С‚Р°РµРј
+	// печатаем
 	Print(ptDWG);
 
-	// СѓРґР°Р»СЏРµРј РІСЂРµРјРµРЅРЅС‹Р№ С„Р°Р№Р»
+	// удаляем временный файл
 	remove(tempName.c_str());
 
 	helper->ActiveDocument->Close();

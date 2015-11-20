@@ -972,6 +972,7 @@ void __fastcall AcadExportThread::Execute()
 
     aexp->OutInfoLog = OutInfoLog;
     aexp->ProgressChanged = ProgressChanged;
+    aexp->SetAutoCADVersion(FAutoCADExport->getAutoCADVersion());
 
     if (FAutoCADExport->ExportAddRows) {
         if ( !(aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows,true)
