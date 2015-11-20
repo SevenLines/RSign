@@ -65,21 +65,21 @@
 //---------------------------------------------------------------------------
 class TFAutoCADExport : public TForm
 {
-__published:	// IDE-managed Components
-        TOpenDialog *OpenDialog1;
-        TGroupBox *GroupBox1;
-   TGroupBox *GroupBox4;
-   TComboBox *cbCurList;
-   TComboBox *cbPrjList;
-   TLabel *Label7;
-   TLabel *Label8;
-        TOpenDialog *OpenDialog2;
-        TSaveDialog *SaveDialog1;
-        TPanel *pnlLeft;
-        TGroupBox *GroupBox10;
-        TButton *Button6;
-        TComboBox *edtPath;
-        TLabel *Label28;
+__published:    // IDE-managed Components
+    TOpenDialog *OpenDialog1;
+    TGroupBox *GroupBox1;
+    TGroupBox *GroupBox4;
+    TComboBox *cbCurList;
+    TComboBox *cbPrjList;
+    TLabel *Label7;
+    TLabel *Label8;
+    TOpenDialog *OpenDialog2;
+    TSaveDialog *SaveDialog1;
+    TPanel *pnlLeft;
+    TGroupBox *GroupBox10;
+    TButton *Button6;
+    TComboBox *edtPath;
+    TLabel *Label28;
     TGroupBox *GroupBox6;
     TEdit *edtTopAddRows;
     TButton *btnTopAddRows;
@@ -203,150 +203,153 @@ __published:	// IDE-managed Components
     TEdit *edtScaleYBlock;
     TLabel *Label29;
     TCheckBox *chkDrawMap;
-        void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-        void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
-          TShiftState Shift);
-        void __fastcall chkAllClick(TObject *Sender);
-        void __fastcall Button2Click(TObject *Sender);
-        void __fastcall Button3Click(TObject *Sender);
-   void __fastcall cbCurListChange(TObject *Sender);
-   void __fastcall cbPrjListChange(TObject *Sender);
-        void __fastcall btnTopAddRowsClick(TObject *Sender);
-        void __fastcall Button5Click(TObject *Sender);
-        void __fastcall Button6Click(TObject *Sender);
-        void __fastcall listBottomRowsDragOver(TObject *Sender,
-          TObject *Source, int X, int Y, TDragState State, bool &Accept);
-        void __fastcall edtBottomAddRowsClick(TObject *Sender);
-        void __fastcall edtTopAddRowsDblClick(TObject *Sender);
-        void __fastcall FormShow(TObject *Sender);
-        void __fastcall cbIniChange(TObject *Sender);
-        void __fastcall btnOkClick(TObject *Sender);
-        void __fastcall edtTopAddRowsChange(TObject *Sender);
-        void __fastcall edtStartChange(TObject *Sender);
-        void __fastcall Button4Click(TObject *Sender);
+    TComboBox *cmbAutoCADVersion;
+    TLabel *Label30;
+    void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+    void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
+                                TShiftState Shift);
+    void __fastcall chkAllClick(TObject *Sender);
+    void __fastcall Button2Click(TObject *Sender);
+    void __fastcall Button3Click(TObject *Sender);
+    void __fastcall cbCurListChange(TObject *Sender);
+    void __fastcall cbPrjListChange(TObject *Sender);
+    void __fastcall btnTopAddRowsClick(TObject *Sender);
+    void __fastcall Button5Click(TObject *Sender);
+    void __fastcall Button6Click(TObject *Sender);
+    void __fastcall listBottomRowsDragOver(TObject *Sender,
+                                           TObject *Source, int X, int Y, TDragState State, bool &Accept);
+    void __fastcall edtBottomAddRowsClick(TObject *Sender);
+    void __fastcall edtTopAddRowsDblClick(TObject *Sender);
+    void __fastcall FormShow(TObject *Sender);
+    void __fastcall cbIniChange(TObject *Sender);
+    void __fastcall btnOkClick(TObject *Sender);
+    void __fastcall edtTopAddRowsChange(TObject *Sender);
+    void __fastcall edtStartChange(TObject *Sender);
+    void __fastcall Button4Click(TObject *Sender);
     void __fastcall btnShowInfoClick(TObject *Sender);
-private:	// User declarations
-        AnsiString strIniFileName;
-        void SaveIni(TIniFile *ini);
-        void LoadIni(TIniFile *ini);
-        int iCur,iPrj;
-        int topAddRowsCount;
-        int bottomAddRowsCount;
-        bool fIniLoading;
-        WideString get_EditTopAddRows();
-        void set_EditTopAddRows(WideString value);        
+private:    // User declarations
+    AnsiString strIniFileName;
+    void SaveIni(TIniFile *ini);
+    void LoadIni(TIniFile *ini, bool firstTime=false);
+    int iCur, iPrj;
+    int topAddRowsCount;
+    int bottomAddRowsCount;
+    bool fIniLoading;
+    WideString get_EditTopAddRows();
+    void set_EditTopAddRows(WideString value);
 
-public:		// User declarations
-        __fastcall TFAutoCADExport(TComponent* Owner);
-        void __fastcall SetRoadId(int rid);
-        AnsiString RoadName;
-        AnsiString RoadDistrict;
+public:     // User declarations
+    __fastcall TFAutoCADExport(TComponent* Owner);
+    void __fastcall SetRoadId(int rid);
+    AnsiString RoadName;
+    AnsiString RoadDistrict;
 
-        int getExportTo(){return rgOut->ItemIndex;}
-        AnsiString getFileName(){return ExtractFileDir(Application->ExeName)+"\\AutoCAD\\"+edtPath->Text;}
+    int getExportTo() {return rgOut->ItemIndex;}
+    AnsiString getFileName() {return ExtractFileDir(Application->ExeName) + "\\AutoCAD\\" + edtPath->Text;}
+    AnsiString getAutoCADVersion();
 
-        MPROPERTY1(RoadMetrics);
-        MPROPERTY1(Attachments);
-        MPROPERTY1(RoadSigns);
-        MPROPERTY1(Mark);
-        MPROPERTY1(Tubes);
-        MPROPERTY1(Bridges);
-        MPROPERTY1(Signal);
-        MPROPERTY1(SignalExistToo);
-        MPROPERTY1(Busstops);
-        MPROPERTY1(RoadSideObjects);
-        MPROPERTY1(Slope);
-        MPROPERTY1(Table);
-        MPROPERTY1(Curves);
-        MPROPERTY1(Lamps);
-        MPROPERTY1(TrafficLights);
-        MPROPERTY1(CityObjects);
-        MPROPERTY1(MoundHeights);
-        MPROPERTY1(Auto6_13);
-        MPROPERTY1(LeftValueOnly6_13);
-        MPROPERTY1(Sidewalks);
-        MPROPERTY1(Borders);
-        MPROPERTY1(Profile);
-        MPROPERTY1(Plan);
-        MPROPERTY1(Communications);
-        MPROPERTY1(Town);
-        MPROPERTY1(Surface);
-        MPROPERTY1(MakeHeader);
-        MPROPERTY1(HideAutoCAD);
-        MPROPERTY1(ShowAttachmentComments);
-        MPROPERTY1(TopAddRowsWithoutData);
-        MPROPERTY1(GridStep);
-        MPROPERTY1(Ruler);
-        MPROPERTY1(Section);
-        MPROPERTY1(Graphic);
-        MPROPERTY1(DrawMap);
+    MPROPERTY1(RoadMetrics);
+    MPROPERTY1(Attachments);
+    MPROPERTY1(RoadSigns);
+    MPROPERTY1(Mark);
+    MPROPERTY1(Tubes);
+    MPROPERTY1(Bridges);
+    MPROPERTY1(Signal);
+    MPROPERTY1(SignalExistToo);
+    MPROPERTY1(Busstops);
+    MPROPERTY1(RoadSideObjects);
+    MPROPERTY1(Slope);
+    MPROPERTY1(Table);
+    MPROPERTY1(Curves);
+    MPROPERTY1(Lamps);
+    MPROPERTY1(TrafficLights);
+    MPROPERTY1(CityObjects);
+    MPROPERTY1(MoundHeights);
+    MPROPERTY1(Auto6_13);
+    MPROPERTY1(LeftValueOnly6_13);
+    MPROPERTY1(Sidewalks);
+    MPROPERTY1(Borders);
+    MPROPERTY1(Profile);
+    MPROPERTY1(Plan);
+    MPROPERTY1(Communications);
+    MPROPERTY1(Town);
+    MPROPERTY1(Surface);
+    MPROPERTY1(MakeHeader);
+    MPROPERTY1(HideAutoCAD);
+    MPROPERTY1(ShowAttachmentComments);
+    MPROPERTY1(TopAddRowsWithoutData);
+    MPROPERTY1(GridStep);
+    MPROPERTY1(Ruler);
+    MPROPERTY1(Section);
+    MPROPERTY1(Graphic);
+    MPROPERTY1(DrawMap);
 
-        __property bool ExportAddRows = {read = get_ExportAddRows};\
-        bool get_ExportAddRows(){
-             return getTopRow("дополнительные строки")!=-1 && getBottomRow("дополнительные строки")!=-1 && !edtTopAddRows->Text.IsEmpty();
-        }
+    __property bool ExportAddRows = {read = get_ExportAddRows}; \
+    bool get_ExportAddRows() {
+        return getTopRow("дополнительные строки") != -1 && getBottomRow("дополнительные строки") != -1 && !edtTopAddRows->Text.IsEmpty();
+    }
 
-        MPROPERTY3(RCenter);
-        MPROPERTY3(NotExistsColor);
-        MPROPERTY3(UnderTextYOffset);
-        MPROPERTY3(AutoShrinkOneLetterWidth);
-        MPROPERTY3(UnderTextHeight);
-        MPROPERTY3(RowHeight);
-        MPROPERTY3(MinBarrierSegmentLength)
-        MPROPERTY3(GrphRowHeight);
-        MPROPERTY3(HeaderWidth);
-        MPROPERTY3(HeaderTextHeight);
-        MPROPERTY3(UseVerticalTextIfLess);
-        MPROPERTY3(SmallGridMarkHeight);
-        MPROPERTY3(SidewalksHatchScale);
-        MPROPERTY3(ProfileHatchScale);
-        MPROPERTY3(TableHatchScale);
+    MPROPERTY3(RCenter);
+    MPROPERTY3(NotExistsColor);
+    MPROPERTY3(UnderTextYOffset);
+    MPROPERTY3(AutoShrinkOneLetterWidth);
+    MPROPERTY3(UnderTextHeight);
+    MPROPERTY3(RowHeight);
+    MPROPERTY3(MinBarrierSegmentLength)
+    MPROPERTY3(GrphRowHeight);
+    MPROPERTY3(HeaderWidth);
+    MPROPERTY3(HeaderTextHeight);
+    MPROPERTY3(UseVerticalTextIfLess);
+    MPROPERTY3(SmallGridMarkHeight);
+    MPROPERTY3(SidewalksHatchScale);
+    MPROPERTY3(ProfileHatchScale);
+    MPROPERTY3(TableHatchScale);
 
-        MPROPERTY4(LinesTop);
-        MPROPERTY4(LinesBottom);
+    MPROPERTY4(LinesTop);
+    MPROPERTY4(LinesBottom);
 
-        MPROPERTY5(SidewalksHatch);
-        MPROPERTY5(ProfileHatch);
-        MPROPERTY5(TableHatch);
-        MPROPERTY5(InfoTemplate);
-        MPROPERTY5(ProjectBarrierPrefix);
+    MPROPERTY5(SidewalksHatch);
+    MPROPERTY5(ProfileHatch);
+    MPROPERTY5(TableHatch);
+    MPROPERTY5(InfoTemplate);
+    MPROPERTY5(ProjectBarrierPrefix);
 
-        MPROPERTY6(Start);
-        MPROPERTY6(End);
-        MPROPERTY6(Step);
-        MPROPERTY6(GridStep);
-        MPROPERTY6(ScaleY);
-        MPROPERTY6(ScaleYBlock);        
-        MPROPERTY6(LineWidth);
+    MPROPERTY6(Start);
+    MPROPERTY6(End);
+    MPROPERTY6(Step);
+    MPROPERTY6(GridStep);
+    MPROPERTY6(ScaleY);
+    MPROPERTY6(ScaleYBlock);
+    MPROPERTY6(LineWidth);
 
-        __property int ExportTo = {read  = getExportTo};
-        __property AnsiString FileName = {read = getFileName};
-        __property WideString EditTopAddRows = {read = get_EditTopAddRows, write = set_EditTopAddRows};
+    __property int ExportTo = {read  = getExportTo};
+    __property AnsiString FileName = {read = getFileName};
+    __property WideString EditTopAddRows = {read = get_EditTopAddRows, write = set_EditTopAddRows};
 
-        int getIndexOfItemInComboBox(TComboBox *combo, AnsiString value, bool fAddIfNotExist);
+    int getIndexOfItemInComboBox(TComboBox *combo, AnsiString value, bool fAddIfNotExist);
 
-        int getTopRow(AnsiString rowName);
-        int getBottomRow(AnsiString rowName);
+    int getTopRow(AnsiString rowName);
+    int getBottomRow(AnsiString rowName);
 
-        int setBottomAddRowsCount(int count);   /* это чтобы правильно пересчитывать позицию строк*/
-        int setTopAddRowsCount(int count);      /* с учетом дополнительных строк надо вызвать по крайне мере*/
-                                                /* один раз перед getTopRow и getBottomRow соответственно */
-                                                /* с правильно пересчитанным значением count
-                                                   функцией Export%Bottom|Top%AddRows(form->Edit%Bottom|Top%AddRows,true)
-                                                   PS: дада... facepalm */
+    int setBottomAddRowsCount(int count);   /* это чтобы правильно пересчитывать позицию строк*/
+    int setTopAddRowsCount(int count);      /* с учетом дополнительных строк надо вызвать по крайне мере*/
+    /* один раз перед getTopRow и getBottomRow соответственно */
+    /* с правильно пересчитанным значением count
+       функцией Export%Bottom|Top%AddRows(form->Edit%Bottom|Top%AddRows,true)
+       PS: дада... facepalm */
 
-        int getRow(TCheckListBox *lb, AnsiString &rowName);
-        void SaveRowsInfoToIni(TCheckListBox *list, TIniFile *ini);
-        void LoadRowsInfoFromIni(TCheckListBox *list, TIniFile *ini);
-        int countOfUnchecksBefore(TCheckListBox *list, int iRow);
-        void SetupTEdits();
+    int getRow(TCheckListBox *lb, AnsiString &rowName);
+    void SaveRowsInfoToIni(TCheckListBox *list, TIniFile *ini);
+    void LoadRowsInfoFromIni(TCheckListBox *list, TIniFile *ini);
+    int countOfUnchecksBefore(TCheckListBox *list, int iRow);
+    void SetupTEdits();
 
-        void fillComboRoad();
-        void locateRoadNameComboRoad();
-        
-        void __fastcall LoadSetupsInis();
-        void __fastcall LoadTemplates();
-        int __fastcall CountOfExports(); // returns count of selected items for export
+    void fillComboRoad();
+    void locateRoadNameComboRoad();
+
+    void __fastcall LoadSetupsInis();
+    void __fastcall LoadTemplates();
+    int __fastcall CountOfExports(); // returns count of selected items for export
 
 };
 //---------------------------------------------------------------------------

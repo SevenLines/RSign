@@ -39,7 +39,7 @@ __fastcall TFAutoCADExport::TFAutoCADExport(TComponent* Owner)
   strIniFileName = ChangeFileExt(Application->ExeName,".ini");
   SetupTEdits();
   TIniFile *ini = new TIniFile(strIniFileName);
-  LoadIni(ini);
+  LoadIni(ini, true);
   delete ini;
 }
 //---------------------------------------------------------------------------
@@ -140,7 +140,7 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
    ini->WriteString("AutoCAD","EditTopAddRows",edtTopAddRows->Text);
 
    ini->WriteString("AutoCAD","ExportFile",edtPath->Text);
-
+   ini->WriteString("AutoCAD","Version",cmbAutoCADVersion->Text);
 
    ini->WriteInteger("AutoCAD","iCurrentDataSet",cbCurList->ItemIndex);
    ini->WriteInteger("AutoCAD","iProjectDataSet",cbPrjList->ItemIndex);
@@ -164,11 +164,9 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
 
    SaveRowsInfoToIni(listTopRows, ini);
    SaveRowsInfoToIni(listBottomRows, ini);
-
- 
 }
 
-void TFAutoCADExport::LoadIni(TIniFile *ini)
+void TFAutoCADExport::LoadIni(TIniFile *ini, bool firstTime)
 {
    fIniLoading = true;
    chkAttachments->Checked = ini->ReadBool("AutoCAD","ExportAttachmetns",true);
@@ -252,10 +250,13 @@ void TFAutoCADExport::LoadIni(TIniFile *ini)
 
    edtPath->ItemIndex = edtPath->Items->IndexOf(ini->ReadString("AutoCAD","ExportFile",""));
 
-
    LoadRowsInfoFromIni(listTopRows, ini);
    LoadRowsInfoFromIni(listBottomRows, ini);
    fIniLoading = false;
+
+   if (firstTime) {
+    cmbAutoCADVersion->ItemIndex = cmbAutoCADVersion->Items->IndexOf(ini->ReadString("AutoCAD","Version","Default"));
+   }
 }
 void __fastcall TFAutoCADExport::FormClose(TObject *Sender,
       TCloseAction &Action)
@@ -454,6 +455,11 @@ int TFAutoCADExport::getRow(TCheckListBox *lb, AnsiString &rowName)
       }
    }
    return iRow+enl-countOfUnchecksBefore(lb, iRow);
+}
+
+AnsiString TFAutoCADExport::getAutoCADVersion()
+{
+   return cmbAutoCADVersion->Text;
 }
 
 int TFAutoCADExport::countOfUnchecksBefore(TCheckListBox *list, int iRow)

@@ -181,6 +181,11 @@ bool __fastcall TAcadExport::BindToCurrentDocument(TRoad *road)
     return true;
 }
 
+void __fastcall TAcadExport::SetAutoCADVersion(AnsiString version)
+{
+    AutoCAD.setAutoCADVersion(version);
+}
+
 void TAcadExport::Print()
 {
     FAutoCADPrint->helper = &AutoCAD;

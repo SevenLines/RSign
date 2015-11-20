@@ -294,6 +294,7 @@ public:
         ~AutoCADHelper();
 
         AnsiString strLostBlocks;
+        AnsiString AutoCADProgID;
         AnsiString (*SignLabelParser)(AnsiString , AnsiString );
 
         Variant cadPoint(double x = 0, double y = 0, double z = 0);
@@ -305,6 +306,7 @@ public:
         /*œ–»ÀŒ∆≈Õ»≈ -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
         AcadApplication *RunAutoCAD(bool fVisible=true);
         AcadApplication *BindAutoCAD();
+        void setAutoCADVersion(AnsiString version);
         void ResetBlocksCollection();
         void waitForIdle();
         void DisableAutoSave();

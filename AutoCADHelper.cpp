@@ -156,6 +156,7 @@ AutoCADHelper::AutoCADHelper():fInvertYAxe(0),fInvertXAxe(0)
    gCopyTextObject = 0;
    gCopyText = 0;
    iAutoSaveInterval = -1;
+   AutoCADProgID = "AutoCAD.Application";
    BMP = new Graphics::TBitmap();
 }
 
@@ -167,7 +168,8 @@ AutoCADHelper::~AutoCADHelper()
 
 AcadApplication *AutoCADHelper::BindAutoCAD()
 {
-   if(FAILED(cadApplication.BindToActive(ProgIDToClassID("AutoCAD.Application")))) return 0;
+
+   if(FAILED(cadApplication.BindToActive(ProgIDToClassID(this->AutoCADProgID)))) return 0;
 
    if(cadApplication->Documents->Count>0 && cadApplication->ActiveDocument){
        SetActive(cadApplication->ActiveDocument);
@@ -178,9 +180,11 @@ AcadApplication *AutoCADHelper::BindAutoCAD()
 
 AcadApplication * AutoCADHelper::RunAutoCAD(bool fVisible)
 {
-//    if(FAILED(cadApplication.BindRunning())){
-    if(FAILED(cadApplication.BindToActive(ProgIDToClassID("AutoCAD.Application")))){
-        if(FAILED(cadApplication.Bind(ProgIDToClassID("AutoCAD.Application")))){
+    /*IDispatch *disp = (IDispatch*)GetActiveOleObject(this->AutoCADProgID);
+    IAcadApplication *obj;
+    disp->QueryInterface(__uuidof(IAcadApplication), (void **)&obj); */
+    if(FAILED(cadApplication.BindToActive(ProgIDToClassID(this->AutoCADProgID)))){
+        if(FAILED(cadApplication.Bind(ProgIDToClassID(AutoCADProgID)))){
            throw "can't run AutoCAD";
         }
     }
@@ -191,6 +195,16 @@ AcadApplication * AutoCADHelper::RunAutoCAD(bool fVisible)
     }
     return cadApplication;
 
+}
+
+void AutoCADHelper::setAutoCADVersion(AnsiString version)
+{
+    if (version == "Default") {
+      this->AutoCADProgID = "AutoCAD.Application";
+    } else {
+      int iVersion = version.ToInt() - 2012 + 18;
+      this->AutoCADProgID = "AutoCAD.Application." + IntToStr(iVersion);
+    }       
 }
 
 AcadApplication *AutoCADHelper::getApplication()

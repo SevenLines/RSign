@@ -125,6 +125,7 @@ class TAcadExport {
 
       __fastcall TAcadExport(void);
       __fastcall ~TAcadExport(void);
+      void __fastcall SetAutoCADVersion(AnsiString version);
       bool __fastcall BeginDocument(TRoad *road);
       bool __fastcall BindToCurrentDocument(TRoad *road);
       bool __fastcall ExportTables(TFAutoCADExport *form);
