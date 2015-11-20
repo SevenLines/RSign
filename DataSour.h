@@ -201,7 +201,7 @@ void __fastcall BuildRoadMetrics(int MetSour=-1);
 void __fastcall BuildLongSlopesPart(TDictSource *Dict,int sp,int ep);
 void __fastcall BuildSimplePart(int spos,int epos,int step,TDictSource *Dict);
 void __fastcall BuildWidePart(int spos,int epos,int step,int roundval,TDictSource *Dict);
-void __fastcall BuildRoadSides(int spos,int epos,TRoadSide side,int step,int roundval,int ref,TDictSource *dict);
+void __fastcall BuildRoadSides(int spos,int epos,TRoadSide side,int wlen,int step,int roundval,int ref,TDictSource *dict);
 void __fastcall BuildWidthMeasure(int step,TDictSource *Dict);
 //Разрывает кромку и бровку по примыканиям
 void __fastcall BreakRoadLines(void);

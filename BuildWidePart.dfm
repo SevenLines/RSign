@@ -42,7 +42,7 @@ object frmWidePartDialog: TfrmWidePartDialog
       Width = 165
       Height = 29
       AutoSize = False
-      Caption = #1052#1072#1082#1089#1080#1084#1072#1083#1100#1085#1072#1103' '#1088#1072#1079#1085#1080#1094#1072' '#1096#1080#1088#1080#1085#1099' '#1085#1072' '#1091#1095#1072#1089#1090#1082#1077' ('#1089#1084')'
+      Caption = #1064#1080#1088#1080#1085#1072' '#1087#1086' '#1087#1086#1083#1086#1089#1072#1084
       WordWrap = True
     end
     object Label2: TLabel
@@ -68,7 +68,7 @@ object frmWidePartDialog: TfrmWidePartDialog
       Width = 53
       Height = 21
       TabOrder = 1
-      Text = '20'
+      Text = '300'
     end
     object editPartRoundVal: TEdit
       Left = 188
@@ -84,9 +84,10 @@ object frmWidePartDialog: TfrmWidePartDialog
       Width = 15
       Height = 21
       Associate = editPartMaxDev
-      Min = 10
+      Min = 200
+      Max = 400
       Increment = 5
-      Position = 20
+      Position = 300
       TabOrder = 3
       Wrap = False
     end
@@ -108,12 +109,12 @@ object frmWidePartDialog: TfrmWidePartDialog
       Height = 21
       Style = csDropDownList
       ItemHeight = 13
-      ItemIndex = 0
+      ItemIndex = 1
       TabOrder = 5
-      Text = #1054#1082#1088#1091#1075#1083#1077#1085#1080#1077' '#1074#1085#1080#1079
+      Text = #1064#1080#1088#1080#1085#1072' '#1087#1086' '#1087#1086#1083#1086#1089#1072#1084
       Items.Strings = (
         #1054#1082#1088#1091#1075#1083#1077#1085#1080#1077' '#1074#1085#1080#1079
-        #1042#1099#1088#1072#1074#1085#1080#1074#1072#1085#1080#1077' '#1091#1095#1072#1089#1090#1082#1086#1074)
+        #1064#1080#1088#1080#1085#1072' '#1087#1086' '#1087#1086#1083#1086#1089#1072#1084)
     end
   end
   object GroupBox2: TGroupBox

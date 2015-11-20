@@ -1043,6 +1043,14 @@ else
 return X;
 }
 
+void __fastcall TPolyline::RemovePointsOnLine(void) {
+   int n=1;
+   for (int i=1;i<Count;i++)
+      if (i==Count-1 || Points[i].X!=Points[n-1].X || Points[i].X!=Points[i+1].X)
+         Points[n++]=Points[i];
+   SetCount(n);
+}
+
 void __fastcall TPolyline::Sum(TPolyline *Fir,TPolyline *Sec,int K1,int K2)
 {
 SetCount(Fir->Count+Sec->Count);
@@ -1121,6 +1129,32 @@ for (int i=0;i<FCount;i++)
     FPoints[i].X+=DX;
 }
 
+// —троим участки кратные defln (ширина полосы. ≈сли
+// полос меньше чем 2  то ширину оокругл€ем до величины кратной roundln
+void __fastcall TPolyline::MakeWidePart2(TPolyline *P,int defln,int roundln) {
+  int *A=new int [P->Count];
+  SetCount(P->Count);
+  for (int i=0;i<P->Count;i++) {
+     int k=(P->Points[i].X+roundln/2)/defln;
+     if (k>=2)
+        A[i]=k*defln;
+     else
+        A[i]=((P->Points[i].X+roundln/2)/roundln)*roundln;
+  }
+  int n=1;
+  FPoints[0].L=P->Points[0].L;
+  FPoints[0].X=A[0];
+  for (int i=n;i<P->Count;i++) {
+     if (i+1==P->Count || A[n-1]!=A[i] || A[i+1]!=A[i] )  {
+         FPoints[n].L=P->Points[i].L;
+         FPoints[n].X=A[i];
+         A[n++]=A[i];
+      }
+  }
+   delete[] A;
+   SetCount(n);
+}
+
 void __fastcall TPolyline::MakeSimplePart(TPolyline *P,int defln) {
    SetCount(P->Count);
    int *A=new int [P->Count];
@@ -1135,8 +1169,6 @@ void __fastcall TPolyline::MakeSimplePart(TPolyline *P,int defln) {
          FPoints[n].X=A[i]*defln;
          A[n++]=A[i];
       }
-   delete[] A;
-   SetCount(n);
 }
 
 void __fastcall TPolyline::MakeWidePart(TPolyline *P,int Par1,int RoundVal)
@@ -1262,8 +1294,7 @@ for (int i=0;i<n;i++)
         FPoints[k+1].L=P->Points[j-1].L+L3/2;
           // ѕлощадь равна L1*X1+(3X1+X2)*L2/8+(3X1+X3)*L3/8  (площадь половины трапеции)
         double H=(L1*X1+((3*X1+X2)*L2+(3*X1+X3)*L3)/8)/(L1+(L2+L3)/2);
-        H=(H+RoundVal/2)/RoundVal;
-        H*=RoundVal;
+        H=((int)(H+RoundVal/2)/RoundVal)*RoundVal;
         FPoints[k].X=FPoints[k+1].X=H;
         k+=2;
         }
