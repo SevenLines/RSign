@@ -157,6 +157,7 @@ public:		// User declarations
        float vcTop,vcCenter,vcBottom, vStep, sPos, ePos;
        AcadDocumentPtr lastDoc;
        AnsiString FileName;
+              
        AutoCADPrintOutputStyle OutputStyle;
         __fastcall TFAutoCADPrint(TComponent* Owner);
         __fastcall ~TFAutoCADPrint();

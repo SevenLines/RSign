@@ -226,8 +226,7 @@ class TAcadExport {
       void __fastcall TAcadExport::SetLayerOrder(AnsiString LayerName, AnsiString order);
       void SetAttributes(AcadBlockReferencePtr block, AnsiString labels);
       void Print();
-      // столбы освещения
-      void __fastcall EndDocument();
+      void __fastcall EndDocument(AnsiString savePath="");
 };
 //---------------------------------------------------------------------------
 

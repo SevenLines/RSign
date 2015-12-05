@@ -205,6 +205,7 @@ __published:    // IDE-managed Components
     TCheckBox *chkDrawMap;
     TComboBox *cmbAutoCADVersion;
     TLabel *Label30;
+    TCheckBox *chkSaveToDir;
     void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
     void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
                                 TShiftState Shift);
@@ -243,6 +244,7 @@ public:     // User declarations
     void __fastcall SetRoadId(int rid);
     AnsiString RoadName;
     AnsiString RoadDistrict;
+    AnsiString lastSavePath;
 
     int getExportTo() {return rgOut->ItemIndex;}
     AnsiString getFileName() {return ExtractFileDir(Application->ExeName) + "\\AutoCAD\\" + edtPath->Text;}
@@ -283,6 +285,7 @@ public:     // User declarations
     MPROPERTY1(Section);
     MPROPERTY1(Graphic);
     MPROPERTY1(DrawMap);
+    MPROPERTY1(SaveToDir);
 
     __property bool ExportAddRows = {read = get_ExportAddRows}; \
     bool get_ExportAddRows() {

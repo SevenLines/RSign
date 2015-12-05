@@ -610,7 +610,7 @@ void __fastcall TAcadExport::SetLayerOrder(AnsiString LayerName, AnsiString orde
     AutoCAD.ActiveDocument->SendCommand(WideString("(command \"_draworder\" ss \"\" \"" + order + "\")\n"));
 }
 
-void __fastcall TAcadExport::EndDocument() {
+void __fastcall TAcadExport::EndDocument(AnsiString savePath) {
     rectmap.clear();
     //AutoCAD.ActiveDocument->SendCommand(WideString("SAVETIME " + IntToStr(iAutoSaveInterval) + "\n"));
     //AutoCAD.Application->ZoomAll();
@@ -620,6 +620,9 @@ void __fastcall TAcadExport::EndDocument() {
     SetLayerOrder("RoadPlan", "_back");
     SetLayerOrder("RoadTrafficLights", "_front");
     SetLayerOrder("RoadMetrics", "_back");
+    SetLayerOrder("RoadSurface", "_back");
+    SetLayerOrder("RoadTown", "_back");
+
 
     AutoCAD.ActiveDocument->SendCommand(WideString("_.zoom _e\n"));
 
@@ -644,6 +647,10 @@ void __fastcall TAcadExport::EndDocument() {
         Tube->Delete();
     }
     AutoCAD.EnableAutoSave();
+    
+    if (savePath != "") {
+       AutoCAD.ActiveDocument->SaveAs(WideString(savePath));
+    } 
 }
 
 bool _fastcall TAcadExport::ExportProfil(TExtPolyline *Poly) {
@@ -3693,7 +3700,9 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
         }
 
         pl = DrawPolyPoints(p, false, false);
-        SetObjectColor(pl, Color[0], Color[1], Color[2]);
+        if (pl) {
+           SetObjectColor(pl, Color[0], Color[1], Color[2]);
+        }
     }
     return true;
 }

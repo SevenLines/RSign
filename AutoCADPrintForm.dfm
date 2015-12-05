@@ -5,7 +5,7 @@ object FAutoCADPrint: TFAutoCADPrint
   BorderStyle = bsDialog
   Caption = #1055#1077#1095#1072#1090#1100' '#1080#1079' AutoCAD '
   ClientHeight = 322
-  ClientWidth = 626
+  ClientWidth = 570
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

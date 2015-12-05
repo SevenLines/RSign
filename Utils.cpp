@@ -47,7 +47,7 @@ void Utils::split(AnsiString str, AnsiString separators, vector<AnsiString>& wor
     char* tok = strtok(string_ptr, separators_ptr);
     AnsiString lastWord;
     for(int i=0; tok; ++i) {
-        if ( max_splits == -1 || i < max_splits ) {
+        if ( max_splits == -1 || i < max_splits - 1 ) {
             words_out.push_back(tok);
         } else {
             lastWord += String(tok) + " ";
