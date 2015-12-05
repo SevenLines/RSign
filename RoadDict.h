@@ -23,7 +23,7 @@ public:
 
 // Строка классификатора объектов
 
-#define MAXOBJPROPCOUNT 16
+#define MAXOBJPROPCOUNT 32
 #define PR_NECESSARY 1
 #define PR_PUBLISHED 2
 #define PR_READONLY  4

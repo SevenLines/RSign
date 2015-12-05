@@ -21,9 +21,9 @@ object MainForm: TMainForm
     Top = 0
     Width = 818
     Height = 541
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = #1054#1073#1098#1077#1082#1090#1099' '#1080' '#1093#1072#1088#1072#1082#1090#1077#1088#1080#1089#1090#1080#1082#1080
@@ -121,7 +121,7 @@ object MainForm: TMainForm
           Height = 21
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
-          ItemHeight = 0
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
@@ -150,7 +150,7 @@ object MainForm: TMainForm
           Height = 21
           Style = csDropDownList
           Anchors = [akLeft, akTop, akRight]
-          ItemHeight = 0
+          ItemHeight = 13
           TabOrder = 3
         end
         object CharList: TCheckListBox
@@ -177,7 +177,7 @@ object MainForm: TMainForm
           Top = 480
           Width = 145
           Height = 25
-          Anchors = [akLeft, akTop, akRight]
+          Anchors = [akRight, akBottom]
           Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' '#1079#1072#1087#1088#1086#1089#1099
           TabOrder = 6
           OnClick = Button4Click
@@ -286,7 +286,7 @@ object MainForm: TMainForm
           Width = 156
           Height = 21
           Style = csDropDownList
-          ItemHeight = 0
+          ItemHeight = 13
           TabOrder = 3
         end
         object Button2: TButton
