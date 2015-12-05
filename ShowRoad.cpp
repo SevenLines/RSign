@@ -2719,9 +2719,9 @@ void __fastcall TRoadFrm::BuildWidePartsDialog(void)
         			FMetricData->BuildWidePart(sp,ep,frmWidePartDialog->PartMaxDev,frmWidePartDialog->PartRoundVal,FDictSour);
             }
 			if (frmWidePartDialog->BuildLeftSides)
-			FMetricData->BuildRoadSides(sp,ep,rsLeft,frmWidePartDialog->SideMaxDev,frmWidePartDialog->SideRoundVal,frmWidePartDialog->SideKind,FDictSour);
+			FMetricData->BuildRoadSides(sp,ep,rsLeft,frmWidePartDialog->PartMaxDev,frmWidePartDialog->SideMaxDev,frmWidePartDialog->SideRoundVal,frmWidePartDialog->SideKind,FDictSour);
 			if (frmWidePartDialog->BuildRightSides)
-			FMetricData->BuildRoadSides(sp,ep,rsRight,frmWidePartDialog->SideMaxDev,frmWidePartDialog->SideRoundVal,frmWidePartDialog->SideKind,FDictSour);
+			FMetricData->BuildRoadSides(sp,ep,rsRight,frmWidePartDialog->PartMaxDev,frmWidePartDialog->SideMaxDev,frmWidePartDialog->SideRoundVal,frmWidePartDialog->SideKind,FDictSour);
 			FMetricData->BuildRoadMetrics();
 			MainForm->SendBroadCastMessage(CM_INSERTGROUP,0,(int)FMetricData);
 		}

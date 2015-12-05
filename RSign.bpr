@@ -20,7 +20,7 @@
       AutoCADExportForm.obj unSignalsInsert.obj AcadExportThread.obj 
       AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj 
       MiniReports.obj ItemSelectDialog.obj TConnectionFormThreadUnit.obj 
-      ConnectionFormUnit.obj VideoBar.obj ActiveX\MyActiveX.obj"/>
+      ConnectionFormUnit.obj VideoBar.obj ActiveX\MyActiveX.obj Helpers.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -161,6 +161,7 @@
       <FILE FILENAME="ConnectionFormUnit.cpp" FORMNAME="ConnectionForm" UNITNAME="ConnectionFormUnit" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="VideoBar.cpp" FORMNAME="frmVideoBar" UNITNAME="VideoBar" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ActiveX\MyActiveX.cpp" FORMNAME="" UNITNAME="MyActiveX" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="Helpers.cpp" FORMNAME="" UNITNAME="Helpers" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

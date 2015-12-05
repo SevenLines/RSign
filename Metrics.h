@@ -241,6 +241,8 @@ void __fastcall ExpandToSimplePoly(TPolyline *Poly, double len);
 void __fastcall AddPoly(TPolyline * Added);
 // Заменяет все участки в которых координата X равна 0 на соответствующий участок Ref
 void __fastcall ReplaceNullPart(TPolyline *Ref);
+// удаляет точки для которых координата X совпадает с предыдущей и следующей
+void __fastcall RemovePointsOnLine(void);
 // Удаляет из начала и конца линии участки с X=0;
 void __fastcall Trim(void);
 // Добавляет новый отрезок в конец полилинии (L1>=L последней точки)
@@ -267,6 +269,10 @@ void __fastcall CopyAndCut(TPolyline* Poly,__int32 L1,__int32 L2);
 
 // округляет ширину полосы в меньшую сторону с точностью defln
 void __fastcall MakeSimplePart(TPolyline *P,int defln);
+
+// Строим участки кратные defln (ширина полосы. Если
+// полос меньше чем 2  то ширину оокругляем до величины кратной roundln
+void __fastcall MakeWidePart2(TPolyline *P,int defln,int roundln);
 
 // Из полосы вида ___/\/\/\-  делает полосу вида  ___|-----
 void __fastcall MakeWidePart(TPolyline *Pl,int Par1,int RoundVal);

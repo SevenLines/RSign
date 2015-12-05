@@ -826,11 +826,11 @@ P.MakeSimplePart(&Q,step);
         RObj->PutProperty("L",String(P.Points[i-1].L));
         RObj->PutProperty("LMax",String(P.Points[i].L));
         RObj->PutProperty("Width",P.Points[i-1].X);
-        RObj->PutProperty("EWidth",P.Points[i].X);        
+        RObj->PutProperty("EWidth",P.Points[i].X);
         RObj->DrwClassId=Dict->SelectDrwParam(RObj,1);
         FBuffer->Add(RObj);
   }
-AddFromBufer();  
+AddFromBufer();
 }
 
 void __fastcall TDtaSource::BuildWidePart(int spos,int epos,int step,int roundval,TDictSource *Dict)
@@ -838,8 +838,8 @@ void __fastcall TDtaSource::BuildWidePart(int spos,int epos,int step,int roundva
 TPolyline T,Q,P;
 T.Sum(&(Road->RightLine),&(Road->LeftLine),1,-1);
 Q.CopyAndCut(&T,spos,epos);
-P.MakeWidePart(&Q,step,roundval);
-for (int i=1;i<P.Count;i+=2)
+P.MakeWidePart2(&Q,step,roundval);
+for (int i=1;i<P.Count;i++)
     {
     if (P.Points[i].X>=roundval)
         {
@@ -847,7 +847,8 @@ for (int i=1;i<P.Count;i+=2)
         TRoadObject *RObj=Factory->CreateRoadObj(Rec->ClassName,0,WIDTHCODE);
         RObj->PutProperty("L",String(P.Points[i-1].L));
         RObj->PutProperty("LMax",String(P.Points[i].L));
-        RObj->PutProperty("Width",P.Points[i].X);
+        RObj->PutProperty("Width",P.Points[i-1].X);
+        RObj->PutProperty("EWidth",P.Points[i].X);
         RObj->DrwClassId=Dict->SelectDrwParam(RObj,1);
         FBuffer->Add(RObj);
         }
@@ -855,8 +856,24 @@ for (int i=1;i<P.Count;i+=2)
 AddFromBufer();
 }
 
-void __fastcall TDtaSource::BuildRoadSides(int spos,int epos,TRoadSide side,int step,int roundval,int ref,TDictSource *Dict)
+void __fastcall TDtaSource::BuildRoadSides(int spos,int epos,TRoadSide side,int wlen,int step,int roundval,int ref,TDictSource *Dict)
 {
+/* Теперь строим обочины с учетом укрепления */
+// Находим ширину проезжей части и ее от кромки и делим на 2
+TPolyline T1,Q1,P1,R1,S;
+T1.Sum(&(Road->RightLine),&(Road->LeftLine),1,-1);
+Q1.CopyAndCut(&T1,spos,epos);
+P1.MakeWidePart2(&Q1,wlen,roundval);
+R1.Sum(&Q1,&P1,1,-1);
+for (int i=0;i<R1.Count;i++)
+  if (R1.Points[i].X<0)
+     R1.Points[i].X=0;
+  else
+     R1.Points[i].X=(R1.Points[i].X/(2*roundval))*roundval;
+R1.RemovePointsOnLine();
+S.MakeWidePart(&R1,step,roundval);
+
+
 TPolyline T,P,Q;
 if (side==rsRight)
     T.Sum(&(Road->RightSide),&(Road->RightLine),1,-1);
@@ -864,17 +881,37 @@ else
     T.Sum(&(Road->LeftSide),&(Road->LeftLine),-1,1);
 Q.CopyAndCut(&T,spos,epos);
 P.MakeWidePart(&Q,step,roundval);
-for (int i=1;i<P.Count;i+=2)
-    {
-    if (P.Points[i].X>=roundval)
+int L1,L2=min(P.Points[0].L,S.Points[0].L);
+int W1=0,W2=0;
+for (int i=0,j=0;i<P.Count || j<S.Count;) {
+    L1=L2;
+    if (i>=P.Count)
+       L2=S.Points[j+1].L,W2=S.Points[j].X,W1=0,j+=2;
+    else if (j>=S.Count)
+       L2=P.Points[i+1].L,W1=P.Points[i].X,W2=0,i+=2;
+    else {
+       if (P.Points[i].L<S.Points[j].L)
+          L2=min(S.Points[j].L,P.Points[i+1].L),W1=P.Points[i].X,i+=2;
+       else
+          L2=min(S.Points[j+1].L,P.Points[i].L),W2=S.Points[j].X,j+=2;
+    }
+    if (L1+300>L2) // Заплатка на вывод участков короче 3 метров
+        L2=L1; // Чтобы начать с этого места
+    else if (L2>L1 && (W1>=roundval/2 || W2>=roundval/2))
         {
         TObjMetaClass *Rec=Dict->ObjClasses->Items[ROADSIDECODE];
         TRoadObject *RObj=Factory->CreateRoadObj(Rec->ClassName,0,ROADSIDECODE);
-        RObj->PutProperty("L",String(P.Points[i-1].L));
-        RObj->PutProperty("LMax",String(P.Points[i].L));
-        RObj->PutProperty("DX",String(P.Points[i].X));
+        W1=((W1+(roundval/2))/roundval)*roundval;
+        W2=((W2+(roundval/2))/roundval)*roundval;
+        RObj->PutProperty("L",String(L1));
+        RObj->PutProperty("LMax",String(L2));
+        RObj->PutProperty("DX",String(W1));
         RObj->PutProperty("Placement",String(int(side)));
         RObj->PutProperty("Strength",String(int(ref)));
+        if (W2>0) {
+            RObj->PutProperty("DX_S",W2);
+            RObj->PutProperty("Strength_S",String(88));
+        }
         RObj->DrwClassId=Dict->SelectDrwParam(RObj,1);
         FBuffer->Add(RObj);
         }

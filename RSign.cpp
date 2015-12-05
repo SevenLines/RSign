@@ -51,7 +51,7 @@ USEFORM("unSignalsInsert.cpp", frmSignalsInsert);
 USEFORM("AttachForm.cpp", frmAttachParams);
 USEFORM("MoveForm.cpp", moveDialog);
 USEFORM("AddRowsDescription.cpp", FAddRowDescription);
-USEFORM("ItemSelectDialog.cpp", Form1);
+USEFORM("ItemSelectDialog.cpp", ItemSelectDialogForm);
 USEFORM("ConnectionFormUnit.cpp", ConnectionForm);
 USEFORM("VideoBar.cpp", frmVideoBar);
 //---------------------------------------------------------------------------
