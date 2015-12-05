@@ -773,6 +773,14 @@ object FAutoCADExport: TFAutoCADExport
               '2013'
               '2014')
           end
+          object chkSaveToDir: TCheckBox
+            Left = 0
+            Top = 304
+            Width = 249
+            Height = 17
+            Caption = #1079#1072#1087#1088#1072#1074#1096#1080#1074#1072#1090#1100' '#1087#1072#1087#1082#1091' '#1076#1083#1103' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103' '#1092#1072#1081#1083#1072
+            TabOrder = 13
+          end
         end
         object TabSheet1: TTabSheet
           Caption = #1089#1090#1088#1086#1082#1080

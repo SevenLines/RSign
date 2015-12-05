@@ -960,6 +960,7 @@ void __fastcall AcadExportThread::Execute()
     if (!MetricData) return;
 
     bool fWickedErrorWas = false; // проверка на наличие неопределенных ошибок
+    AnsiString savePath = "";
 
     RESET_ERROR_FLAG; // сброс глобального флага ошибок
 
@@ -990,6 +991,18 @@ void __fastcall AcadExportThread::Execute()
     }
 
     if (aexp->BeginDocument(R)) {
+
+        if (FAutoCADExport->ExportSaveToDir) {
+            savePath = FAutoCADExport->lastSavePath;
+            if (!SelectDirectory("Выберете папку для сохранения файла", "", savePath)) {
+                goto export_end;
+            }
+            FAutoCADExport->lastSavePath = savePath;
+            savePath = savePath + "\\" + RoadName;
+            savePath = StringReplace(savePath, "\"", "", TReplaceFlags() << rfReplaceAll);
+            savePath = StringReplace(savePath, "\'", "", TReplaceFlags() << rfReplaceAll);
+        }
+
         ProgressForm->Caption = "Идет экспорт в AutoCAD";
         SET_PROGRESS_FORM_CAPTION("Пробую подключиться к AutoCAD")
         SET_PROGRESS_FORM_POSITION(0);
@@ -1022,7 +1035,6 @@ void __fastcall AcadExportThread::Execute()
         default:
             goto export_end;
         }
-
 
         if (FAutoCADExport->ExportHideAutoCAD) {
             ADD_PROGRESS_FORM_LINE("Скрываю AutoCAD");
@@ -1253,7 +1265,7 @@ export_end:
             ShowMessage("Во время исполнения были обнаружены серьезные ошибки. Возможно что некоторые строки не были выведены.\nРекомендуется ознакомиться с журналом.");
         }
     }
-    aexp->EndDocument();
+    aexp->EndDocument(savePath);
     FlashWindow(Application->Handle, true);
     delete aexp;
     Synchronize(deleteRoad);
