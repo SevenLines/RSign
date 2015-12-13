@@ -1348,7 +1348,7 @@ void AutoCADTable::FillLastGaps(float step, int iRow)
         if(gFillGaps[i]) DrawRepeatEmptyInterval(i,RowslEnd[i],TableWidth,step,true);
      }
    }else{
-     DrawRepeatEmptyInterval(iRow,RowslEnd[iRow],TableWidth,step,true);
+     DrawRepeatEmptyInterval(iRow, RowslEnd[iRow], TableWidth, step, true);
    }
 }
 

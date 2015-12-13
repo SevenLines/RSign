@@ -352,15 +352,17 @@ void __fastcall TFAutoCADPrint::cmdPrintClick(TObject *Sender)
 	if (!helper) return;
 	ReadValues();
 	try {
-		SaveDialog1->FileName = AutoCAD.ActiveDocument->SummaryInfo->Title;
+        FileName = AutoCAD.ActiveDocument->SummaryInfo->Title;
+		SaveDialog1->FileName = StringReplace(FileName, "\"", "", TReplaceFlags() << rfReplaceAll);
 		//SaveDialog1->FileName = SaveDialog1->FileName + ".pdf";
 	} catch (...) {}
 	if (!SaveDialog1->Execute()) {
 		return;
 	}
 
+    FileName = SaveDialog1->FileName;
 	// убираем расширение у имени файла
-	FileName = ChangeFileExt(SaveDialog1->FileName, "");
+	FileName = ChangeFileExt(FileName, "");
 
 	// печатаем
 	Print();
