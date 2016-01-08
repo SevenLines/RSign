@@ -231,9 +231,9 @@ bool __fastcall TAcadExport::OpenDocument(AnsiString name)
         AutoCAD.SendCommand(WideString("CLAYER 0\n"));
         AutoCAD.ActiveDocument->ActiveSpace = acModelSpace;
         AutoCAD.CheckExistingBlocks();
-        BUILDER_INFO("РЈСЃРїРµС€РЅРѕ РѕС‚РєСЂС‹Р» РґРѕРєСѓРјРµРЅС‚ Рё РїРµСЂРµСЃС‡РёС‚Р°Р» Р±Р»РѕРєРё");
+        BUILDER_INFO("Успешно открыл документ и пересчитал блоки");
     } catch (...) {
-        BUILDER_ERROR("Р’РѕР·РЅРёРєР»Р° РЅРµРїСЂРµРґРІРёРґРµРЅР°СЏ РѕС€РёР±РєР° РїСЂРё РѕС‚РєСЂС‹С‚РёРё РґРѕРєСѓРјРµРЅС‚Р°!");
+        BUILDER_ERROR("Возникла непредвиденая ошибка при открытии документа!");
         return false;
     }
     return true;
@@ -279,7 +279,7 @@ bool __fastcall TAcadExport::BeginDocument(TRoad *road) {
         strSignsAbsent = "";
         strMarkAbsent = "";
 
-        /*СЂР°Р·РјРµС‚РєР° С‚Р°Р±Р»РёС†Р°*/
+        /*разметка таблица*/
         tableTop.TableWidth = road->LMax;
         tableTop.FillGapsBegin = road->LMin;
 
@@ -302,7 +302,7 @@ bool __fastcall TAcadExport::AddLayer(AnsiString l_name)
     try {
         layers = AutoCAD.ActiveDocument->get_Layers();
     } catch (...) {
-        BUILDER_ERROR("РќРµ СЃРјРѕРі РїРѕР»СѓС‡РёС‚СЊ РґРѕСЃС‚СѓРї Рє СЃР»РѕСЏРј");
+        BUILDER_ERROR("Не смог получить доступ к слоям");
         return false;
     }
     if (!layers)
@@ -310,7 +310,7 @@ bool __fastcall TAcadExport::AddLayer(AnsiString l_name)
     try {
         IAcadLayer * layer_ptr = layers->Add(WideString(l_name).c_bstr());
     } catch (...) {
-        BUILDER_ERROR("РќРµ СѓРґР°Р»РѕСЃСЊ РґРѕР±Р°РІРёС‚СЊ СЃР»РѕР№ " << l_name.c_str());
+        BUILDER_ERROR("Не удалось добавить слой " << l_name.c_str());
     }
     AutoCAD.SendCommand(WideString("CLAYER " + l_name + "\n"));
 
@@ -322,36 +322,36 @@ bool __fastcall TAcadExport::DrawTables(bool fWithRuler)
 {
     int i;
 
-    if (!fDrawMap) { // СЂРµР¶РёРј РєР°СЂС‚С‹ РѕС‚РєР»СЋС‡РµРЅ
+    if (!fDrawMap) { // режим карты отключен
         if (tableTop.RowsCount)tableTop.DrawTable();
         if (tableTop.drawHeaders) {
-            tableTop.DrawHeaderText(iTopSidewalks, "РўСЂРѕС‚СѓР°СЂС‹ СЃР»РµРІР°", HeaderTextHeight);
-            tableTop.DrawHeaderText(iProfileTop, "РџСЂРѕРґРѕР»СЊРЅС‹Р№ РїСЂРѕС„РёР»СЊ", HeaderTextHeight);
-            tableTop.DrawHeaderText(iTopCurves, "Р­Р»РµРјРµРЅС‚С‹ РґРѕСЂРѕРіРё РІ РїР»Р°РЅРµ", HeaderTextHeight);
-            tableTop.DrawHeaderText(iTopSlopes, "Р­Р»РµРјРµРЅС‚С‹ РґРѕСЂРѕРіРё РІ\nРїСЂРѕРґРѕР»СЊРЅРѕРј РїСЂРѕС„РёР»Рµ", HeaderTextHeight);
-            tableTop.DrawHeaderText(iTopMoundH, "Р’С‹СЃРѕС‚Р° РЅР°СЃС‹РїРё СЃР»РµРІР°", HeaderTextHeight);
-            tableTop.DrawHeaderText(iTopBarriers, "Р”РѕСЂРѕР¶РЅС‹Рµ РѕРіСЂР°Р¶РґРµРЅРёРµ Рё\nРЅР°РїСЂР°РІР»СЏСЋС‰РёРµ СѓСЃС‚СЂ-РІР° СЃР»РµРІР°", HeaderTextHeight);
-            tableTop.DrawHeaderText(iTop0, "РѕСЃРµРІР°СЏ Р»РёРЅРёСЏ", HeaderTextHeight);
+            tableTop.DrawHeaderText(iTopSidewalks, "Тротуары слева", HeaderTextHeight);
+            tableTop.DrawHeaderText(iProfileTop, "Продольный профиль", HeaderTextHeight);
+            tableTop.DrawHeaderText(iTopCurves, "Элементы дороги в плане", HeaderTextHeight);
+            tableTop.DrawHeaderText(iTopSlopes, "Элементы дороги в\nпродольном профиле", HeaderTextHeight);
+            tableTop.DrawHeaderText(iTopMoundH, "Высота насыпи слева", HeaderTextHeight);
+            tableTop.DrawHeaderText(iTopBarriers, "Дорожные ограждение и\nнаправляющие устр-ва слева", HeaderTextHeight);
+            tableTop.DrawHeaderText(iTop0, "осевая линия", HeaderTextHeight);
             for (i = 0; i < iTopAxeCount; i++) {
-                tableTop.DrawHeaderText(iTopAxe - i, IntToStr(i + 1) + "-СЏ РѕС‚ РѕСЃРµРІРѕР№", HeaderTextHeight);
+                tableTop.DrawHeaderText(iTopAxe - i, IntToStr(i + 1) + "-я от осевой", HeaderTextHeight);
             }
         }
         if (tableBottom.RowsCount) tableBottom.DrawTable();
         if (tableBottom.drawHeaders) {
-            tableBottom.DrawHeaderText(iBottomSidewalks, "РўСЂРѕС‚СѓР°СЂС‹ СЃРїСЂР°РІР°", HeaderTextHeight);
-            tableBottom.DrawHeaderText(iBottomSurface, "РўРёРї РїРѕРєСЂС‹С‚РёСЏ", HeaderTextHeight);
-            tableBottom.DrawHeaderText(iBottomMoundH, "Р’С‹СЃРѕС‚Р° РЅР°СЃС‹РїРё СЃРїСЂР°РІР°", HeaderTextHeight);
-            tableBottom.DrawHeaderText(iBottomBarriers, "Р”РѕСЂРѕР¶РЅС‹Рµ РѕРіСЂР°Р¶РґРµРЅРёРµ Рё\nРЅР°РїСЂР°РІР»СЏСЋС‰РёРµ СѓСЃС‚СЂ-РІР° СЃРїСЂР°РІР°", HeaderTextHeight);
-            tableBottom.DrawHeaderText(iBottom0, "РѕСЃРµРІР°СЏ Р»РёРЅРёСЏ", HeaderTextHeight);
+            tableBottom.DrawHeaderText(iBottomSidewalks, "Тротуары справа", HeaderTextHeight);
+            tableBottom.DrawHeaderText(iBottomSurface, "Тип покрытия", HeaderTextHeight);
+            tableBottom.DrawHeaderText(iBottomMoundH, "Высота насыпи справа", HeaderTextHeight);
+            tableBottom.DrawHeaderText(iBottomBarriers, "Дорожные ограждение и\nнаправляющие устр-ва справа", HeaderTextHeight);
+            tableBottom.DrawHeaderText(iBottom0, "осевая линия", HeaderTextHeight);
             if (~iBottomArtifacts) {
-                tableBottom.DrawHeaderText(iBottomArtifacts, "РСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹Рµ СЃРѕРѕСЂСѓР¶РµРЅРёСЏ РЎР›Р•Р’Рђ", HeaderTextHeight);
-                tableBottom.DrawHeaderText(iBottomArtifacts + 1, "РСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹Рµ СЃРѕРѕСЂСѓР¶РµРЅРёСЏ РЎРџР РђР’Рђ", HeaderTextHeight);
+                tableBottom.DrawHeaderText(iBottomArtifacts, "Искусственные сооружения СЛЕВА", HeaderTextHeight);
+                tableBottom.DrawHeaderText(iBottomArtifacts + 1, "Искусственные сооружения СПРАВА", HeaderTextHeight);
             }
-            tableBottom.DrawHeaderText(iBottomCurves, "Р­Р»РµРјРµРЅС‚С‹ РґРѕСЂРѕРіРё РІ РїР»Р°РЅРµ", HeaderTextHeight);
-            tableBottom.DrawHeaderText(iBottomSlopes, "Р­Р»РµРјРµРЅС‚С‹ РґРѕСЂРѕРіРё РІ\nРїСЂРѕРґРѕР»СЊРЅРѕРј РїСЂРѕС„РёР»Рµ", HeaderTextHeight);
+            tableBottom.DrawHeaderText(iBottomCurves, "Элементы дороги в плане", HeaderTextHeight);
+            tableBottom.DrawHeaderText(iBottomSlopes, "Элементы дороги в\nпродольном профиле", HeaderTextHeight);
 
             for (i = 0; i < iBottomAxeCount; i++) {
-                tableBottom.DrawHeaderText(iBottomAxe + i, IntToStr(i + 1) + "-СЏ РѕС‚ РѕСЃРµРІРѕР№", HeaderTextHeight);
+                tableBottom.DrawHeaderText(iBottomAxe + i, IntToStr(i + 1) + "-я от осевой", HeaderTextHeight);
             }
         }
 
@@ -365,12 +365,12 @@ bool __fastcall TAcadExport::DrawTables(bool fWithRuler)
                                 + "\r\n" + IntToStr((int)tableBottom.FillGapsBegin)
                                 + "\r\n" + IntToStr((int)tableBottom.TableWidth)
                                 + "\r\n" + IntToStr((int)iStep)
-                                + "\r\n# РІС‹СЃРѕС‚Р° РІРµСЂС…РЅРµР№ С‚Р°Р±Р»РёС†С‹"
-                                + "\r\n# РІС‹СЃРѕС‚Р° РЅРёР¶РЅРµР№ С‚Р°Р±Р»РёС†С‹"
-                                + "\r\n# СЂР°СЃС‚РѕСЏРЅРёРµ РѕС‚ С†РµРЅС‚СЂР° РґРѕ РЅРёР·Р° РІРµСЂС…РЅРµР№ С‚Р°Р±Р»РёС†С‹"
-                                + "\r\n# РЅР°С‡Р°Р»Рѕ РґРѕСЂРѕРіРё"
-                                + "\r\n# РєРѕРЅРµС† РґРѕСЂРѕРіРё"
-                                + "\r\n# С€Р°Рі"
+                                + "\r\n# высота верхней таблицы"
+                                + "\r\n# высота нижней таблицы"
+                                + "\r\n# растояние от центра до низа верхней таблицы"
+                                + "\r\n# начало дороги"
+                                + "\r\n# конец дороги"
+                                + "\r\n# шаг"
                                ));
     si->set_Keywords(WideString(strInfoTemplate));
 
@@ -476,22 +476,22 @@ bool __fastcall TAcadExport::ExportTables(TFAutoCADExport *form)
     iTopAddRowsCount = ExportTopAddRows(form->EditTopAddRows, true);
     form->setTopAddRowsCount(iTopAddRowsCount);
 
-    count += (~(iTopSidewalks = form->getTopRow("С‚СЂРѕС‚СѓР°СЂС‹"))) ? 1 : 0;
-    count += (~(iTopMoundH = form->getTopRow("РІС‹СЃРѕС‚С‹ РЅР°СЃС‹РїРё"))) ? 1 : 0;
-    count += (~(iTopBarriers = form->getTopRow("РґРѕСЂРѕР¶РЅС‹Рµ РѕРіСЂР°Р¶РґРµРЅРёСЏ Рё РЅР°РїСЂР°РІР»СЏСЋС‰РёРµ СѓСЃС‚СЂ-РІР°"))) ? 1 : 0;
-    count += (~(iTop0 = form->getTopRow("СЂР°Р·РјРµС‚РєР° РѕСЃРµРІР°СЏ"))) ? 1 : 0;
-    count += (~(iTopAxe = form->getTopRow("СЂР°Р·РјРµС‚РєР° РѕС‚ РѕСЃРµРІРѕР№"))) ? 1 : 0;
+    count += (~(iTopSidewalks = form->getTopRow("тротуары"))) ? 1 : 0;
+    count += (~(iTopMoundH = form->getTopRow("высоты насыпи"))) ? 1 : 0;
+    count += (~(iTopBarriers = form->getTopRow("дорожные ограждения и направляющие устр-ва"))) ? 1 : 0;
+    count += (~(iTop0 = form->getTopRow("разметка осевая"))) ? 1 : 0;
+    count += (~(iTopAxe = form->getTopRow("разметка от осевой"))) ? 1 : 0;
 
     if (~iTopAxe) {
         iTopAxeCount = iMarkLinesTop ? iMarkLinesTop : form->TableRowLinesTop;
         count += iTopAxeCount - 1;
         iTopAxe += iTopAxeCount - 1;
     }
-    count += (~(iProfileTop = form->getTopRow("РїСЂРѕРґРѕР»СЊРЅС‹Р№ РїСЂРѕС„РёР»СЊ"))) ? 1 : 0;
-    count += (~(iTopCurves = form->getTopRow("РєСЂРёРІС‹Рµ РІ РїР»Р°РЅРµ"))) ? 1 : 0;
-    count += (~(iTopSlopes = form->getTopRow("РїСЂРѕРґРѕР»СЊРЅС‹Рµ СѓРєР»РѕРЅС‹"))) ? 1 : 0;
-    count += (~(iTopRoadCover = form->getTopRow("С‚РёРї РїРѕРєСЂС‹С‚РёСЏ"))) ? 1 : 0;
-    count += (~(iTopAddRow = form->getTopRow("РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ СЃС‚СЂРѕРєРё"))) ? iTopAddRowsCount : 0;
+    count += (~(iProfileTop = form->getTopRow("продольный профиль"))) ? 1 : 0;
+    count += (~(iTopCurves = form->getTopRow("кривые в плане"))) ? 1 : 0;
+    count += (~(iTopSlopes = form->getTopRow("продольные уклоны"))) ? 1 : 0;
+    count += (~(iTopRoadCover = form->getTopRow("тип покрытия"))) ? 1 : 0;
+    count += (~(iTopAddRow = form->getTopRow("дополнительные строки"))) ? iTopAddRowsCount : 0;
 
     tableTop.RowsCount = count;
 
@@ -520,21 +520,21 @@ bool __fastcall TAcadExport::ExportTables(TFAutoCADExport *form)
     iBottomAddRowsCount = ExportBottomAddRows(form->EditTopAddRows, true);
     form->setBottomAddRowsCount(iBottomAddRowsCount);
 
-    count += (~(iBottomSidewalks = form->getBottomRow("С‚СЂРѕС‚СѓР°СЂС‹"))) ? 1 : 0;
-    count += (~(iBottomMoundH = form->getBottomRow("РІС‹СЃРѕС‚С‹ РЅР°СЃС‹РїРё"))) ? 1 : 0;
-    count += (~(iBottomBarriers = form->getBottomRow("РґРѕСЂРѕР¶РЅС‹Рµ РѕРіСЂР°Р¶РґРµРЅРёСЏ Рё РЅР°РїСЂР°РІР»СЏСЋС‰РёРµ СѓСЃС‚СЂ-РІР°"))) ? 1 : 0;
-    count += (~(iBottom0 = form->getBottomRow("СЂР°Р·РјРµС‚РєР° РѕСЃРµРІР°СЏ"))) ? 1 : 0;
-    count += (~(iBottomAxe = form->getBottomRow("СЂР°Р·РјРµС‚РєР° РѕС‚ РѕСЃРµРІРѕР№"))) ? 1 : 0;
+    count += (~(iBottomSidewalks = form->getBottomRow("тротуары"))) ? 1 : 0;
+    count += (~(iBottomMoundH = form->getBottomRow("высоты насыпи"))) ? 1 : 0;
+    count += (~(iBottomBarriers = form->getBottomRow("дорожные ограждения и направляющие устр-ва"))) ? 1 : 0;
+    count += (~(iBottom0 = form->getBottomRow("разметка осевая"))) ? 1 : 0;
+    count += (~(iBottomAxe = form->getBottomRow("разметка от осевой"))) ? 1 : 0;
 
     if (~iBottomAxe) {
         iBottomAxeCount = iMarkLinesBottom ? iMarkLinesBottom : form->TableRowLinesBottom;
         count += iBottomAxeCount - 1;
     }
-    count += (~(iBottomCurves = form->getBottomRow("РєСЂРёРІС‹Рµ РІ РїР»Р°РЅРµ"))) ? 1 : 0;
-    count += (~(iBottomSurface = form->getBottomRow("С‚РёРї РїРѕРєСЂС‹С‚РёСЏ"))) ? 1 : 0;
-    count += (~(iBottomSlopes = form->getBottomRow("РїСЂРѕРґРѕР»СЊРЅС‹Рµ СѓРєР»РѕРЅС‹"))) ? 1 : 0;
-    count += (~(iBottomArtifacts = form->getBottomRow("РёСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹Рµ СЃРѕРѕСЂСѓР¶РµРЅРёСЏ"))) ? 2 : 0; //РґРІРµ СЃС‚СЂРѕРєРё РЅР° РёСЃРєСѓСЃСЃ.СЃРѕРѕСЂСѓР¶.
-    count += (~(iBottomAddRow = form->getBottomRow("РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ СЃС‚СЂРѕРєРё"))) ? iBottomAddRowsCount : 0;
+    count += (~(iBottomCurves = form->getBottomRow("кривые в плане"))) ? 1 : 0;
+    count += (~(iBottomSurface = form->getBottomRow("тип покрытия"))) ? 1 : 0;
+    count += (~(iBottomSlopes = form->getBottomRow("продольные уклоны"))) ? 1 : 0;
+    count += (~(iBottomArtifacts = form->getBottomRow("искусственные сооружения"))) ? 2 : 0; //две строки на искусс.сооруж.
+    count += (~(iBottomAddRow = form->getBottomRow("дополнительные строки"))) ? iBottomAddRowsCount : 0;
     tableBottom.RowsCount  = count;
 
     tableBottom.RowsCount = maxBottomCountGraphic = tableBottom.RowsCount;
@@ -628,12 +628,12 @@ void __fastcall TAcadExport::EndDocument(AnsiString savePath) {
 
     AnsiString strMessage = "";
     if (!strSignsAbsent.IsEmpty() || !AutoCAD.strLostBlocks.IsEmpty()) {
-        strMessage += "-=-=-=-=-=-=-=-=-\nРЎР»РµРґСѓСЋС‰РёРµ Р·РЅР°РєРё РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚:" + strSignsAbsent;
+        strMessage += "-=-=-=-=-=-=-=-=-\nСледующие знаки отсутствуют:" + strSignsAbsent;
         strMessage += AutoCAD.strLostBlocks;
         strMessage += "\n-=-=-=-=-=-=-=-=-\n";
     }
     if (!strMarkAbsent.IsEmpty()) {
-        strMessage += "-=-=-=-=-=-=-=-=-\nРќРµ РѕРїСЂРµРґРµР»РµРЅС‹ С‚РёРїС‹ Р»РёРЅРёР№ РґР»СЏ:" + strMarkAbsent + "\nСЃРјРѕС‚СЂРё С‚Р°Р±Р». Classifier\nClass_id = 55";
+        strMessage += "-=-=-=-=-=-=-=-=-\nНе определены типы линий для:" + strMarkAbsent + "\nсмотри табл. Classifier\nClass_id = 55";
         strMessage += "\n-=-=-=-=-=-=-=-=-\n";
     }
     if (!strMessage.IsEmpty()) ShowMessage(strMessage);
@@ -654,7 +654,7 @@ void __fastcall TAcadExport::EndDocument(AnsiString savePath) {
 }
 
 bool _fastcall TAcadExport::ExportProfil(TExtPolyline *Poly) {
-    if (fDrawMap) return true; // РІ СЂРµРґРёРјРµ РєР°СЂС‚С‹ РЅРёС‡РµРіРѕ РЅРµ СЂРёСЃСѓРµРј
+    if (fDrawMap) return true; // в редиме карты ничего не рисуем
 
     int i, count;
     double *points;
@@ -711,10 +711,10 @@ bool _fastcall TAcadExport::ExportProfil(TExtPolyline *Poly) {
 bool __fastcall TAcadExport::ExportRoadMetric(TExtPolyline *Poly, TMetricsKind kind, bool fEnd) {
     //if (kind==mkBrovka)
     //   Poly->Count
-    //   Poly->Points[i].X -- РєРѕРѕСЂРґРёРЅР°С‚Р° РїРѕ С€РёСЂРёРЅРµ
-    //   Poly->Points[i].L -- РєРѕРѕСЂРґРёРЅР°С‚Р° РїРѕ РґР»РёРЅРµ
-    //   Poly->Codes[i]&1  РљРѕРґ РІРёРґРёРјРѕСЃС‚Рё РґРѕ i-С‚РѕР№ С‚РѕС‡РєРё 1 - РІРёРґРёРјС‹Р№, 0 - РЅРµРІРёРґРёРјС‹Р№
-    //   РљРѕРѕСЂРґРёРЅР°С‚С‹ С†РµР»С‹Рµ РІ СЃР°РЅС‚РёРјРµС‚СЂР°С…!
+    //   Poly->Points[i].X -- координата по ширине
+    //   Poly->Points[i].L -- координата по длине
+    //   Poly->Codes[i]&1  Код видимости до i-той точки 1 - видимый, 0 - невидимый
+    //   Координаты целые в сантиметрах!
     if (fEnd) {
         if (smallGridMarkHeight != 0 && !fDrawMap) {
             int step = 10000;
@@ -740,7 +740,7 @@ bool __fastcall TAcadExport::ExportRoadMetric(TExtPolyline *Poly, TMetricsKind k
         DrawPolyPoints(Poly, false, true);
         break;
     default:
-        BUILDER_INFO("РќРµРёР·РІРµСЃС‚РЅС‹Р№ С‚РёРї РјРµС‚СЂРёРєРё: " << kind);
+        BUILDER_INFO("Неизвестный тип метрики: " << kind);
         DrawPolyPoints(Poly);
     }
 
@@ -754,7 +754,7 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly, TRoadAttach *a, bo
         return true;
     }
 
-    // РёС‰РµРј РјРёРЅРёРјР°Р»СЊРЅСѓСЋ Рё РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ С‚РѕС‡РєСѓ РїРѕ Y Сѓ РїСЂРёРјС‹РєР°РЅРёСЏ
+    // ищем минимальную и максимальную точку по Y у примыкания
     int maxY = abs(Poly->Points[0].y);
     int minY = abs(Poly->Points[0].y);
     int iLast, i;
@@ -770,7 +770,7 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly, TRoadAttach *a, bo
         }
     }
 
-    // РІС‹РІРѕРґ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ
+    // вывод комментария
     if (fShowAttachmentComments) {
         vector<AnsiString> strings;
         AnsiString str = a->Comment;
@@ -802,7 +802,7 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly, TRoadAttach *a, bo
     }
 
 
-    // РІС‹РІРѕРґ РЅР°Р·РІР°РЅРёСЏ РїСЂРёРјС‹РєР°РЅРёСЏ
+    // вывод названия примыкания
 
     if (a->Name != "") {
         AutoCAD.DrawText(a->Name,
@@ -837,11 +837,11 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     double scale = ScaleYBlock * 50;
     int signSpotOffset = 19;
 
-    /// СЃРѕР·РґР°РІР°С‚СЊ РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚ signspot СЃРёР»СЊРЅРѕ РЅР°СЂРїСЏР¶РЅРѕ, С‚Р°Рє С‡С‚Рѕ СЃРѕР·РґР°РґРёРј РµРіРѕ РѕРґРёРЅ СЂР°Р·
-    /// Р° РїРѕС‚РѕРј Р±СѓРґРµРј РІСЃРµ РІСЂРµРјСЏ РєРѕРїРёСЂРѕРІР°С‚СЊ
+    /// создавать новый объект signspot сильно нарпяжно, так что создадим его один раз
+    /// а потом будем все время копировать
     if (!fAlreadyDrawSignSpot) {
-        SignsPositions.clear(); // С‚Р°Рє РєР°Рє РїСЂРѕС†РµРґСѓСЂР° СЃРѕРІРµСЂС€Р°РµС‚СЃСЏ, РєР°Рє РїСЂР°РІРёР»Рѕ РІ
-        // РЅР°С‡Р°Р»Рµ, С‚Рѕ РїРѕС‡РёСЃС‚РёРј СЃРїРёСЃРѕРє РїРѕР·РёС†РёР№ Р·РЅР°РєРѕРІ
+        SignsPositions.clear(); // так как процедура совершается, как правило в
+        // начале, то почистим список позиций знаков
         SignSpot1 = AutoCAD.DrawBlock("signspot", 0, 0, 0, scale);
         if (!AutoCAD.SetPropertyPoint(SignSpot1, "pHand", AutoCADPoint(0, 0)))
             return false;
@@ -857,7 +857,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         fAlreadyDrawSignSpot = true;
     }
 
-    // РїР°СЂРЅС‹Рµ Р·РЅР°РєРё
+    // парные знаки
     AnsiString signsPair[][2] = {
         {"5.19.1", "5.19.2"},
         {"5.16", "5.16"},
@@ -871,7 +871,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     vector<TRoadSign*> onAttachment;
 
     if (count >= 2) {
-        // СЂР°Р·Р±РёРІР°РµРј РЅР° РіСЂСѓРїРїС‹: Р·РЅР°РєРё РЅР° РїСЂРёРјС‹РєР°РЅРёСЏС… Рё Р·РЅР°РєРё РЅР° РіР»Р°РІРЅРѕР№ РґРѕСЂРѕРіРµ
+        // разбиваем на группы: знаки на примыканиях и знаки на главной дороге
         for (int i = 0; i < count; ++i) {
             TRoadSign *s = signs[i];
             if (s->OnAttach && s->OnAttach != saRoad) {
@@ -882,10 +882,10 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         }
 
         if (onAttachment.size() == 0 || onRoad.size() == 0) {
-            // РІСЃРµ Р·РЅР°РєРё Р»РёР±Рѕ РЅР° РїСЂРёРјС‹РєР°РЅРёСЏС…, Р»РёР±Рѕ РЅР° РіР»Р°РІРЅРѕР№ РґРѕСЂРѕРіРµ
-            // РјРѕР¶РЅРѕ РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°С‚СЊ
+            // все знаки либо на примыканиях, либо на главной дороге
+            // можно ничего не делать
             bool fAllOnRoad = onRoad.size() > 0;
-            // СЂР°Р·Р±РёРІР°РµРј РЅР° РіСЂСѓРїРїС‹ РїРѕ РЅР°РїСЂР°РІР»РµРЅРёСЏРј
+            // разбиваем на группы по направлениям
             if (onRoad.size() > 0) {
                 for (int i = 0; i < onRoad.size(); ++i) {
                     TRoadSign* s = onRoad[i];
@@ -921,7 +921,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                     }
                 }
             }
-            // РёС‰РµРј РїР°СЂРЅС‹Рµ Р·РЅР°РєРё Рё РїРµСЂРµРЅРѕСЃРёРј РёС… РёР· РѕР±СЂР°С‚РЅРѕРіРѕ РІ РїСЂСЏРјРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ
+            // ищем парные знаки и переносим их из обратного в прямое направление
             bool wasPair = false;
             for (int i = 0; i < direct.size(); ++i) {
                 TRoadSign* s = direct[i];
@@ -950,15 +950,15 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                 }
             }
             if (wasPair && direct.size() == 2 && undirect.size() == 1) {
-                // РєРѕРјР±РёРЅР°С†РёСЏ РїР°СЂРЅС‹Рµ Р·РЅР°РєРё Рё РѕРґРёРЅ РІ РїСЂРѕС‚РёРІРѕРїРѕР»РѕР¶РЅРѕРј РЅР°РїСЂР°РІР»РµРЅРЅРёРё
-                // РїРѕРґРєР»РµРёРІР°РµРј РїР°СЂСѓ Рє РїСЂРѕС‚РёРІРѕРїРѕР»РѕР¶РЅРѕРјСѓ РЅР°РїСЂР°РІР»РµРЅРёСЋ
+                // комбинация парные знаки и один в противоположном направленнии
+                // подклеиваем пару к противоположному направлению
                 undirect.push_back(direct[0]);
                 undirect.push_back(direct[1]);
                 direct.clear();
                 sort(undirect.begin(), undirect.end(), Helpers::compareSigns);
                 signs = undirect.begin();
             } else if (direct.size() == 0 || undirect.size() == 0) {
-                // РµСЃР»Рё РІСЃРµ Р·РЅР°РєРё РІ РѕРґРЅРѕРј РЅР°СЂРїР°РІР»РµРЅРёРё
+                // если все знаки в одном нарпавлении
                 if (direct.size() > 0) {
                     sort(direct.begin(), direct.end(), Helpers::compareSigns);
                     signs = direct.begin();
@@ -968,13 +968,13 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                     signs = undirect.begin();
                 }
             } else {
-                // РѕСЃС‚Р°Р»СЊРЅС‹Рµ СЃР»СѓС‡Р°Рё СЃРІРѕРґРёРј Рє РїСЂРµРґС‹РґСѓС‰РёРј РґРІСѓРј
+                // остальные случаи сводим к предыдущим двум
                 ExportSigns(Poly, direct.begin(), direct.size(), fEnd);
                 ExportSigns(Poly, undirect.begin(), undirect.size(), fEnd);
                 return true;
             }
         } else {
-            // РІС‹РІРѕРґРёРј РєР°Р¶РґСѓСЋ РіСЂСѓРїРїСѓ РѕС‚РґРµР»СЊРЅРѕ
+            // выводим каждую группу отдельно
             ExportSigns(Poly, onAttachment.begin(), onAttachment.size(), fEnd);
             ExportSigns(Poly, onRoad.begin(), onRoad.size(), fEnd);
             return true;
@@ -997,7 +997,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
     }
 
     if (true) {
-        // РЅР°СЃС‚СЂР°РёРІР°РµРј РєРѕСЂСЂРµРєС‚РЅС‹Р№ РїРѕРІРѕСЂРѕС‚ Р·РЅР°РєРѕРІ
+        // настраиваем корректный поворот знаков
         switch (signs[0]->Direction) {
         case roDirect:
             switch (signs[0]->Placement) {
@@ -1043,7 +1043,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                 }
                 break;
             default:
-                BUILDER_ERROR("РќРµ РјРѕРіСѓ РѕРїСЂРµРґРµР»РёС‚СЊ СѓРіРѕР» РїРѕРІРѕСЂРѕС‚Р° Р·РЅР°РєР° " << signs[0]->OldTitle.c_str() << " РЅР° РїРѕР·РёС†РёРё " << Poly->Points[0].x);
+                BUILDER_ERROR("Не могу определить угол поворота знака " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x);
             }
             break;
         case roUnDirect:
@@ -1090,7 +1090,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                 }
                 break;
             default:
-                BUILDER_ERROR("РќРµ РјРѕРіСѓ РѕРїСЂРµРґРµР»РёС‚СЊ СѓРіРѕР» РїРѕРІРѕСЂРѕС‚Р° Р·РЅР°РєР° " << signs[0]->OldTitle.c_str() << " РЅР° РїРѕР·РёС†РёРё " << Poly->Points[0].x);
+                BUILDER_ERROR("Не могу определить угол поворота знака " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x);
             }
             break;
         }
@@ -1213,14 +1213,14 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
             }
         }
     } catch (...) {
-        BUILDER_ERROR("РћС€РёР±РєР° РІС‹РІРѕРґР° Р·РЅР°РєР°: " << signs[0]->OldTitle.c_str() << " РЅР° РїРѕР·РёС†РёРё " << Poly->Points[0].x );
+        BUILDER_ERROR("Ошибка вывода знака: " << signs[0]->OldTitle.c_str() << " на позиции " << Poly->Points[0].x );
         return false;
     }
     return true;
 }
 
-// РІРѕР·РІСЂР°С‰Р°РµС‚ РєРѕР»-РІРѕ Р·РЅР°РєРѕРІ Р»РµР¶Р°С‰РёС…
-// РѕРєРѕР»Рѕ РїРѕР·РёС†РёРё pos, РІ РїСЂРµРґРµР»Р°С… radius
+// возвращает кол-во знаков лежащих
+// около позиции pos, в пределах radius
 int TAcadExport::findSignSuperposition(TPoint pos, int radius)
 {
     int counter = 0;
@@ -1233,16 +1233,16 @@ int TAcadExport::findSignSuperposition(TPoint pos, int radius)
     return counter;
 }
 
-/// name - РЅР·РІР°РЅРёРµ Р·РЅР°РєР°
-/// label - РЅР°РґРїРёСЃСЊ РЅР° Р·РЅР°РєРµ
-/// pos - РїРѕР»РѕР¶РµРЅРёРµ Р·РЅР°РєР°
-/// xoffset - cРґРІРёРі Р·РЅР°РєР° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ pos.x
-/// yoffset - cРґРІРёРі Р·РЅР°РєР° РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ pos.y
-/// rotation - РїРѕРІРѕСЂРѕС‚ Р·РЅР°РєР°
-/// rotationHandle - РїРѕРІРѕСЂРѕС‚ СЃРЅРѕСЃРєРё, Р·РЅР°Рє Р±СѓРґРµС‚ РєСЂРµРїРёС‚СЊСЃСЏ Рє СЃРЅРѕСЃРєРµ
-/// scale - РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёРµ
-/// fOnAttachment - Р·РЅР°Рє РЅР°С…РѕРґРёС‚СЃСЏ РЅР° РїСЂРёРјС‹РєР°РЅРёРё (С‚Рѕ РµСЃС‚СЊ РЅР° РІСЉРµР·РґРµ РёР»Рё РІС‹РµР·РґРµ),
-///                 РїРѕСЃС‚Р°РІРёС‚СЊ True РµСЃР»Рё РЅР° РїСЂРёРјС‹РєР°РЅРёРё
+/// name - нзвание знака
+/// label - надпись на знаке
+/// pos - положение знака
+/// xoffset - cдвиг знака относительно pos.x
+/// yoffset - cдвиг знака относительно pos.y
+/// rotation - поворот знака
+/// rotationHandle - поворот сноски, знак будет крепиться к сноске
+/// scale - масштабирование
+/// fOnAttachment - знак находится на примыкании (то есть на въезде или выезде),
+///                 поставить True если на примыкании
 void TAcadExport::DrawSign(
     AnsiString Name,
     AnsiString label,
@@ -1296,13 +1296,13 @@ void TAcadExport::DrawSign(
     IAcadSelectionSet *set = AutoCAD.ActiveDocument->ActiveSelectionSet;
     set->Clear();
 
-    // РєРѕРїРёСЂСѓРµРј СЃРЅРѕСЃРєСѓ
+    // копируем сноску
     block = signspot->Copy();
     AutoCAD.SetAttribute(block, "LABEL", AnsiString(_pos));
-    // РїРѕРІРѕСЂР°С‡РёРІР°РµРј СЃРЅРѕСЃРєСѓ
+    // поворачиваем сноску
     block->set_Rotation(rotationHandle);
 
-    // С‡С‚РѕР±С‹ Р·Р° РєСЂР°Р№ РЅРµ СѓС…РѕРґРёР»Рё
+    // чтобы за край не уходили
     float posOffset = 0.25 * ScaleY;
     if (!fUnderRoad && !fDrawMap) {
         int framePos = (LPos / 100) % (iStep / 100);
@@ -1316,7 +1316,7 @@ void TAcadExport::DrawSign(
     //if (fUnderRoad || fOnAttachment) {
     //    tyOffset += 500 * posOffset;
     //}
-    // С‡С‚РѕР±С‹ РЅРµ Р±С‹Р»Рѕ РЅР°Р»РѕР¶РµРЅРёР№, РЅР°Р»РѕР¶РµРЅРЅС‹Рµ Р·РЅР°РєРё СЃРґРёРІРіР°РµРј РІРїСЂР°РІРѕ
+    // чтобы не было наложений, наложенные знаки сдивгаем вправо
     int countOfSignsNearCurrent;
     countOfSignsNearCurrent = findSignSuperposition(TPoint(pos.x, pos.y) , 1000 * posOffset);
     if ( countOfSignsNearCurrent > 0 ) {
@@ -1327,24 +1327,24 @@ void TAcadExport::DrawSign(
         }
     }
 
-    // Р·Р°РїРѕРјРЅРёРј РїРѕР»РѕР¶РµРЅРёРµ Р·РЅР°РєР°
+    // запомним положение знака
     SignsPositions.push_back(TPoint(pos.x, pos.y) );
 
-    // РїРѕСЃС‚Р°РІРёРј СЃРЅРѕСЃРєСѓ Рё СЃРґРІРёРЅРµРј РµРµ С…РІРѕСЃС‚РёРє
+    // поставим сноску и сдвинем ее хвостик
     //AutoCAD.SetPropertyDouble(block,"Length",1200);
     block->set_InsertionPoint(AutoCAD.cadPoint(int(pos.x), int(pos.y)));
     AutoCAD.SetPropertyPoint(block, "pHand", AutoCADPoint(txOffset, tyOffset));
 
-    // СЃРѕР±СЃС‚РІРµРЅРЅРѕ СЂРёСЃСѓРµРј Р·РЅР°Рє
+    // собственно рисуем знак
     //block = AutoCAD.DrawBlock(Name,int(newPos.x),int(newPos.y),rotation,scale);
     block = AutoCAD.DrawBlock(Name, int(txOffset), int(tyOffset), rotation, scale);
-    // РїРѕРІРѕСЂР°С‡РёРІР°РµРј Р±Р»РѕРє РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ С†РµРЅС‚СЂР°
+    // поворачиваем блок относительно центра
     block->Rotate(AutoCAD.cadPoint(0, 0), rotationHandle);
     block->Move(AutoCAD.cadPoint(0, 0), AutoCAD.cadPoint(int(pos.x), int(pos.y)));
     if (block.IsBound()) {
         SetAttributes(block, Helpers::SignLabelParser(Name, label));
         if (Name.Pos("6.10.1") || Name.Pos("6.10.2") || Name.Pos("6.9.1") || Name.Pos("6.9.2")) {
-            block->color = 5; /*СЃРёРЅРёР№ С†РІРµС‚ Р·РЅР°РєР°Рј*/
+            block->color = 5; /*синий цвет знакам*/
         }
     }
 
@@ -1632,13 +1632,13 @@ AnsiString TAcadExport::RoadMarkTextDraw(AnsiString text, TPoint pStart, TPoint 
     return "";
 }
 
-// РњРёС€Р°, РІР·СЏС‚СЊ РєРѕРґ СЂР°Р·РјРµС‚РєРё РјРѕР¶РЅРѕ С‚Р°Рє
+// Миша, взять код разметки можно так
 // TPlanLabel *l=m->GetText(0);
 // String s=l->Caption;
-// РїРѕСЃР»Рµ РѕРєРѕРЅС‡Р°РЅРёСЏ РѕР±СЂР°Р±РѕС‚РєРё РЅР°РґРѕ СѓРґР°Р»СЏС‚СЊ l
+// после окончания обработки надо удалять l
 // delete l;
-// line СЌС‚Рѕ РЅРѕРјРµСЂ Р»РёРЅРёРё (0 - РѕСЃРµРІР°СЏ 1,2 - РЅРѕРјРµСЂР° СЃРїСЂР°РІР° -1,-2 - СЃР»РµРІР°
-// 100 - СЂР°Р·РјРµС‚РєР° РЅРµ РЅР° Р»РёРЅРёСЏС…
+// line это номер линии (0 - осевая 1,2 - номера справа -1,-2 - слева
+// 100 - разметка не на линиях
 AcadPolylinePtr TAcadExport::DrawRoadMark(TRoadMark *m, TExtPolyline *Poly, AnsiString name,
         int iRow, int line, AutoCADTable *table, bool dontDrawPolyLine)
 {
@@ -1648,7 +1648,7 @@ AcadPolylinePtr TAcadExport::DrawRoadMark(TRoadMark *m, TExtPolyline *Poly, Ansi
     int count = Poly->Count;
     float kEdgeLines = 0.5;
 
-    if (fDrawMap) table = NULL; // РІ СЂРµР¶РёРјРµ РєР°СЂС‚С‹ РІ С‚Р°Р±Р»РёС†Рµ РЅРёС‡РµРіРѕ РЅРµ СЂРёСЃСѓРµРј
+    if (fDrawMap) table = NULL; // в режиме карты в таблице ничего не рисуем
 
     if (count > 1) { // are there any points to draw?
         if (!dontDrawPolyLine) {
@@ -1744,11 +1744,11 @@ AcadBlockReferencePtr TAcadExport::DrawBlockOnLine(String blockName, TPoint p1, 
             try {
                 AutoCAD.SetPropertyDouble(block, props[i], length);
             } catch (...) {
-                BUILDER_ERROR("РќРµ СЃРјРѕРі РёР·РјРµРЅРёС‚СЊ СЃРІРѕР№СЃС‚РІРѕ "
+                BUILDER_ERROR("Не смог изменить свойство "
                               << props[i].c_str()
-                              << " Р±Р»РѕРєР° "
+                              << " блока "
                               << blockName.c_str()
-                              << " РЅР° РїСЂРѕРјРµР¶СѓС‚РєРµ "
+                              << " на промежутке "
                               << "[" << p1.x << "; " << p1.y << "]"
                               << "[" << p2.x << "; " << p2.y << "]");
             }
@@ -1804,7 +1804,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 iRow = iBottomAxe + line - 1;
             }
         } else if (line == 0) {
-            table = 0; /*РІС‹РІРѕРґ РІРѕР·РјРѕР¶РµРЅ РІ РґРІРµ С‚Р°Р±Р»РёС†С‹ СЃСЂР°Р·Сѓ*/
+            table = 0; /*вывод возможен в две таблицы сразу*/
             iRow = 0;
         }
 
@@ -1829,27 +1829,27 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
             }
 
             switch (m->Kind) {
-            case ma1: /*СЃРїР»РѕС€РЅР°СЏ*/
+            case ma1: /*сплошная*/
                 DrawRoadMark(m, Poly, "1.1", iRow, line, table);
                 break;
-            case ma1_park: /*СЃРїР»РѕС€РЅР°СЏ РЅР° РїР°СЂРєРѕРІРєРµ*/
+            case ma1_park: /*сплошная на парковке*/
                 for (int i = 0; i < count - 1; i++) {
                     DrawBlockOnLine("r_1.1_park", Poly->Points[i + 1], Poly->Points[i], "Length", ScaleYBlock / 4);
                 }
                 break;
 
-            case ma2_1:/*РљСЂР°Р№ РїСЂРѕРµР·Р¶РµР№ С‡Р°СЃС‚Рё (СЃРїР»РѕС€РЅР°СЏ) */
+            case ma2_1:/*Край проезжей части (сплошная) */
                 DrawRoadMark(m, Poly, "1.2.1", iRow, line, table);
                 break;
 
-            case ma2_2:/*РљСЂР°РµРІР°СЏ Р»РёРЅРёСЏ (РїСЂРµСЂС‹РІРёСЃС‚Р°СЏ)  */
+            case ma2_2:/*Краевая линия (прерывистая)  */
                 pl1 = DrawRoadMark(m, Poly, "1.2.2", iRow, line, table);
                 try {
                     if (pl1) pl1->set_Linetype(WideString("linedash_1"));
                 } catch (...) {}
                 break;
 
-            case ma3: /*РґРІРѕР№РЅР°СЏ СЃРїР»РѕС€РЅР°СЏ*/
+            case ma3: /*двойная сплошная*/
                 angle = Helpers::GetAngle2(Poly->Points[0], Poly->Points[count - 1], ScaleY, &length);
                 DrawRoadMark(m, Poly, "1.3", iRow, line, table, true);
                 for (int i = 0; i < count - 1; i++) {
@@ -1857,7 +1857,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 }
                 break;
 
-            case ma4:/*РћР±РѕР·РЅР°С‡РµРЅРёРµ РјРµСЃС‚, РіРґРµ Р·Р°РїСЂРµС‰РµРЅР° РѕСЃС‚Р°РЅРѕРІРєР°*/
+            case ma4:/*Обозначение мест, где запрещена остановка*/
                 /*pl1 = DrawPolyPoints(Poly);
 
                 color = pl1->TrueColor;
@@ -1882,7 +1882,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 //DrawTextOverPoly(Poly, "1.4", RoadMarkTextDraw);
                 break;
 
-            case ma5: /*РџСЂРµСЂС‹РІРёСЃС‚Р°СЏ Р»РёРЅРёСЏ*/
+            case ma5: /*Прерывистая линия*/
                 pl1 = DrawRoadMark(m, Poly, "1.5", iRow, line, table);
                 if (pl1.IsBound()) {
                     pl1->set_Linetype(WideString("linedash_1"));
@@ -1890,7 +1890,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 }
                 break;
 
-            case ma6: /*РџСЂРёР±Р»РёР¶РµРЅРёРµ Рє СЃРїР»РѕС€РЅРѕР№ Р»РёРЅРёРё*/
+            case ma6: /*Приближение к сплошной линии*/
                 pl1 = DrawRoadMark(m, Poly, "1.6", iRow, line, table);
                 if (pl1.IsBound()) {
                     pl1->set_Linetype(WideString("linedash_2"));
@@ -1898,7 +1898,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 }
                 break;
 
-            case ma7:  /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РїРѕР»РѕСЃ РґРІРёР¶РµРЅРёСЏ РЅР° РїРµСЂРµРєСЂРµСЃС‚РєРµ*/
+            case ma7:  /*Обозначение полос движения на перекрестке*/
                 pl1 = DrawRoadMark(m, Poly, "1.7", iRow, line, table);
                 if (pl1.IsBound()) {
                     pl1->set_Linetype(WideString("linedash_3"));
@@ -1906,7 +1906,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 }
                 break;
 
-            case ma8: /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РіСЂР°РЅРёС†С‹ РјРµР¶РґСѓ РїРѕР»РѕСЃРѕР№ СЂР°Р·РіРѕРЅР° Рё РѕСЃРЅРѕРІРЅРѕР№ РїРѕР»РѕСЃРѕР№*/
+            case ma8: /*Обозначение границы между полосой разгона и основной полосой*/
                 pl1 = DrawRoadMark(m, Poly, "1.8", iRow, line, table);
                 if (pl1.IsBound()) {
                     pl1->set_Linetype(WideString("linedash_1"));
@@ -1914,11 +1914,11 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 }
                 break;
 
-            case ma9: /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РіСЂР°РЅРёС† СЂРµРІРµСЂСЃРёРІРЅС‹С… РїРѕР»РѕСЃ РґРІРёР¶РµРЅРёСЏ*/
-                BUILDER_ERROR("Р Р°Р·РјРµС‚РєР° 1.9 РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
+            case ma9: /*Обозначение границ реверсивных полос движения*/
+                BUILDER_ERROR("Разметка 1.9 не реализована");
                 break;
 
-            case ma10:  /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РјРµСЃС‚, РіРґРµ Р·Р°РїСЂРµС‰РµРЅР° СЃС‚РѕСЏРЅРєР°*/
+            case ma10:  /*Обозначение мест, где запрещена стоянка*/
                 pl1 = DrawRoadMark(m, Poly, "1.10", iRow, line, table);
                 if (pl1.IsBound()) {
                     pl1->set_Linetype(WideString("linedash_1"));
@@ -1930,8 +1930,8 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 }
                 break;
 
-            case ma11l:  /*Р”РІРёР¶РµРЅРёРµ СЃ РѕРґРЅРѕР№ СЃС‚РѕСЂРѕРЅС‹ (РїСЂРµСЂС‹РІРёСЃС‚Р°СЏ СЃР»РµРІР°)*/
-            case ma11r:  /*Р”РІРёР¶РµРЅРёРµ СЃ РѕРґРЅРѕР№ СЃС‚РѕСЂРѕРЅС‹ (РїСЂРµСЂС‹РІРёСЃС‚Р°СЏ СЃРїСЂР°РІР°)*/
+            case ma11l:  /*Движение с одной стороны (прерывистая слева)*/
+            case ma11r:  /*Движение с одной стороны (прерывистая справа)*/
                 for (int i = 0; i < count - 1; i++) {
                     block = DrawBlockOnLine("r_1.11", Poly->Points[i], Poly->Points[i + 1], "Length");
                     int px =  Poly->Points[i + 1].x - Poly->Points[i].x;
@@ -1949,7 +1949,7 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 DrawTextOverPoly(Poly, "1.11", RoadMarkTextDraw);
                 break;
 
-            case ma12:  /*РЎС‚РѕРї Р»РёРЅРёСЏ*/
+            case ma12:  /*Стоп линия*/
                 /*for(int i=0;i<count-1;i++){
                     DrawBlockOnLine("r_1.12", Poly->Points[i], Poly->Points[i+1], "Length");
                 } */
@@ -1959,14 +1959,14 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 }
                 break;
 
-            case ma13: /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РјРµСЃС‚Р°, РіРґРµ РІРѕРґРёС‚РµР»СЊ РѕР±СЏР·Р°РЅ СѓСЃС‚СѓРїРёС‚СЊ РґРѕСЂРѕРіСѓ*/
+            case ma13: /*Обозначение места, где водитель обязан уступить дорогу*/
                 for (int i = 0; i < count - 1; i++) {
                     DrawBlockOnLine("r_1.13", Poly->Points[i], Poly->Points[i + 1], "Length");
                 }
                 break;
 
             case ma14_1:
-            case ma14_2:/*РїРµС€РµС…РѕРґ*/
+            case ma14_2:/*пешеход*/
             case ma14_3:
                 for (int i = 0; i < count - 1; i++) {
                     DrawBlockOnLine("r_1.14.1", Poly->Points[i], Poly->Points[i + 1], "Width", ScaleYBlock / 4);
@@ -1983,14 +1983,14 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 }
                 break;
 
-            case ma15: /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РїРµСЂРµРµР·РґР° РґР»СЏ РІРµР»РѕСЃРёРїРµРґРёСЃС‚РѕРІ*/
-                BUILDER_ERROR("Р Р°Р·РјРµС‚РєР° 1.15 РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
+            case ma15: /*Обозначение переезда для велосипедистов*/
+                BUILDER_ERROR("Разметка 1.15 не реализована");
                 //tableBottom.DrawRepeatTextInterval(0,"1.15",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
-            case ma16_1: /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РѕСЃС‚СЂРѕРІРєРѕРІ, СЂР°Р·РґРµР»СЏСЋС‰РёС… РїРѕС‚РѕРєРё  РїСЂРѕС‚РёРІРѕРїРѕР»РѕР¶РµРЅРЅС‹С… РЅР°РїСЂР°РІР»РµРЅРёР№*/
-            case ma16_2: /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РѕСЃС‚СЂРѕРІРєРѕРІ, СЂР°Р·РґРµР»СЏСЋС‰РёС… РїРѕС‚РѕРєРё  РѕРґРЅРѕРіРѕ РЅР°РїСЂР°РІР»РµРЅРёСЏ*/
-            case ma16_3: /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РѕСЃС‚СЂРѕРІРєРѕРІ РІ РјРµСЃС‚Р°С… СЃР»РёСЏРЅРёСЏ С‚СЂР°РЅСЃРїРѕСЂС‚РЅС‹С… РїРѕС‚РѕРєРѕРІ*/
+            case ma16_1: /*Обозначение островков, разделяющих потоки  противоположенных направлений*/
+            case ma16_2: /*Обозначение островков, разделяющих потоки  одного направления*/
+            case ma16_3: /*Обозначение островков в местах слияния транспортных потоков*/
 
                 switch (m->Kind) {
                 case  ma16_1: str = "1.16.1"; break;
@@ -2022,13 +2022,13 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 //tableBottom.DrawRepeatTextInterval(0,"1.16",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
-            case ma17: /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РѕСЃС‚Р°РЅРѕРІРѕРє РјР°СЂС€СЂСѓС‚РЅС‹С… С‚СЂР°РЅСЃРїРѕСЂС‚РЅС‹С… СЃСЂРµРґСЃС‚РІ*/
+            case ma17: /*Обозначение остановок маршрутных транспортных средств*/
             {
                 float scale = ScaleYBlock / 4;
                 block = DrawBlockOnLine("r_1.17", Poly->Points[0], Poly->Points[count - 1], "Length Length2", scale);
 
-                // С‡С‚РѕР±С‹ РІС‹РІРѕРґРёС‚СЊ СЂР°Р·РјРµС‚РєСѓ С‚Р°Рє С‡С‚РѕР±С‹ РїСЂР°РІР°СЏ РЅРѕР¶РєР° РЅРµ РѕС‚СЂС‹РІР°Р»Р°СЃСЊ РѕС‚ РѕР±С‰РµРіРѕ РєРѕРЅС‚СѓСЂР°
-                // РІ СЃР»СѓС‡Р°Рµ РёР·РјРµРЅРµРЅРёСЏ СЂР°Р·РјРµСЂРѕРІ Р±Р»РѕРєР° СЂР°Р·РјРµС‚РєРё, РЅР°РґРѕ РїРѕРјРµРЅСЏС‚СЊ Р·РЅР°С‡РµРЅРёРµ 582 РЅР° Р·РЅР°С‡РµРЅРёРµ С€Р°РіР° РїРѕРІС‚РѕСЂРµРЅРёСЏ
+                // чтобы выводить разметку так чтобы правая ножка не отрывалась от общего контура
+                // в случае изменения размеров блока разметки, надо поменять значение 582 на значение шага повторения
                 float blockDefaultLength = 582 * scale;
                 float length = Helpers::GetLength(Poly->Points[0], Poly->Points[count - 1], ScaleY);
                 int realLength = ((int)length / (int)blockDefaultLength) * blockDefaultLength;
@@ -2039,64 +2039,64 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 //tableBottom.DrawRepeatTextInterval(0,"1.17",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
             break;
 
-            case ma18l: /*РќР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ(РЅР°Р»РµРІРѕ)*/
+            case ma18l: /*Направление движения(налево)*/
                 angle = Helpers::GetAngle2(Poly->Points[0], Poly->Points[count - 1], ScaleY);
                 block = AutoCAD.DrawBlock("r_1.18_3", Poly->Points[0].x, -ScaleY * Poly->Points[0].y, angle, ScaleYBlock / 4);
                 AutoCAD.SetPropertyList(block, "Flip", 1);
                 break;
-            case ma18p: /*РќР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ(РїСЂСЏРјРѕ)*/
+            case ma18p: /*Направление движения(прямо)*/
                 angle = Helpers::GetAngle2(Poly->Points[0], Poly->Points[count - 1], ScaleY);
                 block = AutoCAD.DrawBlock("r_1.18_1", Poly->Points[0].x, -ScaleY * Poly->Points[0].y, angle, ScaleYBlock / 4);
                 break;
-            case ma18pl: /*РќР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ(РїСЂСЏРјРѕ,РЅР°Р»РµРІРѕ)*/
+            case ma18pl: /*Направление движения(прямо,налево)*/
                 angle = Helpers::GetAngle2(Poly->Points[0], Poly->Points[count - 1], ScaleY);
                 block = AutoCAD.DrawBlock("r_1.18_2", Poly->Points[0].x, -ScaleY * Poly->Points[0].y, angle, ScaleYBlock / 4);
                 AutoCAD.SetPropertyList(block, "Flip", 1);
                 break;
-            case ma18pr: /*РќР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ(РїСЂСЏРјРѕ,РЅР°РїСЂР°РІРѕ)*/
+            case ma18pr: /*Направление движения(прямо,направо)*/
                 angle = Helpers::GetAngle2(Poly->Points[0], Poly->Points[count - 1], ScaleY);
                 block = AutoCAD.DrawBlock("r_1.18_2", Poly->Points[0].x, -ScaleY * Poly->Points[0].y, angle, ScaleYBlock / 4);
                 break;
-            case ma18prl: /*РќР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ(РїСЂСЏРјРѕ,РЅР°РїСЂР°РІРѕ,РЅР°Р»РµРІРѕ)*/
-                BUILDER_ERROR("Р Р°Р·РјРµС‚РєР° 1.8prl РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
+            case ma18prl: /*Направление движения(прямо,направо,налево)*/
+                BUILDER_ERROR("Разметка 1.8prl не реализована");
                 break;
 
-            case ma18r: /*РќР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ(РЅР°РїСЂР°РІРѕ)*/
+            case ma18r: /*Направление движения(направо)*/
                 angle = Helpers::GetAngle2(Poly->Points[0], Poly->Points[count - 1], ScaleY);
                 block = AutoCAD.DrawBlock("r_1.18_3", Poly->Points[0].x, -ScaleY * Poly->Points[0].y, angle, ScaleYBlock / 4);
                 break;
-            case ma18rl: /*РќР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ(РЅР°РїСЂР°РІРѕ,РЅР°Р»РµРІРѕ)*/
-                BUILDER_ERROR("Р Р°Р·РјРµС‚РєР° 1.8rl РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
+            case ma18rl: /*Направление движения(направо,налево)*/
+                BUILDER_ERROR("Разметка 1.8rl не реализована");
                 //tableBottom.DrawRepeatTextInterval(0,"1.18",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
-            case ma19_1:  /*РќР°РїСЂР°РІР»РµРЅРёРµ РїРµСЂРµСЃС‚СЂРѕРµРЅРёСЏ(РЅР°РїСЂР°РІРѕ)*/
+            case ma19_1:  /*Направление перестроения(направо)*/
                 angle = Helpers::GetAngle2(Poly->Points[0], Poly->Points[count - 1], ScaleY);
                 block = AutoCAD.DrawBlock("r_1.19", Poly->Points[0].x, -ScaleY * Poly->Points[0].y, angle, ScaleYBlock / 4);
                 break;
-            case ma19_2:  /*РќР°РїСЂР°РІР»РµРЅРёРµ РїРµСЂРµСЃС‚СЂРѕРµРЅРёСЏ(РЅР°Р»РµРІРѕ)*/
+            case ma19_2:  /*Направление перестроения(налево)*/
                 angle = Helpers::GetAngle2(Poly->Points[0], Poly->Points[count - 1], ScaleY);
                 block = AutoCAD.DrawBlock("r_1.19", Poly->Points[0].x, -ScaleY * Poly->Points[0].y, angle, ScaleYBlock / 4);
                 AutoCAD.SetPropertyList(block, "Flip", 1);
                 //tableBottom.DrawRepeatTextInterval(0,"1.19",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
-            case ma20: /*РџСЂРёР±Р»РёР¶РµРЅРёРµ Рє РїРѕРїРµСЂРµС‡РЅРѕР№ Р»РёРЅРёРё 1.13*/
+            case ma20: /*Приближение к поперечной линии 1.13*/
                 angle = Helpers::GetAngle2(Poly->Points[0], Poly->Points[count - 1], ScaleY);
                 block = AutoCAD.DrawBlock("r_1.20", Poly->Points[0].x, -ScaleY * Poly->Points[0].y, angle, ScaleYBlock / 4);
                 break;
 
-            case ma21: /*РџСЂРёР±Р»РёР¶РµРЅРёРµ Рє РїРѕРїРµСЂРµС‡РЅРѕР№ Р»РёРЅРёРё 1.12*/
+            case ma21: /*Приближение к поперечной линии 1.12*/
                 //tableBottom.DrawRepeatTextInterval(0,"1.21",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
-                BUILDER_ERROR("Р Р°Р·РјРµС‚РєР° 1.21 РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
+                BUILDER_ERROR("Разметка 1.21 не реализована");
                 break;
 
-            case ma22:  /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РЅРѕРјРµСЂР° РґРѕСЂРѕРіРё*/
-                BUILDER_ERROR("Р Р°Р·РјРµС‚РєР° 1.22 РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
+            case ma22:  /*Обозначение номера дороги*/
+                BUILDER_ERROR("Разметка 1.22 не реализована");
                 //tableBottom.DrawRepeatTextInterval(0,"1.22",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
-            case ma23:  /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РїРѕР»РѕСЃС‹ РґРІРёР¶РµРЅРёСЏ С‚РѕР»СЊРєРѕ РґР»СЏ РјР°СЂС€СЂСѓС‚РЅС‹С… С‚СЂР°РЅСЃРїРѕСЂС‚РЅС‹С… СЃСЂРµРґСЃС‚РІ*/
+            case ma23:  /*Обозначение полосы движения только для маршрутных транспортных средств*/
                 block = AutoCAD.DrawBlock("r_1.23",
                                           Poly->Points[0].x,
                                           -ScaleY * Poly->Points[0].y,
@@ -2105,17 +2105,17 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 //tableBottom.DrawRepeatTextInterval(0,"1.23",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
 
-            case ma24_1: /*Р”СѓР±Р»РёСЂРѕРІР°РЅРёРµ РїСЂРµРґСѓРїСЂРµР¶РґР°СЋС‰РёС… РґРѕСЂРѕР¶РЅС‹С… Р·РЅР°РєРѕРІ*/
-            case ma24_2: /*Р”СѓР±Р»РёСЂРѕРІР°РЅРёРµ Р·Р°РїСЂРµС‰Р°СЋС‰РёС… РґРѕСЂРѕР¶РЅС‹С… Р·РЅР°РєРѕРІ*/
-            case ma24_3: /*Р”СѓР±Р»РёСЂРѕРІР°РЅРёРµ РґРѕСЂРѕР¶РЅРѕРіРѕ Р·РЅР°РєР° РРЅРІР°Р»РёРґС‹*/
-                BUILDER_ERROR("Р Р°Р·РјРµС‚РєР° 1.24 РЅР° РїРѕР·РёС†РёРё " << Poly->Points[0].x << " РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР°");
+            case ma24_1: /*Дублирование предупреждающих дорожных знаков*/
+            case ma24_2: /*Дублирование запрещающих дорожных знаков*/
+            case ma24_3: /*Дублирование дорожного знака Инвалиды*/
+                BUILDER_ERROR("Разметка 1.24 на позиции " << Poly->Points[0].x << " не реализована");
                 //tableBottom.DrawRepeatTextInterval(0,"1.24",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
                 break;
-            case ma24_4: /*Р”СѓР±Р»РёСЂРѕРІР°РЅРёРµ РґРѕСЂРѕР¶РЅРѕРіРѕ Р·РЅР°РєР° РРЅРІР°Р»РёРґС‹*/
+            case ma24_4: /*Дублирование дорожного знака Инвалиды*/
                 block = AutoCAD.DrawBlock("r_1.24_4", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
                                           m->Direction == roDirect ? 0 : M_PI);
                 break;
-            case ma25:  /*РћР±РѕР·РЅР°С‡РµРЅРёРµ РёСЃРєСѓСЃСЃС‚РІРµРЅРЅС‹С… РЅРµСЂРѕРІРЅРѕСЃС‚РµР№*/
+            case ma25:  /*Обозначение искусственных неровностей*/
                 x = Poly->Points[0].x;
                 y = Poly->Points[0].y;
                 height = ScaleY * (Poly->Points[count - 1].y - y);
@@ -2129,11 +2129,11 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 AutoCAD.SetPropertyDouble(block, "Width", height);
                 break;
             default:
-                BUILDER_ERROR("Р Р°Р·РјРµС‚РєР° СЃ id=" << m->Kind << " РЅРµ СЂРµР°Р»РёР·РѕРІР°РЅР° (id СЃРјРѕС‚СЂРё РІ С‚Р°Р±Р»РёС†Рµ Classifier)");
+                BUILDER_ERROR("Разметка с id=" << m->Kind << " не реализована (id смотри в таблице Classifier)");
             }
         }
     } catch (...) {
-        BUILDER_ERROR( ("РћС€РёР±РєР° РІС‹РІРѕРґР° СЂР°Р·РјРµС‚РєРё " + IntToStr((int)m->Kind) + " РЅР° РїРѕР·РёС†РёРё " + IntToStr(Poly->Points[0].x)).c_str() );
+        BUILDER_ERROR( ("Ошибка вывода разметки " + IntToStr((int)m->Kind) + " на позиции " + IntToStr(Poly->Points[0].x)).c_str() );
         return false;
     }
     return true;
@@ -2183,7 +2183,7 @@ bool __fastcall TAcadExport::ExportTube(TExtPolyline *Poly, TRoadTube* t, bool f
     block->Rotation = edge;
     AutoCAD.SetPropertyDouble(block, "Length", Length);
     if (Length > 2000 ) {
-        AutoCAD.SetAttribute(block, "LABEL", "С‚:" + IntToStr((pS.x / 100) % 1000));
+        AutoCAD.SetAttribute(block, "LABEL", "т:" + IntToStr((pS.x / 100) % 1000));
     }
     return true;
 }
@@ -2443,7 +2443,7 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly, TRoadBarrier *b, 
 
     switch (b->Construction) {
     case br112:
-        str = "Р”Рћ (РЈ3)"; //str = "Р‘Р°СЂСЊРµСЂРЅРѕРµ РѕРґРЅРѕСЃС‚РѕСЂРѕРЅРЅРµРµ"
+        str = "ДО (У3)"; //str = "Барьерное одностороннее"
         barrierName = "barBarrierMetal";
         //block = DrawBarrier(points, barrierName, dir<0?0:1, exist, fOpenLeft, &curProp);
         DrawPolyPoints(Poly, true, false, StyleDrawBarrierMetal, &params);
@@ -2457,18 +2457,18 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly, TRoadBarrier *b, 
         break;
 
     case br113:
-        str = "Р”Рћ (РЈ3)"; //str = "Р‘Р°СЂСЊРµСЂРЅРѕРµ РґРІСѓС…СЃС‚РѕСЂРѕРЅРЅРµРµ";
+        str = "ДО (У3)"; //str = "Барьерное двухстороннее";
         barrierName = "barBarrierMetalDuo";
         block = DrawBarrier(points, barrierName, dir < 0 ? 0 : 1, exist, fOpenLeft, &curProp);
         break;
 
     case br114:
-        str = "РўСЂРѕСЃРѕРІРѕРµ";
+        str = "Тросовое";
         break;
 
     case br115:
     case br118:
-        str = "Р”Рћ (РЈ3)"; //str = "РџР°СЂР°РїРµС‚С‹"; "РџРѕ С‚РёРїСѓ РќСЊСЋ-Р”Р¶РµСЂСЃРё";
+        str = "ДО (У3)"; //str = "Парапеты"; "По типу Нью-Джерси";
         barrierName = "barNewJersey";
         DrawPolyPoints(Poly, true, false, StyleDrawBarrierNewJersey, &params);
 
@@ -2480,7 +2480,7 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly, TRoadBarrier *b, 
         pl->set_Lineweight(lineWeight);
         if (!exist) pl->color = NotExistColor;
 
-        // СЂРёСЃРѕРІР°РЅРёРµ СЃРЅРѕСЃРєРё РЅР° СЂР°Р·РјРµС‚РєСѓ 2.5 РЅР° РѕРіСЂР°Р¶РґРµРЅРёРё
+        // рисование сноски на разметку 2.5 на ограждении
         lastStep = -9999;
         for (int i = 0; i < points.size(); i++) {
             int step = points[i].x / iStep;
@@ -2497,24 +2497,24 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly, TRoadBarrier *b, 
         break;
 
     case br116:
-        str = "РЎРµС‚РєРё";
+        str = "Сетки";
         break;
 
     case br117:
-        str = "РџРµСЂРёР»Р°";
+        str = "Перила";
         barrierName = "barCivil";
         params.lineTypeScale = lineTypeScale * 2;
         DrawPolyPoints(Poly, true, false, StyleDrawBarrierCivil, &params);
         break;
 
     case brm:
-        str = "Р”Рћ (РЈ3)"; //str = "РњРµС‚Р°Р»Р»РёС‡РµСЃРєРѕРµ";
+        str = "ДО (У3)"; //str = "Металлическое";
         barrierName = "barBarrierMetal";
         block = DrawBarrier(points, barrierName, dir < 0 ? 0 : 1, exist, fOpenLeft, &curProp);
         break;
 
     default:
-        str = "Р”Рћ (РЈ3)"; // РЅРµСЃС‚Р°РЅРґР°СЂС‚РЅРѕРµ
+        str = "ДО (У3)"; // нестандартное
         DrawPolyPoints(Poly, true, false, StyleDrawBarrierUndefined, &params);
         pl = AutoCAD.DrawRect(pMin.x, pMin.y * -ScaleY, endsRadius, endsRadius);
         pl->set_Lineweight(lineWeight);
@@ -2547,7 +2547,7 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly, TRoadBarrier *b, 
     }
 
     if (strProjectBarrierPrefix.Length()) {
-        str = AnsiString(exist ? "" : strProjectBarrierPrefix.c_str()) + " " + str; //"Р”Рћ (РЈ3)";
+        str = AnsiString(exist ? "" : strProjectBarrierPrefix.c_str()) + " " + str; //"ДО (У3)";
     }
 
     if (!fDrawMap) {
@@ -2672,7 +2672,7 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly, TRoadSignal *s, bo
             delete[] signalsPos;
         }
     } catch (...) {
-        BUILDER_ERROR( ("РћС€РёР±РєР° РІС‹РІРѕРґР° СЃС‚РѕР»Р±РёРєРѕРІ РЅР° РїСЂРѕРјРµР¶СѓС‚РєРµ [" + IntToStr(s->LMin) + "; " + IntToStr(s->LMax) + "]").c_str() );
+        BUILDER_ERROR( ("Ошибка вывода столбиков на промежутке [" + IntToStr(s->LMin) + "; " + IntToStr(s->LMax) + "]").c_str() );
         return false;
     }
     return true;
@@ -2902,7 +2902,7 @@ bool __fastcall TAcadExport::ExportCurve(TDangerCurve *c, bool fEnd) {
             break;
         }
     } catch (...) {
-        BUILDER_ERROR( ("РћС€РёР±РєР° РІС‹РІРѕРґР° РєСЂРёРІРѕР№ РІ РїР»Р°РЅРµ РЅР° РїСЂРѕРјРµР¶СѓС‚РєРµ [" + IntToStr(c->LMin) + "; " + IntToStr(c->LMax) + "]").c_str() );
+        BUILDER_ERROR( ("Ошибка вывода кривой в плане на промежутке [" + IntToStr(c->LMin) + "; " + IntToStr(c->LMax) + "]").c_str() );
         return false;
     }
     lKind = c->Kind;
@@ -2937,8 +2937,8 @@ bool __fastcall TAcadExport::ExportSlope(TDangerSlope *s, int fase, bool fEnd) {
             tableBottom.DrawRepeatEmptyInterval(iBottomSlopes, s->LMin, s->LMax, iStep, true, true, true);
             tableBottom.DrawRepeatVerticalTextInterval(iBottomSlopes, s->LMin, s->LMax, 0.33, iStep, false, 0.15);
         }
-        if (iTopSlopes >= 0)tableTop.DrawRepeatTextIntervalSpec2(iTopSlopes, "l=" + IntToStr(abs(s->Promille)) + "вЂ°", s->LMin, s->LMax, false, iStep);
-        if (iBottomSlopes >= 0)tableBottom.DrawRepeatTextIntervalSpec2(iBottomSlopes, "l=" + IntToStr(abs(s->Promille)) + "вЂ°", s->LMin, s->LMax, false, iStep);
+        if (iTopSlopes >= 0)tableTop.DrawRepeatTextIntervalSpec2(iTopSlopes, "l=" + IntToStr(abs(s->Promille)) + "‰", s->LMin, s->LMax, false, iStep);
+        if (iBottomSlopes >= 0)tableBottom.DrawRepeatTextIntervalSpec2(iBottomSlopes, "l=" + IntToStr(abs(s->Promille)) + "‰", s->LMin, s->LMax, false, iStep);
     } else if (s->Promille < 0) {
         if (iTopSlopes >= 0) {
             tableTop.DrawRepeatEmptyInterval(iTopSlopes, s->LMin, s->LMax, iStep, true, true, false);
@@ -2948,8 +2948,8 @@ bool __fastcall TAcadExport::ExportSlope(TDangerSlope *s, int fase, bool fEnd) {
             tableBottom.DrawRepeatEmptyInterval(iBottomSlopes, s->LMin, s->LMax, iStep, true, true, false);
             tableBottom.DrawRepeatVerticalTextInterval(iBottomSlopes, s->LMin, s->LMax, 0.66, iStep, false, 0.15);
         }
-        if (iTopSlopes >= 0)tableTop.DrawRepeatTextIntervalSpec2(iTopSlopes, "l=" + IntToStr(abs(s->Promille)) + "вЂ°", s->LMin, s->LMax, true, iStep);
-        if (iBottomSlopes >= 0)tableBottom.DrawRepeatTextIntervalSpec2(iBottomSlopes, "l=" + IntToStr(abs(s->Promille)) + "вЂ°", s->LMin, s->LMax, true, iStep);
+        if (iTopSlopes >= 0)tableTop.DrawRepeatTextIntervalSpec2(iTopSlopes, "l=" + IntToStr(abs(s->Promille)) + "‰", s->LMin, s->LMax, true, iStep);
+        if (iBottomSlopes >= 0)tableBottom.DrawRepeatTextIntervalSpec2(iBottomSlopes, "l=" + IntToStr(abs(s->Promille)) + "‰", s->LMin, s->LMax, true, iStep);
     } else {
         if (iTopSlopes >= 0) {
             tableTop.DrawLine(iTopSlopes, s->LMin, tableTop.kBottomEmptyPadding, s->LMax, tableTop.kBottomEmptyPadding);
@@ -3020,7 +3020,7 @@ bool __fastcall TAcadExport::ExportSidewalk(KromkaObjectGroup *sidewalksGroup, b
             delete Poly;
         }
 
-        AnsiString str = "Р°/Р±";
+        AnsiString str = "а/б";
         if (!fDrawMap) {
             switch (sidewalksGroup->objects[0].obj->Placement) {
             case spLeft:
@@ -3158,7 +3158,7 @@ void TAcadExport::ExportAddRowLine( AutoCADTable *table, int iRow,
     AnsiString style = str.SubString(1, 2);
     AnsiString params;
     AnsiString sTemp;
-    if (style == "$c") { //Р·Р°Р»РёРІРєР°
+    if (style == "$c") { //заливка
         params = str.SubString(3, str.Length() - 2).Trim();
         char hatchName[255];
         float scale;
@@ -3167,7 +3167,7 @@ void TAcadExport::ExportAddRowLine( AutoCADTable *table, int iRow,
         table->FillArea(iRow, iPos, iEnd, hatchName, iFillHatchScale, color);
         table->DrawBorder(iPos, iRow);
         table->DrawBorder(iEnd, iRow);
-    } else if (style == "$b") { //Р±Р»РѕРє
+    } else if (style == "$b") { //блок
         params = str.SubString(3, str.Length() - 2).Trim();
         AnsiString blockName;
 
@@ -3180,7 +3180,7 @@ void TAcadExport::ExportAddRowLine( AutoCADTable *table, int iRow,
         }
         table->FillGaps[iRow] = false;
 
-        blockName = paramsValues->Strings[0]; // РїРµСЂРІС‹Р№ РїР°СЂР°РјРµС‚СЂ - РёРјСЏ Р±Р»РѕРєР°
+        blockName = paramsValues->Strings[0]; // первый параметр - имя блока
         paramsValues->Delete(0);
         AcadBlockReferencePtr block = table->DrawBlock(blockName, iRow, iPos, (float)iEnd / 100);
 
@@ -3216,7 +3216,7 @@ void TAcadExport::ExportAddRowLine( AutoCADTable *table, int iRow,
             }
         }
         delete paramsValues;
-    } else { // РїСЂРѕСЃС‚Рѕ С‚РµРєСЃС‚
+    } else { // просто текст
         table->FillGaps[iRow] = true;
         table->DrawRepeatTextIntervalRoadMark(iRow, str, iPos, iEnd, 0, iStep, true);
     }
@@ -3242,13 +3242,15 @@ struct ExportAddRowsOptions {
             result = sscanf(subString.c_str(), "offset=%d", &options.offset);
         }
         if ( pos = line.Pos("lineStyle") ) {
+            char lineStyle[64];
             subString = line.SubString(pos, line.Length() - pos + 1);
-            result = sscanf(subString.c_str(), "lineStyle=%s", &options.lineStyle);
+            result = sscanf(subString.c_str(), "lineStyle=%s", &lineStyle);
+            options.lineStyle = lineStyle;
         }
     }
 
     int offset; // offset of output rows
-    char[64] lineStyle;
+    AnsiString lineStyle;
 };
 
 int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, bool check)
@@ -3292,7 +3294,7 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
                 table->DrawHeaderText(startCount + iRow - 1, str, HeaderTextHeight);
             }
 
-            if (OutInfoLog) OutInfoLog("Р’С‹РІРѕР¶Сѓ \"" + AnsiString(str) + "\"");
+            if (OutInfoLog) OutInfoLog("Вывожу \"" + AnsiString(str) + "\"");
 
             int linesCount = 0;
             int currentLine = 0;
@@ -3305,7 +3307,7 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
             table->FillGaps[iTableRow] = false;
 
             while (getline(file, s))  {
-                // РІС‹С…РѕРґРёРј РµСЃР»Рё РЅР°Р¶Р°Р»Рё РѕС‚РјРµРЅСѓ
+                // выходим если нажали отмену
                 if (ProgressForm->Thread) {
                     AcadExportThread *thread = dynamic_cast<AcadExportThread*>(ProgressForm->Thread);
                     if ( thread->IsTerminated) {
@@ -3332,11 +3334,11 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
 
                         count = strlen(sSPos) + 1 + strlen(sEPos) + 1;
                         if (!TryStrToInt(words[0], sPos)) {
-                            OutInfoLog("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ С„РѕСЂРјР°С‚ РґР°РЅРЅС‹С…: " + str2 + " - " + line);
+                            OutInfoLog("Неправильный формат данных: " + str2 + " - " + line);
                             continue;
                         }
                         if (!TryStrToInt(words[1], ePos)) {
-                            OutInfoLog("РћС€РёР±РєР° РІС‹РІРѕРґР°: " + str2 + " - " + line);
+                            OutInfoLog("Ошибка вывода: " + str2 + " - " + line);
                             continue;
                         }
                         sPos += exportAddRowOptions.offset;
@@ -3346,7 +3348,7 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
 
                         ExportAddRowLine(table, iTableRow, sPos, ePos, line.Trim());
                     } catch (...) {
-                        OutInfoLog("РћС€РёР±РєР° РІС‹РІРѕРґР°: " + str2 + " - " + line);
+                        OutInfoLog("Ошибка вывода: " + str2 + " - " + line);
                     }
                 }
                 currentLine++;
@@ -3408,6 +3410,7 @@ int __fastcall TAcadExport::ExportGraphicPath(AnsiString path, bool check)
             file.seekg(0, ios::beg);
 
             while (getline(file, s))  {
+                AnsiString line = s.c_str();
                 if (line[1] == '#') { // if comment
                     // remove comment symbol, and trim string
                     line[1] = ' ';
@@ -3441,7 +3444,10 @@ int __fastcall TAcadExport::ExportGraphicPath(AnsiString path, bool check)
 
             file.close();
             if (pointsArray.size()) {
-                AutoCAD.DrawPolyLine(pointsArray.begin(), pointsArray.size() / 2, 2);
+                AcadPolylinePtr pl = DrawPolyLine(pointsArray);
+                if (exportAddRowOptions.lineStyle != "") {
+                   pl->set_Linetype(WideString(exportAddRowOptions.lineStyle));
+                }
             }
         }
     }
@@ -3474,7 +3480,7 @@ int __fastcall TAcadExport::ExportTopAddRows(AnsiString DirPath, bool check)
     int max = 0;
     if (!FindFirst(DirPath + "\\top\\*.*", 0, rec)) {
         do {
-            // РІС‹С…РѕРґРёРј РµСЃР»Рё РЅР°Р¶Р°Р»Рё РѕС‚РјРµРЅСѓ
+            // выходим если нажали отмену
             if (ProgressForm->Thread) {
                 AcadExportThread *thread = dynamic_cast<AcadExportThread*>(ProgressForm->Thread);
                 if ( thread->IsTerminated) {
@@ -3482,7 +3488,7 @@ int __fastcall TAcadExport::ExportTopAddRows(AnsiString DirPath, bool check)
                 }
             }
             if ((value = ExportAddRows(DirPath + "\\top\\" + rec.Name, &tableTop, check)) > 0) {
-                // РІС‹С…РѕРґРёРј РµСЃР»Рё РєС‚Рѕ-С‚Рѕ РЅР°Р¶Р°Р» РѕС‚РјРµРЅСѓ
+                // выходим если кто-то нажал отмену
                 if (value == -1) {
                     return -1;
                 }
@@ -3540,62 +3546,69 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
 {
     if (fEnd) return true;
     AcadPolylinePtr pl[1];
-    pl[0] = DrawPolyPoints(p, false, true);
-    AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl, 1, 0, L"SOLID");
-    pl[0]->Erase();
-    AcadAcCmColor *color =  hatch->TrueColor;
+    
     AnsiString strParams;
     AnsiString name;
+    AnsiString hatchFill = "SOLID";
     unsigned char Color[3] = {0, 0, 0};
     int idSurface = t->GetPropValue("Surface").ToInt();
 
     switch (idSurface) {
-    case 233:    //Р¦РµРјРµРЅС‚РѕР±РµС‚РѕРЅ
+    case 233:    //Цементобетон
         Color[0] = Color[1] = Color[2] = 240;
-        strParams = "$c\tANGLE\t75\t251"; // Р·Р°Р»РёРІРєР° С‚РёРї РјР°СЃС€С‚Р°Р± С†РІРµС‚
-        name = "Р¦РµРјРµРЅС‚РѕР±РµС‚РѕРЅ";
+        strParams = "$c\tANGLE\t15\t251"; // заливка тип масштаб цвет
+        name = "цементобетон";
+        hatchFill = "ANGLE";
         break;
 
-    case 234:   // РђСЃС„Р°Р»СЊС‚РѕР±РµС‚РѕРЅ
+    case 234:   // Асфальтобетон
         Color[0] = 196;
         Color[1] = 220;
         Color[2] = 220;
-        strParams = "$c\tSOLID\t75\t161"; // Р·Р°Р»РёРІРєР° С‚РёРї РјР°СЃС€С‚Р°Р± С†РІРµС‚
-        name = "РђСЃС„Р°Р»СЊС‚РѕР±РµС‚РѕРЅ";
+        strParams = "$c\tSOLID\t15\t161"; // заливка тип масштаб цвет
+        name = "асфальтобетон";
         break;
 
-    case 235:   // С‰РµР±РµРЅСЊ СѓРєСЂРµРї
+    case 235:   // щебень укреп
         Color[0] = 244;
         Color[1] = 200;
         Color[2] = 128;
-        strParams = "$c\tGRAVEL\t15\t43"; // Р·Р°Р»РёРІРєР° С‚РёРї РјР°СЃС€С‚Р°Р± С†РІРµС‚
-        name = "Р©РµР±РµРЅСЊ (РіСЂР°РІРёР№)";
+        strParams = "$c\tGRAVEL\t15\t43"; // заливка тип масштаб цвет
+        hatchFill = "GRAVEL";
+        name = "щебень (гравий)";
         break;
 
-    case 236:  // С‰РµР±РµРЅСЊ
+    case 236:  // щебень
         Color[0] = 220;
         Color[1] = 220;
         Color[2] = 180;
-        strParams = "$c\tGRAVEL\t15\t43"; // Р·Р°Р»РёРІРєР° С‚РёРї РјР°СЃС€С‚Р°Р± С†РІРµС‚
-        name = "Р©РµР±РµРЅРѕС‡РЅРѕРµ (РіСЂР°РІРёР№РЅРѕРµ)";
+        strParams = "$c\tGRAVEL\t15\t43"; // заливка тип масштаб цвет
+        hatchFill = "GRAVEL";
+        name = "щебеночное (гравийное)";
         break;
 
-    case 237:  // РіСЂСѓРЅС‚РѕРІРѕРµ
+    case 237:  // грунтовое
         Color[0] = 196;
         Color[1] = 220;
         Color[2] = 220;
-        strParams = "$c\tGRAVEL\t15\t161"; // Р·Р°Р»РёРІРєР° С‚РёРї РјР°СЃС€С‚Р°Р± С†РІРµС‚
-        name = "Р“СЂСѓРЅС‚РѕРІРѕРµ";
+        strParams = "$c\tGRAVEL\t15\t161"; // заливка тип масштаб цвет
+        hatchFill = "GRAVEL";
+        name = "грунтовое";
         break;
 
     case 238:
         Color[0] = 220;
         Color[1] = 220;
         Color[2] = 180;
-        strParams = "$c\tSOLID\t75\t254"; // Р·Р°Р»РёРІРєР° С‚РёРї РјР°СЃС€С‚Р°Р± С†РІРµС‚
-        name = "РїСЂРѕС‡РµРµ";
+        strParams = "$c\tSOLID\t15\t254"; // заливка тип масштаб цвет
+        name = "прочее";
         break;
     }
+
+    pl[0] = DrawPolyPoints(p, false, true);
+    AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl, 1, 0, WideString(hatchFill));
+    pl[0]->Erase();
+    AcadAcCmColor *color =  hatch->TrueColor;
 
     color->SetRGB(Color[0], Color[1], Color[2]);
     hatch->TrueColor = color;
@@ -3625,7 +3638,7 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
     if (fEnd) {
         return true;
     }   // 2385239
-    if (kind >= 2385228 && kind <= 2385239) {  /*СЂРёСЃСѓРµРј РїР»РѕС‰Р°РґРЅС‹Рµ РѕР±СЉРµРєС‚С‹*/
+    if (kind >= 2385228 && kind <= 2385239) {  /*рисуем площадные объекты*/
         AcadPolylinePtr pl[1];
         int scale = 50;
         int rotate = 0;
@@ -3635,7 +3648,7 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
         unsigned char Color[3];
 
         switch (kind) {
-        case 2385228:  //Р‘РµСЂРµРі
+        case 2385228:  //Берег
             fillType = "";
             Color[0] = 185;
             Color[1] = 255;
@@ -3643,7 +3656,7 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
             scale = 400;
             break;
 
-        case 2385229:  //Р‘РѕР»РѕС‚Рѕ
+        case 2385229:  //Болото
             fillType = "DASH";
             Color[0] = 202;
             Color[1] = 227;
@@ -3651,7 +3664,7 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
             scale = 200;
             break;
 
-        case 2385230:  //Р›РµСЃ
+        case 2385230:  //Лес
             fillType = "GRASS";
             Color[0] = 208;
             Color[1] = 255;
@@ -3660,7 +3673,7 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
             rotate = 180;
             break;
 
-        case 2385231:  //РљСѓСЃС‚Р°СЂРЅРёРє
+        case 2385231:  //Кустарник
             fillType = "GRASS";
             Color[0] = 208;
             Color[1] = 255;
@@ -3668,7 +3681,7 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
             scale = 100;
             break;
 
-        case 2385232:  //РџР°С€РЅСЏ
+        case 2385232:  //Пашня
             fillType = "";
             Color[0] = 240;
             Color[1] = 240;
@@ -3676,13 +3689,13 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
             //fErasePolyline = false;
             break;
 
-        case 2385233:  //Р›СѓРі
+        case 2385233:  //Луг
             fillType = "";
             Color[0] = 208;
             Color[1] = 255;
             Color[2] = 208;
             break;
-        case 2385239: // РіР°Р·РѕРЅ
+        case 2385239: // газон
             fillType = "";
             Color[0] = 64;
             Color[1] = 255;
@@ -3704,17 +3717,17 @@ bool __fastcall TAcadExport::ExportPlan(TExtPolyline *p, TLinearRoadSideObject *
         }
         if (fErasePolyline) pl[0]->Erase();
 
-    } else if (kind == 2385108 || kind == 2385224 || // Р›РёРЅРёСЏ Р·Р°СЃС‚СЂРѕР№РєРё
-               kind == 2385225 || kind == 2385248 || // Р—Р°Р±РѕСЂ РґРµСЂРµРІСЏРЅРЅС‹Р№, Р—Р°Р±РѕСЂ РјРµС‚Р°Р»Р»РёС‡РµСЃРєРёР№
-               kind == 2385249 || kind == 2385250) { // РљРІР°СЂС‚Р°Р» Р¶РёР»РѕР№, РљРІР°СЂС‚Р°Р» РЅРµР¶РёР»РѕР№,  РљРІР°СЂС‚Р°Р»
+    } else if (kind == 2385108 || kind == 2385224 || // Линия застройки
+               kind == 2385225 || kind == 2385248 || // Забор деревянный, Забор металлический
+               kind == 2385249 || kind == 2385250) { // Квартал жилой, Квартал нежилой,  Квартал
         AcadPolylinePtr pl;
         unsigned char Color[3];
 
-        if (kind == 2385108) { // Р›РёРЅРёСЏ Р·Р°СЃС‚СЂРѕР№РєРё
+        if (kind == 2385108) { // Линия застройки
             Color[0] = 255, Color[1] = 0, Color[2] = 255;
-        } else if (kind == 2385224 || kind == 2385225) { // Р—Р°Р±РѕСЂ РґРµСЂРµРІСЏРЅРЅС‹Р№, Р—Р°Р±РѕСЂ РјРµС‚Р°Р»Р»РёС‡РµСЃРєРёР№
+        } else if (kind == 2385224 || kind == 2385225) { // Забор деревянный, Забор металлический
             Color[0] = 134, Color[1] = 94, Color[2] = 94;
-        } else if (kind == 2385248 || kind == 2385249 || kind == 2385250) { // РљРІР°СЂС‚Р°Р» Р¶РёР»РѕР№, РљРІР°СЂС‚Р°Р» РЅРµР¶РёР»РѕР№,  РљРІР°СЂС‚Р°Р»
+        } else if (kind == 2385248 || kind == 2385249 || kind == 2385250) { // Квартал жилой, Квартал нежилой,  Квартал
             Color[0] = 94, Color[1] = 132, Color[2] = 112;
         }
 
@@ -3731,7 +3744,7 @@ bool __fastcall TAcadExport::ExportCommunication(TExtPolyline *p, TCommunication
     if (fEnd) return true;
     AcadPolylinePtr pl;
     switch (t->CommKind) {
-    case 2385262: // С‚СЂР°РјРІР°Р№РЅС‹Рµ РїСѓС‚Рё
+    case 2385262: // трамвайные пути
         pl = DrawPolyPoints(p);
         /*for(int i=0;i<p->Count-1;i++){
             DrawBlockOnLine("train-lines", p->Points[i], p->Points[i+1], "Length VerticalLineLength");

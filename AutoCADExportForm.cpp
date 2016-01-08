@@ -525,10 +525,11 @@ void TFAutoCADExport::fillComboRoad()
   TSearchRec sr;
   cmbRoad->Clear();
   cmbRoad->ItemIndex = -1;
-  if(!FindFirst(edtTopAddRows->Text + "\\" + RoadName + "\\*.*", faDirectory, sr)) {
+  AnsiString roadName = StringReplace(RoadName, "\"", "", TReplaceFlags() << rfReplaceAll);
+  if(!FindFirst(edtTopAddRows->Text + "\\" + roadName + "\\*.*", faDirectory, sr)) {
      do {
         if (sr.Attr&faDirectory&& sr.Name!="." && sr.Name!="..") {
-           cmbRoad->AddItem(RoadName + "\\" + sr.Name, 0);
+           cmbRoad->AddItem(roadName + "\\" + sr.Name, 0);
         }
      }while (!FindNext(sr));
   }
@@ -556,7 +557,7 @@ void TFAutoCADExport::locateRoadNameComboRoad()
   roadName = StringReplace(roadName, "-", "",Flags);
   roadName = StringReplace(roadName, "_", "",Flags);
   roadName = StringReplace(roadName, ".", "",Flags);
-  roadName = StringReplace(roadName, "\"", "",Flags);   
+  roadName = StringReplace(roadName, "\"", "",Flags);
 
   cmbRoad->ItemIndex = -1;
   for(int i=0;i<cmbRoad->Items->Count;i++) {

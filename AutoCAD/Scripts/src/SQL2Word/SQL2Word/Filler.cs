@@ -221,7 +221,8 @@ namespace SQL2Word
         private static void _addScriptRow(Table table, 
             String script, 
             int contentStart, 
-            Dictionary<TOKENS, string> specialParameters)
+            Dictionary<TOKENS, string> specialParameters,
+            bool hasRows=true)
         {
             script = Regex.Replace(script, "--.*", "").Replace("\n", " "); // remove oneline SQL-comments
             if (specialParameters != null)
@@ -234,9 +235,14 @@ namespace SQL2Word
                 script = "/*" + tokenString + "*/" + script;
             }
 
-            var row = table.InsertRow();
-            row.MergeCells(0, row.ColumnCount - 1);
-            row.Height = 1;
+            Row row = null;
+            if(hasRows) {
+                row = table.InsertRow();
+                row.MergeCells(0, row.ColumnCount - 1);
+                row.Height = 1;
+            } else {
+                row = table.Rows[contentStart-1];
+            }
 
             // скрипт вставляем в последнюю ячейку с невидимым текстом, без полей и высотой 1 чего-то там
             var cell = row.Cells.FirstOrDefault();
@@ -291,16 +297,16 @@ namespace SQL2Word
                 }
             }
 
-//            if (hasRows)
-//            {
+            if (hasRows)
+            {
                 // удаляем строку со скриптом
                 contentRow.Remove();
-//            }
+            }
 
             if (saveQueries && !String.IsNullOrEmpty(script))
             {
                 // сохраняем запрос
-                _addScriptRow(table, script, contentStart, specialParameters);
+                _addScriptRow(table, script, contentStart, specialParameters, hasRows);
             }
 
             return true;
