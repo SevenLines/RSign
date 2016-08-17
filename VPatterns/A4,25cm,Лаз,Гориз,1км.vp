@@ -23,7 +23,7 @@ Figure=Rectangle,Section=0,PenColor=0,PenWidth=1,BrushColor=16777215,X1=2450,Y1=
 Figure=Grid,Section=0,PenColor=0,PenWidth=1,Border=0,VSpace=1500,HSpace=250,X1=200,Y1=300,X2=2700,Y2=1800
 Figure=KmSign,Section=0,PenColor=0,PenWidth=1,BrushColor=255,Size=60,X=200,Y=770
 Figure=KmSign,Section=0,PenColor=0,PenWidth=1,BrushColor=255,Size=60,X=2700,Y=770
-Figure=LabelRect,Section=0,Color=0,Size=14,Bold=1,Italic=1,Underline=1,Format=1,"FontName=Times New Roman","Text=Диагностика 2013 ИрГТУ","Caption=Название организации",X1=250,Y1=150,X2=2750,Y2=250
+Figure=LabelRect,Section=0,Color=0,Size=14,Bold=1,Italic=1,Underline=1,Format=1,"FontName=Times New Roman","Text=ИРНИТУ 2016 ","Caption=Название организации",X1=250,Y1=150,X2=2750,Y2=250
 Figure=LabelRect,Section=0,Color=0,Size=16,Bold=1,Italic=0,Underline=0,Format=24,"FontName=Times New Roman",Text=$StartKm$,"Caption=Отметка 1",X1=150,Y1=690,X2=250,Y2=740
 Figure=LabelRect,Section=0,Color=0,Size=16,Bold=1,Italic=0,Underline=0,Format=24,"FontName=Times New Roman",Text=$StartKm+1$,"Caption=Отметка 3",X1=2650,Y1=690,X2=2750,Y2=740
 Figure=LabelAngle,Section=0,Color=0,Size=14,Bold=0,Italic=0,Underline=0,Format=30,"FontName=Times New Roman",Text=$PageNum$,"Caption=Номер страницы",Angle=2700,X=100,Y=1920
