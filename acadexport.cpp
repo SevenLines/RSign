@@ -2140,9 +2140,9 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
 }
 
 bool __fastcall TAcadExport::ExportTube(TExtPolyline *Poly, TRoadTube* t, bool fEnd) {
-    static float xLength, yLength, edge, Length;
-    static  AcadBlockReferencePtr block;
-    static min, max, miny, maxy;
+    float xLength, yLength, edge, Length;
+    AcadBlockReferencePtr block;
+    int min, max, miny, maxy;
     TPoint pS, pE, pT;
 
     if (fEnd) {
@@ -2173,11 +2173,7 @@ bool __fastcall TAcadExport::ExportTube(TExtPolyline *Poly, TRoadTube* t, bool f
         if (min > iEnd) return true;
     }
 
-    xLength = pS.x - pE.x;
-    yLength = ScaleY * (pS.y - pE.y);
-    edge = yLength == 0 ? -M_PI_2 : atan(xLength / yLength) - M_PI_2;
-    if (yLength > 0) edge += M_PI;
-    Length = sqrt(xLength * xLength + yLength * yLength);
+    edge = Helpers::GetAngle2(pS, pE, ScaleY, &Length);
     if (!fAlreadyDrawTube) {
         Tube = AutoCAD.DrawBlock("tube");
         fAlreadyDrawTube = true;
@@ -2186,7 +2182,9 @@ bool __fastcall TAcadExport::ExportTube(TExtPolyline *Poly, TRoadTube* t, bool f
     block->set_InsertionPoint(AutoCAD.cadPoint(pS.x, -ScaleY * pS.y));
     block->Rotation = edge;
     AutoCAD.SetPropertyDouble(block, "Length", Length);
-    AutoCAD.SetAttribute(block, "LABEL", "т:" + IntToStr((pS.x / 100) % 1000));
+    if (Length > 2000 ) {
+        AutoCAD.SetAttribute(block, "LABEL", "т:" + IntToStr((pS.x / 100) % 1000));
+    }
     return true;
 }
 
@@ -3180,6 +3178,7 @@ void TAcadExport::ExportAddRowLine( AutoCADTable *table, int iRow,
         if (paramsValues->Count == 0) {
             return;
         }
+        table->FillGaps[iRow] = false;
 
         blockName = paramsValues->Strings[0]; // первый параметр - имя блока
         paramsValues->Delete(0);
@@ -3218,6 +3217,7 @@ void TAcadExport::ExportAddRowLine( AutoCADTable *table, int iRow,
         }
         delete paramsValues;
     } else { // просто текст
+        table->FillGaps[iRow] = true;
         table->DrawRepeatTextIntervalRoadMark(iRow, str, iPos, iEnd, 0, iStep, true);
     }
 }
@@ -3237,15 +3237,20 @@ struct ExportAddRowsOptions {
         int result;
         AnsiString subString;
         // trying to find offset option
-#define INSTRUCTION "offset"
-        if ( pos = line.Pos(INSTRUCTION) ) {
+        if ( pos = line.Pos("offset") ) {
             subString = line.SubString(pos, line.Length() - pos + 1);
-            result = sscanf(subString.c_str(), INSTRUCTION"=%d", &options.offset);
+            result = sscanf(subString.c_str(), "offset=%d", &options.offset);
         }
-#undef INSTRUCTION
+        if ( pos = line.Pos("lineStyle") ) {
+            char lineStyle[64];
+            subString = line.SubString(pos, line.Length() - pos + 1);
+            result = sscanf(subString.c_str(), "lineStyle=%s", &lineStyle);
+            options.lineStyle = lineStyle;
+        }
     }
 
     int offset; // offset of output rows
+    AnsiString lineStyle;
 };
 
 int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, bool check)
@@ -3274,6 +3279,9 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
     iCount = sIRow.Length();
     strcpy(str, str2.SubString(iCount + 2, str2.Length() - iCount).c_str());
     if (iRow < 0) iRow = -iRow;
+
+
+
     if (!check) {
         ifstream file(path.c_str());
         AnsiString line;
@@ -3295,6 +3303,8 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
             }
             file.clear();
             file.seekg(0, ios::beg);
+            int iTableRow = startCount + iRow - 1;
+            table->FillGaps[iTableRow] = false;
 
             while (getline(file, s))  {
                 // выходим если нажали отмену
@@ -3336,8 +3346,7 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
 
                         line = words[2];
 
-                        ExportAddRowLine(table, startCount + iRow - 1, sPos, ePos, line.Trim());
-                        //table->DrawRepeatTextIntervalSpec(startCount+iRow-1, AnsiString(s.c_str()).Trim(), sPos, ePos,0,iStep,true);
+                        ExportAddRowLine(table, iTableRow, sPos, ePos, line.Trim());
                     } catch (...) {
                         OutInfoLog("Ошибка вывода: " + str2 + " - " + line);
                     }
@@ -3348,6 +3357,9 @@ int __fastcall TAcadExport::ExportAddRows(AnsiString path, AutoCADTable *table, 
                 }
             }
             file.close();
+            if (table->FillGaps[iTableRow]) {
+               table->FillLastGaps(iStep, iTableRow);
+            }
         }
     }
     return iRow;
@@ -3364,6 +3376,7 @@ int __fastcall TAcadExport::ExportGraphicPath(AnsiString path, bool check)
     AnsiString sIRow;
     char str[512] = {0};
     char value2[128] = {0};
+    ExportAddRowsOptions exportAddRowOptions;
 
     AnsiString str2;
     str2 = ChangeFileExt(ExtractFileName(path), "");
@@ -3378,7 +3391,8 @@ int __fastcall TAcadExport::ExportGraphicPath(AnsiString path, bool check)
     if (!check) {
         ifstream file(path.c_str());
         string s;
-        int count, linesCount, iValue;
+        int count, linesCount;
+        float iValue;
         float lValue = -1, curValue;
         if (file.is_open()) {
             AddLayer("Graphic" + IntToStr(iRow));
@@ -3396,18 +3410,26 @@ int __fastcall TAcadExport::ExportGraphicPath(AnsiString path, bool check)
             file.seekg(0, ios::beg);
 
             while (getline(file, s))  {
-                lValue = curValue;
+                AnsiString line = s.c_str();
+                if (line[1] == '#') { // if comment
+                    // remove comment symbol, and trim string
+                    line[1] = ' ';
+                    line.Trim();
+                    // try to execute special option commands
+                    ExportAddRowsOptions::FromLine(line, exportAddRowOptions);
+                } else if (s.length() > 0) {
+                    lValue = curValue;
 
-                if (sscanf(s.c_str(), "%i %i %i", &sPos, &ePos, &iValue) == 3) {
-                    curValue = (float)iValue / 100.0f;
-                    pointsArray.push_back(sPos);
-                    pointsArray.push_back(tableGraphic.LeftTop.y - tableGraphic.RowHeight * (iRow - 1) - (1 - lValue)*tableGraphic.RowHeight);
-                    pointsArray.push_back(sPos);
-                    pointsArray.push_back(tableGraphic.LeftTop.y - tableGraphic.RowHeight * (iRow - 1) - (1 - curValue)*tableGraphic.RowHeight);
-                    fWas = true;
+                    if (sscanf(s.c_str(), "%i %i %f", &sPos, &ePos, &iValue) == 3) {
+                        curValue = iValue > 1 ? (float)iValue / 100.0f : iValue;
+                        pointsArray.push_back(sPos);
+                        pointsArray.push_back(tableGraphic.LeftTop.y - tableGraphic.RowHeight * (iRow - 1) - (1 - lValue)*tableGraphic.RowHeight);
+                        pointsArray.push_back(sPos);
+                        pointsArray.push_back(tableGraphic.LeftTop.y - tableGraphic.RowHeight * (iRow - 1) - (1 - curValue)*tableGraphic.RowHeight);
+                        fWas = true;
+                    }
+                    lValue = curValue;
                 }
-                lValue = curValue;
-
                 currentLine++;
                 if (ProgressChanged) {
                     ProgressChanged((float) currentLine / linesCount * 100, "");
@@ -3422,7 +3444,10 @@ int __fastcall TAcadExport::ExportGraphicPath(AnsiString path, bool check)
 
             file.close();
             if (pointsArray.size()) {
-                AutoCAD.DrawPolyLine(pointsArray.begin(), pointsArray.size() / 2, 2);
+                AcadPolylinePtr pl = DrawPolyLine(pointsArray);
+                if (exportAddRowOptions.lineStyle != "") {
+                   pl->set_Linetype(WideString(exportAddRowOptions.lineStyle));
+                }
             }
         }
     }
@@ -3521,62 +3546,69 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
 {
     if (fEnd) return true;
     AcadPolylinePtr pl[1];
-    pl[0] = DrawPolyPoints(p, false, true);
-    AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl, 1, 0, L"SOLID");
-    pl[0]->Erase();
-    AcadAcCmColor *color =  hatch->TrueColor;
+    
     AnsiString strParams;
     AnsiString name;
+    AnsiString hatchFill = "SOLID";
     unsigned char Color[3] = {0, 0, 0};
     int idSurface = t->GetPropValue("Surface").ToInt();
 
     switch (idSurface) {
     case 233:    //Цементобетон
         Color[0] = Color[1] = Color[2] = 240;
-        strParams = "$c\tSOLID\t75\t254"; // заливка тип масштаб цвет
-        name = "Цементобетон";
+        strParams = "$c\tANGLE\t15\t251"; // заливка тип масштаб цвет
+        name = "цементобетон";
+        hatchFill = "ANGLE";
         break;
 
     case 234:   // Асфальтобетон
         Color[0] = 196;
         Color[1] = 220;
         Color[2] = 220;
-        strParams = "$c\tSOLID\t75\t161"; // заливка тип масштаб цвет
-        name = "Асфальтобетон";
+        strParams = "$c\tSOLID\t15\t161"; // заливка тип масштаб цвет
+        name = "асфальтобетон";
         break;
 
     case 235:   // щебень укреп
         Color[0] = 244;
         Color[1] = 200;
         Color[2] = 128;
-        strParams = "$c\tSOLID\t75\t43"; // заливка тип масштаб цвет
-        name = "Щебень (гравий)";
+        strParams = "$c\tGRAVEL\t15\t43"; // заливка тип масштаб цвет
+        hatchFill = "GRAVEL";
+        name = "щебень (гравий)";
         break;
 
     case 236:  // щебень
         Color[0] = 220;
         Color[1] = 220;
         Color[2] = 180;
-        strParams = "$c\tSOLID\t75\t43"; // заливка тип масштаб цвет
-        name = "Щебеночное (гравийное)";
+        strParams = "$c\tGRAVEL\t15\t43"; // заливка тип масштаб цвет
+        hatchFill = "GRAVEL";
+        name = "щебеночное (гравийное)";
         break;
 
     case 237:  // грунтовое
         Color[0] = 196;
         Color[1] = 220;
         Color[2] = 220;
-        strParams = "$c\tSOLID\t75\t161"; // заливка тип масштаб цвет
-        name = "Грунтовое";
+        strParams = "$c\tGRAVEL\t15\t161"; // заливка тип масштаб цвет
+        hatchFill = "GRAVEL";
+        name = "грунтовое";
         break;
 
     case 238:
         Color[0] = 220;
         Color[1] = 220;
         Color[2] = 180;
-        strParams = "$c\tSOLID\t75\t254"; // заливка тип масштаб цвет
+        strParams = "$c\tSOLID\t15\t254"; // заливка тип масштаб цвет
         name = "прочее";
         break;
     }
+
+    pl[0] = DrawPolyPoints(p, false, true);
+    AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl, 1, 0, WideString(hatchFill));
+    pl[0]->Erase();
+    AcadAcCmColor *color =  hatch->TrueColor;
 
     color->SetRGB(Color[0], Color[1], Color[2]);
     hatch->TrueColor = color;

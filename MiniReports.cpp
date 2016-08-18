@@ -212,10 +212,10 @@ void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> &
 
     AnsiString outputPath = _lastOutputDir;
     if (params.count("RoadName")) {
-        outputPath += "\\" + params["RoadName"];
+        outputPath += "\\" + StringReplace(params["RoadName"], "\"", "", TReplaceFlags() << rfReplaceAll);
     }
     if (params.count("DistrictName")) {
-        outputPath += "\\" + params["DistrictName"];
+        outputPath += "\\" + StringReplace(params["DistrictName"], "\"", "", TReplaceFlags() << rfReplaceAll);
     }
     
 	AnsiString script;

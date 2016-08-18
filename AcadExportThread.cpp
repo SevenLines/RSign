@@ -49,7 +49,9 @@ void __fastcall AcadExportThread::setProgressFormCaption()
 
 void __fastcall AcadExportThread::setProgressFormPosition()
 {
-    ProgressForm->Position = ProgressFormPosition;
+    try {
+        ProgressForm->Position = ProgressFormPosition;
+    } catch(...){}
 }
 
 void __fastcall AcadExportThread::setProgressFormMinMax()
