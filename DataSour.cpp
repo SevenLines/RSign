@@ -1895,7 +1895,7 @@ void __fastcall TDtaSource::MoveMetricToProp(TRoad *RefRoad) {
    SortByPlacement();
 }
 
-void __fastcall TDtaSource::ConnectSelectedToBaseLine(int ln,TRoad *RefRoad) {
+void __fastcall TDtaSource::ConnectSelectedToBaseLine(int ln,TRoad *RefRoad,TMetricsKind mk) {
    int n=FObjects->Count;
    TRoadObject **FList=(TRoadObject**)FObjects->List;
    for (int i=0;i<n;i++) {
@@ -1903,9 +1903,9 @@ void __fastcall TDtaSource::ConnectSelectedToBaseLine(int ln,TRoad *RefRoad) {
       if (ob && ob->Selected) {
          ob->Selected=false;
          MainForm->SendBroadCastMessage(CM_CHANGESEL,(int)ob,(int)this);
-         if (ob->DictId==ROADMETRIC) { // С кромкой ничего не делаем
+         if (ob->DictId==ROADMETRIC) { // Ничего не делаем с линиями к которым привязываем
             TRoadSideObject *rs=dynamic_cast<TRoadSideObject *>(ob);
-            if (rs && rs->MetricsKind==mkKromka)
+            if (rs && rs->MetricsKind==mk)
                 continue;
          }
          if (ob->Poly==0) {
@@ -1915,8 +1915,14 @@ void __fastcall TDtaSource::ConnectSelectedToBaseLine(int ln,TRoad *RefRoad) {
             TRoadPoint *p=ob->Poly->Points;
             for (int i=0;i<ob->Poly->Count;i++) {
                 int BaseL,BaseX;
-                if (p[i].Code.XBase()<=4)
-                   p[i].Code.SetXBase(ln==1 ? (p[i].X<0 ? 4 : 3) : 0);
+                if (p[i].Code.XBase()<=4) {
+                   if (ln==1) {
+                      if (mk==mkKromka)
+                         p[i].Code.SetXBase(p[i].X<0 ? 4 : 3);
+                      else if (mk==mkBrovka)
+                         p[i].Code.SetXBase(p[i].X<0 ? 2 : 1);
+                   } else p[i].Code.SetXBase(0);
+                }
                 RefRoad->GetBaseL(ob->Poly,i,ob,BaseL);
                 RefRoad->GetBaseX(ob->Poly,i,ob,p[i].L,BaseX);
                 RefRoad->CalcPointParam(p[i],BaseL,BaseX);

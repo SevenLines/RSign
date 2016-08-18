@@ -2659,9 +2659,9 @@ void __fastcall TRoadFrm::MoveObjects(void) {
 	}
 }
 
-void __fastcall TRoadFrm::ConnectToBaseLine(int ln) {
+void __fastcall TRoadFrm::ConnectToBaseLine(int ln,TMetricsKind mk) {
     if (FEditedData && FMetricData)
-       FEditedData->ConnectSelectedToBaseLine(ln,FEditedData->Road);
+       FEditedData->ConnectSelectedToBaseLine(ln,FEditedData->Road,mk);
 }
 
 void __fastcall TRoadFrm::MoveMetricToProp(void) {
@@ -3181,6 +3181,12 @@ void __fastcall TRoadFrm::PostChangeFocus(void)
 		MainForm->N45->Enabled=!FEditedData->ReadOnly;
 		MainForm->N46->Enabled=!FEditedData->ReadOnly;
 		MainForm->N76->Enabled=!FEditedData->ReadOnly;
+		MainForm->N77->Enabled=!FEditedData->ReadOnly;;
+		MainForm->N78->Enabled=!FEditedData->ReadOnly;;
+        MainForm->N83->Enabled=!FEditedData->ReadOnly;;
+        MainForm->N84->Enabled=!FEditedData->ReadOnly;;
+        MainForm->N85->Enabled=!FEditedData->ReadOnly;;
+        MainForm->N86->Enabled=!FEditedData->ReadOnly;;
 		MainForm->AddDangBut->Enabled=!FEditedData->ReadOnly;
 		MainForm->AddSignBut->Enabled=!FEditedData->ReadOnly;
 	}
@@ -3192,7 +3198,13 @@ void __fastcall TRoadFrm::PostChangeFocus(void)
 		MainForm->N43->Enabled=false;
 		MainForm->N45->Enabled=false;
 		MainForm->N46->Enabled=false;
-		MainForm->N76->Enabled=false;    
+		MainForm->N76->Enabled=false;
+		MainForm->N77->Enabled=false;
+		MainForm->N78->Enabled=false;
+        MainForm->N83->Enabled=false;
+        MainForm->N84->Enabled=false;
+        MainForm->N85->Enabled=false;
+        MainForm->N86->Enabled=false;
 		MainForm->AddDangBut->Enabled=false;
 		MainForm->AddSignBut->Enabled=false;
 	}

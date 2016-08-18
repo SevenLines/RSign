@@ -239,7 +239,9 @@ void __fastcall DeleteChildObjects(TRoadObject *robj);
 void __fastcall DeleteObject(int index);
 void __fastcall MoveAllObjects(int len,TRoad *RefRoad);
 void __fastcall MoveSelectedObjects(int len,TRoad *RefRoad);
-void __fastcall ConnectSelectedToBaseLine(int ln,TRoad *RefRoad);
+// Функция изменяеет привязку метрики объектов к баховой линии
+// TMetricsKind mk может принимать значения: mkKromka,mkBrovka
+void __fastcall ConnectSelectedToBaseLine(int ln,TRoad *RefRoad,TMetricsKind mk);
 // Функция удаляет метрику у дискретных объектов перетаскивая ее в свойства
 void __fastcall MoveMetricToProp(TRoad *RefRoad);
 void __fastcall MoveVideo(int len);

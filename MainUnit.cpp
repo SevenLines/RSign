@@ -358,6 +358,12 @@ void __fastcall TMainForm::SetActiveRoad(TRoadFrm *R)
             }
 			N71->Enabled=false;
 			N76->Enabled=false;
+			N77->Enabled=false;
+			N78->Enabled=false;
+			N83->Enabled=false;
+			N84->Enabled=false;
+			N85->Enabled=false;
+			N86->Enabled=false;
 		}
 		SendBroadCastMessage(CM_ONACTIVATEROADWIN,(int)R,0);
 	}
@@ -1347,7 +1353,7 @@ void __fastcall TMainForm::N83Click(TObject *Sender)
 {
 TMenuItem *it=(TMenuItem*)Sender;
 if (FActiveRoad)
-   FActiveRoad->ConnectToBaseLine(it->Tag);
+   FActiveRoad->ConnectToBaseLine(it->Tag,mkKromka);
 }
 //---------------------------------------------------------------------------
 
@@ -1391,5 +1397,13 @@ void __fastcall TMainForm::PrepareShowRoadSize(TRoadFrm* frm)
 }
 
 
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::N86Click(TObject *Sender)
+{
+TMenuItem *it=(TMenuItem*)Sender;
+if (FActiveRoad)
+   FActiveRoad->ConnectToBaseLine(it->Tag,mkBrovka);
+}
 //---------------------------------------------------------------------------
 
