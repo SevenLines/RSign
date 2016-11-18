@@ -1,13 +1,13 @@
 DECLARE @NumDataSource int
-SELECT @NumDataSource = /*$NumDataSource*/3749/*$*/ -- источник дороги << главное  поле
+SELECT @NumDataSource = /*$NumDataSource*/3894/*$*/ -- РёСЃС‚РѕС‡РЅРёРє РґРѕСЂРѕРіРё << РіР»Р°РІРЅРѕРµ  РїРѕР»Рµ
 
 DECLARE @NumRoad int
 DECLARE @l int, @r int, @max_ob_v float
 DECLARE @mul int
 
-SELECT @l = -1, @r = -1 -- явные границы участка слева и справа
-SELECT @mul = 100 -- множитель границ т.е если значение 100 то границы будут увиличены в 100 раз
-SELECT @max_ob_v = 5 -- максимальная ширина обочины, как правило сильно большие значению означают наличие моста
+SELECT @l = -1, @r = -1 -- СЏРІРЅС‹Рµ РіСЂР°РЅРёС†С‹ СѓС‡Р°СЃС‚РєР° СЃР»РµРІР° Рё СЃРїСЂР°РІР°
+SELECT @mul = 100 -- РјРЅРѕР¶РёС‚РµР»СЊ РіСЂР°РЅРёС† С‚.Рµ РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ 100 С‚Рѕ РіСЂР°РЅРёС†С‹ Р±СѓРґСѓС‚ СѓРІРёР»РёС‡РµРЅС‹ РІ 100 СЂР°Р·
+SELECT @max_ob_v = 5 -- РјР°РєСЃРёРјР°Р»СЊРЅР°СЏ С€РёСЂРёРЅР° РѕР±РѕС‡РёРЅС‹, РєР°Рє РїСЂР°РІРёР»Рѕ СЃРёР»СЊРЅРѕ Р±РѕР»СЊС€РёРµ Р·РЅР°С‡РµРЅРёСЋ РѕР·РЅР°С‡Р°СЋС‚ РЅР°Р»РёС‡РёРµ РјРѕСЃС‚Р°
 
 SELECT @r = case when @r <= 0 or @r - @l < 0 then 99999999 else @r end
 SELECT @l = case when @l < 0 or @r - @l < 0 then -99999999 else @l end
@@ -35,10 +35,13 @@ SELECT t1.pos as l, t1_.pos as r
  INTO #intervals2
 FROM #t1 t1
  LEFT JOIN #t1 t1_ ON t1_.id - t1.id = 1
+ 
 
-SELECT cast(l as int)*@mul as 'проезжая ext', cast(r as int)*@mul as r, cast(w as varchar(10))+'('+cast(rs as varchar(10))+')-'+rtrim(surf) as info
+SELECT cast(l as int)*@mul as 'РїСЂРѕРµР·Р¶Р°СЏ ext', 
+	cast(r as int)*@mul as r, 
+	cast(w as varchar(10))+'('+cast(rs as varchar(10))+')-'+rtrim(surf) as info
 FROM (
-	SELECT l, r, cast(p.Value2 as float) as w, c.FullTitle surf
+SELECT l, r, cast(p.Value2 as float) as w, c.FullTitle surf
 		, round(cast(case cat.Reference when 188 then 3.75*4 
 				when 189 then p.Value2 / 3.75
 				when 190 then p.Value2 / 3.75
@@ -48,13 +51,11 @@ FROM (
 				when 194 then 1
 				else p.Value2 / 3 end as float),0) as rs
 	FROM #intervals2 i
-	 LEFT JOIN ListRoadParts p ON p.StartPos <= i.l and i.r <= p.EndPos and isnull(p.NumPartType,14) = 14
-	 LEFT JOIN ListRoadParts cat ON cat.StartPos <= i.l and i.r <= cat.EndPos and isnull(cat.NumPartType,1) = 1
-	 LEFT JOIN ListRoadParts s ON s.StartPos <= i.l and i.r <= s.EndPos and isnull(s.NumPartType,13) = 13
+	 LEFT JOIN ListRoadParts p ON p.StartPos <= i.l and i.r <= p.EndPos and isnull(p.NumPartType,14) = 14 and p.NumDataSource = @NumDataSource 
+	 LEFT JOIN ListRoadParts cat ON cat.StartPos <= i.l and i.r <= cat.EndPos and isnull(cat.NumPartType,1) = 1 and  cat.NumRoad = @NumRoad and cat.NumDataSource = 0
+	 LEFT JOIN ListRoadParts s ON s.StartPos <= i.l and i.r <= s.EndPos and isnull(s.NumPartType,13) = 13 and s.NumDataSource = @NumDataSource 
 	 LEFT JOIN Classifier c ON c.id_ = s.Reference
-	WHERE	s.NumDataSource = @NumDataSource 
-			and p.NumDataSource = @NumDataSource 
-			and cat.NumRoad = @NumRoad and cat.NumDataSource = 0
+	WHERE r is NOT NULL
 ) t
 ORDER BY l
 

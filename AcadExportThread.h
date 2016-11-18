@@ -80,7 +80,8 @@ protected:
         int __fastcall ExportLamps(vector<pair<int,wpbar> > &data, TAcadExport* aexp);
         int __fastcall ExportBorders(vector<pair<int,wpbar> > &data, TAcadExport* aexp);
         int __fastcall ExportSlope(TDtaSource* data, TAcadExport* aexp);
-        int __fastcall ExportCurves(TDtaSource* data, TAcadExport* aexp);        
+        int __fastcall ExportCurves(TDtaSource* data, TAcadExport* aexp);       
+        int __fastcall ExportRoadOnSurfaceObjects(TDtaSource* data, TAcadExport* aexp); 
 public:
         __fastcall AcadExportThread(bool CreateSuspended, TRoad *r);
         void __fastcall Clear();

@@ -125,6 +125,8 @@ void MiniReports::GenDocxReport(AnsiString reportName, map<AnsiString, AnsiStrin
 
     saveDialog->Title = "Выберите файл куда сохранится результат";
     saveDialog->FileName = StringReplace(params["RoadName"], "\"", "", flags);
+    saveDialog->FileName = StringReplace(saveDialog->FileName, "/", "", flags);
+    saveDialog->FileName = StringReplace(saveDialog->FileName, "\\", "", flags);
 	saveDialog->Filter = "docx | *.docx";
     saveDialog->DefaultExt = ".docx";
 	if(!saveDialog->Execute()) {
@@ -146,7 +148,7 @@ void MiniReports::GenDocxReport(AnsiString reportName, map<AnsiString, AnsiStrin
 			script += " " + it->first + "=\"" + it->second + "\"";
 		}
 	}
-    script += " -q";
+   // script += " -q";
 
     ExecuteScript(exe, script, credentials);
 

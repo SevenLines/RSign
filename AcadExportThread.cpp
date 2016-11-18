@@ -942,6 +942,26 @@ int __fastcall AcadExportThread::ExportCurves(TDtaSource* data, TAcadExport* aex
     return 0;
 }
 
+int __fastcall AcadExportThread::ExportRoadOnSurfaceObjects(TDtaSource* data, TAcadExport* aexp)
+{
+    SET_PROGRESS_FORM_POSITION(0;)
+    aexp->AddLayer("RoadOnSurfaceObjects");
+    for (int i=0;i<data->Objects->Count;i++) {
+        if (Terminated) return -1;
+        if (data->Objects->Items[i]->DictId==75) {
+            SET_PROGRESS_FORM_POSITION(i;)
+            TDescreetRoadObject *t=dynamic_cast<TDescreetRoadObject*>(data->Objects->Items[i]);
+            if (t) {
+                TExtPolyline *p=t->PrepareMetric(R);
+                aexp->ExportDescreetRoadObject(p,t);
+                delete p;
+            }
+        }
+    }
+    aexp->ExportDescreetRoadObject(0,0,true);
+    return 0;
+}
+
 
 
 
@@ -1097,6 +1117,8 @@ void __fastcall AcadExportThread::Execute()
 			if (FAutoCADExport->ExportRoadSideObjects) {
 				EXPORT_ITEM(ExportRoadSideObjects(MetricData, aexp), "Выводим участки отдыха...");
 			}
+
+            EXPORT_ITEM(ExportRoadOnSurfaceObjects(MetricData, aexp), "Выводим колодцы...");
 		}
 	
 		/* Трубы, мосты ,автобусные остановки и высоты насыпей

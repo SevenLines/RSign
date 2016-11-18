@@ -1082,16 +1082,16 @@ void __fastcall TRoadFrm::AcadPrint(void){
 
 void __fastcall TRoadFrm::AcadExport(void) {
 #ifdef AutoCAD_OCXH  // check is AutoCAD available
-	FAutoCADExport->SetRoadId(RoadId);
-	FAutoCADExport->RoadName = FRoadName;
-	FAutoCADExport->RoadDistrict = FDistrictName;
-	if(FAutoCADExport->ShowModal()!=mrOk) return;
+    FAutoCADExport->SetRoadId(RoadId);
+    FAutoCADExport->RoadName = FRoadName;
+    FAutoCADExport->RoadDistrict = FDistrictName;
+    if(FAutoCADExport->ShowModal()!=mrOk) return;
 
-	if(!fBreakedLines && MessageDlg("Разорвать кромку бровки по примыканиям?", mtConfirmation,
-				TMsgDlgButtons() << mbYes << mbNo, 0) == mrYes) {
-		this->BreakRoadLines();
-		fBreakedLines = true;
-	}
+    if(!fBreakedLines && MessageDlg("Разорвать кромку бровки по примыканиям?", mtConfirmation,
+                            TMsgDlgButtons() << mbYes << mbNo, 0) == mrYes) {
+            this->BreakRoadLines();
+            fBreakedLines = true;
+    }
 
     TRoad *R = new TRoad(MetricData->Road,MetricData->Road->LMin,MetricData->Road->LMax);
     /*R->SetBound(L1,L2,-DX,DX);
@@ -1099,24 +1099,24 @@ void __fastcall TRoadFrm::AcadExport(void) {
     R->SetOutBound(L1,L2,-DX,DX);*/
     R->SetFrame(FPMinL,FPMaxL,MarkerL,FPMinX,FPMaxX,FPlanKind,FPlanDirect);
     R->SetOutBound(FPMinL,FPMaxL,FPMinX, FPMaxX);
-	AcadExportThread *thread = new AcadExportThread(true, R);
+    AcadExportThread *thread = new AcadExportThread(true, R);
 
-	ProgressForm->windowBelow = this->Handle;
-	thread->FAutoCADExport = FAutoCADExport;
-	thread->ProgressForm = ProgressForm;
-	thread->MetricData = MetricData;
-	thread->Dict = Dict;
-	thread->ProfilData = ProfilData;
-	thread->CurveData = CurveData;
-	if(!FDistrictName.IsEmpty()) {
-		thread->RoadName = FRoadName+" ("+FDistrictName+")";
-	} else {
-		thread->RoadName = FRoadName;
-	}
+    ProgressForm->windowBelow = this->Handle;
+    thread->FAutoCADExport = FAutoCADExport;
+    thread->ProgressForm = ProgressForm;
+    thread->MetricData = MetricData;
+    thread->Dict = Dict;
+    thread->ProfilData = ProfilData;
+    thread->CurveData = CurveData;
+    if(!FDistrictName.IsEmpty()) {
+            thread->RoadName = FRoadName+" ("+FDistrictName+")";
+    } else {
+            thread->RoadName = FRoadName;
+    }
 
-	thread->Resume();
+    thread->Resume();
 #else
-	ShowMessage("Программа компилировалась без автокада, обратитесь к Мише!");
+    ShowMessage("Программа компилировалась без автокада, обратитесь к Мише!");
 #endif
 }
 

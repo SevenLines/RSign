@@ -2981,6 +2981,34 @@ bool __fastcall TAcadExport::ExportBusStop(TExtPolyline *Poly, TBusStop *s, bool
     return true;
 }
 
+bool __fastcall TAcadExport::ExportDescreetRoadObject(TExtPolyline *Poly, TDescreetRoadObject *s, bool fEnd) {
+    static float rotation;
+    if (fEnd) {
+        return true;
+    }
+
+    if (~iStart) {
+        if (Poly->Points[0].x < iStart) return true;
+    }
+    if (~iEnd) {
+        if (Poly->Points[0].x > iEnd) return true;
+    }
+
+    String blockName = "";   
+    switch(s->DrwClassId) {
+        case  517: // решетка ливневой канализации
+            blockName = "drainage";
+        break;
+        case  516: // люк смотрового колодца
+            blockName = "well";
+        break;
+    }
+    if (blockName != "") {
+        AutoCAD.DrawBlock(blockName, Poly->Points[0].x, -ScaleY * Poly->Points[0].y, rotation, ScaleY / 2);
+    }
+    return true;
+}
+
 bool __fastcall TAcadExport::ExportRestZone(TExtPolyline *Poly, TSquareRoadSideObject_Kromka *r, bool fEnd) {
     if (fEnd) {
         return true;
