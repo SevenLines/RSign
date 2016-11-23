@@ -206,6 +206,7 @@ __published:    // IDE-managed Components
     TComboBox *cmbAutoCADVersion;
     TLabel *Label30;
     TCheckBox *chkSaveToDir;
+        TCheckBox *chkDefects;
     void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
     void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
                                 TShiftState Shift);
@@ -270,6 +271,7 @@ public:     // User declarations
     MPROPERTY1(Auto6_13);
     MPROPERTY1(LeftValueOnly6_13);
     MPROPERTY1(Sidewalks);
+    MPROPERTY1(Defects);
     MPROPERTY1(Borders);
     MPROPERTY1(Profile);
     MPROPERTY1(Plan);

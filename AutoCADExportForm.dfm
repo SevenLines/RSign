@@ -305,9 +305,9 @@ object FAutoCADExport: TFAutoCADExport
         end
         object chkMoundHeights: TCheckBox
           Left = 8
-          Top = 220
+          Top = 218
           Width = 169
-          Height = 17
+          Height = 21
           Caption = #1074#1099#1089#1086#1090#1072' '#1085#1072#1089#1099#1087#1077#1081
           TabOrder = 3
         end
@@ -444,6 +444,14 @@ object FAutoCADExport: TFAutoCADExport
           Height = 14
           Caption = #1075#1086#1088'. '#1086#1073#1098#1077#1082#1090#1099
           TabOrder = 19
+        end
+        object chkDefects: TCheckBox
+          Left = 8
+          Top = 234
+          Width = 169
+          Height = 17
+          Caption = #1076#1077#1092#1077#1082#1090#1099
+          TabOrder = 20
         end
       end
       object Panel1: TPanel

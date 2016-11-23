@@ -36,41 +36,19 @@
 	"buffers":
 	[
 		{
-			"contents": "664050, Россия, Иркутская Область, г. Иркутск, ул. Байкальская 256-51",
+			"file": "AcadExportThread.cpp",
 			"settings":
 			{
-				"buffer_size": 69,
-				"line_ending": "Windows",
-				"name": "664050, Россия, Иркутская Область, г. Иркутск, ул."
-			}
-		},
-		{
-			"contents": "mkdir \"Александровское-Ключи\"\nmkdir \"Александровское-Усолье-Жилкино\"\nmkdir \"Бохан-НоваяИда\"\nmkdir \"Бохан-Середкино\"\nmkdir \"Бохан-Тихоновка\"\nmkdir \"Буреть-Каменка\"\nmkdir \"Грязнушка-Енисей-Онгосор\"\nmkdir \"Донская-Картыгей\"\nmkdir \"Ижылха-Русиновка\"\nmkdir \"Каменка-Склянка-Гречехан\"\nmkdir \"Каменка-Угольная\"\nmkdir \"Крюкова-Ершова\"\nmkdir \"Лузгина-Хокта-Онгой\"\nmkdir \"Майская-Абрамовка\"\nmkdir \"Майская-Рассвет\"\nmkdir \"Макаровская-Гречехан-Тыргур\"\nmkdir \"Новая Ида-Тымырей-Казачье\"\nmkdir \"Олонки-Шарагун\"\nmkdir \"Подъезд к д.Красная Буреть\"\nmkdir \"Подъезд к д.Кулаково\"\nmkdir \"Подъезд к д.Май (Тагай)\"\nmkdir \"Подъезд к д.Хандагай\"\nmkdir \"Подъезд к с. Оса\"\nmkdir \"Подъезд к с.Александровское\"\nmkdir \"Подъезд к с.Бильчир\"\nmkdir \"Подъезд к с.Горхон\"\nmkdir \"Подъезд к с.Грязнушка\"\nmkdir \"Подъезд к с.Жданово\"\nmkdir \"Подъезд к с.Ирхидей\"\nmkdir \"Подъезд к с.Казачье\"\nmkdir \"Подъезд к с.Ленино\"\nmkdir \"Подъезд к с.Мороза\"\nmkdir \"Подъезд к с.Обуса\"\nmkdir \"Подъезд к с.Олонки\"\nmkdir \"Подъезд к с.Приморский\"\nmkdir \"Подъезд к с.Прохоровка\"\nmkdir \"Подъезд к с.Русские Янгуты\"\nmkdir \"Подъезд к с.Унгин (Улей)\"\nmkdir \"Подъезд к с.Усть-Алтан\"\nmkdir \"Подъезд к с.Хайга\"\nmkdir \"Тараса-Бохан\"\nmkdir \"Тараса-Буреть\"\nmkdir \"Тихоновка-Вершина\"\nmkdir \"Укыр-Лаврентьевская\"\nmkdir \"Укыр-Маньково\"\nmkdir \"Укыр-Петрограновка\"\nmkdir \"Укыр-Усть-Укыр\"\nmkdir \"Укыр-Хоргелок-Тачигир\"\n",
-			"file": "/F/Irkutsk2016/create_dirs.bat",
-			"file_size": 2197,
-			"file_write_time": 131216820681913408,
-			"settings":
-			{
-				"buffer_size": 1346,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "mkdir \"Александровское-Ключи\"\nmkdir \"Александровское-Усолье-Жилкино\"\nmkdir \"Бохан-НоваяИда\"\nmkdir \"Бохан-Середкино\"\nmkdir \"Бохан-Тихоновка\"\nmkdir \"Буреть-Каменка\"\nmkdir \"Грязнушка-Енисей-Онгосор\"\nmkdir \"Донская-Картыгей\"\nmkdir \"Ижылха-Русиновка\"\nmkdir \"Каменка-Склянка-Гречехан\"\nmkdir \"Каменка-Угольная\"\nmkdir \"Крюкова-Ершова\"\nmkdir \"Лузгина-Хокта-Онгой\"\nmkdir \"Майская-Абрамовка\"\nmkdir \"Майская-Рассвет\"\nmkdir \"Макаровская-Гречехан-Тыргур\"\nmkdir \"Новая Ида-Тымырей-Казачье\"\nmkdir \"Олонки-Шарагун\"\nmkdir \"Подъезд к д.Красная Буреть\"\nmkdir \"Подъезд к д.Кулаково\"\nmkdir \"Подъезд к д.Май (Тагай)\"\nmkdir \"Подъезд к д.Хандагай\"\nmkdir \"Подъезд к с. Оса\"\nmkdir \"Подъезд к с.Александровское\"\nmkdir \"Подъезд к с.Бильчир\"\nmkdir \"Подъезд к с.Горхон\"\nmkdir \"Подъезд к с.Грязнушка\"\nmkdir \"Подъезд к с.Жданово\"\nmkdir \"Подъезд к с.Ирхидей\"\nmkdir \"Подъезд к с.Казачье\"\nmkdir \"Подъезд к с.Ленино\"\nmkdir \"Подъезд к с.Мороза\"\nmkdir \"Подъезд к с.Обуса\"\nmkdir \"Подъезд к с.Олонки\"\nmkdir \"Подъезд к с.Приморский\"\nmkdir \"Подъезд к с.Прохоровка\"\nmkdir \"Подъезд к с.Русские Янгуты\"\nmkdir \"Подъезд к с.Унгин (Улей)\"\nmkdir \"Подъезд к с.Усть-Алтан\"\nmkdir \"Подъезд к с.Хайга\"\nmkdir \"Тараса-Бохан\"\nmkdir \"Тараса-Буреть\"\nmkdir \"Тихоновка-Вершина\"\nmkdir \"Укыр-Лаврентьевская\"\nmkdir \"Укыр-Маньково\"\nmkdir \"Укыр-Петрограновка\"\nmkdir \"Укыр-Усть-Укыр\"\nmkdir \"Укыр-Хоргелок-Тачигир\"\n",
-			"file": "/F/Irkutsk2016/PHOTO/create_dirs.bat",
-			"file_size": 1394,
-			"file_write_time": 131216821272374445,
-			"settings":
-			{
-				"buffer_size": 1346,
-				"line_ending": "Windows"
+				"buffer_size": 41817,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "acadexport.cpp",
 			"settings":
 			{
-				"buffer_size": 137551,
+				"buffer_size": 138153,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
@@ -79,88 +57,26 @@
 			"file": "acadexport.h",
 			"settings":
 			{
-				"buffer_size": 9780,
+				"buffer_size": 9871,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "RSign.bpr",
+			"file": "const.h",
 			"settings":
 			{
-				"buffer_size": 20577,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AutoCAD/Scripts/minireports/ТЭС/bottom/4_ширина проезжой части(кол-во полос движения)(тип покрытия).sql",
-			"settings":
-			{
-				"buffer_size": 2279,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
-			"settings":
-			{
-				"buffer_size": 1055,
+				"buffer_size": 10740,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "AutoCAD/Scripts/docx/Readme.txt",
+			"file": "RoadObj.h",
 			"settings":
 			{
-				"buffer_size": 1754,
+				"buffer_size": 41926,
 				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AutoCAD/Scripts/docx/ТЕХП-2016.docx",
-			"settings":
-			{
-				"buffer_size": 211985,
-				"encoding": "Hexadecimal",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "AutoCAD/Scripts/last_mini_report.bat",
-			"settings":
-			{
-				"buffer_size": 398,
-				"encoding": "Western (Windows 1252)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "DECLARE @NumRoad int, @NumDataSource int\nSELECT @NumDataSource=/*$NumDataSource*/3805/*$*/\nSELECT @NumRoad = NumRoad FROM ListDataSources WHERE id_ = @NumDataSource\n\nSELECT round(StartPos, 0) StartPos, round(EndPos, 0) EndPos, Value2 Width\n INTO #Road\nFROM ListRoadParts\nWHERE NumRoad = @NumRoad\n    and NumDataSource = @NumDataSource\n    and NumPartType = 14\n\nSELECT round(StartPos, 0) StartPos, round(EndPos, 0) EndPos, Reference\n INTO #Surf\nFROM ListRoadParts\nWHERE NumRoad = @NumRoad\n    and NumDataSource = @NumDataSource\n    and NumPartType = 13\n\nDECLARE @Positions table (id_ int identity(1,1), Pos int)\n\nINSERT INTO @Positions (Pos)\nSELECT StartPos\nFROM #Surf\nUNION\nSELECT EndPos\nFROM #Surf\nUNION\nSELECT StartPos\nFROM #Road\nUNION   \nSELECT EndPos\nFROM #Road\nORDER BY 1  \n\n\nSELECT P.Pos StartPos, P1.Pos EndPos    \n INTO #Parts    \nFROM @Positions P   \nJOIN @Positions P1 ON P.id_ + 1  = P1.id_   \n\n\nSELECT SF.Reference, \n    convert(numeric(10,3), round(sum(P.EndPos - P.StartPos)/1000.0, 3)) Length, \n    convert(int, round(sum(LRP.Width * (P.EndPos - P.StartPos)), 0)) Area\n INTO #RoadAreas\nFROM #Parts P\nLEFT JOIN #Road LRP ON (P.StartPos >= LRP.StartPos and P.StartPos < LRP.EndPos)\nJOIN #Surf SF ON (P.StartPos >= SF.StartPos and P.StartPos < SF.EndPos) \nGROUP BY SF.Reference\n\nSELECT '1. Усовeршенствованные', '', '', '', '', '' UNION ALL\nSELECT '   Цементобетонные',\n    ISNULL((SELECT convert(varchar(10), Length) + '/' + convert(varchar(10), Area) \n            FROM #RoadAreas \n            WHERE Reference = 233), ''), \n    '', '', '', '' UNION ALL\nSELECT '   Асфальтобетонные',\n    ISNULL((SELECT convert(varchar(10), Length) + '/' + convert(varchar(10), Area) \n            FROM #RoadAreas \n            WHERE Reference = 234), ''), \n    '', '', '', '' UNION ALL\nSELECT '   Щебеночные (гравийные), обработанные вяжущими',\n    ISNULL((SELECT convert(varchar(10), Length) + '/' + convert(varchar(10), Area) \n            FROM #RoadAreas \n            WHERE Reference = 235), ''), \n    '', '', '', '' UNION ALL\nSELECT '   Мостовые из мозаики и брусчатки',\n    '', \n    '', '', '', '' UNION ALL\nSELECT '   Прочие',\n    '', \n    '', '', '', '' UNION ALL\nSELECT '2.Переходные', '', '', '', '', '' UNION ALL\nSELECT '   Щебеночные (гравийные)',\n    ISNULL((SELECT convert(varchar(10), Length) + '/' + convert(varchar(10), Area) \n            FROM #RoadAreas \n            WHERE Reference = 236), ''), \n    '', '', '', '' UNION ALL\nSELECT '   Покрытия из грунтов и местных материалов, обработанных вяжущими',\n    ISNULL((SELECT convert(varchar(10), Length) + '/' + convert(varchar(10), Area) \n            FROM #RoadAreas \n            WHERE Reference = 237), ''), \n    '', '', '', '' UNION ALL\nSELECT '   Прочие',\n    '', \n    '', '', '', '' UNION ALL\nSELECT '3.Низшие', '', '', '', '', '' UNION ALL\nSELECT '   Грунтовые естественные',\n    ISNULL((SELECT convert(varchar(10), Length) + '/' + convert(varchar(10), Area) \n            FROM #RoadAreas \n            WHERE Reference = 238), ''),\n    '', '', '', '' UNION ALL\nSELECT '   Прочие',\n    ISNULL((SELECT convert(varchar(10), Length) + '/' + convert(varchar(10), Area) \n            FROM #RoadAreas \n            WHERE ISNULL(Reference, 0) not in(233, 234,235,236,237,238)), ''), \n    '', '', '', ''\n\n\nDROP TABLE #Surf\nDROP TABLE #Road\nDROP TABLE #Parts\nDROP TABLE #RoadAreas\n",
-			"settings":
-			{
-				"buffer_size": 3330,
-				"line_ending": "Windows",
-				"name": "DECLARE @NumRoad int, @NumDataSource int"
-			}
-		},
-		{
-			"file": "AcadExportThread.cpp",
-			"settings":
-			{
-				"buffer_size": 41566,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "AcadExportThread.h",
-			"settings":
-			{
-				"buffer_size": 4500,
 				"line_ending": "Windows"
 			}
 		}
@@ -172,7 +88,7 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 157.0,
+		"height": 150.0,
 		"last_filter": "Package Control: ins",
 		"selected_items":
 		[
@@ -181,11 +97,15 @@
 				"Package Control: Install Package"
 			],
 			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
 				"Package Control: Ins",
 				"Package Control: Install Package"
 			]
 		],
-		"width": 560.0
+		"width": 400.0
 	},
 	"console":
 	{
@@ -206,11 +126,25 @@
 	},
 	"expanded_folders":
 	[
-		"/D/_DISTR/_ASUDOR/RSign",
-		"/D/_DISTR/_ASUDOR/RSign/Data"
+		"/D/_DISTR/_ASUDOR/RSign"
 	],
 	"file_history":
 	[
+		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.h",
+		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.cpp",
+		"/D/_DISTR/_ASUDOR/RSign/rsign.sublime-project",
+		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
+		"/D/ticket_18759_25.csv",
+		"/F/Irkutsk2016/create_dirs.bat",
+		"/F/Irkutsk2016/PHOTO/create_dirs.bat",
+		"/D/_DISTR/_ASUDOR/RSign/acadexport.h",
+		"/D/_DISTR/_ASUDOR/RSign/RSign.bpr",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/4_ширина проезжой части(кол-во полос движения)(тип покрытия).sql",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/Readme.txt",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/ТЕХП-2016.docx",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
+		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
 		"/I/Irkutsk2016/05/2016.09.12_12-52_Doroga_1_priamo_zaezd1/RoadLab.xml",
 		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/02/info.txt",
 		"/D/_MMK/_ROADS/Roads-2016/02/info.txt",
@@ -241,7 +175,6 @@
 		"/D/_DOWNLOADS/rutracker-torrents/20160115/category_24.csv",
 		"/D/_DOWNLOADS/rutracker-torrents/20160115/category_25.csv",
 		"/D/_MMK/_AKARIN/Диссертация/Dissertation/title.tex",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
 		"/C/Users/m/Desktop/СНТ/Подъезд к деревне Ангара-Хайрюзовка Уриковского МО/Иркутский район/bottom/4_ширина обочин справа.txt",
 		"/D/nevelir1.txt",
 		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Ширина проезжей части.sql",
@@ -288,12 +221,9 @@
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/DocX.dll",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report - копия.bat",
 		"/D/ЗАПРОСЫ ТП.sql",
-		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
 		"/D/tp.bat",
 		"/D/_MMK/_CPP/Orbit/build/Makefile",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/tp.bat",
-		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.h",
 		"/D/KRS/Хадай-Хиней/Баяндаевский/top/1_расстояние видимости.txt",
 		"/D/KRS/Васильевка-Харагун/Бодайбинский/top/1_расстояние видимости.txt",
@@ -302,11 +232,9 @@
 		"/D/ТП/Тельма-Раздолье/Усольский/bottom/2_ширина проезжей части.txt",
 		"/D/KRS/Алужино-Корсук-Наумовка до границы района/Эхирит-Булагатский/top/1_расстояние видимости.txt",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/9_искусственные сооружения.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/3_ширина обочин слева.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/5_ширина обочин справа.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/4_ширина обочин справа.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/4_ширина проезжой части(кол-во полос движения)(тип покрытия).sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/2_ширина проезжей части.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/1_ширина земляного полотна.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/top/1_Границы зон обслуживания и наименование дорожных организаций.",
@@ -329,16 +257,7 @@
 		"/D/KRS/_READY/Усть-Ордынский -Качуг-Захал до границы района/Эхирит-Булагатский/bottom/16_искусственные сооружения.txt",
 		"/D/KRS/_READY/Иркутск-Усть-Ордынский-Жигалово-Хандагай/Баяндаевский/top/1_расстояние видимости.txt",
 		"/D/KRS/_READY/Иркутск-Усть-Ордынский-Жигалово-Маяк/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Подъезд к с.Шардай/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Подъезд к с.Хиней/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Шитхулун-Кайзаран/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Подъезд к п.Баяндай/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Подъезд к с.Свердлово/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Н.Идыга-В.Идыга/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Тугутуй-Комой/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Муромцовка-Хуты/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Иркутск-Усть-Ордынский-Булуса-Зады/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Подъезд к п.Харат/Эхирит-Булагатский/top/1_расстояние видимости.txt"
+		"/D/KRS/_READY/Подъезд к с.Шардай/Баяндаевский/top/1_расстояние видимости.txt"
 	],
 	"find":
 	{
@@ -354,9 +273,20 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
+			"DrawPolyPoints",
+			"DEFECT",
+			"defect",
+			"DEFE",
+			"bool",
+			"TDefectKind",
+			"Defect",
+			"Deffect",
+			"Deffects",
+			"ExportDescreetRoadObject",
+			"ExportCityObjects",
 			" RSign.tlb",
 			"TRoadObject",
 			"Колод",
@@ -487,108 +417,24 @@
 	"groups":
 	[
 		{
-			"selected": 10,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
+					"file": "AcadExportThread.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 69,
+						"buffer_size": 41817,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								67,
-								69
-							]
-						],
-						"settings":
-						{
-							"auto_name": "664050, Россия, Иркутская Область, г. Иркутск, ул.",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/F/Irkutsk2016/create_dirs.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1346,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								738,
-								738
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 462.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/F/Irkutsk2016/PHOTO/create_dirs.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1346,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								683,
-								683
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "acadexport.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 137551,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
+								28846,
+								28846
 							]
 						],
 						"settings":
@@ -598,27 +444,57 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 58982.0,
+						"translation.y": 18727.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "acadexport.h",
+					"buffer": 1,
+					"file": "acadexport.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9780,
+						"buffer_size": 138153,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5539,
-								5539
+								137961,
+								137961
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 76560.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "acadexport.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9871,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6618,
+								6534
 							]
 						],
 						"settings":
@@ -628,268 +504,70 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2805.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "RSign.bpr",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 20577,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1619,
-								1619
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/XML/XML.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "AutoCAD/Scripts/minireports/ТЭС/bottom/4_ширина проезжой части(кол-во полос движения)(тип покрытия).sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2279,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 180.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1055,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								1055
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "AutoCAD/Scripts/docx/Readme.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1754,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								38,
-								46
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2677.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "AutoCAD/Scripts/docx/ТЕХП-2016.docx",
+					"buffer": 3,
+					"file": "const.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 211985,
+						"buffer_size": 10740,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								624,
+								627
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "AutoCAD/Scripts/last_mini_report.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 398,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 2192.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3330,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								611,
-								611
-							]
-						],
-						"settings":
-						{
-							"auto_name": "DECLARE @NumRoad int, @NumDataSource int",
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 4,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 78.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
-					"file": "AcadExportThread.cpp",
+					"buffer": 4,
+					"file": "RoadObj.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 41566,
+						"buffer_size": 41926,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								34798,
-								34798
+								20884,
+								20884
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 21794.0,
+						"translation.y": 10259.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "AcadExportThread.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4500,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3508,
-								3508
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 660.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
+					"stack_index": 4,
 					"type": "text"
 				}
 			]

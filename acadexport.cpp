@@ -3002,6 +3002,12 @@ bool __fastcall TAcadExport::ExportDescreetRoadObject(TExtPolyline *Poly, TDescr
         case  516: // люк смотрового колодца
             blockName = "well";
         break;
+        case  518: // урна
+            blockName = "can";
+        break;
+        case  519: // скамья
+            blockName = "bench";
+        break;
     }
     if (blockName != "") {
         AutoCAD.DrawBlock(blockName, Poly->Points[0].x, -ScaleY * Poly->Points[0].y, rotation, ScaleY / 2);
@@ -3834,6 +3840,61 @@ bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, vector<TTraffic
     return true;
 }
 
+bool __fastcall TAcadExport::ExportDefect(TExtPolyline *p, TRoadDefect *d, bool fEnd) 
+{
+    if (fEnd) {
+        return true;
+    }
+
+    switch(d->Kind) {
+        //дефекты в виде участков дорог
+        case dk12:
+        case dk83:
+        case dk84:
+        case dk88:
+        case dk89:
+        case dk85:
+        // case dk3: // гребенка не нужна
+        case dk95:
+        // case dk16: // колейность не нужна
+        // Выбоины ямы заплаты
+        case dk2: 
+        case dk56: 
+        case dk94: 
+        {
+            AcadPolylinePtr pl[1];
+            int scale = 25 * (float)ScaleY / 0.8;
+            int rotate = 0;
+            bool fErasePolyline = true;
+            pl[0] = DrawPolyPoints(p, false, true);
+            AnsiString fillType = "";
+            unsigned char Color[3];
+
+            AcadHatchPtr hatch;
+            String hatchFill = "ANSI37";
+            switch (d->Kind) {
+                case dk2: 
+                case dk56: 
+                case dk94: 
+                    hatchFill = "SOLID";
+                break;
+            }
+            hatch = AutoCAD.FillArea((IDispatch**)pl, 1, 0, hatchFill);
+            hatch->PatternScale = scale;
+            SetObjectColor(hatch, 255, 0, 0);
+            SetObjectColor(pl[0], 255, 0, 0);
+            }
+            break;
+        case dk67: {
+            AcadPolylinePtr pl[1];
+            pl[0] = DrawPolyPoints(p, false, false);
+            SetObjectColor(pl[0], 255, 0, 0);
+        }
+    }
+    
+
+    return true;
+}
 
 
 #endif // WITHOUT_AUTOCAD
