@@ -364,6 +364,8 @@ void __fastcall TMainForm::SetActiveRoad(TRoadFrm *R)
 			N84->Enabled=false;
 			N85->Enabled=false;
 			N86->Enabled=false;
+	        N67->Enabled=false;
+	        N87->Enabled=false;
 		}
 		SendBroadCastMessage(CM_ONACTIVATEROADWIN,(int)R,0);
 	}
@@ -1404,6 +1406,13 @@ void __fastcall TMainForm::N86Click(TObject *Sender)
 TMenuItem *it=(TMenuItem*)Sender;
 if (FActiveRoad)
    FActiveRoad->ConnectToBaseLine(it->Tag,mkBrovka);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::N87Click(TObject *Sender)
+{
+if (FActiveRoad)
+   FActiveRoad->CalculateVisibility();    
 }
 //---------------------------------------------------------------------------
 

@@ -22,6 +22,44 @@ __fastcall TPartTree(int ind1,int ind2)
 };
 
 
+TVisibility *__fastcall TRoadGeometry::CalculateVisibility(int spos,int epos,double DriverHeight,double MarkerHeight,int dir) {
+  DriverHeight*=100; // Все в сантиметрах
+  MarkerHeight*=100;
+  TVisibility *VPart=new TVisibility(FCount);
+  for (int i=0;i<FCount;i++)
+     VPart->L[i]=FL[i];
+  if (dir==1) {
+     for (int i=0,j;i<FCount;i++) {
+        double maxan=-acos(0.);
+        for (j=i+1;j<FCount;j++) {
+           maxan=max(maxan,atan((FValues[j].Z-(FValues[i].Z+DriverHeight))/(FL[j]-FL[i])));
+           double visan=atan((FValues[j].Z+MarkerHeight-(FValues[i].Z+DriverHeight))/(FL[j]-FL[i]));
+           if (visan<maxan)
+              break;
+        }
+        if (j<FCount)
+           VPart->Values[i]=FL[j]-FL[i];
+        else
+           VPart->Values[i]=100000; // некоторое достаточно большое число
+     }
+  } else {
+     for (int i=FCount-1,j;i>=0;i--) {
+        double maxan=-acos(0.);
+        for (j=i-1;j>=0;j--) {
+           maxan=max(maxan,atan((FValues[j].Z-(FValues[i].Z+DriverHeight))/(FL[i]-FL[j])));
+           double visan=atan((FValues[j].Z+MarkerHeight-(FValues[i].Z+DriverHeight))/(FL[i]-FL[j]));
+           if (visan<maxan)
+              break;
+        }
+        if (j>=0)
+           VPart->Values[i]=FL[i]-FL[j];
+        else
+           VPart->Values[i]=100000; // некоторое достаточно большое число
+     }
+  }
+  return VPart;
+}
+
 int __fastcall TRoadGeometry::BuildPartTree(TPartTree* Node,int *DirVals,int *UnDirVals,__int32 MinLen,__int32 Dev)
 {
 int Res=1;

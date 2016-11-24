@@ -20,7 +20,8 @@
       AutoCADExportForm.obj unSignalsInsert.obj AcadExportThread.obj 
       AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj 
       MiniReports.obj ItemSelectDialog.obj TConnectionFormThreadUnit.obj 
-      ConnectionFormUnit.obj VideoBar.obj ActiveX\MyActiveX.obj Helpers.obj"/>
+      ConnectionFormUnit.obj VideoBar.obj ActiveX\MyActiveX.obj Helpers.obj 
+      VisModeForm.obj"/>
     <RESFILES value="RSign.res RSign.tlb"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -35,7 +36,7 @@
       BuildWidePart.dfm RoadMark.dfm ErrorObjectDlg.dfm AutoCADPrintForm.dfm 
       AutoCADExportForm.dfm unSignalsInsert.dfm AttachForm.dfm MoveForm.dfm 
       AddRowsDescription.dfm ItemSelectDialog.dfm ConnectionFormUnit.dfm 
-      VideoBar.dfm"/>
+      VideoBar.dfm VisModeForm.dfm"/>
     <LIBFILES value=""/>
     <LIBRARIES value="vclnp.lib dclusr.lib bcbsmp.lib MyActiveX.lib vclx.lib vcldb.lib 
       adortl.lib dbrtl.lib vcl.lib rtl.lib"/>
@@ -54,14 +55,15 @@
     <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS;_BCB_ATL_DEBUG"/>
     <MAINSOURCE value="RSign.cpp"/>
-    <INCLUDEPATH value="&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;$(BCB)\Imports"/>
-    <LIBPATH value="ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;$(BCB)\Imports"/>
+    <INCLUDEPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;$(BCB)\Imports"/>
+    <LIBPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;$(BCB)\Imports"/>
     <WARNINGS value="-w-par -w-8030 -w-8027 -w-8026"/>
     <WARNOPTSTR value=""/>
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; -IActiveX 
+    <IDLCFLAGS value="-I&quot;C:\Program Files\Borland\CBuilder6\Projects&quot; 
+      -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; -IActiveX 
       -I$(BCB)\include -I$(BCB)\include\vcl -I$(BCB)\include\atl 
       -I$(BCB)\Imports -src_suffix cpp -DNO_PROMPT_ON_ASSERTE_FAILURE 
       -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -boa"/>
@@ -162,6 +164,7 @@
       <FILE FILENAME="VideoBar.cpp" FORMNAME="frmVideoBar" UNITNAME="VideoBar" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ActiveX\MyActiveX.cpp" FORMNAME="" UNITNAME="MyActiveX" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Helpers.cpp" FORMNAME="" UNITNAME="Helpers" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="VisModeForm.cpp" FORMNAME="frmVisMode" UNITNAME="VisModeForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>
