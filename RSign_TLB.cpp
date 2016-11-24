@@ -13,13 +13,13 @@
 // File generated on 09.11.2016 13:14:19 from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\Projects\RSign\RSign.tlb (1)
+// Type Lib: D:\_DISTR\_ASUDOR\RSign\RSign.tlb (1)
 // LIBID: {9585521C-1ADF-42FB-92EB-5C48218460F1}
 // LCID: 0
 // Helpfile: 
 // HelpString: RSign Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\Windows\SysWOW64\stdole2.tlb)
 // ************************************************************************ //
 
 #include <vcl.h>

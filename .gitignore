@@ -21,3 +21,5 @@ AutoCAD/Scripts/.credentials
 acad.err
 *.pdb
 *.exe.config*
+*.$$$
+*.suo

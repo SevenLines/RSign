@@ -18,10 +18,13 @@ namespace SQL2Word
             USE_ZERO_CONUTER,
             AUTO_EXPAND,
             REPLACE_TABLE_ON_EMPTY,
+            ADD_EMPTY_CROSS_ROW,
+            MIN_ROWS_COUNT,
             UPDATE_SCRIPT,
         };
 
         static readonly Regex re_REPLACE_TABLE_ON_EMPTY = new Regex(@"\[REPLACE_TABLE_ON_EMPTY(:(.*?))?\]");
+        static readonly Regex re_MIN_ROWS_COUNT = new Regex(@"\[MIN_ROWS_COUNT(:(\d+))?\]");
         static readonly Regex re_UPDATE_SCRIPT = new Regex(@"\[UPDATE_SCRIPT(:(.*?))?\]");
 
         /// <summary>
@@ -30,8 +33,7 @@ namespace SQL2Word
         /// </summary>
         /// <param name="cell"></param>
         /// <returns></returns>
-        private static List<TOKENS> GetCellTokens(Cell cell, out Dictionary<TOKENS, String> special_parameters)
-        {
+        private static List<TOKENS> GetCellTokens(Cell cell, out Dictionary<TOKENS, String> special_parameters) {
             var output = new List<TOKENS>();
             special_parameters = new Dictionary<TOKENS, string>();
 
@@ -39,34 +41,41 @@ namespace SQL2Word
 
             special_parameters = new Dictionary<TOKENS, string>();
             var text = cell.Paragraphs.First().Text;
-            if (text.Contains("[CONTENT]"))
-            {
+            if (text.Contains("[CONTENT]")) {
                 output.Add(TOKENS.CONTENT);
 //                special_parameters[TOKENS.CONTENT] = "";
             }
-            if (text.Contains("[WITH_COUNTER]")) { 
+            if (text.Contains("[WITH_COUNTER]")) {
                 output.Add(TOKENS.WITH_COUNTER);
                 special_parameters[TOKENS.WITH_COUNTER] = "";
             }
-            if (text.Contains("[USE_ZERO_CONUTER]")) { 
+            if (text.Contains("[USE_ZERO_CONUTER]")) {
                 output.Add(TOKENS.USE_ZERO_CONUTER);
                 special_parameters[TOKENS.USE_ZERO_CONUTER] = "";
             }
-            if (text.Contains("[AUTO_EXPAND]")) { 
+            if (text.Contains("[AUTO_EXPAND]")) {
                 output.Add(TOKENS.AUTO_EXPAND);
                 special_parameters[TOKENS.AUTO_EXPAND] = "";
             }
+            if (text.Contains("[ADD_EMPTY_CROSS_ROW]")) {
+                output.Add(TOKENS.ADD_EMPTY_CROSS_ROW);
+                special_parameters[TOKENS.ADD_EMPTY_CROSS_ROW] = "";
+            }
 
             match = re_REPLACE_TABLE_ON_EMPTY.Match(text);
-            if (match.Success)
-            {
+            if (match.Success) {
                 output.Add(TOKENS.REPLACE_TABLE_ON_EMPTY);
                 special_parameters[TOKENS.REPLACE_TABLE_ON_EMPTY] = match.Groups[2].Value;
             }
 
+            match = re_MIN_ROWS_COUNT.Match(text);
+            if (match.Success) {
+                output.Add(TOKENS.MIN_ROWS_COUNT);
+                special_parameters[TOKENS.MIN_ROWS_COUNT] = match.Groups[2].Value;
+            }
+
             match = re_UPDATE_SCRIPT.Match(text);
-            if (match.Success)
-            {
+            if (match.Success) {
                 output.Add(TOKENS.UPDATE_SCRIPT);
                 special_parameters[TOKENS.UPDATE_SCRIPT] = match.Groups[2].Value;
             }
@@ -75,30 +84,25 @@ namespace SQL2Word
         }
 
 
-        private static List<TOKENS> GetTableTokens(Table table, out Dictionary<TOKENS, string> parameters)
-        {
+        private static List<TOKENS> GetTableTokens(Table table, out Dictionary<TOKENS, string> parameters) {
             var row = GetTableScriptRow(table);
             var cell = row.Cells.First();
             return GetCellTokens(cell, out parameters);
         }
 
-        private static String GetTableScript(Table table)
-        {
+        private static String GetTableScript(Table table) {
             var row = GetTableScriptRow(table);
             var cell = row.Cells.First();
             return GetCellContent(cell);
         }
 
-        private static Row GetTableScriptRow(Table table)
-        {
+        private static Row GetTableScriptRow(Table table) {
             return table.Rows.Last();
         }
 
-        private static void SetTableScriptRowText(Table table, String text)
-        {
+        private static void SetTableScriptRowText(Table table, String text) {
             var cell = GetTableScriptRow(table).Cells.First();
-            if (cell != null)
-            {
+            if (cell != null) {
                 SetCellContent(cell, text);
             }
         }
@@ -108,46 +112,38 @@ namespace SQL2Word
         /// </summary>
         /// <param name="cell"></param>
         /// <returns></returns>
-        private static String GetCellContent(Cell cell, int skip=1)
-        {
+        private static String GetCellContent(Cell cell, int skip = 1) {
             StringBuilder output = new StringBuilder();
-            foreach (var paragraph in cell.Paragraphs.Skip(skip))
-            {
+            foreach (var paragraph in cell.Paragraphs.Skip(skip)) {
                 output.AppendLine(paragraph.Text + " ");
             }
             return output.ToString();
         }
 
-        private static void SetCellContent(Cell cell, String text)
-        {
+        private static void SetCellContent(Cell cell, String text) {
             cell.Paragraphs.ForEach(paragraph => paragraph.Remove(false));
             cell.InsertParagraph(text);
         }
 
 
-        private static bool _fillTable(
-            Table table, 
-            SqlConnection connection, 
+        private static int _fillTable(
+            Table table,
+            SqlConnection connection,
             String script,
             List<TOKENS> tokens,
-            bool useFirstRow = false)
-        {
-            if (String.IsNullOrEmpty(script))
-            {
-                return false;
+            bool useFirstRow = false) {
+            if (String.IsNullOrEmpty(script)) {
+                return 0;
             }
 
             var sql = new SqlCommand(script, connection);
             SqlDataReader reader;
-            try
-            {
+            try {
                 reader = sql.ExecuteReader();
-
             }
-            catch (SqlException ex)
-            {
+            catch (SqlException ex) {
                 SetTableScriptRowText(table, ex.Message);
-                return false;
+                return 0;
             }
 
             int counter = 1;
@@ -160,52 +156,42 @@ namespace SQL2Word
 
             bool isFirstRow = true;
 
-            do
-            {
-                while (reader.Read())
-                {
+            do {
+                while (reader.Read()) {
                     Row r;
-                    if (isFirstRow && useFirstRow)
-                    {
+                    if (isFirstRow && useFirstRow) {
                         r = table.Rows.Last();
-                        foreach (var paragraph in r.Paragraphs)
-                        {
-                            if (!String.IsNullOrEmpty(paragraph.Text))
-                            {
+                        foreach (var paragraph in r.Paragraphs) {
+                            if (!String.IsNullOrEmpty(paragraph.Text)) {
                                 paragraph.RemoveText(0);
-                            };
+                            }
+                            ;
                         }
                     }
-                    else
-                    {
+                    else {
                         r = table.InsertRow();
                     }
 
-                    if (tokens.Contains(TOKENS.WITH_COUNTER))
-                    {
+                    if (tokens.Contains(TOKENS.WITH_COUNTER)) {
                         var p = r.Cells[0].Paragraphs.First();
                         if (p != null)
                             p.Append(counter.ToString());
                     }
 
-                    if (tokens.Contains(TOKENS.AUTO_EXPAND))
-                    {
-                        while (r.ColumnCount < reader.FieldCount + iOffset)
-                        {
+                    if (tokens.Contains(TOKENS.AUTO_EXPAND)) {
+                        while (r.ColumnCount < reader.FieldCount + iOffset) {
                             table.InsertColumn(table.ColumnCount - 1);
                         }
                     }
 
                     var maxValue = Math.Min(reader.FieldCount + iOffset, r.ColumnCount);
-                    for (int i = iOffset; i < maxValue; i++)
-                    {
+                    for (int i = iOffset; i < maxValue; i++) {
                         var p = r.Cells[i].Paragraphs.First();
                         if (p != null)
                             p.Append(reader.GetSqlValue(i - iOffset).ToString());
                     }
 
-                    if (isFirstRow)
-                    {
+                    if (isFirstRow) {
                         isFirstRow = false;
                     }
 
@@ -215,40 +201,37 @@ namespace SQL2Word
 
             reader.Close();
 
-            return !isFirstRow;
+            return counter;
         }
 
-        private static void _addScriptRow(Table table, 
-            String script, 
-            int contentStart, 
+        private static void _addScriptRow(Table table,
+            String script,
+            int contentStart,
             Dictionary<TOKENS, string> specialParameters,
-            bool hasRows=true)
-        {
+            bool hasRows = true) {
             script = Regex.Replace(script, "--.*", "").Replace("\n", " "); // remove oneline SQL-comments
-            if (specialParameters != null)
-            {
+            if (specialParameters != null) {
                 var tokenString = getTokensString(specialParameters);
-                if (!specialParameters.ContainsKey(TOKENS.UPDATE_SCRIPT))
-                {
+                if (!specialParameters.ContainsKey(TOKENS.UPDATE_SCRIPT)) {
                     tokenString = "[UPDATE_SCRIPT:" + contentStart.ToString() + "]" + tokenString;
                 }
                 script = "/*" + tokenString + "*/" + script;
             }
 
             Row row = null;
-            if(hasRows) {
+            if (hasRows) {
                 row = table.InsertRow();
                 row.MergeCells(0, row.ColumnCount - 1);
                 row.Height = 1;
-            } else {
-                row = table.Rows[contentStart-1];
+            }
+            else {
+                row = table.Rows[contentStart - 1];
             }
 
             // скрипт вставляем в последнюю ячейку с невидимым текстом, без полей и высотой 1 чего-то там
             var cell = row.Cells.FirstOrDefault();
-            if (cell != null)
-            {
-                var border = new Border { Tcbs = BorderStyle.Tcbs_none };
+            if (cell != null) {
+                var border = new Border {Tcbs = BorderStyle.Tcbs_none};
                 cell.SetBorder(TableCellBorderType.Bottom, border);
                 cell.SetBorder(TableCellBorderType.Left, border);
                 cell.SetBorder(TableCellBorderType.Right, border);
@@ -268,14 +251,12 @@ namespace SQL2Word
         /// <param name="parameters"></param>
         /// <returns></returns>
         public static bool FillTable(
-            Table table, SqlConnection connection, 
+            Table table, SqlConnection connection,
             Dictionary<string, string> parameters,
-            bool saveQueries)
-        {
+            bool saveQueries) {
             Dictionary<TOKENS, string> specialParameters;
             var tokens = GetTableTokens(table, out specialParameters);
-            if (tokens.Count <= 0)
-            {
+            if (tokens.Count <= 0) {
                 return false;
             }
 
@@ -284,43 +265,48 @@ namespace SQL2Word
 
             var contentRow = GetTableScriptRow(table);
             var contentStart = table.RowCount;
-            var hasRows = _fillTable(table, connection, script, tokens);
+            var rowsCount = _fillTable(table, connection, script, tokens);
 
             // if no values to output
-            if (!hasRows)
-            {
-                if (tokens.Contains(TOKENS.REPLACE_TABLE_ON_EMPTY))
-                {
+            if (rowsCount == 0) {
+                if (tokens.Contains(TOKENS.REPLACE_TABLE_ON_EMPTY)) {
                     table.InsertParagraphBeforeSelf(specialParameters.Default(
                         TOKENS.REPLACE_TABLE_ON_EMPTY, ""));
                     table.Remove();
                 }
+                else if (tokens.Contains(TOKENS.ADD_EMPTY_CROSS_ROW)) {
+                    var row = table.InsertRow();
+                    foreach (var cell in row.Cells) {
+                        cell.SetBorder(TableCellBorderType.TopLeftToBottomRight, new Border());
+                    }
+                }
             }
 
-            if (hasRows)
-            {
-                // удаляем строку со скриптом
-                contentRow.Remove();
+            if (tokens.Contains(TOKENS.MIN_ROWS_COUNT)) {
+                var minRowsCount = int.Parse(specialParameters.Default(TOKENS.MIN_ROWS_COUNT, "1"));
+                if (rowsCount < minRowsCount) {
+                    Enumerable.Range(0, minRowsCount - rowsCount + 1).ToList().ForEach(
+                        (i) => { table.InsertRow(); });
+                }
             }
 
-            if (saveQueries && !String.IsNullOrEmpty(script))
-            {
+            // удаляем строку со скриптом
+            contentRow.Remove();
+
+            if (saveQueries && !String.IsNullOrEmpty(script)) {
                 // сохраняем запрос
-                _addScriptRow(table, script, contentStart, specialParameters, hasRows);
+                _addScriptRow(table, script, contentStart, specialParameters, rowsCount != 0);
             }
 
             return true;
         }
 
-        private static String getTokensString(Dictionary<TOKENS, string> specail_parameters)
-        {
+        private static String getTokensString(Dictionary<TOKENS, string> specail_parameters) {
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (var parameter in specail_parameters)
-            {
+            foreach (var parameter in specail_parameters) {
                 stringBuilder.Append("[");
                 stringBuilder.Append(parameter.Key);
-                if (String.IsNullOrEmpty(parameter.Value))
-                {
+                if (String.IsNullOrEmpty(parameter.Value)) {
                     stringBuilder.Append(parameter.Value);
                 }
                 stringBuilder.Append("]");
@@ -331,11 +317,10 @@ namespace SQL2Word
         public static void UpdateTable(
             Table table, SqlConnection connection,
             Dictionary<string, string> parameters,
-            bool saveQueries)
-        {
+            bool saveQueries) {
             // скрипт должен быть в последней строке
             var row = table.Rows.Last();
-            
+
             var script = GetCellContent(row.Cells.FirstOrDefault(), 0);
             row.Remove();
 
@@ -349,8 +334,7 @@ namespace SQL2Word
             if (!Int32.TryParse(specailParameters[TOKENS.UPDATE_SCRIPT], out firstDataRow))
                 return;
 
-            while (table.RowCount  > 1 && table.RowCount >= firstDataRow)
-            {
+            while (table.RowCount > 1 && table.RowCount >= firstDataRow) {
                 table.Rows.Last().Remove();
             }
 
@@ -361,9 +345,8 @@ namespace SQL2Word
 
             _fillTable(table, connection, script, tokens, table.RowCount == 1 && firstDataRow == 1);
 
-            if (saveQueries)
-            {
-                _addScriptRow(table, script, 
+            if (saveQueries) {
+                _addScriptRow(table, script,
                     firstDataRow,
                     null);
             }

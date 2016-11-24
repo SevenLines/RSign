@@ -36,262 +36,48 @@
 	"buffers":
 	[
 		{
-			"file": "/D/_MMK/d/loadspd/pakh_slw.bpr",
+			"file": "AcadExportThread.cpp",
 			"settings":
 			{
-				"buffer_size": 3449,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/d/loadspd/uco_modd.bpr",
-			"settings":
-			{
-				"buffer_size": 3899,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/d/loadspd/uucha_lec.bpr",
-			"settings":
-			{
-				"buffer_size": 3906,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/d/ukampf/uwin_dos.bpr",
-			"settings":
-			{
-				"buffer_size": 4156,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/d/ukampf/usave_com.bpr",
-			"settings":
-			{
-				"buffer_size": 3901,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/d/cpp/srpfmain.h",
-			"settings":
-			{
-				"buffer_size": 21390,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/d/.gitignore",
-			"settings":
-			{
-				"buffer_size": 30,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/d/CMakeLists.txt",
-			"settings":
-			{
-				"buffer_size": 10232,
+				"buffer_size": 41817,
+				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/introduction.tex",
+			"file": "acadexport.cpp",
 			"settings":
 			{
-				"buffer_size": 21208,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/part1.tex",
-			"settings":
-			{
-				"buffer_size": 22112,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/part2.tex",
-			"settings":
-			{
-				"buffer_size": 85483,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/D/Program Files (x86)/MAGIX/Photo Graphic Designer 11/install.cfg",
-			"settings":
-			{
-				"buffer_size": 1279,
+				"buffer_size": 138153,
+				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/D/_MMK/_JAVA/Celebs-Image-Viewer/gradlew.bat",
+			"file": "acadexport.h",
 			"settings":
 			{
-				"buffer_size": 2314,
+				"buffer_size": 9871,
+				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/D/_MMK/_JAVA/Celebs-Image-Viewer/build.gradle",
+			"file": "const.h",
 			"settings":
 			{
-				"buffer_size": 1516,
+				"buffer_size": 10740,
+				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/D/_MMK/_ROADS/Roads-2016/2016_04_12_13_33/RoadLab.xml",
+			"file": "RoadObj.h",
 			"settings":
 			{
-				"buffer_size": 21026,
+				"buffer_size": 41926,
+				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_GAMES/Rocksmith 2014/rocksmith2014_nocable_pbs.ini",
-			"settings":
-			{
-				"buffer_size": 1018,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_DISTR/wicleanup/Readme.txt",
-			"settings":
-			{
-				"buffer_size": 687,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/dissertation.bbl",
-			"settings":
-			{
-				"buffer_size": 8944,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/dissertation.tex",
-			"settings":
-			{
-				"buffer_size": 528,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "\nEg {    Tim: even_sec_time corrected_time WkNum  ; GPS seconds of the week, week number\n        Geo: latitude longitude height AntHgt        ; Degrees minutes seconds, metres, metres\n        Loc: d-east d-north d-height v-east v-north v-height ; local level pos+vel, metres, m/s\n        Prn: sv1 sv2 sv3 ...                         ; satellite prn numbers\n        Sta: quality amb_drift dd_dop pdop hdop vdop ; 1-6, cycles/sec, dops\n        Rms: L1Rms CARms P2Rms D1Rms L1Std CAStd D1Std ; m, m/s Rms=RMS of resid, Std=meas std-dev\n        Var: cee cnn czz cve cvn cvz cpos            ; Position + velocity variance + trace with ppm, m^2, m^2/s^2\n        Clk: ClkOffset ClkDrift ClkSd GlnClkDif PhaseClkOffset GlnPhaseDif; Receiver clock offset parameters (m)\n        Flg: S/K L/F NumGps NumGlonass SolType       ; (S)tatic, (K)inematic, f(L)oat amb., (F)ixed amb.\n        Cov: cne cze czn cvne cvze cvzn              ;position and velocity covariance.\n        Trp: TrpDelay TrpStd                         ; Tropospheric zenith delay (m) Standard Devaition of Delay.\n}\n\nOut {   Tim: 192472.00 192472.000000 1892\n        Geo: 52 14 23.26896 104 19 30.47459 427.0356 0.082\n        Loc: 0.000 0.000 0.000 0.146 0.598 -1.079\n        Sta: 4 0.000000 0.00 2.380 1.220 2.040\n        Rms: 0.0156 2.040 0.000 1.383 0.0480 9.580 1.334\n        Var: 1.06003e-001 2.08927e-001 3.93674e-001 1.00552e+000 1.62058e+000 7.57677e+000 7.08604e-001\n        Flg: K L 7 0\n        Sep: 0.000 0.000 0.000 0.000 0.000 0.000\n        Wgt: 1 2 0 100\n        Clk: -96.671 3.254 0.510\n}",
-			"settings":
-			{
-				"buffer_size": 1557,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Python27/Scripts/rpatool.py",
-			"settings":
-			{
-				"buffer_size": 16640,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/G/m/PycharmProjects/analyse/test2.py",
-			"settings":
-			{
-				"buffer_size": 5185,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/biblio.bib",
-			"settings":
-			{
-				"buffer_size": 9621,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "Подъезд к деревне Ангара-Хайрюзовка      \n    Прямое  2016.06.21_11-54_podezd_SNT_svetofor_prymo_i_podezd_k_derevne_Angara\n    Обратное  2016.06.21_12-14_podezd_SNT_svetofor_obratno_i_podezd_k_derevne_Angara\nСНТ Светофор    \n    Прямое  2016.06.21_11-54_podezd_SNT_svetofor_prymo_i_podezd_k_derevne_Angara   \n    Обратное  2016.06.21_12-14_podezd_SNT_svetofor_obratno_i_podezd_k_derevne_Angara\nСНТ Политехник\n    2016.06.21_14-29_podezd_SNT_Politehnik_prymo\nСНТ Светлое\n    2016.06.23_12-12_Podezd_SNT_Svetloe_zaezd2_prymo\nСНТ Строитель   \n    2016.06.21_13-56_podezd_SNT_Stroitel_prymo",
-			"settings":
-			{
-				"buffer_size": 586,
-				"line_ending": "Windows",
-				"name": "Подъезд к деревне Ангара-Хайрюзовка"
-			}
-		},
-		{
-			"contents": "664050, Россия, Иркутская Область, г. Иркутск, ул. Байкальская 256-51",
-			"settings":
-			{
-				"buffer_size": 69,
-				"line_ending": "Windows",
-				"name": "664050, Россия, Иркутская Область, г. Иркутск, ул."
-			}
-		},
-		{
-			"contents": "Каташевцев Михаил Дмитриевич\n\n664050, Россия, Иркутская Область, г. Иркутск, ул. Байкальская 256-51",
-			"settings":
-			{
-				"buffer_size": 99,
-				"line_ending": "Windows",
-				"name": "Каташевцев Михаил Дмитриевич"
-			}
-		},
-		{
-			"file": "/D/_GAMES/OpenRCT2/data/language/russian.txt",
-			"settings":
-			{
-				"buffer_size": 141513,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_GAMES/OpenRCT2/OpenRCT2 Launcher.application",
-			"settings":
-			{
-				"buffer_size": 12584,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/D/_DOWNLOADS/rutracker-torrents/20160115/category_24.csv",
-			"settings":
-			{
-				"buffer_size": 2347843,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/D/_DOWNLOADS/rutracker-torrents/20160115/category_25.csv",
-			"settings":
-			{
-				"buffer_size": 34129093,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/title.tex",
-			"settings":
-			{
-				"buffer_size": 928,
-				"line_ending": "Unix"
 			}
 		}
 	],
@@ -302,7 +88,7 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 157.0,
+		"height": 150.0,
 		"last_filter": "Package Control: ins",
 		"selected_items":
 		[
@@ -311,11 +97,15 @@
 				"Package Control: Install Package"
 			],
 			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
 				"Package Control: Ins",
 				"Package Control: Install Package"
 			]
 		],
-		"width": 560.0
+		"width": 400.0
 	},
 	"console":
 	{
@@ -336,11 +126,64 @@
 	},
 	"expanded_folders":
 	[
-		"/D/_DISTR/_ASUDOR/RSign",
-		"/D/_DISTR/_ASUDOR/RSign/Data"
+		"/D/_DISTR/_ASUDOR/RSign"
 	],
 	"file_history":
 	[
+		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.h",
+		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.cpp",
+		"/D/_DISTR/_ASUDOR/RSign/rsign.sublime-project",
+		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
+		"/D/ticket_18759_25.csv",
+		"/F/Irkutsk2016/create_dirs.bat",
+		"/F/Irkutsk2016/PHOTO/create_dirs.bat",
+		"/D/_DISTR/_ASUDOR/RSign/acadexport.h",
+		"/D/_DISTR/_ASUDOR/RSign/RSign.bpr",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/4_ширина проезжой части(кол-во полос движения)(тип покрытия).sql",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/Readme.txt",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/ТЕХП-2016.docx",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
+		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
+		"/I/Irkutsk2016/05/2016.09.12_12-52_Doroga_1_priamo_zaezd1/RoadLab.xml",
+		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/02/info.txt",
+		"/D/_MMK/_ROADS/Roads-2016/02/info.txt",
+		"/D/_MMK/d/loadspd/pakh_slw.bpr",
+		"/D/_MMK/d/loadspd/uco_modd.bpr",
+		"/D/_MMK/d/loadspd/uucha_lec.bpr",
+		"/D/_MMK/d/ukampf/uwin_dos.bpr",
+		"/D/_MMK/d/ukampf/usave_com.bpr",
+		"/D/_MMK/d/cpp/srpfmain.h",
+		"/D/_MMK/d/.gitignore",
+		"/D/_MMK/d/CMakeLists.txt",
+		"/D/_MMK/_AKARIN/Диссертация/Dissertation/introduction.tex",
+		"/D/_MMK/_AKARIN/Диссертация/Dissertation/part1.tex",
+		"/D/_MMK/_AKARIN/Диссертация/Dissertation/part2.tex",
+		"/D/Program Files (x86)/MAGIX/Photo Graphic Designer 11/install.cfg",
+		"/D/_MMK/_JAVA/Celebs-Image-Viewer/gradlew.bat",
+		"/D/_MMK/_JAVA/Celebs-Image-Viewer/build.gradle",
+		"/D/_MMK/_ROADS/Roads-2016/2016_04_12_13_33/RoadLab.xml",
+		"/D/_GAMES/Rocksmith 2014/rocksmith2014_nocable_pbs.ini",
+		"/D/_DISTR/wicleanup/Readme.txt",
+		"/D/_MMK/_AKARIN/Диссертация/Dissertation/dissertation.bbl",
+		"/D/_MMK/_AKARIN/Диссертация/Dissertation/dissertation.tex",
+		"/C/Python27/Scripts/rpatool.py",
+		"/G/m/PycharmProjects/analyse/test2.py",
+		"/D/_MMK/_AKARIN/Диссертация/Dissertation/biblio.bib",
+		"/D/_GAMES/OpenRCT2/data/language/russian.txt",
+		"/D/_GAMES/OpenRCT2/OpenRCT2 Launcher.application",
+		"/D/_DOWNLOADS/rutracker-torrents/20160115/category_24.csv",
+		"/D/_DOWNLOADS/rutracker-torrents/20160115/category_25.csv",
+		"/D/_MMK/_AKARIN/Диссертация/Dissertation/title.tex",
+		"/C/Users/m/Desktop/СНТ/Подъезд к деревне Ангара-Хайрюзовка Уриковского МО/Иркутский район/bottom/4_ширина обочин справа.txt",
+		"/D/nevelir1.txt",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Ширина проезжей части.sql",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Сигнальные столбики.sql",
+		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/info.txt",
+		"/I/SCHEDULE/SchduleExport 2/Export.cfg",
+		"/I/_SCHEDULE/Бизнес-контингенты_new.txt",
+		"/D/nevelir1.json",
+		"/C/Users/m/Desktop/2016.08.18_14-03_nevelir_test_1 точки сканера.txt",
 		"/C/Users/m/Desktop/2016.04.14_17-03_CORRECT2 точки сканера.rar",
 		"/C/sbic.txt",
 		"/C/Users/m/Desktop/2016.04.14_17-03_CORRECT2 точки сканера.txt",
@@ -377,14 +220,10 @@
 		"/D/_DISTR/_ASUDOR/RSign/AutoCADExportForm.cpp",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/DocX.dll",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report - копия.bat",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
 		"/D/ЗАПРОСЫ ТП.sql",
-		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
 		"/D/tp.bat",
 		"/D/_MMK/_CPP/Orbit/build/Makefile",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/tp.bat",
-		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.h",
 		"/D/KRS/Хадай-Хиней/Баяндаевский/top/1_расстояние видимости.txt",
 		"/D/KRS/Васильевка-Харагун/Бодайбинский/top/1_расстояние видимости.txt",
@@ -393,11 +232,9 @@
 		"/D/ТП/Тельма-Раздолье/Усольский/bottom/2_ширина проезжей части.txt",
 		"/D/KRS/Алужино-Корсук-Наумовка до границы района/Эхирит-Булагатский/top/1_расстояние видимости.txt",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/9_искусственные сооружения.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/3_ширина обочин слева.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/5_ширина обочин справа.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/4_ширина обочин справа.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/4_ширина проезжой части(кол-во полос движения)(тип покрытия).sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/2_ширина проезжей части.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/1_ширина земляного полотна.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/top/1_Границы зон обслуживания и наименование дорожных организаций.",
@@ -420,59 +257,11 @@
 		"/D/KRS/_READY/Усть-Ордынский -Качуг-Захал до границы района/Эхирит-Булагатский/bottom/16_искусственные сооружения.txt",
 		"/D/KRS/_READY/Иркутск-Усть-Ордынский-Жигалово-Хандагай/Баяндаевский/top/1_расстояние видимости.txt",
 		"/D/KRS/_READY/Иркутск-Усть-Ордынский-Жигалово-Маяк/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Подъезд к с.Шардай/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Подъезд к с.Хиней/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Шитхулун-Кайзаран/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Подъезд к п.Баяндай/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Подъезд к с.Свердлово/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Н.Идыга-В.Идыга/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Тугутуй-Комой/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Муромцовка-Хуты/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Иркутск-Усть-Ордынский-Булуса-Зады/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Подъезд к п.Харат/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Баяндай-Нагалык/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Байша-Нагатай/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Алужино-Корсук-Наумовка до границы района/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к п.Покровка/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Харануты-Имегей/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Алужина-Наумовка-Ользоны/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Иркутск-Усть-Ордынский-Жигалово-Гаханы-Ахины/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Иркутск-Усть-Ордынский-Жигалово-Бадагуй/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Хогот-Ст.Хогот/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к с.Хадай/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Молой-Бадагуй/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Тельма-Раздолье/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к с.Капсал/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Гаханы-Зурцаган/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к с.Баянгазуй/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к подстанции Усть-Орда/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Усть-Ордынский -Качуг-Захал до границы района/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Ользоны-Кокорина-Нагалык/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Иркутск-Усть-Ордынский-Жигалово-Байша/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Гаханы-Муромцовка/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Усть-Ордынский-Оса-Н.Идыга-Харазаргай-Кукунут/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к с.Отонхой/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к с.Хиней/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к с.Каменка/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Шитхулун-Кайзаран/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к п.Баяндай/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Черемхово-Голуметъ-Онот/Черемховский/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к с.Свердлово/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Н.Идыга-В.Идыга/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Тугутуй-Комой/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Муромцовка-Хуты/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Иркутск-Усть-Ордынский-Булуса-Зады/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Подъезд к п.Харат/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/KRS/Алужина-Наумовка-Ользоны/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Баяндай-Нагалык/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Байша-Нагатай/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Иркутск-Усть-Ордынский-Жигалово-Хандагай/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Иркутск-Усть-Ордынский-Жигалово-Маяк/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/_MMK/_ROADS/Roads-2012/Аларский Район/трубы - дамп.sql"
+		"/D/KRS/_READY/Подъезд к с.Шардай/Баяндаевский/top/1_расстояние видимости.txt"
 	],
 	"find":
 	{
-		"height": 38.0
+		"height": 36.0
 	},
 	"find_in_files":
 	{
@@ -484,9 +273,31 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
+			"DrawPolyPoints",
+			"DEFECT",
+			"defect",
+			"DEFE",
+			"bool",
+			"TDefectKind",
+			"Defect",
+			"Deffect",
+			"Deffects",
+			"ExportDescreetRoadObject",
+			"ExportCityObjects",
+			" RSign.tlb",
+			"TRoadObject",
+			"Колод",
+			"ExportBorder",
+			"Surface",
+			"OnSurfaceObjects",
+			"\n",
+			"Бохан",
+			" основное н  ",
+			"  основное н  ",
+			" основное н  ",
 			"2015",
 			"passport_when",
 			"Y",
@@ -548,7 +359,7 @@
 			"-1",
 			"Черемхово-Голуметъ-Онот (Черемховский)[0074+000]",
 			"$b\\t",
-			"$b	",
+			"$b\t",
 			" ",
 			"GetActiveObject",
 			"BindToActive",
@@ -588,9 +399,10 @@
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
+			"\\n\\t",
 			"C:\\Users\\m\\Desktop\\Roads2",
 			"2321, @N",
 			"$b ",
@@ -605,805 +417,119 @@
 	"groups":
 	[
 		{
-			"selected": 25,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/D/_MMK/d/loadspd/pakh_slw.bpr",
+					"file": "AcadExportThread.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3449,
+						"buffer_size": 41817,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								944,
-								944
+								28846,
+								28846
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/XML/XML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 31,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/D/_MMK/d/loadspd/uco_modd.bpr",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3899,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/XML/XML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 30,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/D/_MMK/d/loadspd/uucha_lec.bpr",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3906,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/XML/XML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 29,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/D/_MMK/d/ukampf/uwin_dos.bpr",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4156,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/XML/XML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 28,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "/D/_MMK/d/ukampf/usave_com.bpr",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3901,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/XML/XML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 27,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "/D/_MMK/d/cpp/srpfmain.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 21390,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 9849.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 26,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "/D/_MMK/d/.gitignore",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 30,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								29,
-								29
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 25,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "/D/_MMK/d/CMakeLists.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 10232,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								269,
-								269
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 24,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/introduction.tex",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 21208,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2376.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 16,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/part1.tex",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 22112,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 7194.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 23,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/part2.tex",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 85483,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 26964.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "/D/Program Files (x86)/MAGIX/Photo Graphic Designer 11/install.cfg",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1279,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								55,
-								55
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 15,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "/D/_MMK/_JAVA/Celebs-Image-Viewer/gradlew.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2314,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "/D/_MMK/_JAVA/Celebs-Image-Viewer/build.gradle",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1516,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 396.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "/D/_MMK/_ROADS/Roads-2016/2016_04_12_13_33/RoadLab.xml",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 21026,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/XML/XML.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 15,
-					"file": "/D/_GAMES/Rocksmith 2014/rocksmith2014_nocable_pbs.ini",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1018,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								578,
-								578
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "/D/_DISTR/wicleanup/Readme.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 687,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 17,
-					"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/dissertation.bbl",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8944,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 133.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 18,
-					"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/dissertation.tex",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 528,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX/LaTeX.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 19,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1557,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4,
-								1069
-							]
-						],
-						"settings":
-						{
-							"auto_name": "",
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 8,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 20,
-					"file": "/C/Python27/Scripts/rpatool.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 16640,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 5093.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 21,
-					"file": "/G/m/PycharmProjects/analyse/test2.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5185,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5185,
-								5185
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2428.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 22,
-					"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/biblio.bib",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 9621,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX/Bibtex.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 440.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 23,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 586,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								586,
-								586
-							]
-						],
-						"settings":
-						{
-							"auto_name": "Подъезд к деревне Ангара-Хайрюзовка",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 24,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 69,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								69,
-								69
-							]
-						],
-						"settings":
-						{
-							"auto_name": "664050, Россия, Иркутская Область, г. Иркутск, ул.",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 25,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 99,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								29,
-								29
-							]
-						],
-						"settings":
-						{
-							"auto_name": "Каташевцев Михаил Дмитриевич",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 18727.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 26,
-					"file": "/D/_GAMES/OpenRCT2/data/language/russian.txt",
+					"buffer": 1,
+					"file": "acadexport.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 141513,
+						"buffer_size": 138153,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								137961,
+								137961
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 76560.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 27,
-					"file": "/D/_GAMES/OpenRCT2/OpenRCT2 Launcher.application",
+					"buffer": 2,
+					"file": "acadexport.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 12584,
+						"buffer_size": 9871,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								6618,
+								6534
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/XML/XML.tmLanguage",
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2677.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "const.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10740,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								624,
+								627
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
@@ -1411,119 +537,37 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 28,
-					"file": "/D/_DOWNLOADS/rutracker-torrents/20160115/category_24.csv",
+					"buffer": 4,
+					"file": "RoadObj.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2347843,
+						"buffer_size": 41926,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								20884,
+								20884
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 209124.0,
+						"translation.y": 10259.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
-					"type": "text"
-				},
-				{
-					"buffer": 29,
-					"file": "/D/_DOWNLOADS/rutracker-torrents/20160115/category_25.csv",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 34129093,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 19,
-					"type": "text"
-				},
-				{
-					"buffer": 30,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"auto_name": "",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 18,
-					"type": "text"
-				},
-				{
-					"buffer": 31,
-					"file": "/D/_MMK/_AKARIN/Диссертация/Dissertation/title.tex",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 928,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 264.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 17,
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
@@ -1576,7 +620,7 @@
 	"project": "rsign.sublime-project",
 	"replace":
 	{
-		"height": 70.0
+		"height": 66.0
 	},
 	"save_all_on_build": true,
 	"select_file":

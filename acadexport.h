@@ -154,7 +154,8 @@ class TAcadExport {
       bool __fastcall ExportSignal(TExtPolyline *Poly,TRoadSignal *s,bool exist, bool fEnd = false);
       bool __fastcall ExportCurve(TDangerCurve *c, bool fEnd = false);
       bool __fastcall ExportSlope(TDangerSlope *s, int fase = 1, bool fEnd = false);
-      bool __fastcall ExportBusStop(TExtPolyline *Poly,TBusStop *s, bool fEnd = false);
+      bool __fastcall ExportBusStop(TExtPolyline *Poly, TBusStop*s, bool fEnd = false);
+      bool __fastcall ExportDescreetRoadObject(TExtPolyline *Poly, TDescreetRoadObject *s, bool fEnd = false);
       bool __fastcall ExportLighting(TExtPolyline *Poly,TRoadLighting *s, bool exist, bool fEnd = false);
 //      bool __fastcall ExportEmbankment(...)
       bool __fastcall ExportMoundHeight(TMoundHeight *m, int fase = 0, bool fEnd = false);
@@ -164,6 +165,7 @@ class TAcadExport {
       bool __fastcall ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool fEnd = false);
       bool __fastcall ExportCommunication(TExtPolyline *p, TCommunication *t, bool fEnd = false);
       bool __fastcall ExportTrafficLight(TExtPolyline *p, vector<TTrafficLight*> &t, bool fEnd = false );
+      bool __fastcall ExportDefect(TExtPolyline *Poly, TRoadDefect *d,bool fEnd = false );
       //bool __fastcall ExportCityObjects(TExtPolyline *p, TTrafficLight *t, bool fEnd = false );
 
       bool __fastcall ExportTown(TExtPolyline *p, TTown *t, bool fEnd = false);
