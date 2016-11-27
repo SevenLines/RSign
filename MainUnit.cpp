@@ -36,6 +36,7 @@
 #include "AutoCADPrintForm.h"
 #include "ItemSelectDialog.h"
 #include "ConnectionFormUnit.h"
+#include "AutoCADExportForm.h"
 
 #include "GdiPlusInclude.h"
 
@@ -259,6 +260,8 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
     lastVideoWindowPosition.Right = ini->ReadInteger("ShowRoad", "VideoRight", 0);
     lastVideoWindowPosition.Bottom = ini->ReadInteger("ShowRoad", "VideoBottom", 0);
 
+    FAutoCADExport->lastSavePath = ini->ReadString("AutoCAD", "LastSavePath", "");
+
 }
 
 void __fastcall TMainForm::WriteIni(TIniFile *ini)
@@ -279,6 +282,7 @@ void __fastcall TMainForm::WriteIni(TIniFile *ini)
 
 	ini->WriteString("PrintPattern","Name",VPatFrm->FileName);
 	ini->WriteString("Video","Servers",VideoServers->CommaText);
+     ini->WriteString("AutoCAD","LastSavePath",FAutoCADExport->lastSavePath);
     ConnectionForm->saveIni(ini);
 }
 

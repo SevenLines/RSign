@@ -210,9 +210,9 @@ public:
         void SplitTextForRoadMark(AnsiString str, int RectHeight, int RectWidth, vector<LineInfo> &lines);        
         void DrawRepeatTextIntervalRoadMark(int iRow, AnsiString str,
                                 float sPos, float ePos,
-                                AnsiString (*func)(float _min, float _max) = 0,
+                                AnsiString (*func)(float _min, float _max, void *data) = 0,
                                 float step = 0,
-                                bool fWithBorders = true, float kProp = 0.43);
+                                bool fWithBorders = true, float kProp = 0.43, void *data=0);
         void DrawTextInBordersRoadMark(int row, float offBeg,
                                     float offEnd,AnsiString str,
                                     bool fWithBorders = true,float kProp = 0.52);

@@ -15,8 +15,8 @@ public:
     static bool compareSigns(const TRoadSign* s1, const TRoadSign* s2);
     static int GetAngle(TPoint p0, TPoint p1, TPoint p2);
     static AnsiString SignLabelParser(AnsiString signName, AnsiString label);
-    static AnsiString StringConvertSignals(float f1, float f2);
-    static AnsiString StringConvert(float f1, float f2);
+    static AnsiString StringConvertSignals(float f1, float f2, void* data);
+    static AnsiString StringConvert(float f1, float f2, void* data);
 
     static void swap(int &x, int &y);
 };
@@ -31,8 +31,6 @@ bool operator==(TPoint p1, TPoint p2)
     return p1.x == p2.x && p1.y == p2.y;
 }
 
-int *sp;
-int spCount;
 int lessForVerticalLabels;
 
 #endif

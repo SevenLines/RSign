@@ -2106,6 +2106,13 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 break;
 
             case ma24_1: /*Дублирование предупреждающих дорожных знаков*/
+                block = AutoCAD.DrawBlock("r_1.24.1", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
+                                          m->Direction == roDirect ? 0 : M_PI);//ma24_2_20km
+                break;
+            case ma24_2_20km: /*Дублирование ограничения в 20км*/
+                block = AutoCAD.DrawBlock("r_1.24.2_20km", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
+                                          m->Direction == roDirect ? 0 : M_PI);
+                break;
             case ma24_2: /*Дублирование запрещающих дорожных знаков*/
             case ma24_3: /*Дублирование дорожного знака Инвалиды*/
                 BUILDER_ERROR("Разметка 1.24 на позиции " << Poly->Points[0].x << " не реализована");
@@ -2438,7 +2445,7 @@ bool __fastcall TAcadExport::ExportBarrier(TExtPolyline *Poly, TRoadBarrier *b, 
     BarrierDrawStyleParameters params;
     params.lineWeight = lineWeight;
     params.lineTypeScale = lineTypeScale;
-    params.NotExistColor = lineWeight;
+    params.NotExistColor = NotExistColor;
     params.exist = exist;
 
     switch (b->Construction) {
@@ -2625,9 +2632,8 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly, TRoadSignal *s, bo
             }
             step = length[iCur - 1] / (s->Count - 1);
 
-            int *signalsPos = new int[s->Count];
-            int signalsPosCount = 0;
-            signalsPos[signalsPosCount++] = s->LMin;
+            std::vector<int> signalsPos(s->Count);
+            signalsPos.push_back(s->LMin);
 
             iCur = 1;
             curL = 0;
@@ -2643,23 +2649,19 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly, TRoadSignal *s, bo
                 k = 1 - (length[iCur] - curL) / (length[iCur] - length[iCur - 1]);
                 tx = Poly->Points[iCur].x - Poly->Points[iCur - 1].x;
                 ty = -ScaleY * (Poly->Points[iCur].y - Poly->Points[iCur - 1].y);
-                signalsPos[signalsPosCount] = Poly->Points[iCur - 1].x + k * tx;
-                block = AutoCAD.DrawBlock("signalpost", signalsPos[signalsPosCount], -ScaleY * Poly->Points[iCur - 1].y + k * ty, 0, scale);
+                signalsPos.push_back(Poly->Points[iCur - 1].x + k * tx);
+                block = AutoCAD.DrawBlock("signalpost", signalsPos.back(), -ScaleY * Poly->Points[iCur - 1].y + k * ty, 0, scale);
                 if (!exist) block->color = NotExistColor;
-                signalsPosCount++;
             }
-
-            signalsPos[signalsPosCount++] = s->LMax;
-            sp = signalsPos;
-            spCount = signalsPosCount;
+            signalsPos.push_back(s->LMax);
 
             if (!fDrawMap) {
                 switch (s->Placement) {
                 case opLeft:
-                    tableTop.DrawRepeatTextIntervalRoadMark(iTopBarriers, "", s->LMin, s->LMax, Helpers::StringConvertSignals, iStep, true, 0.43);
+                    tableTop.DrawRepeatTextIntervalRoadMark(iTopBarriers, "", s->LMin, s->LMax, Helpers::StringConvertSignals, iStep, true, 0.43, (void*)&signalsPos);
                     break;
                 case opRight:
-                    tableBottom.DrawRepeatTextIntervalRoadMark(iBottomBarriers, "", s->LMin, s->LMax, Helpers::StringConvertSignals, iStep, true, 0.43);
+                    tableBottom.DrawRepeatTextIntervalRoadMark(iBottomBarriers, "", s->LMin, s->LMax, Helpers::StringConvertSignals, iStep, true, 0.43, (void*)&signalsPos);
                     break;
                 }
             }
@@ -2669,7 +2671,6 @@ bool __fastcall TAcadExport::ExportSignal(TExtPolyline *Poly, TRoadSignal *s, bo
             block = AutoCAD.DrawBlock("signalpost", Poly->Points[count - 1].x, -ScaleY * Poly->Points[count - 1].y, 0, scale);
             if (!exist) block->color = NotExistColor;
             delete[] length;
-            delete[] signalsPos;
         }
     } catch (...) {
         BUILDER_ERROR( ("Ошибка вывода столбиков на промежутке [" + IntToStr(s->LMin) + "; " + IntToStr(s->LMax) + "]").c_str() );

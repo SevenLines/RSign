@@ -207,6 +207,7 @@ __published:    // IDE-managed Components
     TLabel *Label30;
     TCheckBox *chkSaveToDir;
         TCheckBox *chkDefects;
+        TCheckBox *chkConditionAsExisting;
     void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
     void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
                                 TShiftState Shift);
@@ -231,6 +232,7 @@ __published:    // IDE-managed Components
     void __fastcall btnShowInfoClick(TObject *Sender);
 private:    // User declarations
     AnsiString strIniFileName;
+
     void SaveIni(TIniFile *ini);
     void LoadIni(TIniFile *ini, bool firstTime=false);
     int iCur, iPrj;
@@ -288,6 +290,7 @@ public:     // User declarations
     MPROPERTY1(Graphic);
     MPROPERTY1(DrawMap);
     MPROPERTY1(SaveToDir);
+    MPROPERTY1(ConditionAsExisting);
 
     __property bool ExportAddRows = {read = get_ExportAddRows}; \
     bool get_ExportAddRows() {

@@ -4,6 +4,7 @@
 #pragma hdrstop
 
 #include "Helpers.h"
+#include <vector>
 
 //---------------------------------------------------------------------------
 
@@ -108,16 +109,19 @@ int Helpers::GetAngle(TPoint p0, TPoint p1, TPoint p2)
     return angle * 180 / M_PI;
 }
 
-AnsiString Helpers::StringConvertSignals(float f1, float f2)
+AnsiString Helpers::StringConvertSignals(float f1, float f2, void* data)
 {
     int counter = 0;
-    for (int i = 0; i < spCount; i++) {
-        if (sp[i] >= f1 - 1 && sp[i] <= f2 + 1) {
+    AnsiString temp;
+    int t = int(f2) % 100000 / 100;
+    int i;
+    std::vector<int>* signalsPositions = (vector<int>*)data;
+
+    for (i = 0; i < signalsPositions->size(); ++i) {
+        if (signalsPositions->at(i) >= f1 - 1 && signalsPositions->at(i) <= f2 + 1) {
             counter++;
         }
     }
-    AnsiString temp;
-    int t = int(f2) % 100000 / 100;
     if (fabs(f2 - f1) >= lessForVerticalLabels * 100) {
         temp.printf(" [%i; %i]", int(f1) % 100000 / 100, t == 0 ? 1000 : t);
         return IntToStr(counter) + "רע." + temp;
@@ -126,7 +130,7 @@ AnsiString Helpers::StringConvertSignals(float f1, float f2)
 }
 
 
-AnsiString Helpers::StringConvert(float f1, float f2)
+AnsiString Helpers::StringConvert(float f1, float f2, void* data)
 {
     int t = int(f2) % 100000 / 100;
     int t1, t2;

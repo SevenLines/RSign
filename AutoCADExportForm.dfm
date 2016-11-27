@@ -258,7 +258,7 @@ object FAutoCADExport: TFAutoCADExport
     Left = 225
     Top = 0
     Width = 641
-    Height = 449
+    Height = 457
     Caption = 'pnlLeft'
     TabOrder = 1
     Visible = False
@@ -266,7 +266,7 @@ object FAutoCADExport: TFAutoCADExport
       Left = 1
       Top = 1
       Width = 224
-      Height = 447
+      Height = 455
       Align = alLeft
       Caption = 'Panel3'
       TabOrder = 0
@@ -274,14 +274,13 @@ object FAutoCADExport: TFAutoCADExport
         Left = 3
         Top = 7
         Width = 213
-        Height = 293
+        Height = 314
         BevelInner = bvRaised
         BevelOuter = bvLowered
-        Caption = 'Panel2'
         TabOrder = 0
         object chkLamps: TCheckBox
           Left = 8
-          Top = 248
+          Top = 280
           Width = 65
           Height = 17
           Caption = #1092#1086#1085#1072#1088#1080
@@ -289,7 +288,7 @@ object FAutoCADExport: TFAutoCADExport
         end
         object chkSidewalks: TCheckBox
           Left = 72
-          Top = 248
+          Top = 280
           Width = 73
           Height = 17
           Caption = #1090#1088#1086#1090#1091#1072#1088#1099
@@ -297,7 +296,7 @@ object FAutoCADExport: TFAutoCADExport
         end
         object chkBorders: TCheckBox
           Left = 144
-          Top = 248
+          Top = 280
           Width = 65
           Height = 17
           Caption = #1073#1086#1088#1076#1102#1088#1099
@@ -431,7 +430,7 @@ object FAutoCADExport: TFAutoCADExport
         end
         object chkTrafficLights: TCheckBox
           Left = 8
-          Top = 273
+          Top = 297
           Width = 79
           Height = 14
           Caption = #1089#1074#1077#1090#1086#1092#1086#1088#1099
@@ -439,7 +438,7 @@ object FAutoCADExport: TFAutoCADExport
         end
         object chkCityObjects: TCheckBox
           Left = 93
-          Top = 273
+          Top = 297
           Width = 96
           Height = 14
           Caption = #1075#1086#1088'. '#1086#1073#1098#1077#1082#1090#1099
@@ -447,7 +446,7 @@ object FAutoCADExport: TFAutoCADExport
         end
         object chkDefects: TCheckBox
           Left = 8
-          Top = 234
+          Top = 235
           Width = 169
           Height = 17
           Caption = #1076#1077#1092#1077#1082#1090#1099
@@ -456,9 +455,9 @@ object FAutoCADExport: TFAutoCADExport
       end
       object Panel1: TPanel
         Left = 3
-        Top = 301
+        Top = 325
         Width = 213
-        Height = 81
+        Height = 76
         BevelInner = bvRaised
         BevelOuter = bvLowered
         TabOrder = 1
@@ -514,7 +513,7 @@ object FAutoCADExport: TFAutoCADExport
       end
       object GroupBox9: TGroupBox
         Left = 3
-        Top = 388
+        Top = 404
         Width = 213
         Height = 48
         Caption = ' '#1074#1077#1088#1090#1080#1082#1072#1083#1100#1085#1072#1103' '#1089#1077#1090#1082#1072' '
@@ -548,7 +547,7 @@ object FAutoCADExport: TFAutoCADExport
       Left = 225
       Top = 1
       Width = 415
-      Height = 447
+      Height = 455
       Align = alClient
       Caption = 'Panel4'
       TabOrder = 1
@@ -590,7 +589,7 @@ object FAutoCADExport: TFAutoCADExport
         Left = 1
         Top = 49
         Width = 413
-        Height = 397
+        Height = 405
         ActivePage = TabSheet2
         Align = alClient
         MultiLine = True
@@ -682,7 +681,7 @@ object FAutoCADExport: TFAutoCADExport
           end
           object chkAuto6_13: TCheckBox
             Left = 2
-            Top = 265
+            Top = 257
             Width = 122
             Height = 17
             Caption = #1089#1076#1074#1080#1075#1072#1090#1100' '#1079#1085#1072#1082' 6.13 '
@@ -692,7 +691,7 @@ object FAutoCADExport: TFAutoCADExport
           end
           object chkLeftValueOnly6_13: TCheckBox
             Left = 125
-            Top = 265
+            Top = 257
             Width = 241
             Height = 17
             Caption = #1090#1086#1083#1100#1082#1086' '#1082#1080#1083#1086#1084#1077#1090#1088#1072#1078' '#1076#1086' '#1095#1077#1088#1090#1099' ('#1079#1085#1072#1082' 6.13)'
@@ -750,8 +749,8 @@ object FAutoCADExport: TFAutoCADExport
             TabOrder = 9
           end
           object chkShowAttachmentComments: TCheckBox
-            Left = 0
-            Top = 287
+            Left = 2
+            Top = 275
             Width = 209
             Height = 14
             Caption = #1042#1099#1074#1086#1076#1080#1090#1100' '#1082#1086#1084#1077#1085#1090#1072#1088#1080#1080' '#1087#1088#1080#1084#1099#1082#1072#1085#1080#1081
@@ -782,12 +781,25 @@ object FAutoCADExport: TFAutoCADExport
               '2014')
           end
           object chkSaveToDir: TCheckBox
-            Left = 0
-            Top = 304
+            Left = 2
+            Top = 289
             Width = 249
             Height = 17
-            Caption = #1079#1072#1087#1088#1072#1074#1096#1080#1074#1072#1090#1100' '#1087#1072#1087#1082#1091' '#1076#1083#1103' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103' '#1092#1072#1081#1083#1072
+            Caption = #1047#1072#1087#1088#1072#1096#1080#1074#1072#1090#1100' '#1087#1072#1087#1082#1091' '#1076#1083#1103' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103' '#1092#1072#1081#1083#1072
             TabOrder = 13
+          end
+          object chkConditionAsExisting: TCheckBox
+            Left = 2
+            Top = 305
+            Width = 351
+            Height = 17
+            Hint = 
+              #1054#1073#1098#1077#1082#1090#1099' '#1087#1088#1086#1077#1082#1090#1080#1088#1091#1077#1084#1086#1075#1086' '#1089#1083#1086#1103'  '#1073#1091#1076#1091#1090' '#1089#1095#1080#1090#1072#1090#1100#1089#1103' '#1079#1072' '#1089#1091#1097#1077#1089#1090#1074#1091#1102#1097#1080#1077' '#1077#1089#1083 +
+              #1080' '#1091' '#1085#1080#1093' '#1087#1088#1086#1089#1090#1072#1074#1083#1077#1085#1086' '#1089#1074#1086#1081#1089#1090#1074#1086' "'#1089#1086#1089#1090#1086#1103#1085#1080#1103'"'
+            Caption = #1053#1072#1083#1080#1095#1080#1077' '#1089#1086#1089#1090#1086#1103#1085#1080#1103' -- '#1087#1088#1080#1079#1085#1072#1082' '#1089#1091#1097#1077#1089#1090#1074#1091#1102#1097#1077#1075#1086' '#1086#1073#1098#1077#1082#1090#1072
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 14
           end
         end
         object TabSheet1: TTabSheet
@@ -1059,7 +1071,7 @@ object FAutoCADExport: TFAutoCADExport
           end
           object GroupBox13: TGroupBox
             Left = 0
-            Top = 208
+            Top = 216
             Width = 405
             Height = 161
             Align = alBottom

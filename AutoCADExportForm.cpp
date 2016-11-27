@@ -100,6 +100,7 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
  ini->WriteBool("AutoCAD","ExportPlan",chkPlan->Checked);
  ini->WriteBool("AutoCAD","ExportSurface",chkSurface->Checked);
  ini->WriteBool("AutoCAD","ExportTown",chkTown->Checked);
+ ini->WriteBool("AutoCAD","ExportConditionAsExisting",chkConditionAsExisting->Checked);
  ini->WriteBool("AutoCAD","ExportTrafficLights",chkTrafficLights->Checked);
  ini->WriteBool("AutoCAD","ExportCityObjects",chkCityObjects->Checked);
  ini->WriteBool("AutoCAD","ExportProfile",chkProfile->Checked);
@@ -151,6 +152,7 @@ void TFAutoCADExport::SaveIni(TIniFile *ini)
  ini->WriteString("AutoCAD","SidewalksHatch",edtSidewalksHatch->Text);
  ini->WriteString("AutoCAD","ProjectBarrierPrefix",edtProjectBarrierPrefix->Text);
 
+
  ini->WriteString("AutoCAD","TableHatch",edtTableHatch->Text);
  ini->WriteInteger("AutoCAD", "HeaderTextHeight", HeaderTextHeight);
  ini->WriteInteger("AutoCAD","ScaleY",ScaleY);
@@ -200,6 +202,7 @@ void TFAutoCADExport::LoadIni(TIniFile *ini, bool firstTime)
  chkProfile->Checked = ini->ReadBool("AutoCAD", "chkProfile", false);
  chkSurface->Checked = ini->ReadBool("AutoCAD", "ExportSurface", false);
  chkTown->Checked = ini->ReadBool("AutoCAD","ExportTown",false);
+ chkConditionAsExisting->Checked = ini->ReadBool("AutoCAD","ExportConditionAsExisting",false);
  chkProfile->Checked = ini->ReadBool("AutoCAD","ExportProfile",false);
  chkMakeHeader->Checked = ini->ReadBool("AutoCAD","MakeHeaders",true);
  chkTopAddRowsWithoutData->Checked = ini->ReadBool("AutoCAD","ExportAddRowsWithoutData",false);
@@ -222,6 +225,7 @@ void TFAutoCADExport::LoadIni(TIniFile *ini, bool firstTime)
  edtScaleYBlock->Text = ini->ReadInteger("AutoCAD","ScaleYBlock",0);   
  edtStart->Text = ini->ReadInteger("AutoCAD","iStart",-1);
  edtEnd->Text = ini->ReadInteger("AutoCAD","iEnd",-1);
+
  edtLineWidth->Text = ini->ReadInteger("AutoCAD","LineWidth",0);
  edtAutoShrinkOneLetterWidth->Text = ini->ReadInteger("AutoCAD","AutoShrinkOneLetterWidth",2300);
  edtUseVerticalTextIfLess->Text = ini->ReadInteger("AutoCAD","UseVerticalTextIfLess",50);

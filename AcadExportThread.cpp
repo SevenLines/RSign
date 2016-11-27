@@ -751,12 +751,12 @@ int __fastcall AcadExportThread::SortCurrentAndProjectObjects(TDtaSource* dataCu
     }
     // только для столбиков требуется в настройках поставить дополнительную галочку
     // для вывода существующих столбиков
-    if (dataCurrent) {
+    bool fIncludeSignalExist = dataProject!=0?FAutoCADExport->ExportSignalExistToo:true;
+    if (dataCurrent && fIncludeSignalExist) {
         SET_PROGRESS_FORM_MINMAX(0,dataCurrent->Objects->Count-1);
         SET_PROGRESS_FORM_POSITION(0)
         // столбики из существующего выводим всегда если не указан проектируемый источник,
         // иначе только если стоит галочка в настройках
-        //bool fIncludeSignalExist = dataProject!=0?FAutoCADExport->ExportSignalExistToo:true;
         for (int i=0;i<dataCurrent->Objects->Count;i++) {
             SET_PROGRESS_FORM_POSITION(i)
             if (Terminated) return -1;
@@ -791,6 +791,7 @@ int __fastcall AcadExportThread::ExportSignal(vector<pair<int,wpbar> > &data, TA
     aexp->AddLayer("RoadSignals");
 
     int lastStep = R->Step;
+    bool exist;
     R->Step = 1000;
     
     for (vector<pair<int,wpbar> >::iterator i=data.begin();i!=data.end();i++) {
@@ -798,11 +799,19 @@ int __fastcall AcadExportThread::ExportSignal(vector<pair<int,wpbar> > &data, TA
         SET_PROGRESS_FORM_POSITION((i - data.begin()));
         if (i->second.s) {
             TExtPolyline *p=i->second.s->PrepareMetric(R);
-            aexp->ExportSignal(p,i->second.s,i->second.exist);
+            exist = i->second.exist;
+            if (FAutoCADExport->ExportConditionAsExisting) {
+                exist |= i->second.s->GetPropValue("Condition") != "0";
+            }
+            aexp->ExportSignal(p,i->second.s,exist);
             delete p;
         } else if (i->second.b) {
             TExtPolyline *p=i->second.b->PrepareMetric(R);
-            aexp->ExportBarrier(p,i->second.b,i->second.exist);
+            exist = i->second.exist;
+            if (FAutoCADExport->ExportConditionAsExisting) {
+                exist |= i->second.b->GetPropValue("Condition") != "0";
+            }
+            aexp->ExportBarrier(p,i->second.b, exist);
             delete p;
         }
     }
@@ -873,13 +882,17 @@ int __fastcall AcadExportThread::ExportLamps(vector<pair<int,wpbar> > &data, TAc
 {
     SET_PROGRESS_FORM_POSITION(0)
     aexp->AddLayer("Lights");
-    
+    bool exist;
     for (vector<pair<int,wpbar> >::iterator i=data.begin();i!=data.end();i++) {
         if (Terminated) return -1;
         SET_PROGRESS_FORM_POSITION((i - data.begin()));
         if (i->second.l) {
             TExtPolyline *p=i->second.l->PrepareMetric(R);
-            aexp->ExportLighting(p,i->second.l,i->second.exist);
+            exist = i->second.exist;
+            if (FAutoCADExport->ExportConditionAsExisting) {
+                exist |= i->second.l->GetPropValue("Condition") != "0";
+            }
+            aexp->ExportLighting(p,i->second.l, exist);
             delete p;
         }
     }
@@ -1028,9 +1041,12 @@ void __fastcall AcadExportThread::Execute()
                 goto export_end;
             }
             FAutoCADExport->lastSavePath = savePath;
-            savePath = savePath + "\\" + RoadName;
-            savePath = StringReplace(savePath, "\"", "", TReplaceFlags() << rfReplaceAll);
-            savePath = StringReplace(savePath, "\'", "", TReplaceFlags() << rfReplaceAll);
+            AnsiString roadName = RoadName;
+            roadName = StringReplace(roadName, "\"", "", TReplaceFlags() << rfReplaceAll);
+            roadName = StringReplace(roadName, "\'", "", TReplaceFlags() << rfReplaceAll);
+            roadName = StringReplace(roadName, "\\", "", TReplaceFlags() << rfReplaceAll);
+            roadName = StringReplace(roadName, "/", "", TReplaceFlags() << rfReplaceAll);
+            savePath = savePath + "\\" + roadName;
         }
 
         ProgressForm->Caption = "Идет экспорт в AutoCAD";
