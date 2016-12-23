@@ -23,3 +23,4 @@ acad.err
 *.exe.config*
 *.$$$
 *.suo
+RSign.ini
