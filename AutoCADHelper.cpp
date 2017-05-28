@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <iostream>
 #include <algorithm>
+#include <Registry.hpp>
 
 #include "AutoCADHelper.h"
 #include "MickMacros.h"
@@ -168,7 +169,7 @@ AutoCADHelper::~AutoCADHelper()
 
 AcadApplication *AutoCADHelper::BindAutoCAD()
 {
-
+   CLSID_AcadApplication = ProgIDToClassID(this->AutoCADProgID); 
    if(FAILED(cadApplication.BindRunning())) return 0;
 
    if(cadApplication->Documents->Count>0 && cadApplication->ActiveDocument){
@@ -180,12 +181,13 @@ AcadApplication *AutoCADHelper::BindAutoCAD()
 
 AcadApplication * AutoCADHelper::RunAutoCAD(bool fVisible)
 {
-    /*IDispatch *disp = (IDispatch*)GetActiveOleObject(this->AutoCADProgID);
-    IAcadApplication *obj;
-    disp->QueryInterface(__uuidof(IAcadApplication), (void **)&obj); */
+    //AnsiString progId = ClassIDToProgID(CLSID_AcadApplication);
+    CLSID_AcadApplication = ProgIDToClassID(this->AutoCADProgID);
     if(FAILED(cadApplication.BindRunning())){
-        if(FAILED(cadApplication.Bind(ProgIDToClassID("AutoCAD.Application")))){
-           throw "can't run AutoCAD";
+        if(FAILED(cadApplication.BindDefault())){
+            throw "can't run AutoCAD";
+        } else {
+            Sleep(3000);
         }
     }
     cadApplication->Visible = fVisible;
@@ -200,7 +202,14 @@ AcadApplication * AutoCADHelper::RunAutoCAD(bool fVisible)
 void AutoCADHelper::setAutoCADVersion(AnsiString version)
 {
     if (version == "Default") {
-      this->AutoCADProgID = "AutoCAD.Application";
+      TRegistry *reg = new TRegistry;
+      try
+      {
+          reg->OpenKeyReadOnly("Software\\Classes\\AutoCAD.Application\\CurVer");
+          this->AutoCADProgID = reg->ReadString("");
+      } __finally {
+          delete reg;
+      }
     } else {
       int iVersion = version.ToInt() - 2012 + 18;
       this->AutoCADProgID = "AutoCAD.Application." + IntToStr(iVersion);

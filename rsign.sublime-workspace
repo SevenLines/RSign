@@ -40,200 +40,13 @@
 	"buffers":
 	[
 		{
-			"file": "acadexport.h",
+			"contents": "Searching 2209 files for \"SaveToDir\" (whole word)\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADExportForm.h:\n  289      MPROPERTY1(Graphic);\n  290      MPROPERTY1(DrawMap);\n  291:     MPROPERTY1(SaveToDir);\n  292      MPROPERTY1(ConditionAsExisting);\n  293  \n\n1 match in 1 file\n\n\n\nSearching 2209 files for \"SaveToDir\"\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.cpp:\n 1036      if (aexp->BeginDocument(R)) {\n 1037  \n 1038:         if (FAutoCADExport->ExportSaveToDir) {\n 1039              savePath = FAutoCADExport->lastSavePath;\n 1040              if (!SelectDirectory(\"Выберете папку для сохранения файла\", \"\", savePath)) {\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADExportForm.h:\n  206      TComboBox *cmbAutoCADVersion;\n  207      TLabel *Label30;\n  208:     TCheckBox *chkSaveToDir;\n  209          TCheckBox *chkDefects;\n  210          TCheckBox *chkConditionAsExisting;\n  ...\n  289      MPROPERTY1(Graphic);\n  290      MPROPERTY1(DrawMap);\n  291:     MPROPERTY1(SaveToDir);\n  292      MPROPERTY1(ConditionAsExisting);\n  293  \n\n3 matches across 2 files\n\n\nSearching 2209 files for \"lastSavePath\"\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.cpp:\n 1037  \n 1038          if (FAutoCADExport->ExportSaveToDir) {\n 1039:             savePath = FAutoCADExport->lastSavePath;\n 1040              if (!SelectDirectory(\"Выберете папку для сохранения файла\", \"\", savePath)) {\n 1041                  goto export_end;\n 1042              }\n 1043:             FAutoCADExport->lastSavePath = savePath;\n 1044              AnsiString roadName = RoadName;\n 1045              roadName = StringReplace(roadName, \"\\\"\", \"\", TReplaceFlags() << rfReplaceAll);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADExportForm.cpp:\n  152   ini->WriteString(\"AutoCAD\",\"SidewalksHatch\",edtSidewalksHatch->Text);\n  153   ini->WriteString(\"AutoCAD\",\"ProjectBarrierPrefix\",edtProjectBarrierPrefix->Text);\n  154:  ini->WriteString(\"AutoCAD\",\"LastSavePath\",lastSavePath);\n  155  \n  156   ini->WriteString(\"AutoCAD\",\"TableHatch\",edtTableHatch->Text);\n  ...\n  226   edtStart->Text = ini->ReadInteger(\"AutoCAD\",\"iStart\",-1);\n  227   edtEnd->Text = ini->ReadInteger(\"AutoCAD\",\"iEnd\",-1);\n  228:  lastSavePath = ini->ReadString(\"AutoCAD\", \"LastSavePath\", \"\");\n  229   edtLineWidth->Text = ini->ReadInteger(\"AutoCAD\",\"LineWidth\",0);\n  230   edtAutoShrinkOneLetterWidth->Text = ini->ReadInteger(\"AutoCAD\",\"AutoShrinkOneLetterWidth\",2300);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADExportForm.h:\n  248      AnsiString RoadName;\n  249      AnsiString RoadDistrict;\n  250:     AnsiString lastSavePath;\n  251  \n  252      int getExportTo() {return rgOut->ItemIndex;}\n\nD:\\_DISTR\\_ASUDOR\\RSign\\RSign.ini:\n  120  PDFBinder=.\\AutoCAD\\PDFBinder\\pdfbinder.exe\n  121  ExportConditionAsExisting=1\n  122: LastSavePath=d:\\_MMK\\_ROADS\\Roads-2016\\ÄÈÀÃÍÎÑÒÈÊÀ\\ÏÎÄÄ\\\n  123  \n\n8 matches across 4 files\n\n\nSearching 2211 files for \"ma24_2\"\n\nD:\\_DISTR\\_ASUDOR\\RSign\\acadexport.cpp:\n 2107  \n 2108              case ma24_1: /*Дублирование предупреждающих дорожных знаков*/\n 2109:             case ma24_2: /*Дублирование запрещающих дорожных знаков*/\n 2110              case ma24_3: /*Дублирование дорожного знака Инвалиды*/\n 2111                  BUILDER_ERROR(\"Разметка 1.24 на позиции \" << Poly->Points[0].x << \" не реализована\");\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.cpp:\n  685                        case ma23:\n  686                        case ma24_1:\n  687:                       case ma24_2:\n  688                        case ma24_3:\n  689                        case ma24_4:\n\nD:\\_DISTR\\_ASUDOR\\RSign\\const.h:\n  254      ma18r=2384983,ma18l=2384984,ma18pr=2384985,ma18pl=2384986,ma18rl=2385131,ma18prl=2384987,\n  255      ma19_1=2384988,ma19_2=2384989,ma20=2384990,ma21=2384991,ma22=2384992,ma23=2384993,\n  256:     ma24_1=2385127,ma24_2=2385128,ma24_3=2385129,ma24_4=2385266,ma25=2385130,ma14_1e=2385260,ma14_2e=2385272};\n  257  \n  258  enum TTrafficLightsPlacement {tlpOpora=2385257,tlpConsol=2385258,tlpRast=2385259};\n  ...\n  267  const TMarkKind MLIslands[MLIslandsCount]={ma16_1,ma16_2,ma16_3};\n  268  #define MLArrowsCount 16\n  269: const TMarkKind MLArrows[MLArrowsCount]={ma18p,ma18l,ma18r,ma18pl,ma18pr,ma18rl,ma18prl,ma19_1,ma19_2,ma20,ma21,ma22,ma23,ma24_1,ma24_2,ma24_3};\n  270  \n  271  \n\n4 matches across 3 files\n\n\nSearching 2216 files for \"ma24_1\"\n\nD:\\_DISTR\\_ASUDOR\\RSign\\acadexport.cpp:\n 2106                  break;\n 2107  \n 2108:             case ma24_1: /*Дублирование предупреждающих дорожных знаков*/\n 2109                  block = AutoCAD.DrawBlock(\"r_1.24_1\", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,\n 2110                                            m->Direction == roDirect ? 0 : M_PI);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.cpp:\n  684                        case ma20:\n  685                        case ma23:\n  686:                       case ma24_1:\n  687                        case ma24_2:\n  688                        case ma24_3:\n\nD:\\_DISTR\\_ASUDOR\\RSign\\const.h:\n  254      ma18r=2384983,ma18l=2384984,ma18pr=2384985,ma18pl=2384986,ma18rl=2385131,ma18prl=2384987,\n  255      ma19_1=2384988,ma19_2=2384989,ma20=2384990,ma21=2384991,ma22=2384992,ma23=2384993,\n  256:     ma24_1=2385127,ma24_2=2385128,ma24_3=2385129,ma24_4=2385266,ma25=2385130,ma14_1e=2385260,ma14_2e=2385272};\n  257  \n  258  enum TTrafficLightsPlacement {tlpOpora=2385257,tlpConsol=2385258,tlpRast=2385259};\n  ...\n  267  const TMarkKind MLIslands[MLIslandsCount]={ma16_1,ma16_2,ma16_3};\n  268  #define MLArrowsCount 16\n  269: const TMarkKind MLArrows[MLArrowsCount]={ma18p,ma18l,ma18r,ma18pl,ma18pr,ma18rl,ma18prl,ma19_1,ma19_2,ma20,ma21,ma22,ma23,ma24_1,ma24_2,ma24_3};\n  270  \n  271  \n\n4 matches across 3 files\n\n\nSearching 2215 files for \"newBlockName\"\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADHelper.cpp:\n 1190  AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, vector<WideString> &labels)\n 1191  {\n 1192: \tAnsiString newBlockName;\n 1193  \tAcadBlockPtr newBlock;\n 1194  \tIAcadBlock* tempBlock;\n ....\n 1203  \t\t\tBUILDER_ERROR(\"Блок '\" << AnsiString(blocksNames[i]).c_str() << \"' не найден\");\n 1204  \t\t}\n 1205: \t\tif (newBlockName!=\"\") newBlockName+=\"_\";\n 1206: \t\tnewBlockName += blocksNames[i];\n 1207  \t\t\n 1208  \t\tAnsiString label = labels[i];\n ....\n 1214          label = StringReplace(label, \">\", \"\", TReplaceFlags() << rfReplaceAll);\n 1215  \t\tif (!labels[i].IsEmpty()) {\n 1216: \t\t\tnewBlockName += \"[\" + label + \"]\";\n 1217  \t\t}\n 1218  \t\t\n ....\n 1222  \t\n 1223  \t// пробуем возвратить ново-созданный блок, вдруг он уже существует\n 1224: \tif (std::find(existingBlocks.begin(), existingBlocks.end(), newBlockName) != existingBlocks.end()) {\n 1225: \t\treturn cadActiveDocument->Blocks->Item(Variant(newBlockName));\n 1226  \t}\n 1227  \t\n ....\n 1256  \t//\tформируем новый блок\n 1257  \tint yOffset = 0;\n 1258: \tnewBlock = cadActiveDocument->Blocks->Add(cadPoint(0, 0), WideString(newBlockName));\n 1259  \tfor(int i=0;i<blocks.size();++i) {\n 1260  \t\tif(blockHeights[i] != -1) {\n\n8 matches in 1 file\n\n\nSearching 2235 files for \"AutoCAD_OCX\" (regex)\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADHelper.h:\n    5  #ifndef WITHOUT_AUTOCAD\n    6  \n    7: #include \"AutoCAD_OCX.h\"\n    8  #include <string.h>\n    9  #include <Graphics.hpp>\n\nD:\\_DISTR\\_ASUDOR\\RSign\\RSign.bpr:\n   22        MiniReports.obj ItemSelectDialog.obj TConnectionFormThreadUnit.obj \n   23        ConnectionFormUnit.obj VideoBar.obj ActiveX\\MyActiveX.obj Helpers.obj \n   24:       VisModeForm.obj AutoCAD\\versions\\AutoCAD_OCX.obj \n   25        AutoCAD\\versions\\AutoCAD_TLB.obj\"/>\n   26      <RESFILES value=\"RSign.res RSign.tlb\"/>\n   ..\n  167        <FILE FILENAME=\"Helpers.cpp\" FORMNAME=\"\" UNITNAME=\"Helpers\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  168        <FILE FILENAME=\"VisModeForm.cpp\" FORMNAME=\"frmVisMode\" UNITNAME=\"VisModeForm\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  169:       <FILE FILENAME=\"AutoCAD\\versions\\AutoCAD_OCX.cpp\" FORMNAME=\"\" UNITNAME=\"AutoCAD_OCX.cpp\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  170        <FILE FILENAME=\"AutoCAD\\versions\\AutoCAD_TLB.cpp\" FORMNAME=\"\" UNITNAME=\"AutoCAD_TLB.cpp\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  171    </FILELIST>\n\nD:\\_DISTR\\_ASUDOR\\RSign\\ShowRoad.cpp:\n   34  #include \"ProgressFrm.h\"\n   35  \n   36: #ifdef AutoCAD_OCXH // check is AutoCAD available\n   37  #include \"AutoCADExportForm.h\"\n   38  #include \"AcadExportThread.h\"\n   ..\n 1059  \n 1060  void __fastcall TRoadFrm::AcadPrint(void){\n 1061: #ifdef AutoCAD_OCXH  // check is AutoCAD available\n 1062  \tTAcadExport *aexp=new TAcadExport();\n 1063  \tint L1=MetricData->Road->LMin;\n ....\n 1083  \n 1084  void __fastcall TRoadFrm::AcadExport(void) {\n 1085: #ifdef AutoCAD_OCXH  // check is AutoCAD available\n 1086      FAutoCADExport->SetRoadId(RoadId);\n 1087      FAutoCADExport->RoadName = FRoadName;\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\src\\AutoCAD_OCX.cpp:\n   45  #endif\n   46  \n   47: #include \"AutoCAD_OCX.h\"\n   48  \n   49  #if !defined(__PRAGMA_PACKAGE_SMART_INIT)\n   ..\n  766  // informs the IDE of the OCX proxy classes implemented here.\n  767  // *********************************************************************//\n  768: namespace Autocad_ocx\n  769  {\n  770  \n  ...\n  786  }\n  787  \n  788: };     // namespace Autocad_ocx\n  789  \n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\src\\AutoCAD_OCX.h:\n   22  //   (1) v2.0 stdole, (C:\\Windows\\SysWOW64\\stdole2.tlb)\n   23  // ************************************************************************ //\n   24: #ifndef   AutoCAD_OCXH\n   25: #define   AutoCAD_OCXH\n   26  \n   27  #pragma option push -b -w-inl\n   ..\n 2607  #pragma option pop\n 2608  \n 2609: #endif // AutoCAD_OCXH\n 2610  \n\n13 matches across 5 files\n\n\nSearching 2218 files for \"AutoCAD_OCX\" (regex)\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADHelper.h:\n    5  #ifndef WITHOUT_AUTOCAD\n    6  \n    7: #include \"AutoCAD_OCX.h\"\n    8  #include <string.h>\n    9  #include <Graphics.hpp>\n\nD:\\_DISTR\\_ASUDOR\\RSign\\RSign.bpr:\n   22        MiniReports.obj ItemSelectDialog.obj TConnectionFormThreadUnit.obj \n   23        ConnectionFormUnit.obj VideoBar.obj ActiveX\\MyActiveX.obj Helpers.obj \n   24:       VisModeForm.obj AutoCAD\\versions\\AutoCAD_OCX.obj \n   25        AutoCAD\\versions\\AutoCAD_TLB.obj\"/>\n   26      <RESFILES value=\"RSign.res RSign.tlb\"/>\n   ..\n  167        <FILE FILENAME=\"Helpers.cpp\" FORMNAME=\"\" UNITNAME=\"Helpers\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  168        <FILE FILENAME=\"VisModeForm.cpp\" FORMNAME=\"frmVisMode\" UNITNAME=\"VisModeForm\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  169:       <FILE FILENAME=\"AutoCAD\\versions\\AutoCAD_OCX.cpp\" FORMNAME=\"\" UNITNAME=\"AutoCAD_OCX.cpp\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  170        <FILE FILENAME=\"AutoCAD\\versions\\AutoCAD_TLB.cpp\" FORMNAME=\"\" UNITNAME=\"AutoCAD_TLB.cpp\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  171    </FILELIST>\n\nD:\\_DISTR\\_ASUDOR\\RSign\\ShowRoad.cpp:\n   34  #include \"ProgressFrm.h\"\n   35  \n   36: #ifdef AutoCAD_OCXH // check is AutoCAD available\n   37  #include \"AutoCADExportForm.h\"\n   38  #include \"AcadExportThread.h\"\n   ..\n 1059  \n 1060  void __fastcall TRoadFrm::AcadPrint(void){\n 1061: #ifdef AutoCAD_OCXH  // check is AutoCAD available\n 1062  \tTAcadExport *aexp=new TAcadExport();\n 1063  \tint L1=MetricData->Road->LMin;\n ....\n 1083  \n 1084  void __fastcall TRoadFrm::AcadExport(void) {\n 1085: #ifdef AutoCAD_OCXH  // check is AutoCAD available\n 1086      FAutoCADExport->SetRoadId(RoadId);\n 1087      FAutoCADExport->RoadName = FRoadName;\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\src\\AutoCAD_OCX.cpp:\n   45  #endif\n   46  \n   47: #include \"AutoCAD\\src\\AutoCAD_OCX.h\"\n   48  \n   49  #if !defined(__PRAGMA_PACKAGE_SMART_INIT)\n   ..\n  766  // informs the IDE of the OCX proxy classes implemented here.\n  767  // *********************************************************************//\n  768: namespace Autocad_ocx\n  769  {\n  770  \n  ...\n  786  }\n  787  \n  788: };     // namespace Autocad_ocx\n  789  \n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\src\\AutoCAD_OCX.h:\n   22  //   (1) v2.0 stdole, (C:\\Windows\\SysWOW64\\stdole2.tlb)\n   23  // ************************************************************************ //\n   24: #ifndef   AutoCAD_OCXH\n   25: #define   AutoCAD_OCXH\n   26  \n   27  #pragma option push -b -w-inl\n   ..\n 2607  #pragma option pop\n 2608  \n 2609: #endif // AutoCAD_OCXH\n 2610  \n\n13 matches across 5 files\n\n\nSearching 2220 files for \"LIBID_AutoCAD\" (regex)\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\src\\AutoCAD_TLB.cpp:\n   53  // GUIDS declared in the TypeLibrary                                      \n   54  // *********************************************************************//\n   55: GUID LIBID_AutoCAD = {0xE072BCE4, 0x9027, 0x4F86,{ 0xBA, 0xE2, 0xEF,0x11, 0x9F, 0xD0,0xA0, 0xD3} };\n   56  GUID IID_IAcadObject = {0x425F38BA, 0x456A, 0x4937,{ 0x88, 0x25, 0xBE,0xA0, 0x6D, 0x12,0xDA, 0xA2} };\n   57  GUID IID_IAcadDatabase = {0x1086243D, 0x9230, 0x49F6,{ 0xB7, 0xDE, 0xFF,0x08, 0x2A, 0x68,0x3F, 0x50} };\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\src\\AutoCAD_TLB.h:\n   71  //   Non-DISP interfaces: IID_xxxx                                        \n   72  // *********************************************************************//\n   73: extern __declspec (package) const GUID LIBID_AutoCAD;\n   74  extern __declspec (package) const GUID GUID_AcBoolean;\n   75  extern __declspec (package) const GUID GUID_AcOnOff;\n   ..\n 1667  typedef IAcadToolbarItemPtr AcadToolbarItemPtr;\n 1668  \n 1669: #define LIBID_OF_AcadHyperlink (&LIBID_AutoCAD)\n 1670: #define LIBID_OF_AcadDynamicBlockReferenceProperty (&LIBID_AutoCAD)\n 1671: #define LIBID_OF_AcadAcCmColor (&LIBID_AutoCAD)\n 1672: #define LIBID_OF_AcadObject (&LIBID_AutoCAD)\n 1673: #define LIBID_OF_AcadXRecord (&LIBID_AutoCAD)\n 1674: #define LIBID_OF_AcadSortentsTable (&LIBID_AutoCAD)\n 1675: #define LIBID_OF_AcadDimStyle (&LIBID_AutoCAD)\n 1676: #define LIBID_OF_AcadLayer (&LIBID_AutoCAD)\n 1677: #define LIBID_OF_AcadLineType (&LIBID_AutoCAD)\n 1678: #define LIBID_OF_AcadMaterial (&LIBID_AutoCAD)\n 1679: #define LIBID_OF_AcadRegisteredApplication (&LIBID_AutoCAD)\n 1680: #define LIBID_OF_AcadTextStyle (&LIBID_AutoCAD)\n 1681: #define LIBID_OF_AcadUCS (&LIBID_AutoCAD)\n 1682: #define LIBID_OF_AcadView (&LIBID_AutoCAD)\n 1683: #define LIBID_OF_AcadViewport (&LIBID_AutoCAD)\n 1684: #define LIBID_OF_AcadGroup (&LIBID_AutoCAD)\n 1685: #define LIBID_OF_AcadPlotConfiguration (&LIBID_AutoCAD)\n 1686: #define LIBID_OF_AcadLayout (&LIBID_AutoCAD)\n 1687: #define LIBID_OF_AcadIdPair (&LIBID_AutoCAD)\n 1688: #define LIBID_OF_AcadTableStyle (&LIBID_AutoCAD)\n 1689: #define LIBID_OF_AcadSectionSettings (&LIBID_AutoCAD)\n 1690: #define LIBID_OF_AcadSectionTypeSettings (&LIBID_AutoCAD)\n 1691: #define LIBID_OF_AcadMLeaderStyle (&LIBID_AutoCAD)\n 1692: #define LIBID_OF_AcadHyperlinks (&LIBID_AutoCAD)\n 1693: #define LIBID_OF_AcadDictionary (&LIBID_AutoCAD)\n 1694: #define LIBID_OF_AcadLayers (&LIBID_AutoCAD)\n 1695: #define LIBID_OF_AcadDimStyles (&LIBID_AutoCAD)\n 1696: #define LIBID_OF_AcadDictionaries (&LIBID_AutoCAD)\n 1697: #define LIBID_OF_AcadLineTypes (&LIBID_AutoCAD)\n 1698: #define LIBID_OF_AcadMaterials (&LIBID_AutoCAD)\n 1699: #define LIBID_OF_AcadTextStyles (&LIBID_AutoCAD)\n 1700: #define LIBID_OF_AcadUCSs (&LIBID_AutoCAD)\n 1701: #define LIBID_OF_AcadRegisteredApplications (&LIBID_AutoCAD)\n 1702: #define LIBID_OF_AcadViews (&LIBID_AutoCAD)\n 1703: #define LIBID_OF_AcadViewports (&LIBID_AutoCAD)\n 1704: #define LIBID_OF_AcadGroups (&LIBID_AutoCAD)\n 1705: #define LIBID_OF_AcadBlocks (&LIBID_AutoCAD)\n 1706: #define LIBID_OF_AcadLayouts (&LIBID_AutoCAD)\n 1707: #define LIBID_OF_AcadPlotConfigurations (&LIBID_AutoCAD)\n 1708: #define LIBID_OF_AcadEntity (&LIBID_AutoCAD)\n 1709: #define LIBID_OF_AcadRasterImage (&LIBID_AutoCAD)\n 1710: #define LIBID_OF_Acad3DFace (&LIBID_AutoCAD)\n 1711: #define LIBID_OF_Acad3DPolyline (&LIBID_AutoCAD)\n 1712: #define LIBID_OF_AcadRegion (&LIBID_AutoCAD)\n 1713: #define LIBID_OF_Acad3DSolid (&LIBID_AutoCAD)\n 1714: #define LIBID_OF_AcadArc (&LIBID_AutoCAD)\n 1715: #define LIBID_OF_AcadAttribute (&LIBID_AutoCAD)\n 1716: #define LIBID_OF_AcadAttributeReference (&LIBID_AutoCAD)\n 1717: #define LIBID_OF_AcadBlockReference (&LIBID_AutoCAD)\n 1718: #define LIBID_OF_AcadCircle (&LIBID_AutoCAD)\n 1719: #define LIBID_OF_AcadEllipse (&LIBID_AutoCAD)\n 1720: #define LIBID_OF_AcadHatch (&LIBID_AutoCAD)\n 1721: #define LIBID_OF_AcadLeader (&LIBID_AutoCAD)\n 1722: #define LIBID_OF_AcadMLeaderLeader (&LIBID_AutoCAD)\n 1723: #define LIBID_OF_AcadMLeader (&LIBID_AutoCAD)\n 1724: #define LIBID_OF_AcadLWPolyline (&LIBID_AutoCAD)\n 1725: #define LIBID_OF_AcadLine (&LIBID_AutoCAD)\n 1726: #define LIBID_OF_AcadMText (&LIBID_AutoCAD)\n 1727: #define LIBID_OF_AcadPoint (&LIBID_AutoCAD)\n 1728: #define LIBID_OF_AcadPolyline (&LIBID_AutoCAD)\n 1729: #define LIBID_OF_AcadPolygonMesh (&LIBID_AutoCAD)\n 1730: #define LIBID_OF_AcadRay (&LIBID_AutoCAD)\n 1731: #define LIBID_OF_AcadShape (&LIBID_AutoCAD)\n 1732: #define LIBID_OF_AcadSolid (&LIBID_AutoCAD)\n 1733: #define LIBID_OF_AcadSpline (&LIBID_AutoCAD)\n 1734: #define LIBID_OF_AcadText (&LIBID_AutoCAD)\n 1735: #define LIBID_OF_AcadTolerance (&LIBID_AutoCAD)\n 1736: #define LIBID_OF_AcadTrace (&LIBID_AutoCAD)\n 1737: #define LIBID_OF_AcadXline (&LIBID_AutoCAD)\n 1738: #define LIBID_OF_AcadPViewport (&LIBID_AutoCAD)\n 1739: #define LIBID_OF_AcadMInsertBlock (&LIBID_AutoCAD)\n 1740: #define LIBID_OF_AcadPolyfaceMesh (&LIBID_AutoCAD)\n 1741: #define LIBID_OF_AcadMLine (&LIBID_AutoCAD)\n 1742: #define LIBID_OF_AcadExternalReference (&LIBID_AutoCAD)\n 1743: #define LIBID_OF_AcadTable (&LIBID_AutoCAD)\n 1744: #define LIBID_OF_AcadOle (&LIBID_AutoCAD)\n 1745: #define LIBID_OF_AcadHelix (&LIBID_AutoCAD)\n 1746: #define LIBID_OF_AcadSurface (&LIBID_AutoCAD)\n 1747: #define LIBID_OF_AcadPlaneSurface (&LIBID_AutoCAD)\n 1748: #define LIBID_OF_AcadExtrudedSurface (&LIBID_AutoCAD)\n 1749: #define LIBID_OF_AcadRevolvedSurface (&LIBID_AutoCAD)\n 1750: #define LIBID_OF_AcadSweptSurface (&LIBID_AutoCAD)\n 1751: #define LIBID_OF_AcadLoftedSurface (&LIBID_AutoCAD)\n 1752: #define LIBID_OF_AcadSection (&LIBID_AutoCAD)\n 1753: #define LIBID_OF_AcadSectionManager (&LIBID_AutoCAD)\n 1754: #define LIBID_OF_AcadDwfUnderlay (&LIBID_AutoCAD)\n 1755: #define LIBID_OF_AcadDgnUnderlay (&LIBID_AutoCAD)\n 1756: #define LIBID_OF_AcadPdfUnderlay (&LIBID_AutoCAD)\n 1757: #define LIBID_OF_AcadSubEntity (&LIBID_AutoCAD)\n 1758: #define LIBID_OF_AcadSubEntSolidFace (&LIBID_AutoCAD)\n 1759: #define LIBID_OF_AcadSubEntSolidEdge (&LIBID_AutoCAD)\n 1760: #define LIBID_OF_AcadSubEntSolidVertex (&LIBID_AutoCAD)\n 1761: #define LIBID_OF_AcadSubEntSolidNode (&LIBID_AutoCAD)\n 1762: #define LIBID_OF_AcadWipeout (&LIBID_AutoCAD)\n 1763: #define LIBID_OF_AcadSubDMesh (&LIBID_AutoCAD)\n 1764: #define LIBID_OF_AcadSubDMeshFace (&LIBID_AutoCAD)\n 1765: #define LIBID_OF_AcadSubDMeshEdge (&LIBID_AutoCAD)\n 1766: #define LIBID_OF_AcadSubDMeshVertex (&LIBID_AutoCAD)\n 1767: #define LIBID_OF_AcadNurbSurface (&LIBID_AutoCAD)\n 1768: #define LIBID_OF_AcadDimension (&LIBID_AutoCAD)\n 1769: #define LIBID_OF_AcadDimAligned (&LIBID_AutoCAD)\n 1770: #define LIBID_OF_AcadDimAngular (&LIBID_AutoCAD)\n 1771: #define LIBID_OF_AcadDimDiametric (&LIBID_AutoCAD)\n 1772: #define LIBID_OF_AcadDimOrdinate (&LIBID_AutoCAD)\n 1773: #define LIBID_OF_AcadDimRadial (&LIBID_AutoCAD)\n 1774: #define LIBID_OF_AcadDimRotated (&LIBID_AutoCAD)\n 1775: #define LIBID_OF_AcadDim3PointAngular (&LIBID_AutoCAD)\n 1776: #define LIBID_OF_AcadDimArcLength (&LIBID_AutoCAD)\n 1777: #define LIBID_OF_AcadDimRadialLarge (&LIBID_AutoCAD)\n 1778: #define LIBID_OF_AcadBlock (&LIBID_AutoCAD)\n 1779: #define LIBID_OF_AcadModelSpace (&LIBID_AutoCAD)\n 1780: #define LIBID_OF_AcadPaperSpace (&LIBID_AutoCAD)\n 1781: #define LIBID_OF_AcadPointCloud (&LIBID_AutoCAD)\n 1782: #define LIBID_OF_AcadFileDependency (&LIBID_AutoCAD)\n 1783: #define LIBID_OF_AcadFileDependencies (&LIBID_AutoCAD)\n 1784: #define LIBID_OF_AcadSummaryInfo (&LIBID_AutoCAD)\n 1785: #define LIBID_OF_AcadDatabasePreferences (&LIBID_AutoCAD)\n 1786: #define LIBID_OF_AcadDatabase (&LIBID_AutoCAD)\n 1787: #define LIBID_OF_AcadSecurityParams (&LIBID_AutoCAD)\n 1788: #define LIBID_OF_AcadLayerStateManager (&LIBID_AutoCAD)\n 1789: #define LIBID_OF_AcadState (&LIBID_AutoCAD)\n 1790: #define LIBID_OF_AcadApplication (&LIBID_AutoCAD)\n 1791: #define LIBID_OF_AcadApplicationMinorVersion1 (&LIBID_AutoCAD)\n 1792: #define LIBID_OF_AcadApplicationMinorVersion2 (&LIBID_AutoCAD)\n 1793: #define LIBID_OF_AcadSelectionSet (&LIBID_AutoCAD)\n 1794: #define LIBID_OF_AcadSelectionSets (&LIBID_AutoCAD)\n 1795: #define LIBID_OF_AcadPlot (&LIBID_AutoCAD)\n 1796: #define LIBID_OF_AcadPreferences (&LIBID_AutoCAD)\n 1797: #define LIBID_OF_AcadPreferencesDrafting (&LIBID_AutoCAD)\n 1798: #define LIBID_OF_AcadPreferencesDisplay (&LIBID_AutoCAD)\n 1799: #define LIBID_OF_AcadPreferencesFiles (&LIBID_AutoCAD)\n 1800: #define LIBID_OF_AcadPreferencesOpenSave (&LIBID_AutoCAD)\n 1801: #define LIBID_OF_AcadPreferencesOutput (&LIBID_AutoCAD)\n 1802: #define LIBID_OF_AcadPreferencesProfiles (&LIBID_AutoCAD)\n 1803: #define LIBID_OF_AcadPreferencesSelection (&LIBID_AutoCAD)\n 1804: #define LIBID_OF_AcadPreferencesSystem (&LIBID_AutoCAD)\n 1805: #define LIBID_OF_AcadPreferencesUser (&LIBID_AutoCAD)\n 1806: #define LIBID_OF_AcadMenuGroups (&LIBID_AutoCAD)\n 1807: #define LIBID_OF_AcadMenuGroup (&LIBID_AutoCAD)\n 1808: #define LIBID_OF_AcadMenuBar (&LIBID_AutoCAD)\n 1809: #define LIBID_OF_AcadPopupMenus (&LIBID_AutoCAD)\n 1810: #define LIBID_OF_AcadPopupMenu (&LIBID_AutoCAD)\n 1811: #define LIBID_OF_AcadPopupMenuItem (&LIBID_AutoCAD)\n 1812: #define LIBID_OF_AcadUtility (&LIBID_AutoCAD)\n 1813: #define LIBID_OF_AcadDocument (&LIBID_AutoCAD)\n 1814: #define LIBID_OF_AcadDocuments (&LIBID_AutoCAD)\n 1815: #define LIBID_OF_AcadToolbars (&LIBID_AutoCAD)\n 1816: #define LIBID_OF_AcadToolbar (&LIBID_AutoCAD)\n 1817: #define LIBID_OF_AcadToolbarItem (&LIBID_AutoCAD)\n 1818  \n 1819  // *********************************************************************//\n\n151 matches across 2 files\n\n\nSearching 2220 files for \"BindAutoCAD\" (regex)\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADHelper.cpp:\n  168  }\n  169  \n  170: AcadApplication *AutoCADHelper::BindAutoCAD()\n  171  {\n  172  \n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADHelper.h:\n  306          /*ПРИЛОЖЕНИЕ -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/\n  307          AcadApplication *RunAutoCAD(bool fVisible=true);\n  308:         AcadApplication *BindAutoCAD();\n  309          void setAutoCADVersion(AnsiString version);\n  310          void ResetBlocksCollection();\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADPrintForm.cpp:\n  694  \thelper = 0;\n  695  \n  696: \tif (AutoCAD.BindAutoCAD()) {\n  697  \t\tif (!AutoCAD.ActiveDocument) {\n  698  \t\t\tif (!ffirst1)ShowMessage(\"Íå âîçìîæíî ïîäêëþ÷èòüñÿ ê àêòèâíîìó äîêóìåíòó.\\n\\\n\n3 matches across 3 files\n\n\nSearching 2220 files for \"BindRunning\" (regex)\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADHelper.cpp:\n  171  {\n  172  \n  173:    if(FAILED(cadApplication.BindRunning())) return 0;\n  174  \n  175     if(cadApplication->Documents->Count>0 && cadApplication->ActiveDocument){\n\nD:\\_DISTR\\_ASUDOR\\RSign\\RSign_TLB.h:\n  189    }\n  190  \n  191:   HRESULT BindRunning()\n  192    {\n  193      return BindToActive(CLSID_RoadView);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\ActiveX\\MediaPlayer_TLB.h:\n 2680    }\n 2681  \n 2682:   HRESULT BindRunning()\n 2683    {\n 2684      return BindToActive(CLSID_DirectControl);\n ....\n 2809    }\n 2810  \n 2811:   HRESULT BindRunning()\n 2812    {\n 2813      return BindToActive(CLSID_RadioView);\n ....\n 3388    }\n 3389  \n 3390:   HRESULT BindRunning()\n 3391    {\n 3392      return BindToActive(CLSID_MediaPlayer_);\n ....\n 4513    }\n 4514  \n 4515:   HRESULT BindRunning()\n 4516    {\n 4517      return BindToActive(CLSID_AsyncPProt);\n ....\n 4577    }\n 4578  \n 4579:   HRESULT BindRunning()\n 4580    {\n 4581      return BindToActive(CLSID_AsyncMHandler);\n ....\n 4693    }\n 4694  \n 4695:   HRESULT BindRunning()\n 4696    {\n 4697      return BindToActive(CLSID_RadioPlayer);\n ....\n 4874    }\n 4875  \n 4876:   HRESULT BindRunning()\n 4877    {\n 4878      return BindToActive(CLSID_RadioBand);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\src\\AutoCAD_TLB.h:\n 28035    }\n 28036  \n 28037:   HRESULT BindRunning()\n 28038    {\n 28039      return BindToActive(CLSID_AcadObject);\n .....\n 28241    }\n 28242  \n 28243:   HRESULT BindRunning()\n 28244    {\n 28245      return BindToActive(CLSID_AcadDatabase);\n .....\n 28766    }\n 28767  \n 28768:   HRESULT BindRunning()\n 28769    {\n 28770      return BindToActive(CLSID_AcadModelSpace);\n .....\n 29238    }\n 29239  \n 29240:   HRESULT BindRunning()\n 29241    {\n 29242      return BindToActive(CLSID_AcadBlock);\n .....\n 29800    }\n 29801  \n 29802:   HRESULT BindRunning()\n 29803    {\n 29804      return BindToActive(CLSID_AcadEntity);\n .....\n 30017    }\n 30018  \n 30019:   HRESULT BindRunning()\n 30020    {\n 30021      return BindToActive(CLSID_AcadAcCmColor);\n .....\n 30130    }\n 30131  \n 30132:   HRESULT BindRunning()\n 30133    {\n 30134      return BindToActive(CLSID_AcadHyperlinks);\n .....\n 30228    }\n 30229  \n 30230:   HRESULT BindRunning()\n 30231    {\n 30232      return BindToActive(CLSID_AcadHyperlink);\n .....\n 30342    }\n 30343  \n 30344:   HRESULT BindRunning()\n 30345    {\n 30346      return BindToActive(CLSID_Acad3DFace);\n .....\n 30594    }\n 30595  \n 30596:   HRESULT BindRunning()\n 30597    {\n 30598      return BindToActive(CLSID_AcadPolygonMesh);\n .....\n 30838    }\n 30839  \n 30840:   HRESULT BindRunning()\n 30841    {\n 30842      return BindToActive(CLSID_Acad3DPolyline);\n .....\n 31082    }\n 31083  \n 31084:   HRESULT BindRunning()\n 31085    {\n 31086      return BindToActive(CLSID_AcadArc);\n .....\n 31436    }\n 31437  \n 31438:   HRESULT BindRunning()\n 31439    {\n 31440      return BindToActive(CLSID_AcadAttribute);\n .....\n 31788    }\n 31789  \n 31790:   HRESULT BindRunning()\n 31791    {\n 31792      return BindToActive(CLSID_Acad3DSolid);\n .....\n 32047    }\n 32048  \n 32049:   HRESULT BindRunning()\n 32050    {\n 32051      return BindToActive(CLSID_AcadRegion);\n .....\n 32287    }\n 32288  \n 32289:   HRESULT BindRunning()\n 32290    {\n 32291      return BindToActive(CLSID_AcadCircle);\n .....\n 32628    }\n 32629  \n 32630:   HRESULT BindRunning()\n 32631    {\n 32632      return BindToActive(CLSID_AcadDimAligned);\n .....\n 33240    }\n 33241  \n 33242:   HRESULT BindRunning()\n 33243    {\n 33244      return BindToActive(CLSID_AcadDimension);\n .....\n 33982    }\n 33983  \n 33984:   HRESULT BindRunning()\n 33985    {\n 33986      return BindToActive(CLSID_AcadDimAngular);\n .....\n 34678    }\n 34679  \n 34680:   HRESULT BindRunning()\n 34681    {\n 34682      return BindToActive(CLSID_AcadDimDiametric);\n .....\n 35482    }\n 35483  \n 35484:   HRESULT BindRunning()\n 35485    {\n 35486      return BindToActive(CLSID_AcadDimRotated);\n .....\n 36210    }\n 36211  \n 36212:   HRESULT BindRunning()\n 36213    {\n 36214      return BindToActive(CLSID_AcadDimOrdinate);\n .....\n 36880    }\n 36881  \n 36882:   HRESULT BindRunning()\n 36883    {\n 36884      return BindToActive(CLSID_AcadDimRadial);\n .....\n 37415    }\n 37416  \n 37417:   HRESULT BindRunning()\n 37418    {\n 37419      return BindToActive(CLSID_AcadEllipse);\n .....\n 37705    }\n 37706  \n 37707:   HRESULT BindRunning()\n 37708    {\n 37709      return BindToActive(CLSID_AcadLeader);\n .....\n 37999    }\n 38000  \n 38001:   HRESULT BindRunning()\n 38002    {\n 38003      return BindToActive(CLSID_AcadMText);\n .....\n 38248    }\n 38249  \n 38250:   HRESULT BindRunning()\n 38251    {\n 38252      return BindToActive(CLSID_AcadPoint);\n .....\n 38496    }\n 38497  \n 38498:   HRESULT BindRunning()\n 38499    {\n 38500      return BindToActive(CLSID_AcadLWPolyline);\n .....\n 38784    }\n 38785  \n 38786:   HRESULT BindRunning()\n 38787    {\n 38788      return BindToActive(CLSID_AcadPolyline);\n .....\n 39030    }\n 39031  \n 39032:   HRESULT BindRunning()\n 39033    {\n 39034      return BindToActive(CLSID_AcadRay);\n .....\n 39256    }\n 39257  \n 39258:   HRESULT BindRunning()\n 39259    {\n 39260      return BindToActive(CLSID_AcadShape);\n .....\n 39486    }\n 39487  \n 39488:   HRESULT BindRunning()\n 39489    {\n 39490      return BindToActive(CLSID_AcadSolid);\n .....\n 39753    }\n 39754  \n 39755:   HRESULT BindRunning()\n 39756    {\n 39757      return BindToActive(CLSID_AcadSpline);\n .....\n 40070    }\n 40071  \n 40072:   HRESULT BindRunning()\n 40073    {\n 40074      return BindToActive(CLSID_AcadText);\n .....\n 40357    }\n 40358  \n 40359:   HRESULT BindRunning()\n 40360    {\n 40361      return BindToActive(CLSID_AcadTolerance);\n .....\n 40594    }\n 40595  \n 40596:   HRESULT BindRunning()\n 40597    {\n 40598      return BindToActive(CLSID_AcadTrace);\n .....\n 40805    }\n 40806  \n 40807:   HRESULT BindRunning()\n 40808    {\n 40809      return BindToActive(CLSID_AcadXline);\n .....\n 41069    }\n 41070  \n 41071:   HRESULT BindRunning()\n 41072    {\n 41073      return BindToActive(CLSID_AcadBlockReference);\n .....\n 41412    }\n 41413  \n 41414:   HRESULT BindRunning()\n 41415    {\n 41416      return BindToActive(CLSID_AcadHatch);\n .....\n 41751    }\n 41752  \n 41753:   HRESULT BindRunning()\n 41754    {\n 41755      return BindToActive(CLSID_AcadRasterImage);\n .....\n 42023    }\n 42024  \n 42025:   HRESULT BindRunning()\n 42026    {\n 42027      return BindToActive(CLSID_AcadLine);\n .....\n 42348    }\n 42349  \n 42350:   HRESULT BindRunning()\n 42351    {\n 42352      return BindToActive(CLSID_AcadLayout);\n .....\n 42554    }\n 42555  \n 42556:   HRESULT BindRunning()\n 42557    {\n 42558      return BindToActive(CLSID_AcadPlotConfiguration);\n .....\n 42776    }\n 42777  \n 42778:   HRESULT BindRunning()\n 42779    {\n 42780      return BindToActive(CLSID_AcadMInsertBlock);\n .....\n 43057    }\n 43058  \n 43059:   HRESULT BindRunning()\n 43060    {\n 43061      return BindToActive(CLSID_AcadPolyfaceMesh);\n .....\n 43271    }\n 43272  \n 43273:   HRESULT BindRunning()\n 43274    {\n 43275      return BindToActive(CLSID_AcadMLine);\n .....\n 43648    }\n 43649  \n 43650:   HRESULT BindRunning()\n 43651    {\n 43652      return BindToActive(CLSID_AcadDim3PointAngular);\n .....\n 44106    }\n 44107  \n 44108:   HRESULT BindRunning()\n 44109    {\n 44110      return BindToActive(CLSID_AcadExternalReference);\n .....\n 44974    }\n 44975  \n 44976:   HRESULT BindRunning()\n 44977    {\n 44978      return BindToActive(CLSID_AcadTable);\n .....\n 46074    }\n 46075  \n 46076:   HRESULT BindRunning()\n 46077    {\n 46078      return BindToActive(CLSID_AcadDimArcLength);\n .....\n 46856    }\n 46857  \n 46858:   HRESULT BindRunning()\n 46859    {\n 46860      return BindToActive(CLSID_AcadDimRadialLarge);\n .....\n 47402    }\n 47403  \n 47404:   HRESULT BindRunning()\n 47405    {\n 47406      return BindToActive(CLSID_AcadSection);\n .....\n 47660    }\n 47661  \n 47662:   HRESULT BindRunning()\n 47663    {\n 47664      return BindToActive(CLSID_AcadSectionSettings);\n .....\n 48185    }\n 48186  \n 48187:   HRESULT BindRunning()\n 48188    {\n 48189      return BindToActive(CLSID_AcadMLeader);\n .....\n 48552    }\n 48553  \n 48554:   HRESULT BindRunning()\n 48555    {\n 48556      return BindToActive(CLSID_AcadPaperSpace);\n .....\n 49176    }\n 49177  \n 49178:   HRESULT BindRunning()\n 49179    {\n 49180      return BindToActive(CLSID_AcadPViewport);\n .....\n 49529    }\n 49530  \n 49531:   HRESULT BindRunning()\n 49532    {\n 49533      return BindToActive(CLSID_AcadView);\n .....\n 49684    }\n 49685  \n 49686:   HRESULT BindRunning()\n 49687    {\n 49688      return BindToActive(CLSID_AcadBlocks);\n .....\n 49810    }\n 49811  \n 49812:   HRESULT BindRunning()\n 49813    {\n 49814      return BindToActive(CLSID_AcadGroups);\n .....\n 49961    }\n 49962  \n 49963:   HRESULT BindRunning()\n 49964    {\n 49965      return BindToActive(CLSID_AcadGroup);\n .....\n 50110    }\n 50111  \n 50112:   HRESULT BindRunning()\n 50113    {\n 50114      return BindToActive(CLSID_AcadDimStyles);\n .....\n 50229    }\n 50230  \n 50231:   HRESULT BindRunning()\n 50232    {\n 50233      return BindToActive(CLSID_AcadDimStyle);\n .....\n 50348    }\n 50349  \n 50350:   HRESULT BindRunning()\n 50351    {\n 50352      return BindToActive(CLSID_AcadLayers);\n .....\n 50530    }\n 50531  \n 50532:   HRESULT BindRunning()\n 50533    {\n 50534      return BindToActive(CLSID_AcadLayer);\n .....\n 50700    }\n 50701  \n 50702:   HRESULT BindRunning()\n 50703    {\n 50704      return BindToActive(CLSID_AcadLineTypes);\n .....\n 50823    }\n 50824  \n 50825:   HRESULT BindRunning()\n 50826    {\n 50827      return BindToActive(CLSID_AcadLineType);\n .....\n 50945    }\n 50946  \n 50947:   HRESULT BindRunning()\n 50948    {\n 50949      return BindToActive(CLSID_AcadDictionaries);\n .....\n 51089    }\n 51090  \n 51091:   HRESULT BindRunning()\n 51092    {\n 51093      return BindToActive(CLSID_AcadDictionary);\n .....\n 51235    }\n 51236  \n 51237:   HRESULT BindRunning()\n 51238    {\n 51239      return BindToActive(CLSID_AcadXRecord);\n .....\n 51361    }\n 51362  \n 51363:   HRESULT BindRunning()\n 51364    {\n 51365      return BindToActive(CLSID_AcadRegisteredApplications);\n .....\n 51479    }\n 51480  \n 51481:   HRESULT BindRunning()\n 51482    {\n 51483      return BindToActive(CLSID_AcadRegisteredApplication);\n .....\n 51597    }\n 51598  \n 51599:   HRESULT BindRunning()\n 51600    {\n 51601      return BindToActive(CLSID_AcadTextStyles);\n .....\n 51748    }\n 51749  \n 51750:   HRESULT BindRunning()\n 51751    {\n 51752      return BindToActive(CLSID_AcadTextStyle);\n .....\n 51901    }\n 51902  \n 51903:   HRESULT BindRunning()\n 51904    {\n 51905      return BindToActive(CLSID_AcadUCSs);\n .....\n 52032    }\n 52033  \n 52034:   HRESULT BindRunning()\n 52035    {\n 52036      return BindToActive(CLSID_AcadUCS);\n .....\n 52160    }\n 52161  \n 52162:   HRESULT BindRunning()\n 52163    {\n 52164      return BindToActive(CLSID_AcadViews);\n .....\n 52286    }\n 52287  \n 52288:   HRESULT BindRunning()\n 52289    {\n 52290      return BindToActive(CLSID_AcadViewports);\n .....\n 52473    }\n 52474  \n 52475:   HRESULT BindRunning()\n 52476    {\n 52477      return BindToActive(CLSID_AcadViewport);\n .....\n 52649    }\n 52650  \n 52651:   HRESULT BindRunning()\n 52652    {\n 52653      return BindToActive(CLSID_AcadLayouts);\n .....\n 52776    }\n 52777  \n 52778:   HRESULT BindRunning()\n 52779    {\n 52780      return BindToActive(CLSID_AcadPlotConfigurations);\n .....\n 52998    }\n 52999  \n 53000:   HRESULT BindRunning()\n 53001    {\n 53002      return BindToActive(CLSID_AcadDatabasePreferences);\n .....\n 53165    }\n 53166  \n 53167:   HRESULT BindRunning()\n 53168    {\n 53169      return BindToActive(CLSID_AcadFileDependencies);\n .....\n 53291    }\n 53292  \n 53293:   HRESULT BindRunning()\n 53294    {\n 53295      return BindToActive(CLSID_AcadFileDependency);\n .....\n 53434    }\n 53435  \n 53436:   HRESULT BindRunning()\n 53437    {\n 53438      return BindToActive(CLSID_AcadSummaryInfo);\n .....\n 53555    }\n 53556  \n 53557:   HRESULT BindRunning()\n 53558    {\n 53559      return BindToActive(CLSID_AcadSectionManager);\n .....\n 53683    }\n 53684  \n 53685:   HRESULT BindRunning()\n 53686    {\n 53687      return BindToActive(CLSID_AcadMaterials);\n .....\n 53805    }\n 53806  \n 53807:   HRESULT BindRunning()\n 53808    {\n 53809      return BindToActive(CLSID_AcadMaterial);\n .....\n 53921    }\n 53922  \n 53923:   HRESULT BindRunning()\n 53924    {\n 53925      return BindToActive(CLSID_AcadSectionTypeSettings);\n .....\n 54206    }\n 54207  \n 54208:   HRESULT BindRunning()\n 54209    {\n 54210      return BindToActive(CLSID_AcadDynamicBlockReferenceProperty);\n .....\n 54307    }\n 54308  \n 54309:   HRESULT BindRunning()\n 54310    {\n 54311      return BindToActive(CLSID_AcadSortentsTable);\n .....\n 54451    }\n 54452  \n 54453:   HRESULT BindRunning()\n 54454    {\n 54455      return BindToActive(CLSID_AcadIdPair);\n .....\n 54731    }\n 54732  \n 54733:   HRESULT BindRunning()\n 54734    {\n 54735      return BindToActive(CLSID_AcadTableStyle);\n .....\n 55211    }\n 55212  \n 55213:   HRESULT BindRunning()\n 55214    {\n 55215      return BindToActive(CLSID_AcadMLeaderStyle);\n .....\n 57302    }\n 57303  \n 57304:   HRESULT BindRunning()\n 57305    {\n 57306      return BindToActive(CLSID_AcadAttributeReference);\n .....\n 58728    }\n 58729  \n 58730:   HRESULT BindRunning()\n 58731    {\n 58732      return BindToActive(CLSID_AcadSubEntity);\n .....\n 58848    }\n 58849  \n 58850:   HRESULT BindRunning()\n 58851    {\n 58852      return BindToActive(CLSID_AcadMLeaderLeader);\n .....\n 63812    }\n 63813  \n 63814:   HRESULT BindRunning()\n 63815    {\n 63816      return BindToActive(CLSID_AcadOle);\n .....\n 64281    }\n 64282  \n 64283:   HRESULT BindRunning()\n 64284    {\n 64285      return BindToActive(CLSID_AcadHelix);\n .....\n 64720    }\n 64721  \n 64722:   HRESULT BindRunning()\n 64723    {\n 64724      return BindToActive(CLSID_AcadSurface);\n .....\n 65308    }\n 65309  \n 65310:   HRESULT BindRunning()\n 65311    {\n 65312      return BindToActive(CLSID_AcadPlaneSurface);\n .....\n 65909    }\n 65910  \n 65911:   HRESULT BindRunning()\n 65912    {\n 65913      return BindToActive(CLSID_AcadExtrudedSurface);\n .....\n 66539    }\n 66540  \n 66541:   HRESULT BindRunning()\n 66542    {\n 66543      return BindToActive(CLSID_AcadRevolvedSurface);\n .....\n 67178    }\n 67179  \n 67180:   HRESULT BindRunning()\n 67181    {\n 67182      return BindToActive(CLSID_AcadSweptSurface);\n .....\n 67858    }\n 67859  \n 67860:   HRESULT BindRunning()\n 67861    {\n 67862      return BindToActive(CLSID_AcadLoftedSurface);\n .....\n 68647    }\n 68648  \n 68649:   HRESULT BindRunning()\n 68650    {\n 68651      return BindToActive(CLSID_AcadDwfUnderlay);\n .....\n 69125    }\n 69126  \n 69127:   HRESULT BindRunning()\n 69128    {\n 69129      return BindToActive(CLSID_AcadSubEntSolidFace);\n .....\n 69220    }\n 69221  \n 69222:   HRESULT BindRunning()\n 69223    {\n 69224      return BindToActive(CLSID_AcadSubEntSolidEdge);\n .....\n 69311    }\n 69312  \n 69313:   HRESULT BindRunning()\n 69314    {\n 69315      return BindToActive(CLSID_AcadSubEntSolidVertex);\n .....\n 69402    }\n 69403  \n 69404:   HRESULT BindRunning()\n 69405    {\n 69406      return BindToActive(CLSID_AcadSubEntSolidNode);\n .....\n 69493    }\n 69494  \n 69495:   HRESULT BindRunning()\n 69496    {\n 69497      return BindToActive(CLSID_AcadWipeout);\n .....\n 69989    }\n 69990  \n 69991:   HRESULT BindRunning()\n 69992    {\n 69993      return BindToActive(CLSID_AcadSubDMesh);\n .....\n 70387    }\n 70388  \n 70389:   HRESULT BindRunning()\n 70390    {\n 70391      return BindToActive(CLSID_AcadSubDMeshFace);\n .....\n 70498    }\n 70499  \n 70500:   HRESULT BindRunning()\n 70501    {\n 70502      return BindToActive(CLSID_AcadSubDMeshEdge);\n .....\n 70608    }\n 70609  \n 70610:   HRESULT BindRunning()\n 70611    {\n 70612      return BindToActive(CLSID_AcadSubDMeshVertex);\n .....\n 70737    }\n 70738  \n 70739:   HRESULT BindRunning()\n 70740    {\n 70741      return BindToActive(CLSID_AcadNurbSurface);\n .....\n 75511    }\n 75512  \n 75513:   HRESULT BindRunning()\n 75514    {\n 75515      return BindToActive(CLSID_AcadPointCloud);\n .....\n 75761    }\n 75762  \n 75763:   HRESULT BindRunning()\n 75764    {\n 75765      return BindToActive(CLSID_AcadSecurityParams);\n .....\n 75881    }\n 75882  \n 75883:   HRESULT BindRunning()\n 75884    {\n 75885      return BindToActive(CLSID_AcadLayerStateManager);\n .....\n 76171    }\n 76172  \n 76173:   HRESULT BindRunning()\n 76174    {\n 76175      return BindToActive(CLSID_AcadDocument);\n .....\n 76491    }\n 76492  \n 76493:   HRESULT BindRunning()\n 76494    {\n 76495      return BindToActive(CLSID_AcadPlot);\n .....\n 76686    }\n 76687  \n 76688:   HRESULT BindRunning()\n 76689    {\n 76690      return BindToActive(CLSID_AcadApplication);\n .....\n 76887    }\n 76888  \n 76889:   HRESULT BindRunning()\n 76890    {\n 76891      return BindToActive(CLSID_AcadPreferences);\n .....\n 77127    }\n 77128  \n 77129:   HRESULT BindRunning()\n 77130    {\n 77131      return BindToActive(CLSID_AcadPreferencesFiles);\n .....\n 77468    }\n 77469  \n 77470:   HRESULT BindRunning()\n 77471    {\n 77472      return BindToActive(CLSID_AcadPreferencesDisplay);\n .....\n 77710    }\n 77711  \n 77712:   HRESULT BindRunning()\n 77713    {\n 77714      return BindToActive(CLSID_AcadPreferencesOpenSave);\n .....\n 77898    }\n 77899  \n 77900:   HRESULT BindRunning()\n 77901    {\n 77902      return BindToActive(CLSID_AcadPreferencesOutput);\n .....\n 78069    }\n 78070  \n 78071:   HRESULT BindRunning()\n 78072    {\n 78073      return BindToActive(CLSID_AcadPreferencesSystem);\n .....\n 78222    }\n 78223  \n 78224:   HRESULT BindRunning()\n 78225    {\n 78226      return BindToActive(CLSID_AcadPreferencesUser);\n .....\n 78395    }\n 78396  \n 78397:   HRESULT BindRunning()\n 78398    {\n 78399      return BindToActive(CLSID_AcadPreferencesDrafting);\n .....\n 78568    }\n 78569  \n 78570:   HRESULT BindRunning()\n 78571    {\n 78572      return BindToActive(CLSID_AcadPreferencesSelection);\n .....\n 78695    }\n 78696  \n 78697:   HRESULT BindRunning()\n 78698    {\n 78699      return BindToActive(CLSID_AcadPreferencesProfiles);\n .....\n 78795    }\n 78796  \n 78797:   HRESULT BindRunning()\n 78798    {\n 78799      return BindToActive(CLSID_AcadMenuGroups);\n .....\n 78907    }\n 78908  \n 78909:   HRESULT BindRunning()\n 78910    {\n 78911      return BindToActive(CLSID_AcadMenuGroup);\n .....\n 79018    }\n 79019  \n 79020:   HRESULT BindRunning()\n 79021    {\n 79022      return BindToActive(CLSID_AcadPopupMenus);\n .....\n 79149    }\n 79150  \n 79151:   HRESULT BindRunning()\n 79152    {\n 79153      return BindToActive(CLSID_AcadPopupMenu);\n .....\n 79311    }\n 79312  \n 79313:   HRESULT BindRunning()\n 79314    {\n 79315      return BindToActive(CLSID_AcadPopupMenuItem);\n .....\n 79448    }\n 79449  \n 79450:   HRESULT BindRunning()\n 79451    {\n 79452      return BindToActive(CLSID_AcadToolbars);\n .....\n 79607    }\n 79608  \n 79609:   HRESULT BindRunning()\n 79610    {\n 79611      return BindToActive(CLSID_AcadToolbar);\n .....\n 79783    }\n 79784  \n 79785:   HRESULT BindRunning()\n 79786    {\n 79787      return BindToActive(CLSID_AcadToolbarItem);\n .....\n 79904    }\n 79905  \n 79906:   HRESULT BindRunning()\n 79907    {\n 79908      return BindToActive(CLSID_AcadMenuBar);\n .....\n 80006    }\n 80007  \n 80008:   HRESULT BindRunning()\n 80009    {\n 80010      return BindToActive(CLSID_AcadDocuments);\n .....\n 80100    }\n 80101  \n 80102:   HRESULT BindRunning()\n 80103    {\n 80104      return BindToActive(CLSID_AcadState);\n .....\n 80186    }\n 80187  \n 80188:   HRESULT BindRunning()\n 80189    {\n 80190      return BindToActive(CLSID_AcadSelectionSets);\n .....\n 80302    }\n 80303  \n 80304:   HRESULT BindRunning()\n 80305    {\n 80306      return BindToActive(CLSID_AcadSelectionSet);\n .....\n 80512    }\n 80513  \n 80514:   HRESULT BindRunning()\n 80515    {\n 80516      return BindToActive(CLSID_AcadUtility);\n\n154 matches across 4 files\n\n\nSearching 2220 files for \"setAutoCADVersion\" (regex)\n\nD:\\_DISTR\\_ASUDOR\\RSign\\acadexport.cpp:\n  182  }\n  183  \n  184: void __fastcall TAcadExport::SetAutoCADVersion(AnsiString version)\n  185  {\n  186:     AutoCAD.setAutoCADVersion(version);\n  187  }\n  188  \n\nD:\\_DISTR\\_ASUDOR\\RSign\\acadexport.h:\n  126        __fastcall TAcadExport(void);\n  127        __fastcall ~TAcadExport(void);\n  128:       void __fastcall SetAutoCADVersion(AnsiString version);\n  129        bool __fastcall BeginDocument(TRoad *road);\n  130        bool __fastcall BindToCurrentDocument(TRoad *road);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.cpp:\n 1017      aexp->OutInfoLog = OutInfoLog;\n 1018      aexp->ProgressChanged = ProgressChanged;\n 1019:     aexp->SetAutoCADVersion(FAutoCADExport->getAutoCADVersion());\n 1020  \n 1021      if (FAutoCADExport->ExportAddRows) {\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADHelper.cpp:\n  200  }\n  201  \n  202: void AutoCADHelper::setAutoCADVersion(AnsiString version)\n  203  {\n  204      if (version == \"Default\") {\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADHelper.h:\n  307          AcadApplication *RunAutoCAD(bool fVisible=true);\n  308          AcadApplication *BindAutoCAD();\n  309:         void setAutoCADVersion(AnsiString version);\n  310          void ResetBlocksCollection();\n  311          void waitForIdle();\n\n6 matches across 5 files\n\n\nSearching 2220 files for \"FAutoCADExport\" (regex)\n\nD:\\_DISTR\\_ASUDOR\\RSign\\acadexport.cpp:\n  382  }\n  383  \n  384: bool __fastcall TAcadExport::ExportTables(TFAutoCADExport *form)\n  385  {\n  386      fAuto6_13 = form->ExportAuto6_13;\n\nD:\\_DISTR\\_ASUDOR\\RSign\\acadexport.h:\n   26  \n   27  class KromkaObjectGroup;\n   28: class TFAutoCADExport;\n   29  \n   30  struct drect {\n   ..\n  129        bool __fastcall BeginDocument(TRoad *road);\n  130        bool __fastcall BindToCurrentDocument(TRoad *road);\n  131:       bool __fastcall ExportTables(TFAutoCADExport *form);\n  132        bool __fastcall DrawTables(bool fExportRuler);\n  133        bool __fastcall FillGaps(int iRow);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.cpp:\n  752      // только для столбиков требуется в настройках поставить дополнительную галочку\n  753      // для вывода существующих столбиков\n  754:     bool fIncludeSignalExist = dataProject!=0?FAutoCADExport->ExportSignalExistToo:true;\n  755      if (dataCurrent && fIncludeSignalExist) {\n  756          SET_PROGRESS_FORM_MINMAX(0,dataCurrent->Objects->Count-1);\n  ...\n  801              TExtPolyline *p=i->second.s->PrepareMetric(R);\n  802              exist = i->second.exist;\n  803:             if (FAutoCADExport->ExportConditionAsExisting) {\n  804                  exist |= i->second.s->GetPropValue(\"Condition\") != \"0\";\n  805              }\n  ...\n  809              TExtPolyline *p=i->second.b->PrepareMetric(R);\n  810              exist = i->second.exist;\n  811:             if (FAutoCADExport->ExportConditionAsExisting) {\n  812                  exist |= i->second.b->GetPropValue(\"Condition\") != \"0\";\n  813              }\n  ...\n  890              TExtPolyline *p=i->second.l->PrepareMetric(R);\n  891              exist = i->second.exist;\n  892:             if (FAutoCADExport->ExportConditionAsExisting) {\n  893                  exist |= i->second.l->GetPropValue(\"Condition\") != \"0\";\n  894              }\n  ...\n 1017      aexp->OutInfoLog = OutInfoLog;\n 1018      aexp->ProgressChanged = ProgressChanged;\n 1019:     aexp->SetAutoCADVersion(FAutoCADExport->getAutoCADVersion());\n 1020  \n 1021:     if (FAutoCADExport->ExportAddRows) {\n 1022:         if ( !(aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows,true)\n 1023:                 || aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows,true)) ) {\n 1024              int result = Application->MessageBox(\"По пути указаному для дополнительных строк не было найденно не одного файла.\"\n 1025                                                   \"Желаете ли вернуться и указать другой путь(No) или оставить все как есть и продолжить(Yes)?\", \"Предупреждение\", MB_YESNO );\n ....\n 1036      if (aexp->BeginDocument(R)) {\n 1037  \n 1038:         if (FAutoCADExport->ExportSaveToDir) {\n 1039:             savePath = FAutoCADExport->lastSavePath;\n 1040              if (!SelectDirectory(\"Выберете папку для сохранения файла\", \"\", savePath)) {\n 1041                  goto export_end;\n 1042              }\n 1043:             FAutoCADExport->lastSavePath = savePath;\n 1044              AnsiString roadName = RoadName;\n 1045              roadName = StringReplace(roadName, \"\\\"\", \"\", TReplaceFlags() << rfReplaceAll);\n ....\n 1058          ProgressForm->Show();\n 1059  \n 1060:         TDtaSource *CurData=(TDtaSource*)FAutoCADExport->cbCurList->Items->Objects[FAutoCADExport->cbCurList->ItemIndex];\n 1061:         TDtaSource *PrjData=(TDtaSource*)FAutoCADExport->cbPrjList->Items->Objects[FAutoCADExport->cbPrjList->ItemIndex];\n 1062          TDtaSource *DataPrj = PrjData==0?CurData:PrjData; // для обектов выводимых приоритено из проектного источника\n 1063          TDtaSource *DataCur = CurData==0?PrjData:CurData; // для обектов выводимых приоритено из текущего источника\n 1064  \n 1065:         int countOfExportItems = FAutoCADExport->CountOfExports();\n 1066          int currentItem = 0;\n 1067  \n 1068:         switch (FAutoCADExport->ExportTo) {\n 1069          case 0:\n 1070              ADD_PROGRESS_FORM_LINE(\"Подключение к активному документу\");\n ....\n 1075          case 1:\n 1076              ADD_PROGRESS_FORM_LINE(\"Создание нового документа\");\n 1077:             if (!aexp->OpenDocument(FAutoCADExport->FileName)) {\n 1078                  goto export_end;\n 1079              }\n ....\n 1083          }\n 1084  \n 1085:         if (FAutoCADExport->ExportHideAutoCAD) {\n 1086              ADD_PROGRESS_FORM_LINE(\"Скрываю AutoCAD\");\n 1087              aexp->hideApplication();\n ....\n 1090          }\n 1091          // -- Подсчет разметки от осевой -- \n 1092:         int iMarksLinesTop = FAutoCADExport->TableRowLinesTop;\n 1093:         int iMarksLinesBottom = FAutoCADExport->TableRowLinesBottom;\n 1094          aexp->iMarkLinesBottom = aexp->iMarkLinesTop = 0;\n 1095  \n 1096:         if (DataPrj && (!FAutoCADExport->TableRowLinesBottom || !FAutoCADExport->TableRowLinesTop)) {\n 1097              int iLeftMax = 0, iRightMax = 0;\n 1098              \n 1099              SET_PROGRESS_FORM_MINMAX(0, DataPrj->Objects->Count-1);\n 1100              currentItem--;\n 1101:             EXPORT_ITEM(ExportRoadMark(DataPrj, aexp, FAutoCADExport->LineWidth, &iLeftMax, &iRightMax), \"Считаем разметку...\");\n 1102              \n 1103:             FAutoCADExport->TableRowLinesTop = iLeftMax;\n 1104:             FAutoCADExport->TableRowLinesBottom = iRightMax;\n 1105          }\n 1106          // \\ конец Подсчет разметки от осевой \n 1107          \n 1108          ADD_PROGRESS_FORM_LINE(\"Инициализация настроек таблицы\");\n 1109:         aexp->ExportTables(FAutoCADExport);  /*инициализация настроек таблицы*/\n 1110  \n 1111          /* -- вернем значени для разметки обратно -- */\n 1112:         FAutoCADExport->TableRowLinesTop = iMarksLinesTop;\n 1113:         FAutoCADExport->TableRowLinesBottom = iMarksLinesBottom;\n 1114          /* -- */\n 1115  \n 1116:         if (FAutoCADExport->ExportGridStep) {\n 1117              aexp->AddLayer(\"Grid\"); // вывод сетки\n 1118:             aexp->DrawGrid(FAutoCADExport->GridStep);\n 1119          }\n 1120  \n 1121:         if (FAutoCADExport->ExportRuler) {\n 1122              aexp->AddLayer(\"Ruler\"); // вывод линейки\n 1123              aexp->ExportRuler(L1, L2, false);\n ....\n 1127              SET_PROGRESS_FORM_MINMAX(0,MetricData->Objects->Count-1);\n 1128              \n 1129:             if (FAutoCADExport->ExportRoadMetrics) {\n 1130                  EXPORT_ITEM(ExportRoadMetrics(MetricData, aexp), \"Выводим метрику дороги...\");\n 1131              }\n 1132              \n 1133:             if (FAutoCADExport->ExportProfile) {\n 1134                  EXPORT_ITEM(ExportProfile(MetricData, R, aexp), \"Выводим профиль дороги..\");\n 1135              }\n 1136              \n 1137:             if (FAutoCADExport->ExportAttachments) {\n 1138                  EXPORT_ITEM(ExportAttachments(MetricData, aexp), \"Выводим примыкания...\");\n 1139              }\n 1140              \n 1141:             if (FAutoCADExport->ExportRoadSideObjects) {\n 1142                  EXPORT_ITEM(ExportRoadSideObjects(MetricData, aexp), \"Выводим участки отдыха...\");\n 1143              }\n 1144  \n 1145:             if (FAutoCADExport->ExportDefects) {\n 1146                  EXPORT_ITEM(ExportDefects(MetricData, aexp), \"Выводим дефекты...\");\n 1147              }\n ....\n 1153              SET_PROGRESS_FORM_MINMAX(0,DataCur->Objects->Count-1);\n 1154  \n 1155:             if (FAutoCADExport->ExportTown) {\n 1156                  EXPORT_ITEM(ExportTowns(DataCur, aexp), \"Выводим населенные пункты...\");\n 1157              }\n 1158  \n 1159:             if (FAutoCADExport->ExportPlan) { \n 1160                  EXPORT_ITEM(ExportPlan(DataCur, aexp), \"Выводим план...\");\n 1161              }\n 1162  \n 1163:             if (FAutoCADExport->ExportSurface) {\n 1164                  EXPORT_ITEM(ExportSurface(DataCur, aexp), \"Выводим участки по покрытиям...\");\n 1165              }\n 1166  \n 1167:             if (FAutoCADExport->ExportCommunications) {\n 1168                  EXPORT_ITEM(ExportCommunications(DataCur, aexp), \"Выводим коммуникации...\");\n 1169              }\n 1170  \n 1171:             if (FAutoCADExport->ExportTrafficLights) {\n 1172                  EXPORT_ITEM(ExportTrafficLights(DataCur, aexp), \"Выводим светофоры...\");\n 1173              }\n 1174  \n 1175:             if (FAutoCADExport->ExportCityObjects) {\n 1176                  EXPORT_ITEM(ExportCityObjects(DataCur, aexp), \"Выводим городские объекты...\");\n 1177              }\n 1178  \n 1179:             if (FAutoCADExport->ExportTubes) {\n 1180                  EXPORT_ITEM(ExportTubes(DataCur, aexp), \"Выводим трубы...\");\n 1181              }\n 1182  \n 1183:             if (FAutoCADExport->ExportBridges) {\n 1184                  EXPORT_ITEM(ExportBridges(DataCur, aexp), \"Выводим мосты...\");\n 1185              }\n 1186  \n 1187:             if (FAutoCADExport->ExportBusstops) {\n 1188                  EXPORT_ITEM(ExportBusstops(DataCur, aexp), \"Выводим автобусные остановки...\");\n 1189              }\n 1190              \n 1191:             if (FAutoCADExport->ExportMoundHeights) {\n 1192                  EXPORT_ITEM(ExportMoundHeights(DataCur, aexp), \"Выводим высоты насыпей...\");\n 1193              }\n ....\n 1197              SET_PROGRESS_FORM_MINMAX(0,DataPrj->Objects->Count-1);\n 1198              // знаки приоритетно выводим из проектируемого источника\n 1199:             if (FAutoCADExport->ExportRoadSigns) {\n 1200                  EXPORT_ITEM(ExportRoadSigns(DataPrj, aexp), \"Выводим дорожные знаки...\");\n 1201              }\n 1202              // разметку приоритетно выводим из проектируемого источника\n 1203              SET_PROGRESS_FORM_MINMAX(0,DataPrj->Objects->Count-1);\n 1204:             if (FAutoCADExport->ExportMark) {\n 1205:                 EXPORT_ITEM(ExportRoadMark(DataPrj, aexp, FAutoCADExport->LineWidth), \"Выводим разметку\");\n 1206              }\n 1207          }\n 1208  \n 1209          // Выводим ограждения, сигнальные устройства, тротуары, бордюры из обоих источников одновременно\n 1210:         if (FAutoCADExport->ExportSignal || FAutoCADExport->ExportSidewalks || FAutoCADExport->ExportLamps || FAutoCADExport->ExportBorders) {\n 1211              vector<pair<int,wpbar> > bvec;\n 1212              currentItem--;\n ....\n 1217                  SET_PROGRESS_FORM_MINMAX(0,bvec.size()-1);\n 1218  \n 1219:                 if (FAutoCADExport->ExportSignal) {\n 1220                      EXPORT_ITEM(ExportSignal(bvec, aexp), \"Выводим ограждения и сигнальные устройства...\");\n 1221                  }\n 1222  \n 1223:                 if (FAutoCADExport->ExportSidewalks) {\n 1224                      EXPORT_ITEM(ExportSidewalks(bvec, aexp), \"Выводим тротуары...\");\n 1225                  }\n 1226  \n 1227:                 if (FAutoCADExport->ExportLamps) {\n 1228                      EXPORT_ITEM(ExportLamps(bvec, aexp), \"Выводим фонари...\");\n 1229                  }\n 1230  \n 1231:                 if (FAutoCADExport->ExportBorders) {\n 1232                      EXPORT_ITEM(ExportBorders(bvec, aexp), \"Выводим бордюры...\");\n 1233                  }\n ....\n 1237          // Участки уклонов выводим из слоя с профилем\n 1238          if (ProfilData) {\n 1239:             if (FAutoCADExport->ExportSlope) {\n 1240                  SET_PROGRESS_FORM_MINMAX(0,ProfilData->Objects->Count-1);\n 1241                  EXPORT_ITEM(ExportSlope(ProfilData, aexp), \"Выводим участки уклонов ...\");\n ....\n 1245          // Схематический план выводим из слоя с планом\n 1246          if (CurveData) {\n 1247:             if (FAutoCADExport->ExportCurves) {\n 1248                  SET_PROGRESS_FORM_MINMAX(0,CurveData->Objects->Count-1);\n 1249                  EXPORT_ITEM(ExportCurves(CurveData, aexp), \"Выводим кривые в плане...\");\n ....\n 1252  \n 1253          try {\n 1254:             if (FAutoCADExport->ExportAddRows) {\n 1255                  currentItem++;\n 1256                  SET_PROGRESS_FORM_CAPTION_EX(\"выводим дополнительные строки из файлов в верхнюю таблицу\")\n 1257                  SET_PROGRESS_FORM_MINMAX(0,100);\n 1258                  SET_PROGRESS_FORM_POSITION(0)\n 1259:                 if (aexp->ExportTopAddRows(FAutoCADExport->EditTopAddRows)==-1) {\n 1260                      goto export_end;\n 1261                  }\n ....\n 1265                  currentItem++;\n 1266                  SET_PROGRESS_FORM_CAPTION_EX(\"выводим дополнительные строки из файлов в нижнюю таблицу\")\n 1267:                 if (aexp->ExportBottomAddRows(FAutoCADExport->EditTopAddRows)==-1) {\n 1268                      goto export_end;\n 1269                  }\n ....\n 1274  \n 1275          try {\n 1276:             if (FAutoCADExport->ExportGraphic) {\n 1277                  currentItem++;\n 1278                  SET_PROGRESS_FORM_CAPTION(\"выводим дополнительные строки графика\")\n 1279:                 aexp->ExportGraphic(FAutoCADExport->EditTopAddRows,false);\n 1280              }\n 1281          } catch (...) {\n ....\n 1284  \n 1285          try {\n 1286:             if (FAutoCADExport->ExportTable) {\n 1287                  currentItem++;\n 1288                  aexp->AddLayer(\"Table\");\n 1289:                 aexp->DrawTables(FAutoCADExport->ExportRuler);\n 1290              }\n 1291          } catch (...) {\n ....\n 1305  // МЕТКА :D\n 1306  export_end:\n 1307:     //if (FAutoCADExport->ExportHideAutoCAD) {\n 1308      aexp->showApplication();\n 1309      //}\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.h:\n   97          AnsiString RoadName;\n   98  \n   99:         TFAutoCADExport *FAutoCADExport;\n  100          TProgressForm *ProgressForm;\n  101          TDtaSource *MetricData;\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADExportForm.cpp:\n   12  #pragma link \"CSPIN\"\n   13  #pragma resource \"*.dfm\"\n   14: TFAutoCADExport *FAutoCADExport;\n   15  \n   16  \n   ..\n   32  \n   33  //---------------------------------------------------------------------------\n   34: __fastcall TFAutoCADExport::TFAutoCADExport(TComponent* Owner)\n   35  : TForm(Owner)\n   36  {\n   ..\n   47  #define ONLYNUMBERS(editName) SetWindowLong(editName->Handle, GWL_STYLE, GetWindowLong(editName->Handle, GWL_STYLE) | ES_NUMBER);\n   48  \n   49: void TFAutoCADExport::SetupTEdits()\n   50  {\n   51   ONLYNUMBERS(edtUnderTextHeight)\n   ..\n   66  }\n   67  \n   68: int TFAutoCADExport::getIndexOfItemInComboBox(TComboBox *combo, AnsiString value, bool fAddIfNotExist)\n   69  {\n   70    int index = combo->Items->IndexOf(value);\n   ..\n   77  \n   78  \n   79: void TFAutoCADExport::SaveIni(TIniFile *ini)\n   80  {\n   81   ini->WriteBool(\"AutoCAD\",\"ExportAttachmetns\",chkAttachments->Checked);\n   ..\n  170  }\n  171  \n  172: void TFAutoCADExport::LoadIni(TIniFile *ini, bool firstTime)\n  173  {\n  174   fIniLoading = true;\n  ...\n  265  }\n  266  }\n  267: void __fastcall TFAutoCADExport::FormClose(TObject *Sender,\n  268    TCloseAction &Action)\n  269  {\n  ...\n  274  //---------------------------------------------------------------------------\n  275  \n  276: void __fastcall TFAutoCADExport::FormKeyDown(TObject *Sender, WORD &Key,\n  277    TShiftState Shift)\n  278  {\n  ...\n  285  //---------------------------------------------------------------------------\n  286  \n  287: void __fastcall TFAutoCADExport::SetRoadId(int rid) {\n  288  \n  289    cbCurList->Items->Clear();\n  ...\n  312  \n  313  \n  314: void __fastcall TFAutoCADExport::chkAllClick(TObject *Sender)\n  315  {\n  316   TCheckBox *xBox = dynamic_cast<TCheckBox*>(Sender);\n  ...\n  336  \n  337  \n  338: void __fastcall TFAutoCADExport::Button2Click(TObject *Sender)\n  339  {\n  340    static AnsiString name,temp;\n  ...\n  350  //---------------------------------------------------------------------------\n  351  \n  352: void __fastcall TFAutoCADExport::Button3Click(TObject *Sender)\n  353  {\n  354    pnlLeft->Visible = !pnlLeft->Visible;\n  ...\n  361  \n  362  \n  363: void __fastcall TFAutoCADExport::cbCurListChange(TObject *Sender)\n  364  {\n  365   iCur = cbCurList->ItemIndex;\n  ...\n  367  //---------------------------------------------------------------------------\n  368  \n  369: int TFAutoCADExport::setBottomAddRowsCount(int count)\n  370  {\n  371    bottomAddRowsCount = count;\n  372  }\n  373  \n  374: int TFAutoCADExport::setTopAddRowsCount(int count)\n  375  {\n  376    topAddRowsCount = count;\n  ...\n  378  \n  379  \n  380: void __fastcall TFAutoCADExport::cbPrjListChange(TObject *Sender)\n  381  {\n  382    iPrj = cbPrjList->ItemIndex;   \n  ...\n  386  \n  387  \n  388: void __fastcall TFAutoCADExport::btnTopAddRowsClick(TObject *Sender)\n  389  {\n  390    TButton *btn = dynamic_cast<TButton*>(Sender);\n  ...\n  407  \n  408  \n  409: void __fastcall TFAutoCADExport::Button5Click(TObject *Sender)\n  410  {\n  411    if(!OpenDialog2->Execute()) return;\n  ...\n  418  \n  419  \n  420: void __fastcall TFAutoCADExport::Button6Click(TObject *Sender)\n  421  {\n  422    AnsiString newName;\n  ...\n  440  }\n  441  //---------------------------------------------------------------------------\n  442: int TFAutoCADExport::getRow(TCheckListBox *lb, AnsiString &rowName)\n  443  {\n  444   int enl = 0;\n  ...\n  464  }\n  465  \n  466: AnsiString TFAutoCADExport::getAutoCADVersion()\n  467  {\n  468   return cmbAutoCADVersion->Text;\n  469  }\n  470  \n  471: int TFAutoCADExport::countOfUnchecksBefore(TCheckListBox *list, int iRow)\n  472  {\n  473   int c = 0;\n  ...\n  482  }\n  483  \n  484: int TFAutoCADExport::getTopRow(AnsiString rowName)\n  485  {\n  486   return getRow(listTopRows, rowName);\n  487  }\n  488  \n  489: int TFAutoCADExport::getBottomRow(AnsiString rowName)\n  490  {\n  491   return getRow(listBottomRows, rowName);\n  492  }\n  493  \n  494: void TFAutoCADExport::SaveRowsInfoToIni(TCheckListBox *list, TIniFile *ini)\n  495  {\n  496   AnsiString str = \"\";\n  ...\n  501  }\n  502  \n  503: void TFAutoCADExport::LoadRowsInfoFromIni(TCheckListBox *list, TIniFile *ini)\n  504  {\n  505   AnsiString str;\n  ...\n  527  }\n  528  \n  529: void TFAutoCADExport::fillComboRoad()\n  530  {\n  531    TSearchRec sr;\n  ...\n  551  }\n  552  \n  553: void TFAutoCADExport::locateRoadNameComboRoad()\n  554  {\n  555    TReplaceFlags Flags;\n  ...\n  603  \n  604  \n  605: void __fastcall TFAutoCADExport::listBottomRowsDragOver(TObject *Sender,\n  606    TObject *Source, int X, int Y, TDragState State, bool &Accept)\n  607  {\n  ...\n  621  \n  622  \n  623: void __fastcall TFAutoCADExport::edtBottomAddRowsClick(TObject *Sender)\n  624  {\n  625   static TEdit* lastEdit = 0;\n  ...\n  633  //---------------------------------------------------------------------------\n  634  \n  635: void __fastcall TFAutoCADExport::edtTopAddRowsDblClick(TObject *Sender)\n  636  {\n  637   TEdit *edit = dynamic_cast<TEdit*>(Sender);\n  ...\n  641  }\n  642  \n  643: WideString TFAutoCADExport::get_EditTopAddRows()\n  644  {\n  645   return edtTopAddRows->Text +\"\\\\\"+ cmbRoad->Text;\n  646  }\n  647: void TFAutoCADExport::set_EditTopAddRows(WideString value)\n  648  {\n  649    edtTopAddRows->Text = value;\n  ...\n  651  \n  652  \n  653: void __fastcall TFAutoCADExport::LoadSetupsInis()\n  654  {\n  655    TSearchRec rec;\n  ...\n  668  }\n  669  \n  670: void __fastcall TFAutoCADExport::LoadTemplates()\n  671  {\n  672    TSearchRec rec;\n  ...\n  686  }\n  687  \n  688: void __fastcall TFAutoCADExport::FormShow(TObject *Sender)\n  689  {\n  690    LoadSetupsInis();\n  ...\n  695  //---------------------------------------------------------------------------\n  696  \n  697: void __fastcall TFAutoCADExport::cbIniChange(TObject *Sender)\n  698  {\n  699   static lastItem = 0;\n  ...\n  727  //---------------------------------------------------------------------------\n  728  \n  729: void __fastcall TFAutoCADExport::btnOkClick(TObject *Sender)\n  730  {\n  731     bottomAddRowsCount = 0;\n  ...\n  735  \n  736  \n  737: void __fastcall TFAutoCADExport::edtTopAddRowsChange(TObject *Sender)\n  738  {\n  739    fillComboRoad();        \n  ...\n  742  \n  743  \n  744: void __fastcall TFAutoCADExport::edtStartChange(TObject *Sender)\n  745  {\n  746   if(fIniLoading) return;\n  ...\n  754  //---------------------------------------------------------------------------\n  755  \n  756: void __fastcall TFAutoCADExport::Button4Click(TObject *Sender)\n  757  {\n  758   chkSection->Checked = false;\n  ...\n  761  }\n  762  //---------------------------------------------------------------------------\n  763: int __fastcall TFAutoCADExport::CountOfExports()\n  764  {\n  765    int count = 0;\n  ...\n  804  \n  805  \n  806: void __fastcall TFAutoCADExport::btnShowInfoClick(TObject *Sender)\n  807  {\n  808    FAddRowDescription->Show();    \n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADExportForm.h:\n   64  \n   65  //---------------------------------------------------------------------------\n   66: class TFAutoCADExport : public TForm\n   67  {\n   68  __published:    // IDE-managed Components\n   ..\n  244  \n  245  public:     // User declarations\n  246:     __fastcall TFAutoCADExport(TComponent* Owner);\n  247      void __fastcall SetRoadId(int rid);\n  248      AnsiString RoadName;\n  ...\n  362  };\n  363  //---------------------------------------------------------------------------\n  364: extern PACKAGE TFAutoCADExport *FAutoCADExport;\n  365  //---------------------------------------------------------------------------\n  366  //#endif  // WITHOUT_AUTOCAD\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADPrintForm.cpp:\n  693  {\n  694  \thelper = 0;\n  695:         AutoCAD.setAutoCADVersion(FAutoCADExport->getAutoCADVersion())\n  696  \tif (AutoCAD.BindAutoCAD()) {\n  697  \t\tif (!AutoCAD.ActiveDocument) {\n\nD:\\_DISTR\\_ASUDOR\\RSign\\MainUnit.cpp:\n  261      lastVideoWindowPosition.Bottom = ini->ReadInteger(\"ShowRoad\", \"VideoBottom\", 0);\n  262  \n  263:     FAutoCADExport->lastSavePath = ini->ReadString(\"AutoCAD\", \"LastSavePath\", \"\");\n  264  \n  265  }\n  ...\n  283  \tini->WriteString(\"PrintPattern\",\"Name\",VPatFrm->FileName);\n  284  \tini->WriteString(\"Video\",\"Servers\",VideoServers->CommaText);\n  285:      ini->WriteString(\"AutoCAD\",\"LastSavePath\",FAutoCADExport->lastSavePath);\n  286      ConnectionForm->saveIni(ini);\n  287  }\n\nD:\\_DISTR\\_ASUDOR\\RSign\\RSign.bpr:\n  151        <FILE FILENAME=\"AutoCADHelper.cpp\" FORMNAME=\"\" UNITNAME=\"AutoCADHelper\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  152        <FILE FILENAME=\"AutoCADPrintForm.cpp\" FORMNAME=\"FAutoCADPrint\" UNITNAME=\"AutoCADPrintForm\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  153:       <FILE FILENAME=\"AutoCADExportForm.cpp\" FORMNAME=\"FAutoCADExport\" UNITNAME=\"AutoCADExportForm\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  154        <FILE FILENAME=\"unSignalsInsert.cpp\" FORMNAME=\"frmSignalsInsert\" UNITNAME=\"unSignalsInsert\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  155        <FILE FILENAME=\"AcadExportThread.cpp\" FORMNAME=\"\" UNITNAME=\"AcadExportThread\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n\nD:\\_DISTR\\_ASUDOR\\RSign\\RSign.cpp:\n   47  USEFORM(\"ErrorObjectDlg.cpp\", ErrorObjectDialog);\n   48  USEFORM(\"AutoCADPrintForm.cpp\", FAutoCADPrint);\n   49: USEFORM(\"AutoCADExportForm.cpp\", FAutoCADExport);\n   50  USEFORM(\"unSignalsInsert.cpp\", frmSignalsInsert);\n   51  USEFORM(\"AttachForm.cpp\", frmAttachParams);\n   ..\n   60  USEFORM(\"AutoCADPrintForm.cpp\", FAutoCADPrint);\n   61  #endif\n   62: USEFORM(\"AutoCADExportForm.cpp\", FAutoCADExport);\n   63  USEFORM(\"unSignalsInsert.cpp\", frmSignalsInsert);\n   64  USEFORM(\"AttachForm.cpp\", frmAttachParams);\n   ..\n  139                   Application->CreateForm(__classid(TFAutoCADPrint), &FAutoCADPrint);\n  140                   Application->CreateForm(__classid(TFAutoCADPrint), &FAutoCADPrint);\n  141:                  Application->CreateForm(__classid(TFAutoCADExport), &FAutoCADExport);\n  142                   Application->CreateForm(__classid(TfrmSignalsInsert), &frmSignalsInsert);\n  143                   Application->CreateForm(__classid(TfrmAttachParams), &frmAttachParams);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\RSign_without_autocad.bpr:\n  144        <FILE FILENAME=\"AutoCADHelper.cpp\" FORMNAME=\"\" UNITNAME=\"AutoCADHelper\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  145        <FILE FILENAME=\"AutoCADPrintForm.cpp\" FORMNAME=\"FAutoCADPrint\" UNITNAME=\"AutoCADPrintForm\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  146:       <FILE FILENAME=\"AutoCADExportForm.cpp\" FORMNAME=\"FAutoCADExport\" UNITNAME=\"AutoCADExportForm\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  147        <FILE FILENAME=\"unSignalsInsert.cpp\" FORMNAME=\"frmSignalsInsert\" UNITNAME=\"unSignalsInsert\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  148        <FILE FILENAME=\"AcadExportThread.cpp\" FORMNAME=\"\" UNITNAME=\"AcadExportThread\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n\nD:\\_DISTR\\_ASUDOR\\RSign\\RSignx64.bpr:\n  151        <FILE FILENAME=\"AutoCADHelper.cpp\" FORMNAME=\"\" UNITNAME=\"AutoCADHelper\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  152        <FILE FILENAME=\"AutoCADPrintForm.cpp\" FORMNAME=\"FAutoCADPrint\" UNITNAME=\"AutoCADPrintForm\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  153:       <FILE FILENAME=\"AutoCADExportForm.cpp\" FORMNAME=\"FAutoCADExport\" UNITNAME=\"AutoCADExportForm\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  154        <FILE FILENAME=\"unSignalsInsert.cpp\" FORMNAME=\"frmSignalsInsert\" UNITNAME=\"unSignalsInsert\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n  155        <FILE FILENAME=\"AcadExportThread.cpp\" FORMNAME=\"\" UNITNAME=\"AcadExportThread\" CONTAINERID=\"CCompiler\" DESIGNCLASS=\"\" LOCALCOMMAND=\"\"/>\n\nD:\\_DISTR\\_ASUDOR\\RSign\\ShowRoad.cpp:\n 1084  void __fastcall TRoadFrm::AcadExport(void) {\n 1085  #ifdef AutoCAD_OCXH  // check is AutoCAD available\n 1086:     FAutoCADExport->SetRoadId(RoadId);\n 1087:     FAutoCADExport->RoadName = FRoadName;\n 1088:     FAutoCADExport->RoadDistrict = FDistrictName;\n 1089:     if(FAutoCADExport->ShowModal()!=mrOk) return;\n 1090  \n 1091      if(!fBreakedLines && MessageDlg(\"Ðàçîðâàòü êðîìêó áðîâêè ïî ïðèìûêàíèÿì?\", mtConfirmation,\n ....\n 1104  \n 1105      ProgressForm->windowBelow = this->Handle;\n 1106:     thread->FAutoCADExport = FAutoCADExport;\n 1107      thread->ProgressForm = ProgressForm;\n 1108      thread->MetricData = MetricData;\n\n138 matches across 13 files\n",
 			"settings":
 			{
-				"buffer_size": 9871,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "acadexport.cpp",
-			"settings":
-			{
-				"buffer_size": 139522,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AutoCADHelper.cpp",
-			"settings":
-			{
-				"buffer_size": 69691,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Параметры плана.sql",
-			"settings":
-			{
-				"buffer_size": 4592,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Знаки.sql",
-			"settings":
-			{
-				"buffer_size": 7207,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Ограждения.sql",
-			"settings":
-			{
-				"buffer_size": 6564,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Сигнальные столбики.sql",
-			"settings":
-			{
-				"buffer_size": 6388,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Освещение.sql",
-			"settings":
-			{
-				"buffer_size": 5521,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Тротуары.sql",
-			"settings":
-			{
-				"buffer_size": 6285,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Переходно-скоростные полосы.sql",
-			"settings":
-			{
-				"buffer_size": 5049,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Автобусные остановки.sql",
-			"settings":
-			{
-				"buffer_size": 12372,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Разметка.sql",
-			"settings":
-			{
-				"buffer_size": 12780,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AutoCAD/Scripts/docx/Readme.txt",
-			"settings":
-			{
-				"buffer_size": 1885,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/ПОДД/DOCX/gen_script.bat",
-			"settings":
-			{
-				"buffer_size": 24092,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Мосты.sql",
-			"settings":
-			{
-				"buffer_size": 3330,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Придорожный сервис.sql",
-			"settings":
-			{
-				"buffer_size": 4183,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AutoCAD/Scripts/last_mini_report.bat",
-			"settings":
-			{
-				"buffer_size": 427,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/get_podd_docx.bat",
-			"settings":
-			{
-				"buffer_size": 24092,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AutoCAD/Scripts/.credentials",
-			"settings":
-			{
-				"buffer_size": 80,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AutoCADHelper.h",
-			"settings":
-			{
-				"buffer_size": 21075,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Helpers.cpp",
-			"settings":
-			{
-				"buffer_size": 4312,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Helpers.h",
-			"settings":
-			{
-				"buffer_size": 1073,
-				"line_ending": "Windows"
+				"buffer_size": 69889,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
 			}
 		},
 		{
@@ -246,46 +59,44 @@
 			}
 		},
 		{
-			"contents": "Searching 2209 files for \"SaveToDir\" (whole word)\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADExportForm.h:\n  289      MPROPERTY1(Graphic);\n  290      MPROPERTY1(DrawMap);\n  291:     MPROPERTY1(SaveToDir);\n  292      MPROPERTY1(ConditionAsExisting);\n  293  \n\n1 match in 1 file\n\n\n\nSearching 2209 files for \"SaveToDir\"\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.cpp:\n 1036      if (aexp->BeginDocument(R)) {\n 1037  \n 1038:         if (FAutoCADExport->ExportSaveToDir) {\n 1039              savePath = FAutoCADExport->lastSavePath;\n 1040              if (!SelectDirectory(\"Выберете папку для сохранения файла\", \"\", savePath)) {\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADExportForm.h:\n  206      TComboBox *cmbAutoCADVersion;\n  207      TLabel *Label30;\n  208:     TCheckBox *chkSaveToDir;\n  209          TCheckBox *chkDefects;\n  210          TCheckBox *chkConditionAsExisting;\n  ...\n  289      MPROPERTY1(Graphic);\n  290      MPROPERTY1(DrawMap);\n  291:     MPROPERTY1(SaveToDir);\n  292      MPROPERTY1(ConditionAsExisting);\n  293  \n\n3 matches across 2 files\n\n\nSearching 2209 files for \"lastSavePath\"\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.cpp:\n 1037  \n 1038          if (FAutoCADExport->ExportSaveToDir) {\n 1039:             savePath = FAutoCADExport->lastSavePath;\n 1040              if (!SelectDirectory(\"Выберете папку для сохранения файла\", \"\", savePath)) {\n 1041                  goto export_end;\n 1042              }\n 1043:             FAutoCADExport->lastSavePath = savePath;\n 1044              AnsiString roadName = RoadName;\n 1045              roadName = StringReplace(roadName, \"\\\"\", \"\", TReplaceFlags() << rfReplaceAll);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADExportForm.cpp:\n  152   ini->WriteString(\"AutoCAD\",\"SidewalksHatch\",edtSidewalksHatch->Text);\n  153   ini->WriteString(\"AutoCAD\",\"ProjectBarrierPrefix\",edtProjectBarrierPrefix->Text);\n  154:  ini->WriteString(\"AutoCAD\",\"LastSavePath\",lastSavePath);\n  155  \n  156   ini->WriteString(\"AutoCAD\",\"TableHatch\",edtTableHatch->Text);\n  ...\n  226   edtStart->Text = ini->ReadInteger(\"AutoCAD\",\"iStart\",-1);\n  227   edtEnd->Text = ini->ReadInteger(\"AutoCAD\",\"iEnd\",-1);\n  228:  lastSavePath = ini->ReadString(\"AutoCAD\", \"LastSavePath\", \"\");\n  229   edtLineWidth->Text = ini->ReadInteger(\"AutoCAD\",\"LineWidth\",0);\n  230   edtAutoShrinkOneLetterWidth->Text = ini->ReadInteger(\"AutoCAD\",\"AutoShrinkOneLetterWidth\",2300);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADExportForm.h:\n  248      AnsiString RoadName;\n  249      AnsiString RoadDistrict;\n  250:     AnsiString lastSavePath;\n  251  \n  252      int getExportTo() {return rgOut->ItemIndex;}\n\nD:\\_DISTR\\_ASUDOR\\RSign\\RSign.ini:\n  120  PDFBinder=.\\AutoCAD\\PDFBinder\\pdfbinder.exe\n  121  ExportConditionAsExisting=1\n  122: LastSavePath=d:\\_MMK\\_ROADS\\Roads-2016\\ÄÈÀÃÍÎÑÒÈÊÀ\\ÏÎÄÄ\\\n  123  \n\n8 matches across 4 files\n\n\nSearching 2211 files for \"ma24_2\"\n\nD:\\_DISTR\\_ASUDOR\\RSign\\acadexport.cpp:\n 2107  \n 2108              case ma24_1: /*Дублирование предупреждающих дорожных знаков*/\n 2109:             case ma24_2: /*Дублирование запрещающих дорожных знаков*/\n 2110              case ma24_3: /*Дублирование дорожного знака Инвалиды*/\n 2111                  BUILDER_ERROR(\"Разметка 1.24 на позиции \" << Poly->Points[0].x << \" не реализована\");\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.cpp:\n  685                        case ma23:\n  686                        case ma24_1:\n  687:                       case ma24_2:\n  688                        case ma24_3:\n  689                        case ma24_4:\n\nD:\\_DISTR\\_ASUDOR\\RSign\\const.h:\n  254      ma18r=2384983,ma18l=2384984,ma18pr=2384985,ma18pl=2384986,ma18rl=2385131,ma18prl=2384987,\n  255      ma19_1=2384988,ma19_2=2384989,ma20=2384990,ma21=2384991,ma22=2384992,ma23=2384993,\n  256:     ma24_1=2385127,ma24_2=2385128,ma24_3=2385129,ma24_4=2385266,ma25=2385130,ma14_1e=2385260,ma14_2e=2385272};\n  257  \n  258  enum TTrafficLightsPlacement {tlpOpora=2385257,tlpConsol=2385258,tlpRast=2385259};\n  ...\n  267  const TMarkKind MLIslands[MLIslandsCount]={ma16_1,ma16_2,ma16_3};\n  268  #define MLArrowsCount 16\n  269: const TMarkKind MLArrows[MLArrowsCount]={ma18p,ma18l,ma18r,ma18pl,ma18pr,ma18rl,ma18prl,ma19_1,ma19_2,ma20,ma21,ma22,ma23,ma24_1,ma24_2,ma24_3};\n  270  \n  271  \n\n4 matches across 3 files\n\n\nSearching 2216 files for \"ma24_1\"\n\nD:\\_DISTR\\_ASUDOR\\RSign\\acadexport.cpp:\n 2106                  break;\n 2107  \n 2108:             case ma24_1: /*Дублирование предупреждающих дорожных знаков*/\n 2109                  block = AutoCAD.DrawBlock(\"r_1.24_1\", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,\n 2110                                            m->Direction == roDirect ? 0 : M_PI);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AcadExportThread.cpp:\n  684                        case ma20:\n  685                        case ma23:\n  686:                       case ma24_1:\n  687                        case ma24_2:\n  688                        case ma24_3:\n\nD:\\_DISTR\\_ASUDOR\\RSign\\const.h:\n  254      ma18r=2384983,ma18l=2384984,ma18pr=2384985,ma18pl=2384986,ma18rl=2385131,ma18prl=2384987,\n  255      ma19_1=2384988,ma19_2=2384989,ma20=2384990,ma21=2384991,ma22=2384992,ma23=2384993,\n  256:     ma24_1=2385127,ma24_2=2385128,ma24_3=2385129,ma24_4=2385266,ma25=2385130,ma14_1e=2385260,ma14_2e=2385272};\n  257  \n  258  enum TTrafficLightsPlacement {tlpOpora=2385257,tlpConsol=2385258,tlpRast=2385259};\n  ...\n  267  const TMarkKind MLIslands[MLIslandsCount]={ma16_1,ma16_2,ma16_3};\n  268  #define MLArrowsCount 16\n  269: const TMarkKind MLArrows[MLArrowsCount]={ma18p,ma18l,ma18r,ma18pl,ma18pr,ma18rl,ma18prl,ma19_1,ma19_2,ma20,ma21,ma22,ma23,ma24_1,ma24_2,ma24_3};\n  270  \n  271  \n\n4 matches across 3 files\n\n\nSearching 2215 files for \"newBlockName\"\n\nD:\\_DISTR\\_ASUDOR\\RSign\\AutoCADHelper.cpp:\n 1190  AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, vector<WideString> &labels)\n 1191  {\n 1192: \tAnsiString newBlockName;\n 1193  \tAcadBlockPtr newBlock;\n 1194  \tIAcadBlock* tempBlock;\n ....\n 1203  \t\t\tBUILDER_ERROR(\"Блок '\" << AnsiString(blocksNames[i]).c_str() << \"' не найден\");\n 1204  \t\t}\n 1205: \t\tif (newBlockName!=\"\") newBlockName+=\"_\";\n 1206: \t\tnewBlockName += blocksNames[i];\n 1207  \t\t\n 1208  \t\tAnsiString label = labels[i];\n ....\n 1214          label = StringReplace(label, \">\", \"\", TReplaceFlags() << rfReplaceAll);\n 1215  \t\tif (!labels[i].IsEmpty()) {\n 1216: \t\t\tnewBlockName += \"[\" + label + \"]\";\n 1217  \t\t}\n 1218  \t\t\n ....\n 1222  \t\n 1223  \t// пробуем возвратить ново-созданный блок, вдруг он уже существует\n 1224: \tif (std::find(existingBlocks.begin(), existingBlocks.end(), newBlockName) != existingBlocks.end()) {\n 1225: \t\treturn cadActiveDocument->Blocks->Item(Variant(newBlockName));\n 1226  \t}\n 1227  \t\n ....\n 1256  \t//\tформируем новый блок\n 1257  \tint yOffset = 0;\n 1258: \tnewBlock = cadActiveDocument->Blocks->Add(cadPoint(0, 0), WideString(newBlockName));\n 1259  \tfor(int i=0;i<blocks.size();++i) {\n 1260  \t\tif(blockHeights[i] != -1) {\n\n8 matches in 1 file\n",
+			"file": "AutoCADHelper.cpp",
 			"settings":
 			{
-				"buffer_size": 6903,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "BuildWidePart.cpp",
-			"settings":
-			{
-				"buffer_size": 814,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AutoCADExportForm.h",
-			"settings":
-			{
-				"buffer_size": 12545,
+				"buffer_size": 69942,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "AutoCADExportForm.cpp",
+			"file": "AutoCAD/src/AutoCAD_TLB.h",
 			"settings":
 			{
-				"buffer_size": 27078,
+				"buffer_size": 12598174,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "AutoCAD/src/AutoCAD_TLB.cpp",
+			"settings":
+			{
+				"buffer_size": 41269,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "AutoCADHelper.h",
+			"settings":
+			{
+				"buffer_size": 21087,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "const.h",
+			"file": "AutoCAD/src/AutoCAD_OCX.cpp",
 			"settings":
 			{
-				"buffer_size": 10760,
+				"buffer_size": 18752,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
@@ -336,30 +147,62 @@
 	},
 	"expanded_folders":
 	[
-		"/D/_DISTR/_ASUDOR/RSign"
+		"/D/_DISTR/_ASUDOR/RSign",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/src"
 	],
 	"file_history":
 	[
+		"/D/_DISTR/_ASUDOR/RSign/AutoCADExportForm.h",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCADExportForm.cpp",
+		"/D/_DISTR/_ASUDOR/RSign/const.h",
+		"/D/_DISTR/_ASUDOR/RSign/BuildWidePart.cpp",
+		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.cpp",
+		"/D/_DISTR/_ASUDOR/RSign/Helpers.h",
+		"/D/_DISTR/_ASUDOR/RSign/Helpers.cpp",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.h",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/.credentials",
+		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/get_podd_docx.bat",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Придорожный сервис.sql",
+		"/D/_DISTR/_ASUDOR/RSign/acadexport.h",
+		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.cpp",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Параметры плана.sql",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Знаки.sql",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Ограждения.sql",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Сигнальные столбики.sql",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Освещение.sql",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Тротуары.sql",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Переходно-скоростные полосы.sql",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Автобусные остановки.sql",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Разметка.sql",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/Readme.txt",
+		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/ПОДД/DOCX/gen_script.bat",
+		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/ПОДД/Олонки-Шарагун (Боханский)_src/pdf для Олонки-Шарагун (Боханский).bat",
+		"/D/_MMK/_SCHEDULE/srp/.gitignore",
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Мосты.sql",
+		"/F/SCHEDULE/SchduleExport 2/Export.cfg",
+		"/D/_MMK/_SCHEDULE/srp2/prj/SRP6.BPR",
+		"/D/_MMK/_SCHEDULE/srp2/prj/srp.bpr",
+		"/D/23-01_izo/23-01/SPR.ini",
+		"/O/m/PhpstormProjects/разворачивание Drupal.txt",
+		"/H/Crack/readme.txt",
+		"/C/Users/m/Desktop/Привет! =)",
 		"/D/_DISTR/_ASUDOR/RSign/RSign.log",
 		"/D/_DISTR/_ASUDOR/RSign/RSign.ini",
 		"/D/_DISTR/_ASUDOR/RSign/RoadObj.h",
 		"/D/_DISTR/_ASUDOR/RSign/RoadObj.cpp",
 		"/D/_DISTR/_ASUDOR/RSign/0.dct",
-		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADExportForm.cpp",
 		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.h",
 		"/D/_DISTR/_ASUDOR/RSign/rsign.sublime-project",
 		"/D/ticket_18759_25.csv",
 		"/F/Irkutsk2016/create_dirs.bat",
 		"/F/Irkutsk2016/PHOTO/create_dirs.bat",
-		"/D/_DISTR/_ASUDOR/RSign/acadexport.h",
 		"/D/_DISTR/_ASUDOR/RSign/RSign.bpr",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/4_ширина проезжой части(кол-во полос движения)(тип покрытия).sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/Readme.txt",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/ТЕХП-2016.docx",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
 		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
 		"/I/Irkutsk2016/05/2016.09.12_12-52_Doroga_1_priamo_zaezd1/RoadLab.xml",
 		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/02/info.txt",
@@ -394,7 +237,6 @@
 		"/C/Users/m/Desktop/СНТ/Подъезд к деревне Ангара-Хайрюзовка Уриковского МО/Иркутский район/bottom/4_ширина обочин справа.txt",
 		"/D/nevelir1.txt",
 		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Ширина проезжей части.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Сигнальные столбики.sql",
 		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/info.txt",
 		"/I/SCHEDULE/SchduleExport 2/Export.cfg",
 		"/I/_SCHEDULE/Бизнес-контингенты_new.txt",
@@ -438,40 +280,11 @@
 		"/D/ЗАПРОСЫ ТП.sql",
 		"/D/tp.bat",
 		"/D/_MMK/_CPP/Orbit/build/Makefile",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/tp.bat",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.h",
-		"/D/KRS/Хадай-Хиней/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/Васильевка-Харагун/Бодайбинский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/_wi/Подъезд к п.Покровка/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/16_искусственные сооружения.sql",
-		"/D/ТП/Тельма-Раздолье/Усольский/bottom/2_ширина проезжей части.txt",
-		"/D/KRS/Алужино-Корсук-Наумовка до границы района/Эхирит-Булагатский/top/1_расстояние видимости.txt",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/9_искусственные сооружения.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/3_ширина обочин слева.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/5_ширина обочин справа.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/4_ширина обочин справа.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/2_ширина проезжей части.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/1_ширина земляного полотна.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/top/1_Границы зон обслуживания и наименование дорожных организаций.",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/16_Затопляемые оползневые и вечномерзлотные участки.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/17_состояние покрытия.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/15_Снегозадерживаюшие сооружения и насаждения_справа.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/14_Снегозадерживаюшие сооружения и насаждения_слева .sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/13_грунт земляного полотна.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/12_снегозаносимые участки справа.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/11_снегозаносимые участки слева.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/8_20_.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/7_20_.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/6_20_.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/Тех Паспорт-город/bottom/5_Конструкция дорожной одежды и толщина конструктивных слоев.sql",
-		"/D/KRS/_READY/Половинка-Васильевка-Люры_2/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Половинка-Васильевка-Люры_1/Баяндаевский/top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Половинка-Васильевка-Люры/Баяндаевский/_top/1_расстояние видимости.txt",
-		"/D/KRS/_READY/Черемхово-Голуметъ-Онот/Черемховский/graphic/1_КОБ.txt"
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/tp.bat"
 	],
 	"find":
 	{
-		"height": 36.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -486,6 +299,20 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"FAutoCADExport",
+			"setAutoCADVersion",
+			"BindRunning",
+			"BindAutoCAD",
+			"const",
+			"Const",
+			"const",
+			"Const",
+			"const",
+			"LIBID_AutoCAD",
+			"const",
+			"AutoCAD_OCX",
+			"FILENAME=\"(\\w+)\\.lib\"",
+			".lib",
 			"\"",
 			"newBlockName",
 			"ma24_1",
@@ -599,28 +426,17 @@
 			"т",
 			"2321",
 			"-1, @N",
-			"-1",
-			"Черемхово-Голуметъ-Онот (Черемховский)[0074+000]",
-			"$b\\t",
-			"$b\t",
-			" ",
-			"GetActiveObject",
-			"BindToActive",
-			"Poly->Points",
-			";\n",
-			"points",
-			"GetCenterOnPolyline",
-			"int",
-			"DrawTextOverPoly",
-			"GetAngle",
-			"GetAngle2"
+			"-1"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
+			"FILENAME=\"..\\\\build\\\\\\1\\.lib\"",
+			"FILENAME=\"..\\\\\\1\\.lib\"",
+			"FILENAME=\"..\\$1\\.lib\"",
 			"\\n\\t",
 			"C:\\Users\\m\\Desktop\\Roads2",
 			"2321, @N",
@@ -636,681 +452,15 @@
 	"groups":
 	[
 		{
-			"selected": 13,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "acadexport.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9871,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2826,
-								2826
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1587.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 21,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "acadexport.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 139522,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								28915,
-								28915
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 16625.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 18,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "AutoCADHelper.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 69691,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								35526,
-								35526
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 23725.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 16,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Параметры плана.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4592,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4592,
-								3011
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1200.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 15,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Знаки.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 7207,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7160,
-								3843
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": -0.0,
-						"translation.y": 1560.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Ограждения.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6564,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3747,
-								6564
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": -0.0,
-						"translation.y": 2940.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Сигнальные столбики.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6388,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3712,
-								6386
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax"
-						},
-						"translation.x": -0.0,
-						"translation.y": 2580.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Освещение.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5521,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3532,
-								5521
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2460.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Тротуары.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6285,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3616,
-								6284
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": -0.0,
-						"translation.y": 2400.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Переходно-скоростные полосы.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5049,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4976,
-								4976
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2040.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Автобусные остановки.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 12372,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								12371,
-								10481
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": -0.0,
-						"translation.y": 2940.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Разметка.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 12780,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								12778,
-								12778
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 5700.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "AutoCAD/Scripts/docx/Readme.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1885,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1696,
-								1696
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/ПОДД/DOCX/gen_script.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 24092,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2777,
-								2331
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Мосты.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3330,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3329,
-								2990
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1140.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 15,
-					"file": "/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Придорожный сервис.sql",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4183,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4183,
-								3585
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/SQL/SQL.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1418.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "AutoCAD/Scripts/last_mini_report.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 427,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								427,
-								10
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 17,
-					"file": "/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/get_podd_docx.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 24092,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								456
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 2813.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 18,
-					"file": "AutoCAD/Scripts/.credentials",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 80,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								80
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 19,
-					"file": "AutoCADHelper.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 21075,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8433,
-								8433
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3907.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 19,
-					"type": "text"
-				},
-				{
-					"buffer": 20,
-					"file": "Helpers.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4312,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3839,
-								3839
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2139.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 25,
-					"type": "text"
-				},
-				{
-					"buffer": 21,
-					"file": "Helpers.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1073,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								812,
-								812
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 24,
-					"type": "text"
-				},
-				{
-					"buffer": 22,
-					"file": "AcadExportThread.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 46703,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								35037,
-								35037
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 19990.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 22,
-					"type": "text"
-				},
-				{
-					"buffer": 23,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6903,
+						"buffer_size": 69889,
 						"regions":
 						{
 							"match":
@@ -1429,6 +579,1918 @@
 									[
 										6786,
 										6798
+									],
+									[
+										7050,
+										7061
+									],
+									[
+										7370,
+										7381
+									],
+									[
+										7817,
+										7828
+									],
+									[
+										7856,
+										7867
+									],
+									[
+										8203,
+										8214
+									],
+									[
+										8399,
+										8410
+									],
+									[
+										8607,
+										8618
+									],
+									[
+										8839,
+										8850
+									],
+									[
+										9085,
+										9096
+									],
+									[
+										9164,
+										9175
+									],
+									[
+										9402,
+										9413
+									],
+									[
+										9432,
+										9443
+									],
+									[
+										9547,
+										9558
+									],
+									[
+										9742,
+										9753
+									],
+									[
+										10062,
+										10073
+									],
+									[
+										10509,
+										10520
+									],
+									[
+										10548,
+										10559
+									],
+									[
+										10895,
+										10906
+									],
+									[
+										11091,
+										11102
+									],
+									[
+										11299,
+										11310
+									],
+									[
+										11543,
+										11554
+									],
+									[
+										11789,
+										11800
+									],
+									[
+										11868,
+										11879
+									],
+									[
+										12106,
+										12117
+									],
+									[
+										12136,
+										12147
+									],
+									[
+										12251,
+										12262
+									],
+									[
+										12580,
+										12593
+									],
+									[
+										13157,
+										13170
+									],
+									[
+										13403,
+										13416
+									],
+									[
+										13478,
+										13491
+									],
+									[
+										13533,
+										13546
+									],
+									[
+										13585,
+										13598
+									],
+									[
+										13638,
+										13651
+									],
+									[
+										13697,
+										13710
+									],
+									[
+										13751,
+										13764
+									],
+									[
+										13802,
+										13815
+									],
+									[
+										13856,
+										13869
+									],
+									[
+										13910,
+										13923
+									],
+									[
+										13977,
+										13990
+									],
+									[
+										14032,
+										14045
+									],
+									[
+										14081,
+										14094
+									],
+									[
+										14131,
+										14144
+									],
+									[
+										14185,
+										14198
+									],
+									[
+										14236,
+										14249
+									],
+									[
+										14299,
+										14312
+									],
+									[
+										14351,
+										14364
+									],
+									[
+										14403,
+										14416
+									],
+									[
+										14459,
+										14472
+									],
+									[
+										14520,
+										14533
+									],
+									[
+										14585,
+										14598
+									],
+									[
+										14643,
+										14656
+									],
+									[
+										14699,
+										14712
+									],
+									[
+										14755,
+										14768
+									],
+									[
+										14807,
+										14820
+									],
+									[
+										14862,
+										14875
+									],
+									[
+										14920,
+										14933
+									],
+									[
+										14975,
+										14988
+									],
+									[
+										15030,
+										15043
+									],
+									[
+										15086,
+										15099
+									],
+									[
+										15136,
+										15149
+									],
+									[
+										15204,
+										15217
+									],
+									[
+										15255,
+										15268
+									],
+									[
+										15310,
+										15323
+									],
+									[
+										15362,
+										15375
+									],
+									[
+										15414,
+										15427
+									],
+									[
+										15467,
+										15480
+									],
+									[
+										15531,
+										15544
+									],
+									[
+										15583,
+										15596
+									],
+									[
+										15640,
+										15653
+									],
+									[
+										15692,
+										15705
+									],
+									[
+										15748,
+										15761
+									],
+									[
+										15800,
+										15813
+									],
+									[
+										15853,
+										15866
+									],
+									[
+										15902,
+										15915
+									],
+									[
+										15957,
+										15970
+									],
+									[
+										16021,
+										16034
+									],
+									[
+										16081,
+										16094
+									],
+									[
+										16133,
+										16146
+									],
+									[
+										16186,
+										16199
+									],
+									[
+										16237,
+										16250
+									],
+									[
+										16289,
+										16302
+									],
+									[
+										16348,
+										16361
+									],
+									[
+										16401,
+										16414
+									],
+									[
+										16457,
+										16470
+									],
+									[
+										16507,
+										16520
+									],
+									[
+										16558,
+										16571
+									],
+									[
+										16609,
+										16622
+									],
+									[
+										16663,
+										16676
+									],
+									[
+										16720,
+										16733
+									],
+									[
+										16769,
+										16782
+									],
+									[
+										16820,
+										16833
+									],
+									[
+										16871,
+										16884
+									],
+									[
+										16923,
+										16936
+									],
+									[
+										16973,
+										16986
+									],
+									[
+										17028,
+										17041
+									],
+									[
+										17079,
+										17092
+									],
+									[
+										17130,
+										17143
+									],
+									[
+										17185,
+										17198
+									],
+									[
+										17243,
+										17256
+									],
+									[
+										17301,
+										17314
+									],
+									[
+										17352,
+										17365
+									],
+									[
+										17415,
+										17428
+									],
+									[
+										17466,
+										17479
+									],
+									[
+										17515,
+										17528
+									],
+									[
+										17566,
+										17579
+									],
+									[
+										17619,
+										17632
+									],
+									[
+										17677,
+										17690
+									],
+									[
+										17738,
+										17751
+									],
+									[
+										17799,
+										17812
+									],
+									[
+										17857,
+										17870
+									],
+									[
+										17916,
+										17929
+									],
+									[
+										17969,
+										17982
+									],
+									[
+										18029,
+										18042
+									],
+									[
+										18086,
+										18099
+									],
+									[
+										18143,
+										18156
+									],
+									[
+										18200,
+										18213
+									],
+									[
+										18255,
+										18268
+									],
+									[
+										18316,
+										18329
+									],
+									[
+										18377,
+										18390
+									],
+									[
+										18440,
+										18453
+									],
+									[
+										18501,
+										18514
+									],
+									[
+										18554,
+										18567
+									],
+									[
+										18608,
+										18621
+									],
+									[
+										18666,
+										18679
+									],
+									[
+										18724,
+										18737
+									],
+									[
+										18784,
+										18797
+									],
+									[
+										18841,
+										18854
+									],
+									[
+										18896,
+										18909
+									],
+									[
+										18952,
+										18965
+									],
+									[
+										19008,
+										19021
+									],
+									[
+										19066,
+										19079
+									],
+									[
+										19123,
+										19136
+									],
+									[
+										19178,
+										19191
+									],
+									[
+										19234,
+										19247
+									],
+									[
+										19296,
+										19309
+									],
+									[
+										19354,
+										19367
+									],
+									[
+										19414,
+										19427
+									],
+									[
+										19465,
+										19478
+									],
+									[
+										19521,
+										19534
+									],
+									[
+										19577,
+										19590
+									],
+									[
+										19633,
+										19646
+									],
+									[
+										19693,
+										19706
+									],
+									[
+										19755,
+										19768
+									],
+									[
+										19812,
+										19825
+									],
+									[
+										19877,
+										19890
+									],
+									[
+										19931,
+										19944
+									],
+									[
+										19991,
+										20004
+									],
+									[
+										20054,
+										20067
+									],
+									[
+										20105,
+										20118
+									],
+									[
+										20162,
+										20175
+									],
+									[
+										20232,
+										20245
+									],
+									[
+										20302,
+										20315
+									],
+									[
+										20360,
+										20373
+									],
+									[
+										20419,
+										20432
+									],
+									[
+										20469,
+										20482
+									],
+									[
+										20526,
+										20539
+									],
+									[
+										20591,
+										20604
+									],
+									[
+										20655,
+										20668
+									],
+									[
+										20717,
+										20730
+									],
+									[
+										20782,
+										20795
+									],
+									[
+										20845,
+										20858
+									],
+									[
+										20910,
+										20923
+									],
+									[
+										20976,
+										20989
+									],
+									[
+										21039,
+										21052
+									],
+									[
+										21100,
+										21113
+									],
+									[
+										21156,
+										21169
+									],
+									[
+										21211,
+										21224
+									],
+									[
+										21264,
+										21277
+									],
+									[
+										21320,
+										21333
+									],
+									[
+										21375,
+										21388
+									],
+									[
+										21434,
+										21447
+									],
+									[
+										21487,
+										21500
+									],
+									[
+										21541,
+										21554
+									],
+									[
+										21596,
+										21609
+									],
+									[
+										21650,
+										21663
+									],
+									[
+										21703,
+										21716
+									],
+									[
+										21760,
+										21773
+									],
+									[
+										22042,
+										22053
+									],
+									[
+										22297,
+										22308
+									],
+									[
+										22511,
+										22522
+									],
+									[
+										22826,
+										22837
+									],
+									[
+										23018,
+										23029
+									],
+									[
+										23179,
+										23190
+									],
+									[
+										23299,
+										23310
+									],
+									[
+										23415,
+										23426
+									],
+									[
+										23534,
+										23545
+									],
+									[
+										23651,
+										23662
+									],
+									[
+										23771,
+										23782
+									],
+									[
+										23889,
+										23900
+									],
+									[
+										24054,
+										24065
+									],
+									[
+										24177,
+										24188
+									],
+									[
+										24302,
+										24313
+									],
+									[
+										24429,
+										24440
+									],
+									[
+										24551,
+										24562
+									],
+									[
+										24674,
+										24685
+									],
+									[
+										24800,
+										24811
+									],
+									[
+										24927,
+										24938
+									],
+									[
+										25053,
+										25064
+									],
+									[
+										25176,
+										25187
+									],
+									[
+										25304,
+										25315
+									],
+									[
+										25431,
+										25442
+									],
+									[
+										25551,
+										25562
+									],
+									[
+										25677,
+										25688
+									],
+									[
+										25801,
+										25812
+									],
+									[
+										25924,
+										25935
+									],
+									[
+										26047,
+										26058
+									],
+									[
+										26174,
+										26185
+									],
+									[
+										26300,
+										26311
+									],
+									[
+										26427,
+										26438
+									],
+									[
+										26556,
+										26567
+									],
+									[
+										26683,
+										26694
+									],
+									[
+										26811,
+										26822
+									],
+									[
+										26937,
+										26948
+									],
+									[
+										27061,
+										27072
+									],
+									[
+										27184,
+										27195
+									],
+									[
+										27306,
+										27317
+									],
+									[
+										27428,
+										27439
+									],
+									[
+										27555,
+										27566
+									],
+									[
+										27680,
+										27691
+									],
+									[
+										27800,
+										27811
+									],
+									[
+										27922,
+										27933
+									],
+									[
+										28044,
+										28055
+									],
+									[
+										28167,
+										28178
+									],
+									[
+										28288,
+										28299
+									],
+									[
+										28414,
+										28425
+									],
+									[
+										28536,
+										28547
+									],
+									[
+										28658,
+										28669
+									],
+									[
+										28789,
+										28800
+									],
+									[
+										28911,
+										28922
+									],
+									[
+										29039,
+										29050
+									],
+									[
+										29160,
+										29171
+									],
+									[
+										29283,
+										29294
+									],
+									[
+										29417,
+										29428
+									],
+									[
+										29546,
+										29557
+									],
+									[
+										29675,
+										29686
+									],
+									[
+										29797,
+										29808
+									],
+									[
+										29930,
+										29941
+									],
+									[
+										30064,
+										30075
+									],
+									[
+										30186,
+										30197
+									],
+									[
+										30315,
+										30326
+									],
+									[
+										30446,
+										30457
+									],
+									[
+										30570,
+										30581
+									],
+									[
+										30702,
+										30713
+									],
+									[
+										30826,
+										30837
+									],
+									[
+										30953,
+										30964
+									],
+									[
+										31079,
+										31090
+									],
+									[
+										31200,
+										31211
+									],
+									[
+										31323,
+										31334
+									],
+									[
+										31446,
+										31457
+									],
+									[
+										31568,
+										31579
+									],
+									[
+										31694,
+										31705
+									],
+									[
+										31819,
+										31830
+									],
+									[
+										31942,
+										31953
+									],
+									[
+										32064,
+										32075
+									],
+									[
+										32190,
+										32201
+									],
+									[
+										32315,
+										32326
+									],
+									[
+										32444,
+										32455
+									],
+									[
+										32571,
+										32582
+									],
+									[
+										32695,
+										32706
+									],
+									[
+										32834,
+										32845
+									],
+									[
+										32972,
+										32983
+									],
+									[
+										33099,
+										33110
+									],
+									[
+										33225,
+										33236
+									],
+									[
+										33346,
+										33357
+									],
+									[
+										33466,
+										33477
+									],
+									[
+										33588,
+										33599
+									],
+									[
+										33714,
+										33725
+									],
+									[
+										33839,
+										33850
+									],
+									[
+										33963,
+										33974
+									],
+									[
+										34098,
+										34109
+									],
+									[
+										34234,
+										34245
+									],
+									[
+										34367,
+										34378
+									],
+									[
+										34498,
+										34509
+									],
+									[
+										34626,
+										34637
+									],
+									[
+										34757,
+										34768
+									],
+									[
+										34883,
+										34894
+									],
+									[
+										35008,
+										35019
+									],
+									[
+										35144,
+										35155
+									],
+									[
+										35290,
+										35301
+									],
+									[
+										35420,
+										35431
+									],
+									[
+										35543,
+										35554
+									],
+									[
+										35670,
+										35681
+									],
+									[
+										35799,
+										35810
+									],
+									[
+										35934,
+										35945
+									],
+									[
+										36060,
+										36071
+									],
+									[
+										36190,
+										36201
+									],
+									[
+										36310,
+										36321
+									],
+									[
+										36432,
+										36443
+									],
+									[
+										36556,
+										36567
+									],
+									[
+										36685,
+										36696
+									],
+									[
+										36817,
+										36828
+									],
+									[
+										36949,
+										36960
+									],
+									[
+										37078,
+										37089
+									],
+									[
+										37208,
+										37219
+									],
+									[
+										37336,
+										37347
+									],
+									[
+										37468,
+										37479
+									],
+									[
+										37600,
+										37611
+									],
+									[
+										37734,
+										37745
+									],
+									[
+										37866,
+										37877
+									],
+									[
+										37990,
+										38001
+									],
+									[
+										38115,
+										38126
+									],
+									[
+										38244,
+										38255
+									],
+									[
+										38373,
+										38384
+									],
+									[
+										38504,
+										38515
+									],
+									[
+										38632,
+										38643
+									],
+									[
+										38759,
+										38770
+									],
+									[
+										38890,
+										38901
+									],
+									[
+										39024,
+										39035
+									],
+									[
+										39149,
+										39160
+									],
+									[
+										39270,
+										39281
+									],
+									[
+										39398,
+										39409
+									],
+									[
+										39526,
+										39537
+									],
+									[
+										39659,
+										39670
+									],
+									[
+										39794,
+										39805
+									],
+									[
+										39930,
+										39941
+									],
+									[
+										40064,
+										40075
+									],
+									[
+										40198,
+										40209
+									],
+									[
+										40330,
+										40341
+									],
+									[
+										40466,
+										40477
+									],
+									[
+										40603,
+										40614
+									],
+									[
+										40739,
+										40750
+									],
+									[
+										40866,
+										40877
+									],
+									[
+										40992,
+										41003
+									],
+									[
+										41119,
+										41130
+									],
+									[
+										41245,
+										41256
+									],
+									[
+										41375,
+										41386
+									],
+									[
+										41500,
+										41511
+									],
+									[
+										41624,
+										41635
+									],
+									[
+										41752,
+										41763
+									],
+									[
+										41876,
+										41887
+									],
+									[
+										42002,
+										42013
+									],
+									[
+										42124,
+										42135
+									],
+									[
+										42254,
+										42265
+									],
+									[
+										42383,
+										42394
+									],
+									[
+										42638,
+										42655
+									],
+									[
+										42704,
+										42721
+									],
+									[
+										42904,
+										42921
+									],
+									[
+										43223,
+										43240
+									],
+									[
+										43423,
+										43440
+									],
+									[
+										43682,
+										43699
+									],
+									[
+										43987,
+										44001
+									],
+									[
+										44156,
+										44170
+									],
+									[
+										44373,
+										44387
+									],
+									[
+										44744,
+										44758
+									],
+									[
+										45053,
+										45067
+									],
+									[
+										45337,
+										45351
+									],
+									[
+										45621,
+										45635
+									],
+									[
+										45901,
+										45915
+									],
+									[
+										45962,
+										45976
+									],
+									[
+										46040,
+										46054
+									],
+									[
+										46129,
+										46143
+									],
+									[
+										46561,
+										46575
+									],
+									[
+										46626,
+										46640
+									],
+									[
+										46832,
+										46846
+									],
+									[
+										47121,
+										47135
+									],
+									[
+										47163,
+										47177
+									],
+									[
+										47250,
+										47264
+									],
+									[
+										47292,
+										47306
+									],
+									[
+										47627,
+										47641
+									],
+									[
+										47728,
+										47742
+									],
+									[
+										48003,
+										48017
+									],
+									[
+										48143,
+										48157
+									],
+									[
+										48397,
+										48411
+									],
+									[
+										48470,
+										48484
+									],
+									[
+										48612,
+										48626
+									],
+									[
+										48652,
+										48666
+									],
+									[
+										48931,
+										48945
+									],
+									[
+										49045,
+										49059
+									],
+									[
+										49109,
+										49123
+									],
+									[
+										49352,
+										49366
+									],
+									[
+										49491,
+										49505
+									],
+									[
+										49557,
+										49571
+									],
+									[
+										49665,
+										49679
+									],
+									[
+										49791,
+										49805
+									],
+									[
+										49862,
+										49876
+									],
+									[
+										50133,
+										50147
+									],
+									[
+										50336,
+										50350
+									],
+									[
+										50533,
+										50547
+									],
+									[
+										50732,
+										50746
+									],
+									[
+										50931,
+										50945
+									],
+									[
+										51187,
+										51201
+									],
+									[
+										51365,
+										51379
+									],
+									[
+										51530,
+										51544
+									],
+									[
+										51716,
+										51730
+									],
+									[
+										51908,
+										51922
+									],
+									[
+										52095,
+										52109
+									],
+									[
+										52286,
+										52300
+									],
+									[
+										52453,
+										52467
+									],
+									[
+										52624,
+										52638
+									],
+									[
+										52824,
+										52838
+									],
+									[
+										53162,
+										53176
+									],
+									[
+										53491,
+										53505
+									],
+									[
+										53586,
+										53600
+									],
+									[
+										53812,
+										53826
+									],
+									[
+										53844,
+										53858
+									],
+									[
+										53879,
+										53893
+									],
+									[
+										53910,
+										53924
+									],
+									[
+										54134,
+										54148
+									],
+									[
+										54341,
+										54355
+									],
+									[
+										54528,
+										54542
+									],
+									[
+										54705,
+										54719
+									],
+									[
+										54975,
+										54989
+									],
+									[
+										55308,
+										55322
+									],
+									[
+										55574,
+										55588
+									],
+									[
+										55917,
+										55931
+									],
+									[
+										56234,
+										56248
+									],
+									[
+										56400,
+										56414
+									],
+									[
+										56604,
+										56618
+									],
+									[
+										56753,
+										56767
+									],
+									[
+										56910,
+										56924
+									],
+									[
+										57053,
+										57067
+									],
+									[
+										57246,
+										57260
+									],
+									[
+										57262,
+										57276
+									],
+									[
+										57477,
+										57491
+									],
+									[
+										57493,
+										57507
+									],
+									[
+										57643,
+										57657
+									],
+									[
+										57660,
+										57674
+									],
+									[
+										57889,
+										57903
+									],
+									[
+										58003,
+										58017
+									],
+									[
+										58196,
+										58210
+									],
+									[
+										58359,
+										58373
+									],
+									[
+										58499,
+										58513
+									],
+									[
+										58705,
+										58719
+									],
+									[
+										58921,
+										58935
+									],
+									[
+										59048,
+										59062
+									],
+									[
+										59208,
+										59222
+									],
+									[
+										59424,
+										59438
+									],
+									[
+										59572,
+										59586
+									],
+									[
+										59778,
+										59792
+									],
+									[
+										59902,
+										59916
+									],
+									[
+										60037,
+										60051
+									],
+									[
+										60182,
+										60196
+									],
+									[
+										60345,
+										60359
+									],
+									[
+										60491,
+										60505
+									],
+									[
+										60687,
+										60701
+									],
+									[
+										60822,
+										60836
+									],
+									[
+										60936,
+										60950
+									],
+									[
+										61068,
+										61082
+									],
+									[
+										61197,
+										61211
+									],
+									[
+										61333,
+										61347
+									],
+									[
+										61477,
+										61491
+									],
+									[
+										61618,
+										61632
+									],
+									[
+										61719,
+										61733
+									],
+									[
+										61846,
+										61860
+									],
+									[
+										62029,
+										62043
+									],
+									[
+										62252,
+										62266
+									],
+									[
+										62410,
+										62424
+									],
+									[
+										62535,
+										62549
+									],
+									[
+										62681,
+										62695
+									],
+									[
+										62795,
+										62809
+									],
+									[
+										62908,
+										62922
+									],
+									[
+										63109,
+										63123
+									],
+									[
+										63315,
+										63329
+									],
+									[
+										63448,
+										63462
+									],
+									[
+										63590,
+										63604
+									],
+									[
+										63802,
+										63816
+									],
+									[
+										64017,
+										64031
+									],
+									[
+										64129,
+										64143
+									],
+									[
+										64382,
+										64396
+									],
+									[
+										64547,
+										64561
+									],
+									[
+										64785,
+										64799
+									],
+									[
+										64801,
+										64815
+									],
+									[
+										65055,
+										65069
+									],
+									[
+										65319,
+										65333
+									],
+									[
+										65611,
+										65625
+									],
+									[
+										66093,
+										66107
+									],
+									[
+										66693,
+										66707
+									],
+									[
+										66933,
+										66947
+									],
+									[
+										67307,
+										67321
+									],
+									[
+										67325,
+										67339
+									],
+									[
+										67953,
+										67967
+									],
+									[
+										68769,
+										68783
+									],
+									[
+										69341,
+										69355
+									],
+									[
+										69387,
+										69401
+									],
+									[
+										69436,
+										69450
+									],
+									[
+										69496,
+										69510
+									],
+									[
+										69735,
+										69749
+									],
+									[
+										69752,
+										69766
 									]
 								],
 								"scope": ""
@@ -1437,15 +2499,15 @@
 						"selection":
 						[
 							[
-								5842,
-								5842
+								64816,
+								64769
 							]
 						],
 						"settings":
 						{
 							"detect_indentation": false,
 							"line_numbers": false,
-							"output_tag": 6,
+							"output_tag": 13,
 							"result_base_dir": "",
 							"result_file_regex": "^([^ \t].*):$",
 							"result_line_regex": "^ +([0-9]+):",
@@ -1453,55 +2515,27 @@
 							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 2900.0,
+						"translation.y": 30594.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 24,
-					"file": "BuildWidePart.cpp",
+					"buffer": 1,
+					"file": "AcadExportThread.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 814,
+						"buffer_size": 46703,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 23,
-					"type": "text"
-				},
-				{
-					"buffer": 25,
-					"file": "AutoCADExportForm.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 12545,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9827,
-								9846
+								34250,
+								34196
 							]
 						],
 						"settings":
@@ -1511,27 +2545,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5400.0,
+						"translation.y": 14795.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 26,
-					"file": "AutoCADExportForm.cpp",
+					"buffer": 2,
+					"file": "AutoCADHelper.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 27078,
+						"buffer_size": 69942,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								7321,
+								7321
 							]
 						],
 						"settings":
@@ -1541,27 +2575,113 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1500.0,
+						"translation.y": 4230.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 27,
-					"file": "const.h",
+					"buffer": 3,
+					"file": "AutoCAD/src/AutoCAD_TLB.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10760,
+						"buffer_size": 12598174,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7629,
-								7640
+								34005,
+								34005
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 9620.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "AutoCAD/src/AutoCAD_TLB.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 41269,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2548,
+								2548
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 344.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "AutoCADHelper.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 21087,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								532,
+								532
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "AutoCAD/src/AutoCAD_OCX.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 18752,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2538,
+								2526
 							]
 						],
 						"settings":
@@ -1571,10 +2691,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4627.0,
+						"translation.y": 207.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 6,
 					"type": "text"
 				}
 			]
@@ -1627,7 +2747,7 @@
 	"project": "rsign.sublime-project",
 	"replace":
 	{
-		"height": 66.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":
