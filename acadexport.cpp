@@ -3584,7 +3584,7 @@ void TAcadExport::ExportRuler(int iStart, int iEnd, bool fEnd)
     }
 }
 
-bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool fEnd)
+bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool drawSurface, bool fEnd)
 {
     if (fEnd) return true;
     AcadPolylinePtr pl[1];
@@ -3647,16 +3647,20 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
         break;
     }
 
-    pl[0] = DrawPolyPoints(p, false, true);
-    AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl, 1, 0, WideString(hatchFill));
-    pl[0]->Erase();
-    AcadAcCmColor *color =  hatch->TrueColor;
+    if (drawSurface) {
+        pl[0] = DrawPolyPoints(p, false, true);
+        AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl, 1, 0, WideString(hatchFill));
+        pl[0]->Erase();
+        AcadAcCmColor *color =  hatch->TrueColor;
 
-    color->SetRGB(Color[0], Color[1], Color[2]);
-    hatch->TrueColor = color;
+        color->SetRGB(Color[0], Color[1], Color[2]);
+        hatch->TrueColor = color;
+    }
 
     if (~iBottomSurface) {
-        ExportAddRowLine(&tableBottom, iBottomSurface, t->LMin, t->LMax, strParams);
+        if (drawSurface) {
+                ExportAddRowLine(&tableBottom, iBottomSurface, t->LMin, t->LMax, strParams);
+        }
         ExportAddRowLine(&tableBottom, iBottomSurface, t->LMin, t->LMax, name);
     }
     return true;

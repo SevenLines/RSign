@@ -162,7 +162,7 @@ class TAcadExport {
       bool __fastcall ExportRestZone(TExtPolyline *Poly,TSquareRoadSideObject_Kromka *r, bool fEnd = false);
       bool __fastcall ExportSidewalk(KromkaObjectGroup *sidewalksGroup, bool fEnd=false);
       bool __fastcall ExportBorder(TExtPolyline *Poly,TLinearRoadSideObject *o,bool exist, bool fEnd = false);
-      bool __fastcall ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool fEnd = false);
+      bool __fastcall ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool drawSurface=true, bool fEnd = false);
       bool __fastcall ExportCommunication(TExtPolyline *p, TCommunication *t, bool fEnd = false);
       bool __fastcall ExportTrafficLight(TExtPolyline *p, vector<TTrafficLight*> &t, bool fEnd = false );
       bool __fastcall ExportDefect(TExtPolyline *Poly, TRoadDefect *d,bool fEnd = false );
