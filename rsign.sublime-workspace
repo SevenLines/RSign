@@ -3,67 +3,90 @@
 	{
 		"selected_items":
 		[
-			[
-				"Hatc",
-				"hatchFill"
-			],
-			[
-				"cmb",
-				"cmbAutoCADVersion"
-			],
-			[
-				"SetA",
-				"setAutoCADVersion"
-			],
-			[
-				"lef",
-				"leftPos"
-			],
-			[
-				"Tp",
-				"TPoint"
-			],
-			[
-				"las",
-				"lastI"
-			],
-			[
-				"sca",
-				"ScaleY"
-			],
-			[
-				"va",
-				"value"
-			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "acadexport.cpp",
+			"file": "AutoCADPrintForm.cpp",
 			"settings":
 			{
-				"buffer_size": 140034,
-				"encoding": "Cyrillic (Windows 1251)",
+				"buffer_size": 26337,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "Searching 2243 files for \"ma24_2_20km\" (regex)\n\nD:\\_DISTR\\_ASUDOR\\RSign\\acadexport.cpp:\n 2108              case ma24_1: /*Дублирование предупреждающих дорожных знаков*/\n 2109                  block = AutoCAD.DrawBlock(\"r_1.24.1\", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,\n 2110:                                           m->Direction == roDirect ? 0 : M_PI);//ma24_2_20km\n 2111                  break;\n 2112:             case ma24_2_20km: /*Дублирование ограничения в 20км*/\n 2113                  block = AutoCAD.DrawBlock(\"r_1.24.2_20km\", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,\n 2114                                            m->Direction == roDirect ? 0 : M_PI);\n\nD:\\_DISTR\\_ASUDOR\\RSign\\const.h:\n  254      ma18r=2384983,ma18l=2384984,ma18pr=2384985,ma18pl=2384986,ma18rl=2385131,ma18prl=2384987,\n  255      ma19_1=2384988,ma19_2=2384989,ma20=2384990,ma21=2384991,ma22=2384992,ma23=2384993,\n  256:     ma24_1=2385127,ma24_2=2385128,ma24_2_20km=2385275,ma24_3=2385129,ma24_4=2385266,ma25=2385130,ma14_1e=2385260,ma14_2e=2385272};\n  257  \n  258  enum TTrafficLightsPlacement {tlpOpora=2385257,tlpConsol=2385258,tlpRast=2385259};\n\n3 matches across 2 files\n",
+			"contents": "-- Разметка осевая\nDECLARE @NumRoad INT, @NumDataSourceOLD INT, @NumDataSourceNEW INT\nSELECT @NumDataSourceOLD =/*$NumDataSourceOLD*/3921/*$*/\nSELECT @NumDataSourceNEW =/*$NumDataSourceNEW*/3949/*$*/\nSELECT @NumRoad = NumRoad\nFROM ListDataSources\nWHERE id_ = @NumDataSourceOLD\n\n\nUPDATE Classifier SET ShortTitle = '1.18а' WHERE id_ in (2384982)\nUPDATE Classifier SET ShortTitle = '1.18б' WHERE id_ in (2384983,2384984)\nUPDATE Classifier SET ShortTitle = '1.18в' WHERE id_ in (2384985,2384986)\nUPDATE Classifier SET ShortTitle = '1.18г' WHERE id_ in (2384987)\nUPDATE Classifier SET ShortTitle = '1.18д' WHERE id_ in (2385131)\n\nSELECT '1.1' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 1 OrderColumn,  1 K11,    0.1 Width INTO #MarkTypes UNION\nSELECT '1.2' ShortTitle,  'м.' UnitMeasure,  NULL LengthCounting, 2 OrderColumn,  1 K11,    0.1 Width UNION\nSELECT '1.3' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 3 OrderColumn,  2 K11,    0.1 Width UNION\nSELECT '1.4' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 3 OrderColumn,  1 K11,    0.1 Width UNION\nSELECT '1.5' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 5 OrderColumn,  0.25 K11, 0.1 Width UNION\nSELECT '1.6' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 6 OrderColumn,  0.75 K11, 0.1 Width UNION\nSELECT '1.7' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 7 OrderColumn,  0.5 K11,  0.1 Width UNION\nSELECT '1.8' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 8 OrderColumn,  0.25 K11, 0.2 Width UNION\nSELECT '1.11' ShortTitle,   'м.' UnitMeasure,  NULL LengthCounting, 11 OrderColumn, 1.75 K11, 0.15 Width UNION\nSELECT '1.12' ShortTitle,   'м.' UnitMeasure,  NULL LengthCounting, 12 OrderColumn, 1 K11,    0.4 Width UNION\nSELECT '1.13' ShortTitle,   'м.' UnitMeasure,  NULL LengthCounting, 13 OrderColumn, 0.5 K11,  1 Width UNION\nSELECT '1.14.1' ShortTitle, 'м.' UnitMeasure,  2 LengthCounting,    14 OrderColumn, 1 K11,    1.6 Width UNION\n--SELECT '1.14.2' ShortTitle, 'м.' UnitMeasure,  4 LengthCounting,    14 OrderColumn, 1 K11,    1.6 Width UNION\nSELECT '1.16%' ShortTitle,  'шт.' UnitMeasure, NULL LengthCounting, 16 OrderColumn, NULL K11, NULL Width UNION\nSELECT '1.18а' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  18 OrderColumn, 1 K11,    1.44 Width UNION\nSELECT '1.18б' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  18 OrderColumn, 1 K11,    1.82 Width UNION\nSELECT '1.18в' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  18 OrderColumn, 1 K11,    2.62 Width UNION\nSELECT '1.18г' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  18 OrderColumn, 1 K11,    2.09 Width UNION\nSELECT '1.18д' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  18 OrderColumn, 1 K11,    2.09 Width UNION\nSELECT '1.19%' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  19 OrderColumn, 1 K11,    2.64 Width UNION\nSELECT '1.20%' ShortTitle,  'шт.' UnitMeasure, NULL LengthCounting, 20 OrderColumn, NULL K11, NULL Width UNION\nSELECT '1.23' ShortTitle,  'шт.' UnitMeasure, 3 LengthCounting, 23 OrderColumn, 1 K11, 1.8 Width UNION\nSELECT '1.24%' ShortTitle,  'шт.' UnitMeasure, 3 LengthCounting, 24 OrderColumn, 1 K11, 1.8 Width UNION\nSELECT '1.25' ShortTitle,  'м.' UnitMeasure, 2 LengthCounting, 25 OrderColumn,  1 K11, 0.8 Width \n\nSELECT M.*, \n	rtrim(C55.ShortTitle) MarkType, \n	(case when ISNULL(M.Area, 0) > 0 then dbo.pp_GetMinValue(M.Area/4.0, M.Length) else 0 end) Area1,\n	convert(bit,\n		(case when M.NumMark in (2384961,2385125,2384962,2384963,2384964,2384965,2384966,2384967,2384968,2384969,2384970,2384971,2385126)\n		then 1\n		else 0 end) \n	) IsLinear\n INTO #ListRoadMarks\nFROM ListRoadMarks M\nJOIN Classifier C55 ON C55.id_ = M.NumMark\nWHERE M.NumDataSource = @NumDataSourceNEW\n	/*and ((m.Scale = 0 and m.Offset = 0 and m.Points is NULL)or(m.NumMark in (2384974)))*/ -- раскомментировать, если нужна только осевая\n\n\nSELECT DISTINCT M.MarkType + ' (' + ISNULL(T.UnitMeasure, 'м.') + ')' ColumnName,\n	M.MarkType MarkType,\n	ISNULL(T.UnitMeasure, 'м.') UnitMeasure,\n	T.LengthCounting,\n	ISNULL(T.OrderColumn, 0) OrderColumn,\n	T.K11, T.Width\n INTO #MarkClassifier\nFROM #ListRoadMarks M\nLEFT JOIN #MarkTypes T ON M.MarkType like T.ShortTitle\n\nDECLARE @t1 TABLE (k nvarchar(1))\n\nINSERT @t1(k)\n(select 0 union all select 1 union all select 2 union all select 3 union all select 4 union all select 5\n union all select 6 union all select 7 union all select 8 union all select 9)\n\nSELECT cast(t1.k + t2.k + t3.k + t4.k + t5.k as int) as Number\n INTO #Numbers\nFROM @t1 t1, @t1 t2, @t1 t3, @t1 t4, @t1 t5  \n\nSELECT N.Number StartKM, N.Number + 1 EndKM,\n	N.Number*1000 StartPos, (N.Number + 1)*1000 EndPos\n INTO #PartsKM\nFROM ListRoadParts LRP\nJOIN #Numbers N ON N.Number between floor(LRP.STartPos/1000.0) and floor(LRP.EndPos/1000.0)\nWHERE LRP.NumPartType = 33 \n	and LRP.NumDataSource = @NumDataSourceOLD\nORDER BY 1\n\nSELECT KM.StartKM, KM.EndKM, M.MarkType,\n	round(sum(case when M.IsLinear = 1 \n		then dbo.pp_GetMinValue(M.EndPos, KM.EndPos) - dbo.pp_GetMaxValue(M.StartPos, KM.StartPos)\n		else ISNULL(M.Length, 0)\n		end), 0) Length,\n	ISNULL(sum(ISNULL(M.Area1, 0)), 0) Area,\n	count(M.Id_) Num\n INTO #KMMarks\nFROM #ListRoadMarks M\nJOIN #PartsKM KM ON (M.StartPos >= KM.StartPos and M.StartPos < KM.EndPos)\n		or (M.EndPos > KM.StartPos and M.EndPos <= KM.EndPos)\n		or (M.StartPos < KM.StartPos and M.EndPos > KM.EndPos)\nGROUP BY KM.StartKM, KM.EndKM, M.MarkType\n\n\nSELECT KM.StartKM, convert(varchar(10), KM.StartKM) + ' - ' + convert(varchar(10), KM.EndKM) KM,\n	MC.ColumnName, MC.LengthCounting, MC.K11, MC.Width,\n	(case when MC.UnitMeasure = 'шт.' then KM.Num else Length end) Volume,\n	/*(case when MC.UnitMeasure = 'шт.' then Num else 0 end)*/ KM.Num,\n	/*(case when MC.UnitMeasure = 'м.' then Length else 0 end)*/ KM.Length\n	,KM.Area\n INTO #PreResult\nFROM #KMMarks KM\nJOIN #MarkClassifier MC ON MC.MarkType = KM.MarkType\n\n/*Пересчитываем площадь*/\nUPDATE #PreResult SET Area = ISNULL(Volume * K11 * Width, 0) + Area\n\nSELECT StartKM, round(sum(Area), 2) Area\n INTO #AreaResult\nFROM #PreResult\nGROUP BY StartKM\n\nSELECT ColumnName, LengthCounting, K11, Width,\n	sum(Volume) Volume,	sum(Length) Length, sum(Num) Num,\n	(case when LengthCounting is NULL then sum(Length) else sum(Num)*LengthCounting end) LM,\n	sum(Area) Area\n INTO #SumResult\nFROM #PreResult\nGROUP BY ColumnName, LengthCounting, K11, Width\n\nSELECT 1 OrderColumn, '№ км' Header INTO #Header UNION\nSELECT 2 OrderColumn, 'коэф.привед. к 1.1' Header UNION\nSELECT 3 OrderColumn, 'ширина, м' Header \n\nSELECT 1 OrderColumn, 'ИТОГО:' Header INTO #Footer UNION\nSELECT 2 OrderColumn, 'лин.км.' Header UNION\nSELECT 3 OrderColumn, 'привед.км.' Header UNION\nSELECT 4 OrderColumn, 'площадь' Header \n\n/*\nSELECT KM, \n	max(case when MarkType = '1.1' then Volume else 0 end) [1.1]\nFROM #PreResult \nGROUP BY StartKM, KM\nORDER BY StartKM\n*/\nDECLARE @SQL varchar(4000)\nDECLARE @HEADERSQL varchar(8000)\nDECLARE @FOOTERSQL varchar(8000)\n\nSET @SQL = ''\nSET @HEADERSQL = ''\nSET @FOOTERSQL = ''\n\nDECLARE @ColumnName varchar(100), @LengthCounting numeric(10, 2), @K11 numeric(10, 2), @Width numeric(10, 2)\n\nDECLARE RECCUR CURSOR FOR\n  SELECT ColumnName, LengthCounting, K11, Width\n  FROM #MarkClassifier\n  ORDER BY OrderColumn, MarkType\n  \nOPEN RECCUR\nFETCH NEXT FROM RECCUR INTO @ColumnName, @LengthCounting, @K11, @Width\n\nWHILE @@FETCH_STATUS = 0\nBEGIN\n  SET @SQL = @SQL + '\n,max(case when ColumnName = ''' + @ColumnName + ''' then convert(int, Volume) else 0 end) [' + @ColumnName + ']'\n\n  SET @HEADERSQL = @HEADERSQL + '\n,max(case \n	when H.Header = ''№ км'' then ''' +  @ColumnName + '''\n	when H.Header = ''коэф.привед. к 1.1'' then ''' + ISNULL(convert(varchar(10), @K11), '') + '''\n	when H.Header = ''ширина, м'' then ''' + ISNULL(convert(varchar(10), @Width), '') + '''\n	else '''' end) [' + @ColumnName + ']'\n\n  SET @FOOTERSQL = @FOOTERSQL + '\n,max(case \n	when F.Header = ''ИТОГО:'' then (case when ColumnName = ''' + @ColumnName + ''' then Volume else 0 end)\n	when F.Header = ''лин.км.'' then (case when ColumnName = ''' + @ColumnName + ''' then LM else 0 end)/1000\n	when F.Header = ''привед.км.'' then (case when ColumnName = ''' + @ColumnName + ''' then LM*K11 else 0 end)/1000\n	when F.Header = ''площадь'' then (case when ColumnName = ''' + @ColumnName + ''' then Area else 0 end)/1000\nelse 0 end) [' + @ColumnName + ']'\n  FETCH NEXT FROM RECCUR INTO @ColumnName, @LengthCounting, @K11, @Width\nEND\n\nCLOSE RECCUR\nDEALLOCATE RECCUR\n\nSET @SQL = 'SELECT R.KM' + @SQL + ', A.Area\nFROM #PreResult R\nLEFT JOIN #AreaResult A ON A.StartKM = R.StartKM\nGROUP BY R.StartKM, R.KM, A.Area\nORDER BY R.StartKM'\n\nSET @HEADERSQL = 'SELECT H.Header' + @HEADERSQL + ', case when H.OrderColumn = 1 then ''кв.м.'' else '''' end [кв.м.]\nFROM #Header H\nGROUP BY H.Header, H.OrderColumn\nORDER BY H.OrderColumn'\n\nSET @FOOTERSQL = 'SELECT F.Header' + @FOOTERSQL + '\nFROM #Footer F\nCROSS JOIN #SumResult R\nGROUP BY F.Header, F.OrderColumn\nORDER BY F.OrderColumn'\n\nPRINT @HEADERSQL\nEXEC(@HEADERSQL)\n\nPRINT @SQL\nEXEC(@SQL)\n\nPRINT @FOOTERSQL\nEXEC(@FOOTERSQL)\n\nUPDATE Classifier SET ShortTitle = '1.18' WHERE id_ in (2384982,2384983,2384984,2384985,2384986,2384987,2385131)\n\nDROP TABLE #AreaResult\nDROP TABLE #SumResult\nDROP TABLE #Footer\nDROP TABLE #Header\nDROP TABLE #MarkClassifier\nDROP TABLE #PreResult\nDROP TABLE #KMMarks\nDROP TABLE #Numbers\nDROP TABLE #PartsKM\nDROP TABLE #ListRoadMarks\nDROP TABLE #MarkTypes\n",
 			"settings":
 			{
-				"buffer_size": 1173,
+				"buffer_size": 9356,
 				"line_ending": "Windows",
-				"name": "Find Results",
+				"name": "-- Разметка осевая"
+			}
+		},
+		{
+			"file": "AutoCADPrintForm.h",
+			"settings":
+			{
+				"buffer_size": 5236,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/m/AppData/Roaming/Sublime Text 3/Packages/SublimeAStyleFormatter/Default (Windows).sublime-keymap",
+			"settings":
+			{
+				"buffer_size": 371,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/Users/m/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+			"settings":
+			{
+				"buffer_size": 366,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Package Control Messages\n========================\n\nSublimeAStyleFormatter:\n----------------------\n\n  SublimeAStyleFormatter\n  ======================\n  \n  SublimeAStyleFormatter is a simple code formatter plugin for Sublime Text 2.\n  It provides ability to format C, C++, C#, and Java files.\n  \n  Usage\n  -----\n  ### Key Bindings\n  The default key bindings for this plugin:\n  \n  **Windows, Linux:**\n  + `ctrl+alt+f`: Format current file\n  + `ctrl+k, ctrl+f`: Format current selection\n  \n  **OSX:**\n  + `ctrl+alt+f`: Format current file\n  + `super+k,super+f`: Format current selection\n  \n  ### Command Palette\n  Open the command palette, it apperas as `SublimeAStyleFormatter: Format Current File`\n  and `SublimeAStyleFormatter Format Current Selection`.\n  \n  \n\nPackage Control:\n---------------\n\n  Version 3.2 Release Notes\n  \n  This version of Package Control focuses on bug-fixes, with notable changes\n  including:\n  \n   - OS X TLS trust roots are exported using APIs to prevent the error message\n     displayed to some El Capitan users\n  \n   - Theme, syntax and color scheme upgrades have been improved and should result\n     in fewer popup messages when filenames change\n  \n   - Various bugs related to installing dependencies have been resolved\n  \n   - Windows and OS X trust roots are exported in a way that valid/invalid purpose\n     information is now communicated to the OpenSSL-based Python ssl module\n  \n   - Further improvements have been made to handling of git/hg package upgrades\n  \n   - The Windows WinINet downloader has improved compatibility with Windows 10\n  \n\n  Version 3.1 Release Notes\n  \n  Package Control continues its focus on polish and fixing edge-case bugs. Some\n  of the changes in this version include:\n  \n   - quick panel for Install Package now stays open on Windows with recent\n     versions of ST3, even when focus is lost\n   - new \"downloader_precedence\" setting to allow users to use specific HTTP\n     backend due to network proxy or SSL issues\n   - added Install Local Dependency command for package developers to more\n     easily deal with dependencies during development\n   - improved handling of git/hg package upgrade errors\n   - better handling of locked .sublime-package files on Windows\n   - performance improvements for users with a large number of open windows\n  \n  For package developers, the list of available dependencies has been growing:\n  https://github.com/wbond/package_control_channel/blob/master/repository/dependencies.json\n  \n  Enjoy!\n  \n",
+			"settings":
+			{
+				"buffer_size": 2496,
+				"line_ending": "Windows",
+				"name": "Package Control Messages",
 				"scratch": true
 			}
 		},
 		{
-			"file": "const.h",
+			"file": "AcadExportThread.cpp",
 			"settings":
 			{
-				"buffer_size": 10825,
-				"encoding": "Cyrillic (Windows 1251)",
+				"buffer_size": 46712,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "AcadExportThread.h",
+			"settings":
+			{
+				"buffer_size": 4594,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "acadexport.cpp",
+			"settings":
+			{
+				"buffer_size": 140196,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "acadexport.h",
+			"settings":
+			{
+				"buffer_size": 9894,
 				"line_ending": "Windows"
 			}
 		}
@@ -75,18 +98,10 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 242.0,
-		"last_filter": "pretty",
+		"height": 127.0,
+		"last_filter": "Package Control: ins",
 		"selected_items":
 		[
-			[
-				"pretty",
-				"Pretty JSON: Format (Pretty Print) JSON"
-			],
-			[
-				"Package Control: inst",
-				"Package Control: Install Package"
-			],
 			[
 				"Package Control: ins",
 				"Package Control: Install Package"
@@ -103,8 +118,6 @@
 		"height": 160.0,
 		"history":
 		[
-			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) ",
-			" import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) ",
 			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
 		]
 	},
@@ -119,150 +132,26 @@
 	},
 	"expanded_folders":
 	[
-		"/D/_DISTR/_ASUDOR/RSign",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD"
+		"/E/Projects/RSign"
 	],
 	"file_history":
 	[
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Комитет по строительству Администрации г. Улан-Удэ/Улан-Удэ ул. Пищевая до 0-го км Зиграевского тракта/Cam1.smi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Комитет по строительству Администрации г. Улан-Удэ/Улан-Удэ ул. Пищевая до 0-го км Зиграевского тракта/Cam1_об.smi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Кома - ул. Романовского/Cam1_enc.avi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Кома - ул. Романовского/Cam1_об.smi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Кома - ул. Романовского/Cam1.smi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Итанца - ул. Юбилейная/Cam1.smi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Итанца - ул. Юбилейная/Cam1_об.smi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Ильинка - ул. Коммунистическая/Cam1_об.smi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Ильинка - ул. Коммунистическая/Cam1.smi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Ильинка - ул. Коммунистическая/gen.bat",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Байкалагропром/gen.bat",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Байкалагропром/Cam2.smi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Байкалагропром/Cam1_об.smi",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Байкалагропром/Cam1.smi",
-		"/D/nginx/conf/nginx.conf",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.cpp",
-		"/C/Users/m/Desktop/Дороги2017/readme.txt",
-		"/D/_MMK/_AKARIN/Диссертация/Dissertation/Диссертацию смотреть как-то так",
-		"/C/Users/m/Desktop/ENGLISH/tasks.txt",
-		"/D/nginx/conf/zsch.conf",
-		"/C/Windows/System32/drivers/etc/hosts",
-		"/C/Users/m/Desktop/Статья01",
-		"/C/Users/m/AppData/Local/Temp/Temp1_httpd-2.4.27-Win64-VC15.zip/ReadMe.txt",
-		"/D/Hotel.txt",
-		"/C/Users/m/AppData/Local/Matter/matters.json",
-		"/C/Users/m/AppData/Local/Matter/matters.txt",
-		"/C/Users/m/AppData/Local/Matter/matters.dat",
-		"/C/Users/m/AppData/Local/Temp/mf_history_prod_protocol.py.txt",
-		"/D/shops.csv",
-		"/D/shops2.csv",
-		"/D/_DOWNLOADS/Foxit PhantomPDF Business 7 v7.3.6.321 Final Ml_Rus/Лечение.txt",
-		"/C/Users/m/Desktop/ENGLISH/crossword1.txt",
-		"/C/Users/m/AppData/Local/Temp/ai149736729015.tmp/ai149736729015.txt",
-		"/F/Crack/readme.txt",
-		"/G/Crack/readme.txt",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/src/AutoCAD_OCX.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.h",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/src/AutoCAD_TLB.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/src/AutoCAD_TLB.h",
-		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADExportForm.h",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADExportForm.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/const.h",
-		"/D/_DISTR/_ASUDOR/RSign/BuildWidePart.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/Helpers.h",
-		"/D/_DISTR/_ASUDOR/RSign/Helpers.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/.credentials",
-		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/get_podd_docx.bat",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Придорожный сервис.sql",
-		"/D/_DISTR/_ASUDOR/RSign/acadexport.h",
-		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Параметры плана.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Знаки.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Ограждения.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Сигнальные столбики.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Освещение.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Тротуары.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Переходно-скоростные полосы.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Автобусные остановки.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Разметка.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/Readme.txt",
-		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/ПОДД/DOCX/gen_script.bat",
-		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/ПОДД/Олонки-Шарагун (Боханский)_src/pdf для Олонки-Шарагун (Боханский).bat",
-		"/D/_MMK/_SCHEDULE/srp/.gitignore",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Мосты.sql",
-		"/F/SCHEDULE/SchduleExport 2/Export.cfg",
-		"/D/_MMK/_SCHEDULE/srp2/prj/SRP6.BPR",
-		"/D/_MMK/_SCHEDULE/srp2/prj/srp.bpr",
-		"/D/23-01_izo/23-01/SPR.ini",
-		"/O/m/PhpstormProjects/разворачивание Drupal.txt",
-		"/H/Crack/readme.txt",
-		"/C/Users/m/Desktop/Привет! =)",
-		"/D/_DISTR/_ASUDOR/RSign/RSign.log",
-		"/D/_DISTR/_ASUDOR/RSign/RSign.ini",
-		"/D/_DISTR/_ASUDOR/RSign/RoadObj.h",
-		"/D/_DISTR/_ASUDOR/RSign/RoadObj.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/0.dct",
-		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.h",
-		"/D/_DISTR/_ASUDOR/RSign/rsign.sublime-project",
-		"/D/ticket_18759_25.csv",
-		"/F/Irkutsk2016/create_dirs.bat",
-		"/F/Irkutsk2016/PHOTO/create_dirs.bat",
-		"/D/_DISTR/_ASUDOR/RSign/RSign.bpr",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/4_ширина проезжой части(кол-во полос движения)(тип покрытия).sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/ТЕХП-2016.docx",
-		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
-		"/I/Irkutsk2016/05/2016.09.12_12-52_Doroga_1_priamo_zaezd1/RoadLab.xml",
-		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/02/info.txt",
-		"/D/_MMK/_ROADS/Roads-2016/02/info.txt",
-		"/D/_MMK/d/loadspd/pakh_slw.bpr",
-		"/D/_MMK/d/loadspd/uco_modd.bpr",
-		"/D/_MMK/d/loadspd/uucha_lec.bpr",
-		"/D/_MMK/d/ukampf/uwin_dos.bpr",
-		"/D/_MMK/d/ukampf/usave_com.bpr",
-		"/D/_MMK/d/cpp/srpfmain.h",
-		"/D/_MMK/d/.gitignore",
-		"/D/_MMK/d/CMakeLists.txt",
-		"/D/_MMK/_AKARIN/Диссертация/Dissertation/introduction.tex",
-		"/D/_MMK/_AKARIN/Диссертация/Dissertation/part1.tex",
-		"/D/_MMK/_AKARIN/Диссертация/Dissertation/part2.tex",
-		"/D/Program Files (x86)/MAGIX/Photo Graphic Designer 11/install.cfg",
-		"/D/_MMK/_JAVA/Celebs-Image-Viewer/gradlew.bat",
-		"/D/_MMK/_JAVA/Celebs-Image-Viewer/build.gradle",
-		"/D/_MMK/_ROADS/Roads-2016/2016_04_12_13_33/RoadLab.xml",
-		"/D/_GAMES/Rocksmith 2014/rocksmith2014_nocable_pbs.ini",
-		"/D/_DISTR/wicleanup/Readme.txt",
-		"/D/_MMK/_AKARIN/Диссертация/Dissertation/dissertation.bbl",
-		"/D/_MMK/_AKARIN/Диссертация/Dissertation/dissertation.tex",
-		"/C/Python27/Scripts/rpatool.py",
-		"/G/m/PycharmProjects/analyse/test2.py",
-		"/D/_MMK/_AKARIN/Диссертация/Dissertation/biblio.bib",
-		"/D/_GAMES/OpenRCT2/data/language/russian.txt",
-		"/D/_GAMES/OpenRCT2/OpenRCT2 Launcher.application",
-		"/D/_DOWNLOADS/rutracker-torrents/20160115/category_24.csv",
-		"/D/_DOWNLOADS/rutracker-torrents/20160115/category_25.csv",
-		"/D/_MMK/_AKARIN/Диссертация/Dissertation/title.tex",
-		"/C/Users/m/Desktop/СНТ/Подъезд к деревне Ангара-Хайрюзовка Уриковского МО/Иркутский район/bottom/4_ширина обочин справа.txt",
-		"/D/nevelir1.txt",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Ширина проезжей части.sql",
-		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/info.txt",
-		"/I/SCHEDULE/SchduleExport 2/Export.cfg",
-		"/I/_SCHEDULE/Бизнес-контингенты_new.txt",
-		"/D/nevelir1.json",
-		"/C/Users/m/Desktop/2016.08.18_14-03_nevelir_test_1 точки сканера.txt",
-		"/C/Users/m/Desktop/2016.04.14_17-03_CORRECT2 точки сканера.rar",
-		"/C/sbic.txt"
+		"/C/Users/m/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/m/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/m/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
+		"/E/Projects/RSign/AutoCADExportHelper.cpp",
+		"/E/Projects/RSign/AutoCADPrintForm.cpp",
+		"/E/Projects/RSign/AutoCADPrintForm.h"
 	],
 	"find":
 	{
-		"height": 61.0
+		"height": 28.0
 	},
 	"find_in_files":
 	{
-		"height": 126.0,
+		"height": 0.0,
 		"where_history":
 		[
-			""
 		]
 	},
 	"find_state":
@@ -270,149 +159,18 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			",\n",
-			"ma24_2_20km",
-			"\\",
-			"obj_data",
-			"ds_map_set",
-			"ProgressForm",
-			"ProgressForm\n",
-			"FAutoCADExport",
-			"setAutoCADVersion",
-			"BindRunning",
-			"BindAutoCAD",
-			"const",
-			"Const",
-			"const",
-			"Const",
-			"const",
-			"LIBID_AutoCAD",
-			"const",
-			"AutoCAD_OCX",
-			"FILENAME=\"(\\w+)\\.lib\"",
-			".lib",
-			"\"",
-			"newBlockName",
-			"ma24_1",
-			"ma24_2",
-			"lastSavePath",
-			"SaveToDir",
-			"DrawRepeatTextIntervalRoadMark",
-			"StringConvertSignals",
-			"spCount",
-			"шт",
-			"шт.",
-			"Light",
-			"ExportSig",
-			"TRoadObj",
-			"NumCondition",
-			"состояние",
-			"Состояние",
-			"состояние",
-			"TRoadObject",
-			"Condition",
-			"SortCurrentAndProjectObjects",
-			"barrier",
-			"PatternScale",
-			"countOfExportItems",
-			"currentItem",
-			" \n",
-			"dk",
-			"dk12",
-			"dk",
-			"dk83",
-			"SetObjectColor",
-			":\n",
-			"TDefectKind",
-			"DrawPolyPoints",
-			"DEFECT",
-			"defect",
-			"DEFE",
-			"bool",
-			"TDefectKind",
-			"Defect",
-			"Deffect",
-			"Deffects",
-			"ExportDescreetRoadObject",
-			"ExportCityObjects",
-			" RSign.tlb",
-			"TRoadObject",
-			"Колод",
-			"ExportBorder",
-			"Surface",
-			"OnSurfaceObjects",
-			"\n",
-			"Бохан",
-			" основное н  ",
-			"  основное н  ",
-			" основное н  ",
-			"2015",
-			"passport_when",
-			"Y",
-			"$Y$",
-			"y",
-			"Y",
-			"Комбинаторные",
-			"Пинус",
-			"}",
-			"\\cite{",
-			"\\item ",
-			"\\item",
-			"c:",
-			"C:",
-			"asu",
-			"C:",
-			"c:",
-			"C:",
-			"c:",
-			"C:",
-			"Program Files\\Borland\\CBuilder6",
-			"d\\",
-			"lib",
-			"C:\\",
-			"c:\\",
-			"C:\\",
-			"c:\\",
-			"C:\\",
-			"timespec",
-			"Половин",
-			"C:\\Users\\m\\Desktop",
-			"FillAreaBase",
-			"FillArea",
+			"ExportSurface",
 			"ExportRoadCover",
-			"RoadSurface",
-			"Surface\nSurface\nRoadSurface",
-			"RoadSurface",
-			"Surface",
-			"щебеночное",
-			"ExportTopAddRows",
-			"Желаете",
-			"отстутс",
-			".",
-			" 3880",
-			" 3862",
-			" 3864",
-			" 3870",
-			" 3875",
-			"1040000 1045000 270 3875",
-			"1040000 1045000 270",
-			" 3876",
-			"3876"
+			"iBottomSurface",
+			"тип",
+			"покрытие"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": true,
+		"regex": false,
 		"replace_history":
 		[
-			"FILENAME=\"..\\\\build\\\\\\1\\.lib\"",
-			"FILENAME=\"..\\\\\\1\\.lib\"",
-			"FILENAME=\"..\\$1\\.lib\"",
-			"\\n\\t",
-			"C:\\Users\\m\\Desktop\\Roads2",
-			"2321, @N",
-			"$b ",
-			"\\t"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -423,37 +181,35 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 6,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "acadexport.cpp",
+					"file": "AutoCADPrintForm.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 140034,
+						"buffer_size": 26337,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								78357,
-								78357
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 41867.0,
+						"translation.y": 18334.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -461,83 +217,263 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1173,
+						"buffer_size": 9356,
 						"regions":
 						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										366,
-										377
-									],
-									[
-										432,
-										443
-									],
-									[
-										952,
-										963
-									]
-								],
-								"scope": ""
-							}
 						},
 						"selection":
 						[
 							[
-								958,
-								958
+								0,
+								9356
 							]
 						],
 						"settings":
 						{
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 1,
-							"result_base_dir": "",
-							"result_file_regex": "^([^ \t].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+							"auto_name": "-- Разметка осевая",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3538.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "AutoCADPrintForm.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5236,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 2700.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/Users/m/AppData/Roaming/Sublime Text 3/Packages/SublimeAStyleFormatter/Default (Windows).sublime-keymap",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 371,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								371,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/Users/m/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 366,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								202,
+								202
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2496,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2496,
+								2496
+							]
+						],
+						"settings":
+						{
+							"auto_indent": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"word_wrap": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1500.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "AcadExportThread.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 46712,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3926,
+								3939
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2285.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "AcadExportThread.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4594,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1995,
+								1995
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 797.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "acadexport.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 140196,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								132312,
+								132312
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 72305.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "const.h",
+					"buffer": 9,
+					"file": "acadexport.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10825,
+						"buffer_size": 9894,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7619,
-								7634
+								5681,
+								5681
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
+							"syntax": "Packages/C++/C.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4627.0,
+						"translation.y": 2640.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
@@ -545,7 +481,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 35.0
+		"height": 28.0
 	},
 	"input":
 	{
@@ -590,7 +526,7 @@
 	"project": "rsign.sublime-project",
 	"replace":
 	{
-		"height": 64.0
+		"height": 52.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -604,23 +540,19 @@
 	},
 	"select_project":
 	{
-		"height": 625.0,
+		"height": 500.0,
 		"last_filter": "",
 		"selected_items":
 		[
 		],
-		"width": 475.0
+		"width": 380.0
 	},
 	"select_symbol":
 	{
-		"height": 297.0,
-		"last_filter": "pause",
+		"height": 392.0,
+		"last_filter": "Paus",
 		"selected_items":
 		[
-			[
-				"pause",
-				"PauseLastFramePrint"
-			],
 			[
 				"Paus",
 				"PauseLastFramePrint"
@@ -630,7 +562,7 @@
 				"PauseLastFramePrint"
 			]
 		],
-		"width": 490.0
+		"width": 392.0
 	},
 	"selected_group": 0,
 	"settings":

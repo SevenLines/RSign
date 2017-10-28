@@ -3599,7 +3599,7 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
     case 233:    //Цементобетон
         Color[0] = Color[1] = Color[2] = 240;
         strParams = "$c\tANGLE\t15\t251"; // заливка тип масштаб цвет
-        name = "цементобетон";
+        name = "усовершенствованное";
         hatchFill = "ANGLE";
         break;
 
@@ -3608,7 +3608,7 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
         Color[1] = 220;
         Color[2] = 220;
         strParams = "$c\tSOLID\t15\t161"; // заливка тип масштаб цвет
-        name = "асфальтобетон";
+        name = "усовершенствованное";
         break;
 
     case 235:   // щебень укреп
@@ -3617,7 +3617,7 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
         Color[2] = 128;
         strParams = "$c\tGRAVEL\t15\t43"; // заливка тип масштаб цвет
         hatchFill = "GRAVEL";
-        name = "щебень (гравий)";
+        name = "переходное";
         break;
 
     case 236:  // щебень
@@ -3626,7 +3626,7 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
         Color[2] = 180;
         strParams = "$c\tGRAVEL\t15\t43"; // заливка тип масштаб цвет
         hatchFill = "GRAVEL";
-        name = "щебеночное (гравийное)";
+        name = "переходное";
         break;
 
     case 237:  // грунтовое
@@ -3635,7 +3635,7 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
         Color[2] = 220;
         strParams = "$c\tGRAVEL\t15\t161"; // заливка тип масштаб цвет
         hatchFill = "GRAVEL";
-        name = "грунтовое";
+        name = "переходное";
         break;
 
     case 238:
@@ -3833,6 +3833,7 @@ bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, vector<TTraffic
         case tlkTr: blockKind = "T_r"; break;
         case tlkTrl: blockKind = "T_rl"; break;
         case tlkP: blockKind = "TP"; break;
+        case tlkPO: blockKind = "T7"; break;        
         case trlkTR: blockKind = "TR"; break;  //2385256
         }
 

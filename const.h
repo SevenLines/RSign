@@ -261,7 +261,7 @@ enum TMarkKind {ma1=2384961,ma1_park=2385261,ma2_1=2385125,ma2_2=2384962,ma3=238
     ma25=2385130,ma14_1e=2385260,ma14_2e=2385272};
 
 enum TTrafficLightsPlacement {tlpOpora=2385257,tlpConsol=2385258,tlpRast=2385259};
-enum TTrafficLightsKind {tlkT=2385251,tlkTr=2385252,tlkTl=2385253,tlkTrl=2385254,tlkP=2385255,trlkTR=2385257};
+enum TTrafficLightsKind {tlkT=2385251,tlkTr=2385252,tlkTl=2385253,tlkTrl=2385254,tlkPO=2385271,tlkP=2385255,trlkTR=2385257};
 enum TSignBackColor {scNone=2385267,scOrange=2385268,scGreenYellow=2385269};
 
 #define MLLongLinesCount 16
