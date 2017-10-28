@@ -11,6 +11,7 @@
 #include "SettingFrm.h"
 #include "SelNewSign.h"
 #include "SelNewObj.h"
+#include "VisModeForm.h"
 //#include "ShowVideo.h"
 #include "PrnForm.h"
 #include "bmpexport.h"
@@ -213,7 +214,7 @@ void __fastcall TRoadFrm::Initialize(TDictSource *dict,TSharedObjSource *shared)
 	FLayersCont=new TDrawBitmap;
 	SelectRect=new TSelectRect(PBox->Canvas);
 	SelectObj=new TSelectObj(PBox->Canvas,FDrawMan);
-	ShowPanels();                                                                           
+	ShowPanels();
 }
 
 void __fastcall TRoadFrm::OpenView(__int32 RoadId,__int32 ViewId,TDictSource *dict,TSharedObjSource *shared)
@@ -2669,6 +2670,96 @@ void __fastcall TRoadFrm::MoveMetricToProp(void) {
        FEditedData->MoveMetricToProp(FEditedData->Road);
 }
 
+void __fastcall TRoadFrm::CalculateVisibility(void) {
+    if (FProfilData && FEditedData) {
+        double DriverHeight=1.0; //¬ысота водител€ (в метрах)
+        double MarkerHeight=1.0; //¬ысота встречного преп€тстви€ (атовмобил€)
+        int PartLen=5000; // ƒлина участка на котором определ€етс€ видимость (в сантиметрах)
+        const int StepLen=100; // Ўаг измерени€ видимости
+        const int mcount=PartLen/StepLen; // количество измерений
+        const int fcount=(mcount*4)/5; // количество измерений с максимальной видимостью
+        const int Diskrete=1000;//Ўаг округлени€ видимости в см.
+        const int MaxVis=30000;//ћаксимальна€ видимость
+        const int StatSize=1+MaxVis/Diskrete;
+        int StartPos=FProfilData->Road->LMin;;
+        int EndPos=FProfilData->Road->LMax;
+        StartPos=(StartPos/PartLen)*PartLen;
+        EndPos=((EndPos+PartLen-1)/PartLen)*PartLen;
+        frmVisMode->updDriverHeight->Position=DriverHeight*100;
+        frmVisMode->updMarkerHeight->Position=MarkerHeight*100;
+        frmVisMode->updPartLen->Position=PartLen/100;
+        frmVisMode->edStartPos->Text=IntToStr(StartPos/100);
+        frmVisMode->edEndPos->Text=IntToStr(EndPos/100);
+        if (frmVisMode->ShowModal()!=mrOk)
+           return;
+        DriverHeight=(double)frmVisMode->updDriverHeight->Position/100;
+        MarkerHeight=(double)frmVisMode->updMarkerHeight->Position/100;
+        PartLen=frmVisMode->updPartLen->Position*100;
+        StartPos=StrToInt(frmVisMode->edStartPos->Text)*100;
+        EndPos=StrToInt(frmVisMode->edEndPos->Text)*100;
+        for (int dir=1;dir>=-1;dir-=2) {
+          int spos=StartPos;
+          int epos=EndPos;
+          int stat[StatSize];    // ћассив со статистикой по интервалу
+          int count=0;
+          TVisibility *VPart=FProfilData->Road->Geometry.CalculateVisibility(spos,epos,DriverHeight,MarkerHeight,dir);
+          for (;spos<epos;spos+=PartLen) {
+             for (int i=0;i<StatSize;i++)
+                stat[i]=0;
+             double est=0,disp=0;// матожидание и дисперси€
+             for (int pos=spos;pos<spos+PartLen;pos+=StepLen) {
+               TWrapperDouble len;
+               VPart->GetMesValue(pos,len);
+               int rndvis=(floor(len)+Diskrete/2)/Diskrete;
+               if (rndvis>=StatSize-1)
+                  stat[StatSize-1]++;
+               else
+                  stat[rndvis]++,est+=rndvis,disp+=rndvis*rndvis;
+             }
+             if (stat[StatSize-1]<fcount) {
+               est/=(mcount-stat[StatSize-1]);
+               disp=disp/(mcount-stat[StatSize-1]-1)-est*est; //несмещенна€ дисперси€
+               int nmin=max(0,floor(est-2*sqrt(disp)));
+               int nmax=min(StatSize-1,ceil(est+2*sqrt(disp)));
+               est=0;
+               int cnt=0;
+               for (int i=nmin;i<nmax;i++)
+                  est+=i*stat[i],cnt+=stat[i];
+               int vislen;
+               if (cnt==0) // “акое маловеро€тно но надо что-то делать
+                  vislen=(nmin+nmax)*Diskrete/2;
+               else
+                  vislen=(est*Diskrete)/cnt;
+               vislen=((vislen+Diskrete/2)/Diskrete)*Diskrete;
+               TObjMetaClass *Meta=(TObjMetaClass*)Dict->ObjClasses->Items[VISMODECODE];
+               int index=0;
+               TDangerVisMode *dv;
+               do {
+               dv=dynamic_cast<TDangerVisMode*>(FEditedData->FindNext(VISMODECODE,spos,spos,index));
+               ++index;
+               } while (dv!=0 && ! (dv->L==spos && dv->LMax==spos+PartLen && dv->Direction==(dir==1?roDirect:roUnDirect)));
+               if (dv!=0) {
+                  dv->Length=min(dv->Length,vislen/100);
+                  MainForm->SendBroadCastMessage(CM_UPDATEOBJ,(int)dv,(int)FEditedData);
+               } else {
+                  dv=dynamic_cast<TDangerVisMode*>(MainForm->Factory->CreateRoadObj(Meta->ClassName,0,Meta->Id));
+                  if (dv) {
+                     dv->PutPosition(spos,spos+PartLen);
+                     dv->Length=vislen/100;
+                     dv->Direction=(dir==1?roDirect:roUnDirect);
+                     dv->DrwClassId=Dict->SelectDrwParam(dv,FCurPage);
+                     FEditedData->Objects->Add(dv);
+                     FEditedData->SortByPlacement();
+                     MainForm->SendBroadCastMessage(CM_INSERTOBJ,(int)dv,(int)FEditedData);
+                  }
+               }
+             }
+          }
+          delete VPart;
+       }
+     }
+}
+
 void __fastcall TRoadFrm::CalculateRoadMarkLength(void)
 {
 	TDtaSource *src;
@@ -2714,7 +2805,7 @@ void __fastcall TRoadFrm::BuildWidePartsDialog(void)
 			FMetricData->BuildRoadMetrics(1);
 			if (frmWidePartDialog->BuildParts) {
                 if (frmWidePartDialog->cbMethod->ItemIndex==0)
-        			FMetricData->BuildSimplePart(sp,ep,frmWidePartDialog->PartMaxDev,FDictSour);
+        			FMetricData->BuildSimplePart(sp,ep,frmWidePartDialog->PartRoundVal,FDictSour);
                 else if (frmWidePartDialog->cbMethod->ItemIndex==1)
         			FMetricData->BuildWidePart(sp,ep,frmWidePartDialog->PartMaxDev,frmWidePartDialog->PartRoundVal,FDictSour);
             }
@@ -3172,6 +3263,8 @@ void __fastcall TRoadFrm::PostChangeFocus(void)
 	MainForm->N5->Enabled=true;
 	MainForm->N59->Enabled=true;
 	MainForm->N71->Enabled=true;
+	MainForm->N67->Enabled=true;
+	MainForm->N87->Enabled=true;
 	if (FEditedData)
 	{
 		MainForm->N16->Enabled=!FEditedData->ReadOnly;
@@ -3181,12 +3274,15 @@ void __fastcall TRoadFrm::PostChangeFocus(void)
 		MainForm->N45->Enabled=!FEditedData->ReadOnly;
 		MainForm->N46->Enabled=!FEditedData->ReadOnly;
 		MainForm->N76->Enabled=!FEditedData->ReadOnly;
-		MainForm->N77->Enabled=!FEditedData->ReadOnly;;
-		MainForm->N78->Enabled=!FEditedData->ReadOnly;;
-        MainForm->N83->Enabled=!FEditedData->ReadOnly;;
-        MainForm->N84->Enabled=!FEditedData->ReadOnly;;
-        MainForm->N85->Enabled=!FEditedData->ReadOnly;;
-        MainForm->N86->Enabled=!FEditedData->ReadOnly;;
+		MainForm->N77->Enabled=!FEditedData->ReadOnly;
+		MainForm->N78->Enabled=!FEditedData->ReadOnly;
+        MainForm->N83->Enabled=!FEditedData->ReadOnly;
+        MainForm->N84->Enabled=!FEditedData->ReadOnly;
+        MainForm->N85->Enabled=!FEditedData->ReadOnly;
+        MainForm->N86->Enabled=!FEditedData->ReadOnly;
+   	    MainForm->N71->Enabled=!FEditedData->ReadOnly;
+	    MainForm->N67->Enabled=!FEditedData->ReadOnly;
+	    MainForm->N87->Enabled=!FEditedData->ReadOnly;
 		MainForm->AddDangBut->Enabled=!FEditedData->ReadOnly;
 		MainForm->AddSignBut->Enabled=!FEditedData->ReadOnly;
 	}
@@ -3205,6 +3301,9 @@ void __fastcall TRoadFrm::PostChangeFocus(void)
         MainForm->N84->Enabled=false;
         MainForm->N85->Enabled=false;
         MainForm->N86->Enabled=false;
+   	    MainForm->N71->Enabled=false;
+	    MainForm->N67->Enabled=false;
+	    MainForm->N87->Enabled=false;
 		MainForm->AddDangBut->Enabled=false;
 		MainForm->AddSignBut->Enabled=false;
 	}
@@ -3213,7 +3312,7 @@ void __fastcall TRoadFrm::PostChangeFocus(void)
 	MainForm->N14->Enabled=true;
 	MainForm->N70->Enabled=true;
 	MainForm->ItemMiniReports->Enabled=true;
-    
+
     for(int i=0;i<MainForm->ItemDocxReport->Count;++i) {
         TMenuItem* item = MainForm->ItemDocxReport->Items[i];
         item->Enabled=true;

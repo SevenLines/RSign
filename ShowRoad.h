@@ -459,6 +459,8 @@ public:         // User declarations
     void __fastcall LongSlopesPartDialog(void);
     void __fastcall BuildWidePartsDialog(void);
     void __fastcall BuildRoadLines(void);
+    // Рассчитывает видимость по профилю
+    void __fastcall CalculateVisibility(void);
     void __fastcall CalculateRoadMarkLength(void);
     // Ставит точки в местах пересечения кромки бровки с примыканием и помечает участки как невидимые
     void __fastcall BreakRoadLines(void);

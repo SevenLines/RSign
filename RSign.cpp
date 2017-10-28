@@ -54,6 +54,7 @@ USEFORM("AddRowsDescription.cpp", FAddRowDescription);
 USEFORM("ItemSelectDialog.cpp", ItemSelectDialogForm);
 USEFORM("ConnectionFormUnit.cpp", ConnectionForm);
 USEFORM("VideoBar.cpp", frmVideoBar);
+USEFORM("VisModeForm.cpp", frmVisMode);
 //---------------------------------------------------------------------------
 #ifndef WITHOUT_AUTOCAD
 USEFORM("AutoCADPrintForm.cpp", FAutoCADPrint);
@@ -145,6 +146,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
          Application->CreateForm(__classid(TFAddRowDescription), &FAddRowDescription);
          Application->CreateForm(__classid(TConnectionForm), &ConnectionForm);
          Application->CreateForm(__classid(TfrmVideoBar), &frmVideoBar);
+         Application->CreateForm(__classid(TfrmVisMode), &frmVisMode);
          Application->Run();
     }
     catch (Exception &exception)

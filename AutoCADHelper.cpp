@@ -169,7 +169,7 @@ AutoCADHelper::~AutoCADHelper()
 AcadApplication *AutoCADHelper::BindAutoCAD()
 {
 
-   if(FAILED(cadApplication.BindToActive(ProgIDToClassID(this->AutoCADProgID)))) return 0;
+   if(FAILED(cadApplication.BindRunning())) return 0;
 
    if(cadApplication->Documents->Count>0 && cadApplication->ActiveDocument){
        SetActive(cadApplication->ActiveDocument);
@@ -183,8 +183,8 @@ AcadApplication * AutoCADHelper::RunAutoCAD(bool fVisible)
     /*IDispatch *disp = (IDispatch*)GetActiveOleObject(this->AutoCADProgID);
     IAcadApplication *obj;
     disp->QueryInterface(__uuidof(IAcadApplication), (void **)&obj); */
-    if(FAILED(cadApplication.BindToActive(ProgIDToClassID(this->AutoCADProgID)))){
-        if(FAILED(cadApplication.Bind(ProgIDToClassID(AutoCADProgID)))){
+    if(FAILED(cadApplication.BindRunning())){
+        if(FAILED(cadApplication.Bind(ProgIDToClassID("AutoCAD.Application")))){
            throw "can't run AutoCAD";
         }
     }
@@ -775,18 +775,18 @@ bool AutoCADHelper::SetupViewport(AcadLayoutPtr layout, double x, double y,
 void AutoCADHelper::CheckExistingBlocks()
 {
     existingBlocks.clear();
-	IAcadBlock * tempBlock;
+  IAcadBlock * tempBlock;
     IAcadBlocksPtr blocks = cadActiveDocument->Blocks;
     int count = blocks->Count;
 
     for(int i=0;i<count;++i) {
-		try {
-			tempBlock = blocks->Item(Variant(i));
-			existingBlocks.push_back(tempBlock->Name);
-		} catch(...) {
-			continue;
-		}
-	}
+    try {
+      tempBlock = blocks->Item(Variant(i));
+      existingBlocks.push_back(tempBlock->Name);
+    } catch(...) {
+      continue;
+    }
+  }
 }
 
 bool AutoCADHelper::BindToActiveDocument()
@@ -1189,89 +1189,90 @@ bool AutoCADHelper::IsLarger(AnsiString name)
 
 AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, vector<WideString> &labels)
 {
-	AnsiString newBlockName;
-	AcadBlockPtr newBlock;
-	IAcadBlock* tempBlock;
-	vector<IAcadBlock*> blocks;
+  AnsiString newBlockName;
+  AcadBlockPtr newBlock;
+  IAcadBlock* tempBlock;
+  vector<IAcadBlock*> blocks;
     vector<WideString> labelsNew;
 
-	// ищем существующие блоки и формируем имя комбинированного
-	for(int i=0;i<blocksNames.size();++i) {
-		try {
-			tempBlock = cadActiveDocument->Blocks->Item(Variant(blocksNames[i]));
-		} catch(...) {
-			BUILDER_ERROR("Блок '" << AnsiString(blocksNames[i]).c_str() << "' не найден");
-		}
-		if (newBlockName!="") newBlockName+="_";
-		newBlockName += blocksNames[i];
-		
-		AnsiString label = labels[i];
-		label = StringReplace(label, " ", "", TReplaceFlags() << rfReplaceAll);
-		label = StringReplace(label, "\t", "", TReplaceFlags() << rfReplaceAll);
-		label = StringReplace(label, "\n", "", TReplaceFlags() << rfReplaceAll);
-		label = StringReplace(label, ":", "", TReplaceFlags() << rfReplaceAll);
-        label = StringReplace(label, "<", "", TReplaceFlags() << rfReplaceAll);
-        label = StringReplace(label, ">", "", TReplaceFlags() << rfReplaceAll);
-		if (!labels[i].IsEmpty()) {
-			newBlockName += "[" + label + "]";
-		}
-		
-		labelsNew.push_back(labels[i]);
-		blocks.push_back(tempBlock);
-	}
-	
-	// пробуем возвратить ново-созданный блок, вдруг он уже существует
-	if (std::find(existingBlocks.begin(), existingBlocks.end(), newBlockName) != existingBlocks.end()) {
-		return cadActiveDocument->Blocks->Item(Variant(newBlockName));
-	}
-	
-	// ищем размеры блоков
+  // ищем существующие блоки и формируем имя комбинированного
+  for(int i=0;i<blocksNames.size();++i) {
+    try {
+      tempBlock = cadActiveDocument->Blocks->Item(Variant(blocksNames[i]));
+    } catch(...) {
+      BUILDER_ERROR("Блок '" << AnsiString(blocksNames[i]).c_str() << "' не найден");
+    }
+    if (newBlockName!="") newBlockName+="_";
+    newBlockName += blocksNames[i];
+    
+    AnsiString label = labels[i];
+    label = StringReplace(label, " ", "", TReplaceFlags() << rfReplaceAll);
+    label = StringReplace(label, "\t", "", TReplaceFlags() << rfReplaceAll);
+    label = StringReplace(label, "\n", "", TReplaceFlags() << rfReplaceAll);
+    label = StringReplace(label, ":", "", TReplaceFlags() << rfReplaceAll);
+    label = StringReplace(label, "<", "", TReplaceFlags() << rfReplaceAll);
+    label = StringReplace(label, ">", "", TReplaceFlags() << rfReplaceAll);
+    label = StringReplace(label, ",", "", TReplaceFlags() << rfReplaceAll);
+    if (!labels[i].IsEmpty()) {
+      newBlockName += "[" + label + "]";
+    }
+    
+    labelsNew.push_back(labels[i]);
+    blocks.push_back(tempBlock);
+  }
+  
+  // пробуем возвратить ново-созданный блок, вдруг он уже существует
+  if (std::find(existingBlocks.begin(), existingBlocks.end(), newBlockName) != existingBlocks.end()) {
+    return cadActiveDocument->Blocks->Item(Variant(newBlockName));
+  }
+  
+  // ищем размеры блоков
     double subBlockHeight;
     double blockGap = gMakeBlockGap;
-	vector<double> blockHeights(blocks.size());
-	for(int i=0;i<blocks.size();++i) {
-		int subBlocksCount = blocks[i]->Count;
+  vector<double> blockHeights(blocks.size());
+  for(int i=0;i<blocks.size();++i) {
+    int subBlocksCount = blocks[i]->Count;
         subBlockHeight = -1;
-		for(int j=0;j<subBlocksCount;j++){
-		   AcadEntityPtr entity = blocks[i]->Item(Variant(j));
-		   if(entity->EntityType == 7){
-			  AcadBlockReferencePtr subBlock = entity;
-			  if(GetPropertyDouble(subBlock, "Height", subBlockHeight)){
-				  //if(GetPropertyDouble(subBlock,"Width",width)){
-					float scale = subBlock->XScaleFactor;
-					subBlockHeight *= scale;
-					break;
-				  //}
-			  }
-		   }
-		}
-		blockHeights[i] = subBlockHeight + blockGap;
-	}
-	
-	// формируем суммарную высоту блоков
-	double fullHeight = 0;
-	for (int i=0;i<blocks.size();++i)
-		if (blockHeights[i] != -1) fullHeight += blockHeights[i];
-	
-	//	формируем новый блок
-	int yOffset = 0;
-	newBlock = cadActiveDocument->Blocks->Add(cadPoint(0, 0), WideString(newBlockName));
-	for(int i=0;i<blocks.size();++i) {
-		if(blockHeights[i] != -1) {
+    for(int j=0;j<subBlocksCount;j++){
+       AcadEntityPtr entity = blocks[i]->Item(Variant(j));
+       if(entity->EntityType == 7){
+        AcadBlockReferencePtr subBlock = entity;
+        if(GetPropertyDouble(subBlock, "Height", subBlockHeight)){
+          //if(GetPropertyDouble(subBlock,"Width",width)){
+          float scale = subBlock->XScaleFactor;
+          subBlockHeight *= scale;
+          break;
+          //}
+        }
+       }
+    }
+    blockHeights[i] = subBlockHeight + blockGap;
+  }
+  
+  // формируем суммарную высоту блоков
+  double fullHeight = 0;
+  for (int i=0;i<blocks.size();++i)
+    if (blockHeights[i] != -1) fullHeight += blockHeights[i];
+  
+  //  формируем новый блок
+  int yOffset = 0;
+  newBlock = cadActiveDocument->Blocks->Add(cadPoint(0, 0), WideString(newBlockName));
+  for(int i=0;i<blocks.size();++i) {
+    if(blockHeights[i] != -1) {
             WideString subBlockName = blocks[i]->Name;
-			IAcadBlockReference *subBlock =
+      IAcadBlockReference *subBlock =
             newBlock->InsertBlock(cadPoint(0, fullHeight/2 - yOffset - blockHeights[i] / 2), 
-						subBlockName,1, 1, 1, 0, TNoParam());
+            subBlockName,1, 1, 1, 0, TNoParam());
             SetSignLabels(subBlock, SignLabelParser(subBlockName, labelsNew[i]));
             yOffset += blockHeights[i];
-		}		
-	}
+    }   
+  }
 
     // добавляем блок в коллекцию блоков,
     // чтобы в дальнейшем сразу находить нужный блок
     // если он уже существует
-	existingBlocks.push_back(newBlock->Name);
-	return newBlock;
+  existingBlocks.push_back(newBlock->Name);
+  return newBlock;
 }
 
 void AutoCADHelper::DrawRepeatTextInterval(WideString str, float sPosX, float ePosX,
@@ -2181,16 +2182,16 @@ void AutoCADTable::DrawTextInBordersRoadMark(int row, float offBeg,
 
  void AutoCADTable::DrawRepeatTextIntervalRoadMark(int iRow, AnsiString str,
                                 float sPos, float ePos,
-                                AnsiString (*func)(float, float),
-                                float step, bool fWithBorders, float kProp)
+                                AnsiString (*func)(float, float, void* data),
+                                float step, bool fWithBorders, float kProp, void *data)
 {
 #define DRAWTEXT(min, max)  \
         if(func){ \
            AnsiString tStr; \
            if(!str.IsEmpty()){ \
-              tStr = str+func(min,max); \
+              tStr = str+func(min,max,data); \
            }else{ \
-              tStr=func(min,max); \
+              tStr=func(min,max,data); \
            } \
            DrawTextInBordersRoadMark(iRow,min,max,tStr,false,kProp); \
         }else{ \
@@ -2250,7 +2251,7 @@ void AutoCADTable::DrawTextInBordersRoadMark(int row, float offBeg,
      if(fWithBorders) DrawSnakeBorder(iRow,pos,counter);
    }else{
      DRAWTEXT(sPos, ePos);
-     if(/*gFillGaps[iRow]&&*/fWithBorders)DrawSnakeBorder(iRow,sPos,ePos);
+     if(fWithBorders) DrawSnakeBorder(iRow,sPos,ePos);
    }
    delete[] pos;
    RowslEnd[iRow] = ePos;

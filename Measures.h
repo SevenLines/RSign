@@ -7,6 +7,7 @@
 #include <SysUtils.hpp>
 #include <math.h>
 //---------------------------------------------------------------------------
+#define INCCAPVALUE 16
 
 class TGeometryVal
 {
@@ -191,6 +192,22 @@ __fastcall TSlopesPart(__int32 l1,__int32 l2,__int32 val)
 __fastcall TSlopesPart(void) {}
 };
 
+class TWrapperDouble {
+   private:
+   double val;
+   public:
+   TWrapperDouble()  {}   
+   TWrapperDouble(double v) : val(v) {}
+   operator double(void) {return val;}
+   void __fastcall Extrapolate(TWrapperDouble &V1,TWrapperDouble &V2,__int32 L,__int32 L1,__int32 L2)
+    {
+    val=V1;
+    if (L1<L2)
+        val+=((V2-V1)*(L-L1))/(L2-L1);
+    }
+};
+
+
 template <class VAL>
 class TRoadMeasure
 {
@@ -238,6 +255,7 @@ __property VAL *Values={read=FValues};
 __property int Count={read=FCount};
 };
 
+typedef TRoadMeasure<TWrapperDouble> TVisibility;
 
 class TPartTree;
 class TRoadGeometry : public TRoadMeasure<TGeometryVal>
@@ -249,6 +267,7 @@ TSlopesPart* __fastcall PartTreeToArray(TSlopesPart* Array,TPartTree *Node);
 public :
 void __fastcall GetMinMaxZ(__int32 &mn,__int32 &mx);
 TSlopesPart* __fastcall BuildSlopesPart(__int32 MinLen,__int32 Dev,int &Count);
+TVisibility* __fastcall CalculateVisibility(int spos,int epos,double DriverHeight,double MarkerHeight,int dir);
 };
 
 class TVideoTime : public TRoadMeasure<TVideoTimeVal>
@@ -417,6 +436,7 @@ if (FCount>0)
     }
 return Index;
 }
+
 
 
 void __fastcall TRoadGeometry::GetMinMaxZ(__int32 &mn,__int32 &mx)

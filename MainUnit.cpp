@@ -36,6 +36,7 @@
 #include "AutoCADPrintForm.h"
 #include "ItemSelectDialog.h"
 #include "ConnectionFormUnit.h"
+#include "AutoCADExportForm.h"
 
 #include "GdiPlusInclude.h"
 
@@ -259,6 +260,8 @@ void __fastcall TMainForm::ReadIni(TIniFile *ini)
     lastVideoWindowPosition.Right = ini->ReadInteger("ShowRoad", "VideoRight", 0);
     lastVideoWindowPosition.Bottom = ini->ReadInteger("ShowRoad", "VideoBottom", 0);
 
+    FAutoCADExport->lastSavePath = ini->ReadString("AutoCAD", "LastSavePath", "");
+
 }
 
 void __fastcall TMainForm::WriteIni(TIniFile *ini)
@@ -279,6 +282,7 @@ void __fastcall TMainForm::WriteIni(TIniFile *ini)
 
 	ini->WriteString("PrintPattern","Name",VPatFrm->FileName);
 	ini->WriteString("Video","Servers",VideoServers->CommaText);
+     ini->WriteString("AutoCAD","LastSavePath",FAutoCADExport->lastSavePath);
     ConnectionForm->saveIni(ini);
 }
 
@@ -374,6 +378,8 @@ void __fastcall TMainForm::SetActiveRoad(TRoadFrm *R)
 			N84->Enabled=false;
 			N85->Enabled=false;
 			N86->Enabled=false;
+	        N67->Enabled=false;
+	        N87->Enabled=false;
 		}
 		SendBroadCastMessage(CM_ONACTIVATEROADWIN,(int)R,0);
 	}
@@ -1414,6 +1420,13 @@ void __fastcall TMainForm::N86Click(TObject *Sender)
 TMenuItem *it=(TMenuItem*)Sender;
 if (FActiveRoad)
    FActiveRoad->ConnectToBaseLine(it->Tag,mkBrovka);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::N87Click(TObject *Sender)
+{
+if (FActiveRoad)
+   FActiveRoad->CalculateVisibility();    
 }
 //---------------------------------------------------------------------------
 

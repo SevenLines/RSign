@@ -82,6 +82,7 @@ protected:
         int __fastcall ExportSlope(TDtaSource* data, TAcadExport* aexp);
         int __fastcall ExportCurves(TDtaSource* data, TAcadExport* aexp);       
         int __fastcall ExportRoadOnSurfaceObjects(TDtaSource* data, TAcadExport* aexp); 
+        int __fastcall ExportDefects(TDtaSource* data, TAcadExport* aexp); 
 public:
         __fastcall AcadExportThread(bool CreateSuspended, TRoad *r);
         void __fastcall Clear();

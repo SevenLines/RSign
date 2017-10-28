@@ -201,7 +201,7 @@ namespace SQL2Word
 
             reader.Close();
 
-            return counter;
+            return tokens.Contains(TOKENS.USE_ZERO_CONUTER) ? counter : counter  - 1;
         }
 
         private static void _addScriptRow(Table table,

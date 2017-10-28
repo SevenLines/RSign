@@ -206,6 +206,8 @@ __published:    // IDE-managed Components
     TComboBox *cmbAutoCADVersion;
     TLabel *Label30;
     TCheckBox *chkSaveToDir;
+        TCheckBox *chkDefects;
+        TCheckBox *chkConditionAsExisting;
     void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
     void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
                                 TShiftState Shift);
@@ -230,6 +232,7 @@ __published:    // IDE-managed Components
     void __fastcall btnShowInfoClick(TObject *Sender);
 private:    // User declarations
     AnsiString strIniFileName;
+
     void SaveIni(TIniFile *ini);
     void LoadIni(TIniFile *ini, bool firstTime=false);
     int iCur, iPrj;
@@ -270,6 +273,7 @@ public:     // User declarations
     MPROPERTY1(Auto6_13);
     MPROPERTY1(LeftValueOnly6_13);
     MPROPERTY1(Sidewalks);
+    MPROPERTY1(Defects);
     MPROPERTY1(Borders);
     MPROPERTY1(Profile);
     MPROPERTY1(Plan);
@@ -286,6 +290,7 @@ public:     // User declarations
     MPROPERTY1(Graphic);
     MPROPERTY1(DrawMap);
     MPROPERTY1(SaveToDir);
+    MPROPERTY1(ConditionAsExisting);
 
     __property bool ExportAddRows = {read = get_ExportAddRows}; \
     bool get_ExportAddRows() {
