@@ -1839,11 +1839,11 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 break;
 
             case ma2_1:/*Край проезжей части (сплошная) */
-                DrawRoadMark(m, Poly, "1.2.1", iRow, line, table);
+                DrawRoadMark(m, Poly, "1.2", iRow, line, table);
                 break;
 
             case ma2_2:/*Краевая линия (прерывистая)  */
-                pl1 = DrawRoadMark(m, Poly, "1.2.2", iRow, line, table);
+                pl1 = DrawRoadMark(m, Poly, "1.2", iRow, line, table);
                 try {
                     if (pl1) pl1->set_Linetype(WideString("linedash_1"));
                 } catch (...) {}
@@ -2109,11 +2109,18 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 block = AutoCAD.DrawBlock("r_1.24.1", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
                                           m->Direction == roDirect ? 0 : M_PI);//ma24_2_20km
                 break;
+             case ma24_1_children: /*Дублирование предупреждающих дорожных знаков*/
+                block = AutoCAD.DrawBlock("r_1.24.1_children", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
+                                          m->Direction == roDirect ? 0 : M_PI);//ma24_2_20km
+                break;
             case ma24_2_20km: /*Дублирование ограничения в 20км*/
                 block = AutoCAD.DrawBlock("r_1.24.2_20km", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
                                           m->Direction == roDirect ? 0 : M_PI);
                 break;
-            case ma24_2: /*Дублирование запрещающих дорожных знаков*/
+            case ma24_2: /*Дублирование ограничения в 40км*/
+                block = AutoCAD.DrawBlock("r_1.24.2_40km", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
+                                          m->Direction == roDirect ? 0 : M_PI);
+                break;
             case ma24_3: /*Дублирование дорожного знака Инвалиды*/
                 BUILDER_ERROR("Разметка 1.24 на позиции " << Poly->Points[0].x << " не реализована");
                 //tableBottom.DrawRepeatTextInterval(0,"1.24",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);

@@ -4,7 +4,7 @@
 #include "without_autocad.h"
 #ifndef WITHOUT_AUTOCAD
 
-#include "AutoCAD_OCX.h"
+#include "AutoCAD\src\AutoCAD_OCX.h"
 #include <string.h>
 #include <Graphics.hpp>
 #include <stdio.h>
