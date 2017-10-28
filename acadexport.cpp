@@ -1839,11 +1839,11 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 break;
 
             case ma2_1:/*Край проезжей части (сплошная) */
-                DrawRoadMark(m, Poly, "1.2.1", iRow, line, table);
+                DrawRoadMark(m, Poly, "1.2", iRow, line, table);
                 break;
 
             case ma2_2:/*Краевая линия (прерывистая)  */
-                pl1 = DrawRoadMark(m, Poly, "1.2.2", iRow, line, table);
+                pl1 = DrawRoadMark(m, Poly, "1.2", iRow, line, table);
                 try {
                     if (pl1) pl1->set_Linetype(WideString("linedash_1"));
                 } catch (...) {}
