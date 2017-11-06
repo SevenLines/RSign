@@ -563,6 +563,18 @@ bool TFAutoCADPrint::SetFrame(int position, int width)
 			Variant left = helper->cadPoint(position, yCenter);
 			Variant right = helper->cadPoint(position + width, yCenter);
 			helper->Application->ZoomWindow(left, right);
+			//21.384
+			//47.768
+                        float width = viewport->get_Width();
+                        Variant center;
+			if (i == 1 && position == 0) {
+			       /*	viewport->get_Center(center);
+				float width = viewport->get_Width();
+				center.PutElement(center.GetElement(0) - 21.384, 0);
+                                viewport->set_Width(width + 2 * 21.384);
+				viewport->set_Center(center);*/
+			}
+
 		}
 		Application->ProcessMessages();
 	}
