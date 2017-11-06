@@ -84,8 +84,8 @@ object frmWidePartDialog: TfrmWidePartDialog
       Width = 15
       Height = 21
       Associate = editPartMaxDev
-      Min = 200
-      Max = 400
+      Min = 1
+      Max = 1000
       Increment = 5
       Position = 300
       TabOrder = 3
