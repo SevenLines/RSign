@@ -940,6 +940,7 @@ int s=0;
 FreePoints();
 TRoadPoint *Sour=Poly->Points;
 int n=Poly->Count;
+if (n==0) return;
 // Здесь можно написать двоичный поиск.
 for (i=0;i<n;i++)     // i - номер первой точки в области вывода
    if (Sour[i].L>=L1)
@@ -949,26 +950,45 @@ for (j=i;j<n;j++)       // j - первая точка за областью вывода
    if (Sour[j].L>L2)
       break;
 
-if ((i==n)||(j==0))
-    return;         // Точки начинаются за областью вывода
-SetCount(j-i+2);
-if (i>0)
-    {
-    FPoints[s].L=L1;
-    int DL=Sour[i].L-Sour[i-1].L;
-    FPoints[s].X=Sour[i-1].X+(double)(Sour[i].X-Sour[i-1].X)*(L1-Sour[i-1].L)/(DL);
-    s++;
+if (i==n) { // Точки начинаются за областью вывода
+    SetCount(2);
+    FPoints[0]=FPoints[1]=Sour[n-1];
+    FPoints[0].L=L1;
+    FPoints[1].L=L2;
+} else if (j==0) {
+    SetCount(2);
+    FPoints[0]=FPoints[1]=Sour[0];
+    FPoints[0].L=L1;
+    FPoints[1].L=L2;
     }
-memcpy(FPoints+s,Sour+i,(j-i)*sizeof(TRoadPoint));
-s+=j-i;
-if ((j<n)&&(j>0))
-    {
-    FPoints[s].L=L2;
-    int DL=Sour[j].L-Sour[j-1].L;
-    FPoints[s].X=Sour[j-1].X+(double)(Sour[j].X-Sour[j-1].X)*(L2-Sour[j-1].L)/(DL);
+else {
+    SetCount(j-i+2);
+    if (i>0)
+        {
+        FPoints[s].L=L1;
+        int DL=Sour[i].L-Sour[i-1].L;
+        FPoints[s].X=Sour[i-1].X+(double)(Sour[i].X-Sour[i-1].X)*(L1-Sour[i-1].L)/(DL);
+        }
+    else {
+        FPoints[s]=Sour[0];
+        FPoints[s].L=L1;
+        }
     s++;
+    memcpy(FPoints+s,Sour+i,(j-i)*sizeof(TRoadPoint));
+    s+=j-i;
+    if (j<n)
+        {
+        FPoints[s].L=L2;
+        int DL=Sour[j].L-Sour[j-1].L;
+        FPoints[s].X=Sour[j-1].X+(double)(Sour[j].X-Sour[j-1].X)*(L2-Sour[j-1].L)/(DL);
+        }
+    else {
+        FPoints[s]=Sour[n-1];
+        FPoints[s].L=L2;
+        }
+    s++;
+    FCount=s;
     }
-FCount=s;
 }
 
 void __fastcall TPolyline::SetCount(__int32 NCount)
