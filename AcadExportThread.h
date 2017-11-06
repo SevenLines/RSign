@@ -60,7 +60,7 @@ protected:
 
         int __fastcall ExportTowns(TDtaSource* data, TAcadExport* aexp);
         int __fastcall ExportPlan(TDtaSource* data, TAcadExport* aexp);
-        int __fastcall ExportSurface(TDtaSource* data, TAcadExport* aexp);
+        int __fastcall ExportSurface(TDtaSource* data, TAcadExport* aexp, bool drawSurface);
         int __fastcall ExportRoadMetrics(TDtaSource* data, TAcadExport* aexp);
         int __fastcall ExportProfile(TDtaSource* metricData, TRoad* road, TAcadExport* aexp);
         int __fastcall ExportAttachments(TDtaSource* data, TAcadExport* aexp);

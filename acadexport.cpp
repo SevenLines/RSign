@@ -1839,11 +1839,11 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 break;
 
             case ma2_1:/*Край проезжей части (сплошная) */
-                DrawRoadMark(m, Poly, "1.2.1", iRow, line, table);
+                DrawRoadMark(m, Poly, "1.2", iRow, line, table);
                 break;
 
             case ma2_2:/*Краевая линия (прерывистая)  */
-                pl1 = DrawRoadMark(m, Poly, "1.2.2", iRow, line, table);
+                pl1 = DrawRoadMark(m, Poly, "1.2", iRow, line, table);
                 try {
                     if (pl1) pl1->set_Linetype(WideString("linedash_1"));
                 } catch (...) {}
@@ -2109,11 +2109,18 @@ bool __fastcall TAcadExport::ExportRoadMark(TExtPolyline *Poly, TRoadMark *m, in
                 block = AutoCAD.DrawBlock("r_1.24.1", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
                                           m->Direction == roDirect ? 0 : M_PI);//ma24_2_20km
                 break;
+             case ma24_1_children: /*Дублирование предупреждающих дорожных знаков*/
+                block = AutoCAD.DrawBlock("r_1.24.1_children", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
+                                          m->Direction == roDirect ? 0 : M_PI);//ma24_2_20km
+                break;
             case ma24_2_20km: /*Дублирование ограничения в 20км*/
                 block = AutoCAD.DrawBlock("r_1.24.2_20km", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
                                           m->Direction == roDirect ? 0 : M_PI);
                 break;
-            case ma24_2: /*Дублирование запрещающих дорожных знаков*/
+            case ma24_2: /*Дублирование ограничения в 40км*/
+                block = AutoCAD.DrawBlock("r_1.24.2_40km", Poly->Points[0].x, -ScaleY * Poly->Points[0].y,
+                                          m->Direction == roDirect ? 0 : M_PI);
+                break;
             case ma24_3: /*Дублирование дорожного знака Инвалиды*/
                 BUILDER_ERROR("Разметка 1.24 на позиции " << Poly->Points[0].x << " не реализована");
                 //tableBottom.DrawRepeatTextInterval(0,"1.24",Poly->Points[0].x,Poly->Points[count-1].x,StringConvert,100000,0.25);
@@ -3577,7 +3584,7 @@ void TAcadExport::ExportRuler(int iStart, int iEnd, bool fEnd)
     }
 }
 
-bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool fEnd)
+bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool drawSurface, bool fEnd)
 {
     if (fEnd) return true;
     AcadPolylinePtr pl[1];
@@ -3592,7 +3599,7 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
     case 233:    //Цементобетон
         Color[0] = Color[1] = Color[2] = 240;
         strParams = "$c\tANGLE\t15\t251"; // заливка тип масштаб цвет
-        name = "цементобетон";
+        name = "усовершенствованное";
         hatchFill = "ANGLE";
         break;
 
@@ -3601,7 +3608,7 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
         Color[1] = 220;
         Color[2] = 220;
         strParams = "$c\tSOLID\t15\t161"; // заливка тип масштаб цвет
-        name = "асфальтобетон";
+        name = "усовершенствованное";
         break;
 
     case 235:   // щебень укреп
@@ -3610,7 +3617,7 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
         Color[2] = 128;
         strParams = "$c\tGRAVEL\t15\t43"; // заливка тип масштаб цвет
         hatchFill = "GRAVEL";
-        name = "щебень (гравий)";
+        name = "переходное";
         break;
 
     case 236:  // щебень
@@ -3619,7 +3626,7 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
         Color[2] = 180;
         strParams = "$c\tGRAVEL\t15\t43"; // заливка тип масштаб цвет
         hatchFill = "GRAVEL";
-        name = "щебеночное (гравийное)";
+        name = "переходное";
         break;
 
     case 237:  // грунтовое
@@ -3628,7 +3635,7 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
         Color[2] = 220;
         strParams = "$c\tGRAVEL\t15\t161"; // заливка тип масштаб цвет
         hatchFill = "GRAVEL";
-        name = "грунтовое";
+        name = "переходное";
         break;
 
     case 238:
@@ -3640,16 +3647,20 @@ bool __fastcall TAcadExport::ExportRoadCover(TExtPolyline *p, TRoadPart *t, bool
         break;
     }
 
-    pl[0] = DrawPolyPoints(p, false, true);
-    AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl, 1, 0, WideString(hatchFill));
-    pl[0]->Erase();
-    AcadAcCmColor *color =  hatch->TrueColor;
+    if (drawSurface) {
+        pl[0] = DrawPolyPoints(p, false, true);
+        AcadHatchPtr hatch = AutoCAD.FillArea((IDispatch**)pl, 1, 0, WideString(hatchFill));
+        pl[0]->Erase();
+        AcadAcCmColor *color =  hatch->TrueColor;
 
-    color->SetRGB(Color[0], Color[1], Color[2]);
-    hatch->TrueColor = color;
+        color->SetRGB(Color[0], Color[1], Color[2]);
+        hatch->TrueColor = color;
+    }
 
     if (~iBottomSurface) {
-        ExportAddRowLine(&tableBottom, iBottomSurface, t->LMin, t->LMax, strParams);
+        if (drawSurface) {
+                ExportAddRowLine(&tableBottom, iBottomSurface, t->LMin, t->LMax, strParams);
+        }
         ExportAddRowLine(&tableBottom, iBottomSurface, t->LMin, t->LMax, name);
     }
     return true;
@@ -3822,6 +3833,7 @@ bool __fastcall TAcadExport::ExportTrafficLight(TExtPolyline *p, vector<TTraffic
         case tlkTr: blockKind = "T_r"; break;
         case tlkTrl: blockKind = "T_rl"; break;
         case tlkP: blockKind = "TP"; break;
+        case tlkPO: blockKind = "T7"; break;        
         case trlkTR: blockKind = "TR"; break;  //2385256
         }
 

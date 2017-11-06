@@ -9,7 +9,8 @@
 
 
 #include "AutoCADPrintForm.h"
-#include "AutoCADPrintThread.h"
+#include "AutoCADExportForm.h"
+#include "ProgressFrm.h"
 #include "MickMacros.h"
 #include <process.h>
 
@@ -17,6 +18,7 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TFAutoCADPrint *FAutoCADPrint;
+
 
 void __fastcall TFAutoCADPrint::OnDocClose(TObject *Sender)
 {
@@ -353,14 +355,17 @@ void __fastcall TFAutoCADPrint::cmdPrintClick(TObject *Sender)
 	ReadValues();
 	try {
         FileName = AutoCAD.ActiveDocument->SummaryInfo->Title;
-		SaveDialog1->FileName = StringReplace(FileName, "\"", "", TReplaceFlags() << rfReplaceAll);
+        FileName = StringReplace(FileName, "\"", "", TReplaceFlags() << rfReplaceAll);
+        FileName = StringReplace(FileName, "\\", "", TReplaceFlags() << rfReplaceAll);
+        FileName = StringReplace(FileName, "/", "", TReplaceFlags() << rfReplaceAll);        
+        SaveDialog1->FileName = FileName;
 		//SaveDialog1->FileName = SaveDialog1->FileName + ".pdf";
 	} catch (...) {}
 	if (!SaveDialog1->Execute()) {
 		return;
 	}
 
-    FileName = SaveDialog1->FileName;
+        FileName = SaveDialog1->FileName;
 	// убираем расширение у имени файла
 	FileName = ChangeFileExt(FileName, "");
 
@@ -459,7 +464,7 @@ void __fastcall TFAutoCADPrint::edtEndKeyDown(TObject *Sender, WORD &Key,
 				tbPos->Min = v1 / v2;
 			}
 			if (TryStrToInt(edtEnd->Text, v1)) {
-				tbPos->Max = v1 / v2; /*+(v1%v2==0?0:1);*/
+				tbPos->Max = max(0, v1 -1) / v2; /*+(v1%v2==0?0:1);*/
 			}
 		}
 		break;
@@ -484,7 +489,7 @@ void __fastcall TFAutoCADPrint::edtPosKeyDown(TObject *Sender, WORD &Key,
 	switch (Key) {
 		if (TryStrToInt(edtPos->Text, v1)) {
 			if (TryStrToInt(edtStep->Text, v2)) {
-				tbPos->Position = v1 / v2;
+				tbPos->Position = max(0, v1 - 1) / v2;
 			}
 		}
 	}
@@ -689,7 +694,7 @@ print_end:
 void __fastcall TFAutoCADPrint::Button2Click(TObject *Sender)
 {
 	helper = 0;
-
+        AutoCAD.setAutoCADVersion(FAutoCADExport->getAutoCADVersion());
 	if (AutoCAD.BindAutoCAD()) {
 		if (!AutoCAD.ActiveDocument) {
 			if (!ffirst1)ShowMessage("Не возможно подключиться к активному документу.\n\
@@ -739,11 +744,11 @@ void __fastcall TFAutoCADPrint::Button2Click(TObject *Sender)
 	int v1, v2;
 	if (TryStrToInt(edtStep->Text, v2)) {
 		if (TryStrToInt(edtStart->Text, v1)) {
-			if (v1 / v2 > tbPos->Max) tbPos->Max = v1 / v2;
+			if (v1 / v2 > tbPos->Max) tbPos->Max = max(0, v1 - 1) / v2;
 			tbPos->Min = v1 / v2;
 		}
 		if (TryStrToInt(edtEnd->Text, v1)) {
-			tbPos->Max = v1 / v2; /*+(v1%v2==0?0:1);*/
+			tbPos->Max = max(0, v1 - 1) / v2; /*+(v1%v2==0?0:1);*/
 		}
 	}
 }

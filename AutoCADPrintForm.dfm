@@ -1,6 +1,6 @@
 object FAutoCADPrint: TFAutoCADPrint
-  Left = 728
-  Top = 71
+  Left = 582
+  Top = 284
   AutoSize = True
   BorderStyle = bsDialog
   Caption = #1055#1077#1095#1072#1090#1100' '#1080#1079' AutoCAD '
