@@ -1249,7 +1249,8 @@ if (FPlacement!=opRight)
     }
 for (int i=0;i<n;i++)
     p[i].X+=dx,p[i].Code=1;
-p[0].Code=0;
+if (n>0)
+    p[0].Code=0;
 Res=new TExtPolyline;
 Road->ConvertPolyline(*pl,*Res);
 delete pl;
