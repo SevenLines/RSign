@@ -134,7 +134,7 @@ int __fastcall AcadExportThread::ExportPlan(TDtaSource* data, TAcadExport* aexp)
     return 0;
 }
 
-int __fastcall AcadExportThread::ExportSurface(TDtaSource* data, TAcadExport* aexp)
+int __fastcall AcadExportThread::ExportSurface(TDtaSource* data, TAcadExport* aexp, bool drawSurface)
 {
     SET_PROGRESS_FORM_POSITION(0;)
     aexp->AddLayer("RoadSurface");
@@ -145,12 +145,12 @@ int __fastcall AcadExportThread::ExportSurface(TDtaSource* data, TAcadExport* ae
             TRoadPart *t=dynamic_cast<TRoadPart*>(data->Objects->Items[i]);
             if (t) {
                 TExtPolyline *p=t->PrepareMetric(R);
-                aexp->ExportRoadCover(p, t);
+                aexp->ExportRoadCover(p, t, drawSurface);
                 delete p;
             }
         }
     }
-    aexp->ExportRoadCover(0,0,true);
+    aexp->ExportRoadCover(0,0, drawSurface, true);
     return 0;
 }
 
@@ -1160,9 +1160,7 @@ void __fastcall AcadExportThread::Execute()
                 EXPORT_ITEM(ExportPlan(DataCur, aexp), "Выводим план...");
             }
 
-            if (FAutoCADExport->ExportSurface) {
-                EXPORT_ITEM(ExportSurface(DataCur, aexp), "Выводим участки по покрытиям...");
-            }
+            EXPORT_ITEM(ExportSurface(DataCur, aexp, FAutoCADExport->ExportSurface), "Выводим участки по покрытиям...");
 
             if (FAutoCADExport->ExportCommunications) {
                 EXPORT_ITEM(ExportCommunications(DataCur, aexp), "Выводим коммуникации...");

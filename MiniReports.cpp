@@ -124,7 +124,7 @@ void MiniReports::GenDocxReport(AnsiString reportName, map<AnsiString, AnsiStrin
     flags << rfReplaceAll;
 
     saveDialog->Title = "Выберите файл куда сохранится результат";
-    saveDialog->FileName = StringReplace(params["RoadName"], "\"", "", flags);
+    saveDialog->FileName = StringReplace(params["RoadName"] + " " + params["DataSourceName"], "\"", "", flags);
     saveDialog->FileName = StringReplace(saveDialog->FileName, "/", "", flags);
     saveDialog->FileName = StringReplace(saveDialog->FileName, "\\", "", flags);
 	saveDialog->Filter = "docx | *.docx";
@@ -219,7 +219,10 @@ void MiniReports::GenReport(AnsiString reportName, map<AnsiString, AnsiString> &
     if (params.count("DistrictName")) {
         outputPath += "\\" + StringReplace(params["DistrictName"], "\"", "", TReplaceFlags() << rfReplaceAll);
     }
-    
+    if (params.count("DataSourceName")) {
+        outputPath += "\\" + StringReplace(params["DataSourceName"], "\"", "", TReplaceFlags() << rfReplaceAll);
+    }
+
 	AnsiString script;
 	script.sprintf("\"%s\" -i \"%s\" -o \"%s\"",
 					exe,

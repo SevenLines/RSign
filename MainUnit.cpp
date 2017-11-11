@@ -111,6 +111,7 @@ bool TMainForm::GetActiveRoadParamsForMiniReport(std::map<AnsiString, AnsiString
     params["RoadEnd"] = IntToStr(int(FActiveRoad->RoadMaxL / 100));
     params["RoadBegin_km"] = ToKMString(FActiveRoad->RoadMinL / 100);
     params["RoadEnd_km"] = ToKMString(FActiveRoad->RoadMaxL / 100);
+    params["DataSourceName"] = FActiveRoad->MetricData->SourceName;
     params["DistrictName"] = FActiveRoad->DistrictName;
 
     // пытаемся взять протяженость дорогииз объекта начало-конец дороги
