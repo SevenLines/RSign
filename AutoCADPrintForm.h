@@ -129,6 +129,8 @@ private:
         void DrawViewports();
         bool BindViewports();
         void ReadValues();
+        void StretchFull();
+        void StretchFullBack();
         float kHeight,kWidth;
         float _Height,_Width;
         float xOffset,yOffset;

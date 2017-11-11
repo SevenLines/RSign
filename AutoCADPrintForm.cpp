@@ -563,18 +563,6 @@ bool TFAutoCADPrint::SetFrame(int position, int width)
 			Variant left = helper->cadPoint(position, yCenter);
 			Variant right = helper->cadPoint(position + width, yCenter);
 			helper->Application->ZoomWindow(left, right);
-			//21.384
-			//47.768
-                        float width = viewport->get_Width();
-                        Variant center;
-			if (i == 1 && position == 0) {
-			       /*	viewport->get_Center(center);
-				float width = viewport->get_Width();
-				center.PutElement(center.GetElement(0) - 21.384, 0);
-                                viewport->set_Width(width + 2 * 21.384);
-				viewport->set_Center(center);*/
-			}
-
 		}
 		Application->ProcessMessages();
 	}
@@ -584,6 +572,47 @@ bool TFAutoCADPrint::SetFrame(int position, int width)
 bool TFAutoCADPrint::EndPrint()
 {
 	return false;
+}
+
+
+/*
+	растянуть видовой экран на всю ширину нижних таблиц
+	надо при печати  первой старницы когда начало может иметь отрицательную координату
+*/
+void TFAutoCADPrint::StretchFull()
+{
+	AcadPViewportPtr viewport = vpCenter;
+	BUILDER_INFO("Растягиваю видовой экран");
+	int yCenter = vcCenter;
+	if ( viewport.IsBound() ) {
+		float width = viewport->get_Width();
+		Variant center;
+		viewport->get_Center(center);
+
+		//center.PutElement(center.GetElement(0) - 21.384, 0);
+		viewport->set_Width(width + 2 * 21.384);
+		//viewport->set_Center(center);
+	}
+}
+
+/*
+	растянуть видовой экран на всю ширину нижних таблиц
+	надо при печати  первой старницы когда начало может иметь отрицательную координату
+*/
+void TFAutoCADPrint::StretchFullBack()
+{
+	AcadPViewportPtr viewport = vpCenter;
+	BUILDER_INFO("Стягиваю видовой экран");
+	int yCenter = vcCenter;
+	if ( viewport.IsBound() ) {
+		float width = viewport->get_Width();
+		Variant center;
+		viewport->get_Center(center);
+
+		//center.PutElement(center.GetElement(0) + 21.384, 0);
+		viewport->set_Width(width - 2 * 21.384);
+		//viewport->set_Center(center);
+	}
 }
 
 void TFAutoCADPrint::Print(PrintType printType)
@@ -662,14 +691,21 @@ void TFAutoCADPrint::Print(PrintType printType)
 					            "отредактировать текущую страницу в AutoCAD");
 				}
 
+				if (j==0) {
+					helper->SendCommand(L"_UNDO _Mark ");
+					ShowMessage("Это пауза в течении которой вы можете успеть\n"
+					            "отредактировать первую страницу в AutoCAD");
+				}
+
 				helper->ActiveDocument->Plot->PlotToFile(WideString(temp));
+
 
 				// если у нас последний шаг или мы печатаем только один файл, запрос на формирование pdf
 				if (chkOnly->Checked || j == tbPos->Max) {
 					PauseLastFramePrint(fileNames, chkOnly->Checked);
 				}
 
-				if (!chkOnly->Checked && j == tbPos->Max) {
+				if (j == 0 || !chkOnly->Checked && j == tbPos->Max) {
 					helper->SendCommand(L"_UNDO _Back ");
 				}
 
