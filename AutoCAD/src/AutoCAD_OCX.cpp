@@ -10,29 +10,29 @@
 // ************************************************************************ //
 
 // C++ TLBWRTR : $Revision:   1.151.1.0.1.27  $
-// File generated on 09.02.2015 17:27:59 from Type Library described below.
+// File generated on 21.04.2014 17:13:23 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Program Files\Common Files\Autodesk Shared\acax18enu.tlb (1)
-// LIBID: {E072BCE4-9027-4F86-BAE2-EF119FD0A0D3}
+// LIBID: {D32C213D-6096-40EF-A216-89A3A6FB82F7}
 // LCID: 0
 // Helpfile: C:\Program Files\Common Files\Autodesk Shared\ACADAUTO.CHM
-// HelpString: AutoCAD 2012 Type Library
+// HelpString: AutoCAD 2011 Type Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\Windows\system32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
 // Errors:
 //   Hint: Symbol 'Update' renamed to '_Update'
 //   Hint: Symbol 'Update' renamed to '_Update'
 //   Hint: Symbol 'Update' renamed to '_Update'
 //   Hint: Symbol 'Update' renamed to '_Update'
-//   Error creating palette bitmap of (TAcadAcCmColor) : No Server registered for this CoClass
-//   Error creating palette bitmap of (TAcadSortentsTable) : No Server registered for this CoClass
-//   Error creating palette bitmap of (TAcadTableStyle) : No Server registered for this CoClass
-//   Error creating palette bitmap of (TAcadMLeaderStyle) : No Server registered for this CoClass
-//   Error creating palette bitmap of (TAcadDatabase) : No Server registered for this CoClass
-//   Error creating palette bitmap of (TAcadSecurityParams) : No Server registered for this CoClass
-//   Error creating palette bitmap of (TAcadLayerStateManager) : No Server registered for this CoClass
-//   Error creating palette bitmap of (TAcadDocument) : No Server registered for this CoClass
+//   Error creating palette bitmap of (TAcadAcCmColor) : Server C:\Program Files\Autodesk\AutoCAD 2011\acad.exe /Automation contains no icons
+//   Error creating palette bitmap of (TAcadSortentsTable) : Server C:\Program Files\Autodesk\AutoCAD 2011\acad.exe /Automation contains no icons
+//   Error creating palette bitmap of (TAcadTableStyle) : Server C:\Program Files\Autodesk\AutoCAD 2011\acad.exe /Automation contains no icons
+//   Error creating palette bitmap of (TAcadMLeaderStyle) : Server C:\Program Files\Autodesk\AutoCAD 2011\acad.exe /Automation contains no icons
+//   Error creating palette bitmap of (TAcadDatabase) : Server C:\Program Files\Autodesk\AutoCAD 2011\acad.exe /Automation contains no icons
+//   Error creating palette bitmap of (TAcadSecurityParams) : Server C:\Program Files\Autodesk\AutoCAD 2011\acad.exe /Automation contains no icons
+//   Error creating palette bitmap of (TAcadLayerStateManager) : Server C:\Program Files\Autodesk\AutoCAD 2011\acad.exe /Automation contains no icons
+//   Error creating palette bitmap of (TAcadDocument) : Server C:\Program Files\Autodesk\AutoCAD 2011\acad.exe /Automation contains no icons
 // ************************************************************************ //
 
 #include <vcl.h>

@@ -10,16 +10,16 @@
 // ************************************************************************ //
 
 // C++ TLBWRTR : $Revision:   1.151.1.0.1.27  $
-// File generated on 09.02.2015 17:27:59 from Type Library described below.
+// File generated on 21.04.2014 17:13:23 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Program Files\Common Files\Autodesk Shared\acax18enu.tlb (1)
-// LIBID: {E072BCE4-9027-4F86-BAE2-EF119FD0A0D3}
+// LIBID: {D32C213D-6096-40EF-A216-89A3A6FB82F7}
 // LCID: 0
 // Helpfile: C:\Program Files\Common Files\Autodesk Shared\ACADAUTO.CHM
-// HelpString: AutoCAD 2012 Type Library
+// HelpString: AutoCAD 2011 Type Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\Windows\system32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINDOWS\system32\stdole2.tlb)
 // ************************************************************************ //
 #ifndef   AutoCAD_OCXH
 #define   AutoCAD_OCXH
@@ -51,7 +51,7 @@ namespace Autocad_tlb
 {
 
 // *********************************************************************//
-// HelpString: AutoCAD 2012 Type Library
+// HelpString: AutoCAD 2011 Type Library
 // Version:    1.0
 // *********************************************************************//
 
@@ -59,7 +59,7 @@ namespace Autocad_tlb
 // *********************************************************************//
 // COM Component Proxy Class Declaration
 // Component Name   : TAcadAcCmColor
-// Help String      : 
+// Help String      : AutoCAD True Color Object
 // Default Interface: IAcadAcCmColor
 // Def. Intf. Object: IAcadAcCmColorPtr
 // Def. Intf. DISP? : No
@@ -171,7 +171,7 @@ public:
 // *********************************************************************//
 // COM Component Proxy Class Declaration
 // Component Name   : TAcadSortentsTable
-// Help String      : 
+// Help String      : AutoCAD AcadSortentsTable Object
 // Default Interface: IAcadSortentsTable
 // Def. Intf. Object: IAcadSortentsTablePtr
 // Def. Intf. DISP? : No
@@ -236,16 +236,6 @@ public:
   LPDISPATCH __fastcall get_Document(void)
   {
     return GetDefaultInterface()->get_Document();
-  }
-
-  long __fastcall get_ObjectID32(void)
-  {
-    return GetDefaultInterface()->get_ObjectID32();
-  }
-
-  long __fastcall get_OwnerID32(void)
-  {
-    return GetDefaultInterface()->get_OwnerID32();
   }
 
   void __fastcall GetXData(BSTR AppName/*[in]*/, VARIANT* XDataType/*[out]*/, 
@@ -330,8 +320,6 @@ public:
   __property TOLEBOOL HasExtensionDictionary={ read=get_HasExtensionDictionary };
   __property Autocad_tlb::LONG_PTR OwnerID={ read=get_OwnerID };
   __property LPDISPATCH Document={ read=get_Document };
-  __property long ObjectID32={ read=get_ObjectID32 };
-  __property long OwnerID32={ read=get_OwnerID32 };
 private:
   TAcadSortentsTableModified     FOnModified;
 __published:
@@ -342,7 +330,7 @@ __published:
 // *********************************************************************//
 // COM Component Proxy Class Declaration
 // Component Name   : TAcadTableStyle
-// Help String      : 
+// Help String      : AutoCAD AcadTableStyle Object
 // Default Interface: IAcadTableStyle
 // Def. Intf. Object: IAcadTableStylePtr
 // Def. Intf. DISP? : No
@@ -407,16 +395,6 @@ public:
   LPDISPATCH __fastcall get_Document(void)
   {
     return GetDefaultInterface()->get_Document();
-  }
-
-  long __fastcall get_ObjectID32(void)
-  {
-    return GetDefaultInterface()->get_ObjectID32();
-  }
-
-  long __fastcall get_OwnerID32(void)
-  {
-    return GetDefaultInterface()->get_OwnerID32();
   }
 
   BSTR __fastcall get_Name(void)
@@ -512,16 +490,6 @@ public:
   void __fastcall set_TemplateId(Autocad_tlb::LONG_PTR pVal/*[in]*/)
   {
     GetDefaultInterface()->set_TemplateId(pVal/*[in]*/);
-  }
-
-  long __fastcall get_TemplateId32(void)
-  {
-    return GetDefaultInterface()->get_TemplateId32();
-  }
-
-  void __fastcall set_TemplateId32(long pVal/*[in]*/)
-  {
-    GetDefaultInterface()->set_TemplateId32(pVal/*[in]*/);
   }
 
   void __fastcall GetXData(BSTR AppName/*[in]*/, VARIANT* XDataType/*[out]*/, 
@@ -864,21 +832,6 @@ public:
     GetDefaultInterface()->SetTemplateId(val/*[in]*/, option);
   }
 
-  long __fastcall GetTextStyleId32(BSTR bstrCellStyle/*[in]*/)
-  {
-    return GetDefaultInterface()->GetTextStyleId32(bstrCellStyle/*[in]*/);
-  }
-
-  void __fastcall SetTextStyleId32(BSTR bstrCellStyle/*[in]*/, long val/*[in]*/)
-  {
-    GetDefaultInterface()->SetTextStyleId32(bstrCellStyle/*[in]*/, val/*[in]*/);
-  }
-
-  void __fastcall SetTemplateId32(long val/*[in]*/, Autocad_tlb::AcMergeCellStyleOption option)
-  {
-    GetDefaultInterface()->SetTemplateId32(val/*[in]*/, option);
-  }
-
   __property BSTR Handle={ read=get_Handle };
   __property BSTR ObjectName={ read=get_ObjectName };
   __property Autocad_tlb::LONG_PTR ObjectID={ read=get_ObjectID };
@@ -887,8 +840,6 @@ public:
   __property TOLEBOOL HasExtensionDictionary={ read=get_HasExtensionDictionary };
   __property Autocad_tlb::LONG_PTR OwnerID={ read=get_OwnerID };
   __property LPDISPATCH Document={ read=get_Document };
-  __property long ObjectID32={ read=get_ObjectID32 };
-  __property long OwnerID32={ read=get_OwnerID32 };
   __property long NumCellStyles={ read=get_NumCellStyles };
   __property BSTR Name={ read=get_Name, stored=false };
   __property BSTR Description={ read=get_Description, stored=false };
@@ -899,7 +850,6 @@ public:
   __property TOLEBOOL TitleSuppressed={ read=get_TitleSuppressed, stored=false };
   __property TOLEBOOL HeaderSuppressed={ read=get_HeaderSuppressed, stored=false };
   __property Autocad_tlb::LONG_PTR TemplateId={ read=get_TemplateId, stored=false };
-  __property long TemplateId32={ read=get_TemplateId32, stored=false };
 private:
   TAcadTableStyleModified        FOnModified;
 __published:
@@ -910,7 +860,7 @@ __published:
 // *********************************************************************//
 // COM Component Proxy Class Declaration
 // Component Name   : TAcadMLeaderStyle
-// Help String      : 
+// Help String      : AutoCAD MLeaderStyle Object
 // Default Interface: IAcadMLeaderStyle
 // Def. Intf. Object: IAcadMLeaderStylePtr
 // Def. Intf. DISP? : No
@@ -975,16 +925,6 @@ public:
   LPDISPATCH __fastcall get_Document(void)
   {
     return GetDefaultInterface()->get_Document();
-  }
-
-  long __fastcall get_ObjectID32(void)
-  {
-    return GetDefaultInterface()->get_ObjectID32();
-  }
-
-  long __fastcall get_OwnerID32(void)
-  {
-    return GetDefaultInterface()->get_OwnerID32();
   }
 
   BSTR __fastcall get_Name(void)
@@ -1446,8 +1386,6 @@ public:
   __property TOLEBOOL HasExtensionDictionary={ read=get_HasExtensionDictionary };
   __property Autocad_tlb::LONG_PTR OwnerID={ read=get_OwnerID };
   __property LPDISPATCH Document={ read=get_Document };
-  __property long ObjectID32={ read=get_ObjectID32 };
-  __property long OwnerID32={ read=get_OwnerID32 };
   __property TOLEBOOL OverwritePropChanged={ read=get_OverwritePropChanged };
   __property BSTR Name={ read=get_Name, stored=false };
   __property BSTR Description={ read=get_Description, stored=false };
@@ -1501,7 +1439,7 @@ __published:
 // *********************************************************************//
 // COM Component Proxy Class Declaration
 // Component Name   : TAcadDatabase
-// Help String      : 
+// Help String      : The contents of an XRef block
 // Default Interface: IAcadDatabase
 // Def. Intf. Object: IAcadDatabasePtr
 // Def. Intf. DISP? : No
@@ -1671,11 +1609,6 @@ public:
     return GetDefaultInterface()->ObjectIdToObject(ObjectID/*[in]*/);
   }
 
-  LPDISPATCH __fastcall ObjectIdToObject32(long ObjectID/*[in]*/)
-  {
-    return GetDefaultInterface()->ObjectIdToObject32(ObjectID/*[in]*/);
-  }
-
   __property Autocad_tlb::IAcadBlockPtr ModelSpace={ read=get_ModelSpace };
   __property Autocad_tlb::IAcadPaperSpacePtr PaperSpace={ read=get_PaperSpace };
   __property Autocad_tlb::IAcadBlocksPtr Blocks={ read=get_Blocks };
@@ -1707,7 +1640,7 @@ public:
 // *********************************************************************//
 // COM Component Proxy Class Declaration
 // Component Name   : TAcadSecurityParams
-// Help String      : 
+// Help String      : Security Parameters Object
 // Default Interface: IAcadSecurityParams
 // Def. Intf. Object: IAcadSecurityParamsPtr
 // Def. Intf. DISP? : No
@@ -1857,7 +1790,7 @@ public:
 // *********************************************************************//
 // COM Component Proxy Class Declaration
 // Component Name   : TAcadLayerStateManager
-// Help String      : 
+// Help String      : AcadLayerStateManager Class
 // Default Interface: IAcadLayerStateManager
 // Def. Intf. Object: IAcadLayerStateManagerPtr
 // Def. Intf. DISP? : No
@@ -1932,7 +1865,7 @@ public:
 // *********************************************************************//
 // COM Component Proxy Class Declaration
 // Component Name   : TAcadDocument
-// Help String      : 
+// Help String      : An AutoCAD drawing
 // Default Interface: IAcadDocument
 // Def. Intf. Object: IAcadDocumentPtr
 // Def. Intf. DISP? : No
@@ -2359,11 +2292,6 @@ public:
     GetDefaultInterface()->set_ActiveMaterial(pActMaterial/*[in]*/);
   }
 
-  long __fastcall get_HWND32(void)
-  {
-    return GetDefaultInterface()->get_HWND32();
-  }
-
   TVariant __fastcall CopyObjects(VARIANT Objects/*[in]*/, VARIANT Owner/*[in,opt]*/, 
                                   VARIANT* IdPairs/*[in,out,opt]*/)
   {
@@ -2379,11 +2307,6 @@ public:
   LPDISPATCH __fastcall ObjectIdToObject(Autocad_tlb::LONG_PTR ObjectID/*[in]*/)
   {
     return GetDefaultInterface()->ObjectIdToObject(ObjectID/*[in]*/);
-  }
-
-  LPDISPATCH __fastcall ObjectIdToObject32(long ObjectID/*[in]*/)
-  {
-    return GetDefaultInterface()->ObjectIdToObject32(ObjectID/*[in]*/);
   }
 
   Autocad_tlb::IAcadDocumentPtr __fastcall Open(BSTR FullName/*[in]*/, VARIANT Password/*[in,opt]*/)
@@ -2520,7 +2443,6 @@ public:
   __property BSTR WindowTitle={ read=get_WindowTitle };
   __property Autocad_tlb::IAcadApplicationPtr Application={ read=get_Application };
   __property Autocad_tlb::IAcadDatabasePtr Database={ read=get_Database };
-  __property long HWND32={ read=get_HWND32 };
   __property double ElevationModelSpace={ read=get_ElevationModelSpace, stored=false };
   __property double ElevationPaperSpace={ read=get_ElevationPaperSpace, stored=false };
   __property Autocad_tlb::IAcadLayerPtr ActiveLayer={ read=get_ActiveLayer, stored=false };
