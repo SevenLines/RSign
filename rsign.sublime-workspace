@@ -94,12 +94,67 @@
 			}
 		},
 		{
-			"file": "/O/m/PycharmProjects/smyt.txt",
+			"contents": "\"D:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\Scripts\\sql2docx.exe\" -i \"D:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\Scripts\\docx\\ТЕХП-2017-город.docx\" -o \"C:\\Users\\m\\Desktop\\Иркутск 2017\\docx\\ул. ЛЕДОВСКОГО-Видеопаспортизация 2017.docx\"-p DataSourceName=\"Видеопаспортизация 2017\" DistrictName=\"Иркутск\" NumDataSource=\"3984\" NumRoad=\"108\" RoadBegin=\"0\" RoadBegin_km=\"0+000\" RoadEnd=\"526.000\" RoadEnd_km=\"0+526\" RoadName=\"ул. ЛЕДОВСКОГО\"  -c \"D:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\Scripts\\.credentials\"",
+			"file": "AutoCAD/Scripts/last_mini_report.bat",
+			"file_size": 474,
+			"file_write_time": 131549370016974013,
 			"settings":
 			{
-				"buffer_size": 3062,
+				"buffer_size": 469,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/command.bat",
+			"settings":
+			{
+				"buffer_size": 32475,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "RSign.bpr",
+			"settings":
+			{
+				"buffer_size": 21788,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/_MMK/_AKARIN/MathLogic/Orlova/tasks.txt",
+			"settings":
+			{
+				"buffer_size": 4431,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "В общем, так как сходу начать работать с БД наверное будет достаточно сложно, предлагаю для начала соориентироваться просто с организацией данных и написать с десяток запросов, в файлике задания и примеры приложил. А затем в зависимости от того понравится / не понравится придумать как двигаться дальше.\n\nДля вдохновления:\nhttps://d3js.org/\n\n",
+			"settings":
+			{
+				"buffer_size": 342,
+				"line_ending": "Windows",
+				"name": "В общем, так как сходу начать работать с БД наверн"
+			}
+		},
+		{
+			"file": "/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part9/info.txt",
+			"settings":
+			{
+				"buffer_size": 912,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": ".gitignore",
+			"settings":
+			{
+				"buffer_size": 247,
+				"line_ending": "Windows"
 			}
 		},
 		{
@@ -182,6 +237,8 @@
 	],
 	"file_history":
 	[
+		"/C/Users/m/Desktop/result.txt",
+		"/O/m/PycharmProjects/smyt.txt",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1_об.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/заезд1/gen.bat",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/заезд3/Cam1_об.smi",
@@ -307,9 +364,7 @@
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/ТЕХП-2016.docx",
 		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
-		"/I/Irkutsk2016/05/2016.09.12_12-52_Doroga_1_priamo_zaezd1/RoadLab.xml",
-		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/02/info.txt",
-		"/D/_MMK/_ROADS/Roads-2016/02/info.txt"
+		"/I/Irkutsk2016/05/2016.09.12_12-52_Doroga_1_priamo_zaezd1/RoadLab.xml"
 	],
 	"find":
 	{
@@ -481,7 +536,7 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 7,
 			"sheets":
 			[
 				{
@@ -510,7 +565,7 @@
 						"translation.y": 13434.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -538,7 +593,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -566,7 +621,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -594,7 +649,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
@@ -622,7 +677,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -650,16 +705,184 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
 					"buffer": 6,
-					"file": "/O/m/PycharmProjects/smyt.txt",
+					"file": "AutoCAD/Scripts/last_mini_report.bat",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3062,
+						"buffer_size": 469,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								469,
+								469
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/D/command.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 32475,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9,
+								9
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "RSign.bpr",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 21788,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3542,
+								3542
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/XML/XML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 480.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "/D/_MMK/_AKARIN/MathLogic/Orlova/tasks.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4431,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1403,
+								1403
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 720.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 342,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								341,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_name": "В общем, так как сходу начать работать с БД наверн",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part9/info.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 912,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								519,
+								519
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": ".gitignore",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 247,
 						"regions":
 						{
 						},
@@ -672,17 +895,17 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/zzz A File Icon zzz/aliases/Shell Script (Git).sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 480.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 13,
 					"semi_transient": false,
 					"settings":
 					{
@@ -706,11 +929,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 14,
 					"file": "AutoCADPrintForm.h",
 					"semi_transient": false,
 					"settings":
@@ -736,7 +959,7 @@
 						"translation.y": 2220.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 14,
 					"type": "text"
 				}
 			]

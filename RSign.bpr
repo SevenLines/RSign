@@ -21,8 +21,7 @@
       AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj 
       MiniReports.obj ItemSelectDialog.obj TConnectionFormThreadUnit.obj 
       ConnectionFormUnit.obj VideoBar.obj ActiveX\MyActiveX.obj Helpers.obj 
-      VisModeForm.obj AutoCAD\src\AutoCAD_OCX.obj AutoCAD\src\AutoCAD_TLB.obj 
-      RSign_TLB.obj"/>
+      VisModeForm.obj RSign_TLB.obj"/>
     <RESFILES value="RSign.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -46,7 +45,7 @@
     <PACKAGES value="vclx.bpi rtl.bpi vcl.bpi dbrtl.bpi vcldb.bpi bcbsmp.bpi dclocx.bpi 
       qrpt.bpi teeui.bpi vclsmp.bpi teedb.bpi tee.bpi ibsmp.bpi dss.bpi 
       nmfast.bpi inetdb.bpi inet.bpi adortl.bpi"/>
-    <PATHCPP value=".;ActiveX;AutoCAD\src;AutoCAD\src"/>
+    <PATHCPP value=".;ActiveX"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -56,7 +55,7 @@
     <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG"/>
     <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS;_BCB_ATL_DEBUG"/>
     <MAINSOURCE value="RSign.cpp"/>
-    <INCLUDEPATH value="AutoCAD\src;&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl"/>
+    <INCLUDEPATH value="AutoCAD\src;&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;$(BCB)\imports"/>
     <LIBPATH value="AutoCAD\src;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib"/>
     <WARNINGS value="-w-par -w-8030 -w-8027 -w-8026"/>
     <WARNOPTSTR value=""/>
@@ -163,8 +162,6 @@
       <FILE FILENAME="ActiveX\MyActiveX.cpp" FORMNAME="" UNITNAME="MyActiveX" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Helpers.cpp" FORMNAME="" UNITNAME="Helpers" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="VisModeForm.cpp" FORMNAME="frmVisMode" UNITNAME="VisModeForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="AutoCAD\src\AutoCAD_OCX.cpp" FORMNAME="" UNITNAME="AutoCAD_OCX.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="AutoCAD\src\AutoCAD_TLB.cpp" FORMNAME="" UNITNAME="AutoCAD_TLB.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="RSign_TLB.cpp" FORMNAME="" UNITNAME="RSign_TLB" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
