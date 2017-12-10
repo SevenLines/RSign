@@ -40,138 +40,83 @@
 	"buffers":
 	[
 		{
-			"file": "AutoCADPrintForm.cpp",
-			"settings":
-			{
-				"buffer_size": 27638,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part8/info.txt",
-			"settings":
-			{
-				"buffer_size": 1681,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/gen.bat",
-			"settings":
-			{
-				"buffer_size": 134,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/gen.bat",
-			"settings":
-			{
-				"buffer_size": 134,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1.smi",
-			"settings":
-			{
-				"buffer_size": 356969,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1_об.smi",
-			"settings":
-			{
-				"buffer_size": 355138,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "\"D:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\Scripts\\sql2docx.exe\" -i \"D:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\Scripts\\docx\\ТЕХП-2017-город.docx\" -o \"C:\\Users\\m\\Desktop\\Иркутск 2017\\docx\\ул. ЛЕДОВСКОГО-Видеопаспортизация 2017.docx\"-p DataSourceName=\"Видеопаспортизация 2017\" DistrictName=\"Иркутск\" NumDataSource=\"3984\" NumRoad=\"108\" RoadBegin=\"0\" RoadBegin_km=\"0+000\" RoadEnd=\"526.000\" RoadEnd_km=\"0+526\" RoadName=\"ул. ЛЕДОВСКОГО\"  -c \"D:\\_DISTR\\_ASUDOR\\RSign\\AutoCAD\\Scripts\\.credentials\"",
-			"file": "AutoCAD/Scripts/last_mini_report.bat",
-			"file_size": 474,
-			"file_write_time": 131549370016974013,
-			"settings":
-			{
-				"buffer_size": 469,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "/D/command.bat",
 			"settings":
 			{
-				"buffer_size": 32475,
+				"buffer_size": 47915,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "RSign.bpr",
+			"file": "/C/ZET 9/LANGUAGE/Russian/signature.txt",
 			"settings":
 			{
-				"buffer_size": 21788,
+				"buffer_size": 80,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/D/_MMK/_AKARIN/MathLogic/Orlova/tasks.txt",
+			"file": "/C/ZET 9/Wrk/Interp.txt",
 			"settings":
 			{
-				"buffer_size": 4431,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"buffer_size": 5712,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "В общем, так как сходу начать работать с БД наверное будет достаточно сложно, предлагаю для начала соориентироваться просто с организацией данных и написать с десяток запросов, в файлике задания и примеры приложил. А затем в зависимости от того понравится / не понравится придумать как двигаться дальше.\n\nДля вдохновления:\nhttps://d3js.org/\n\n",
+			"contents": "Вы часто принимаете решения, руководствуясь только эмоциональными или личными причинами: Вы поступаете так или иначе потому, что чувствуете, что именно так надо сделать или потому, что Вы всегда так делаете и Вам не хочется ничего менять. Даже когда Вы стремитесь быть рациональным, Ваши предубеждения, интуиция и чувства сильно влияют на Ваши мысли. Вам легко говорить о чувствах, на личные темы, и Вы внушаете другим уверенность, которая дает им возможность выражать свои внутренние чувства так же, как это делаете Вы. Психологически Вы очень проницательны.\n     (Фрэнсис Сакоян. Планеты в домах)\n\n* Луна в Близнецах\nВы не производите впечатление чрезвычайно эмоционального или сентиментального человека и часто не отдаете себе отчет в собственных более глубоких, чем обычно, чувствах и эмоциональных нуждах. Слезы и вспышки раздражения других людей ставят Вас в тупик, и Вы чувствуете себя в подобных ситуациях довольно плохо. Вы бы скорее предпочли разрешить разногласия путем разумного и логического разговора. Если же возникает ситуация, когда необходимо погрузиться в глубину чувств, Вы стремитесь превратить все в шутку.\nВы избегаете сложных, многоплановых поступков, требующих эмоциональных затрат. Вы осторожны и не берете на себя лишней ответственности.\nВы сильно нуждаетесь в обстановке интеллектуального соревнования или сотрудничества и испытываете чувство близости к людям, с которыми можете делиться мыслями, интересами. Для Вас очень важно иметь возможность разговаривать. Вы избегаете людей сильного, молчаливого типа.\nПереливающиеся чувства, быстрое схватывание, богатство мыслей. Без умолку говорят, чем надоедают слушателям. Очень беспокойны, нервны, ищут перемен, разбрасываются, не доводят дело до конца. Хороший нюх благодаря эмоциям. Разъезды, перемена квартир (обмен квартир). Женщины с Луной в Близнецах изящны, стройны, хитры и непостоянны.\n     (Фрэнсис Сакоян. Планеты в знаках Зодиака)\n\n* Оппозиция Луна-Венера   (177.5°)\nСверхчувствительны, чувствуют себя нелюбимыми, отсюда домашние и материальные проблемы. Часто ленивы, интерес к материальной жизни, предметам роскоши. Аспект имеет двойную отрицательную сторону Тельца. Половые излишества или нездоровое питание, чрезмерное употребление сладостей и углеводов. Часто семья ставит в затруднительное положение, вмешиваясь в брачные отношения, иногда в виде конфликта со свекровью или тещей. Если сконцентрироваться на важных устремлениях, материальные удобства домашней жизни не покажутся столь важными.\n     (Фрэнсис Сакоян. Аспекты)\n\nСвязи элементов 3 дома >= 3\nНет\n\nIV. Дом   - Дом, окружающая среда, внешние и внутренние условия, родители\nIV дом: корни. К этому дому относятся родители и более отдаленные предки человека, семья, в которой он живет, жилище и недвижимость в широком смысле слова, а также отношение к родине. Акцентированный 4-й дом часто характеризует самостоятельность человека, способность прочно стоять на ногах, в том числе за счет поддержки близких родственников.\n     (Дома - общее описание)\n\n* 12-й градус Близнецов.\nМеркурий\n\"Бухгалтер ломает голову над книгой счетов, стараясь привести ее в порядок\". - Указывает на человека с математическим складом ума, который склонен обсуждать разнообразные проблемы, возникающие в повседневной жизни, и ни с чем не соглашаться без проверки и размышлений. Зачастую такого человека могут считать упрямым и неподатливым, но никто, кроме него, большей готовностью не согласится подтвердить справедливость или ложность рассматриваемого вопроса, когда случай предоставит ему такое доказательство. Это символ Пунктуальности.\n     (Градусы Исидор Косминский)\n\nСвязи элементов 4 дома >= 3\nНет\n\nV. Дети  - Сознательное самовыражение, дети, творчество, игры, любовные связи\nV дом имеет много разных значений, на первый взгляд не очень-то связанных между собой, но если подумать, то можно сформулировать принцип, объединяющий их все - творчество, необусловленное самовыражение. К этому дому относятся собственно творчество, а также любовь, дети, отдых, игры и развлечения, азарт, хобби... Какое именно значение выбрать - зависит от задачи, которую вы перед собой ставите при изучении гороскопа.\n     (Дома - общее описание)\n\n* 29-й градус Близнецов.\nМарс\n\"Ребенок, превращающий кусок камня в стальную рукавицу\". - Указывает на человека простодушного, необычайно притягательного, наделенного могуществом и знанием невидимых сил. Против него агрессия совершенно бессмысленна, и нападающий вскоре обнаружит, что он сам побежден. Это символ Пророчества.\n     (Градусы Исидор Косминский)\n\nСвязи элементов 5 дома >= 3\nНет\n\nVI. Труд  - Здоровье, уход за телом, диета, одежда, работа, рутинный труд и служение\nVI дом - его смысл может быть коротко отражен словом \"эффективность\". Более конкретно связан с работой, отношением человека к ней, позволяет судить о видах работы, в которых человек может быть наиболее эффективным. Другое важнейшее значение этого дома - здоровье, эффективная работа организма, что ей мешает и как можно помочь.\n     (Дома - общее описание)\n\n* 17-й градус Рака\nЮпитер\n\"Караван купцов на верблюдах держит путь через пустыню\". - Указывает на любителя путешествий - человека, у которого есть склонность к бродячей жизни. Он, однако, очень четко сознает необходимость работы, разъезжая с караванами, чья торговля не ограничивается лишь каким-то одним районом или страной. Такой человек приобретет прибыль благодаря различным товарам, продавая и покупая их, или с помощью вещей, требующихся повсеместно. Временами неблагоразумный, временами терпеливый - но он всегда владеет собой. Это символ Обмена и Торговли.\n     (Градусы Исидор Косминский)\n\nСвязи элементов 6 дома >= 3\nНет\n\nVII. Они   - Личные отношения с другими людьми, партнерами (в том числе брачными)\n",
 			"settings":
 			{
-				"buffer_size": 342,
+				"buffer_size": 5710,
 				"line_ending": "Windows",
-				"name": "В общем, так как сходу начать работать с БД наверн"
+				"name": "Вы часто принимаете решения, руководствуясь только"
 			}
 		},
 		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part9/info.txt",
+			"file": "/D/_DOWNLOADS/=ZET 9 NEW=/Новый активатор 1.3.0.0/Важно!!!.txt",
 			"settings":
 			{
-				"buffer_size": 912,
+				"buffer_size": 426,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": ".gitignore",
+			"file": "/D/command_podd.bat",
 			"settings":
 			{
-				"buffer_size": 247,
+				"buffer_size": 39478,
+				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "212.0666\n399.1679\n\n233.4506\n356.3999",
+			"file": "/D/_MMK/_PYTHON/_WINPOLYGON/gps/2014/083/artu/artuG01_082.dat",
 			"settings":
 			{
-				"buffer_size": 36,
+				"buffer_size": 79134,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/_MMK/_PYTHON/_WINPOLYGON/gps/run.bat",
+			"settings":
+			{
+				"buffer_size": 26,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "[CONTENT][AUTO_EXPAND]\nDECLARE @NumRoad int, @NumDataSource int\nSELECT @NumDataSource=/*$NumDataSource*/3805/*$*/\nSELECT @NumRoad = NumRoad\nFROM ListDataSources\nWHERE id_ = @NumDataSource\n\nUPDATE Classifier SET ShortTitle = '1.18а' WHERE id_ in (2384982)\nUPDATE Classifier SET ShortTitle = '1.18б' WHERE id_ in (2384983,2384984)\nUPDATE Classifier SET ShortTitle = '1.18в' WHERE id_ in (2384985,2384986)\nUPDATE Classifier SET ShortTitle = '1.18г' WHERE id_ in (2384987)\nUPDATE Classifier SET ShortTitle = '1.18д' WHERE id_ in (2385131)\n\nSELECT '1.1' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 1 OrderColumn,  1 K11,    0.1 Width INTO #MarkTypes UNION\nSELECT '1.2.1' ShortTitle,  'м.' UnitMeasure,  NULL LengthCounting, 2 OrderColumn,  1 K11,    0.1 Width UNION\nSELECT '1.2.2' ShortTitle,  'м.' UnitMeasure,  NULL LengthCounting, 2 OrderColumn,  0.25 K11, 0.1 Width UNION\nSELECT '1.3' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 3 OrderColumn,  2 K11,    0.1 Width UNION\nSELECT '1.4' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 3 OrderColumn,  1 K11,    0.1 Width UNION\nSELECT '1.5' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 5 OrderColumn,  0.25 K11, 0.1 Width UNION\nSELECT '1.6' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 6 OrderColumn,  0.75 K11, 0.1 Width UNION\nSELECT '1.7' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 7 OrderColumn,  0.5 K11,  0.1 Width UNION\nSELECT '1.8' ShortTitle,    'м.' UnitMeasure,  NULL LengthCounting, 8 OrderColumn,  0.25 K11, 0.2 Width UNION\nSELECT '1.11' ShortTitle,   'м.' UnitMeasure,  NULL LengthCounting, 11 OrderColumn, 1.75 K11, 0.15 Width UNION\nSELECT '1.12' ShortTitle,   'м.' UnitMeasure,  NULL LengthCounting, 12 OrderColumn, 1 K11,    0.4 Width UNION\nSELECT '1.13' ShortTitle,   'м.' UnitMeasure,  NULL LengthCounting, 13 OrderColumn, 0.5 K11,  1 Width UNION\nSELECT '1.14.1' ShortTitle, 'м.' UnitMeasure,  2 LengthCounting,    14 OrderColumn, 1 K11,    1.6 Width UNION\n--SELECT '1.14.2' ShortTitle, 'м.' UnitMeasure,  4 LengthCounting,    14 OrderColumn, 1 K11,    1.6 Width UNION\nSELECT '1.16%' ShortTitle,  'шт.' UnitMeasure, NULL LengthCounting, 16 OrderColumn, NULL K11, NULL Width UNION\nSELECT '1.17' ShortTitle,  'м.' UnitMeasure, NULL LengthCounting,   17 OrderColumn, 1.5 K11,    0.1 Width UNION\nSELECT '1.18а' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  18 OrderColumn, 1 K11,    1.44 Width UNION\nSELECT '1.18б' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  18 OrderColumn, 1 K11,    1.82 Width UNION\nSELECT '1.18в' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  18 OrderColumn, 1 K11,    2.62 Width UNION\nSELECT '1.18г' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  18 OrderColumn, 1 K11,    2.09 Width UNION\nSELECT '1.18д' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  18 OrderColumn, 1 K11,    2.09 Width UNION\nSELECT '1.19%' ShortTitle,  'шт.' UnitMeasure, 7.5 LengthCounting,  19 OrderColumn, 1 K11,    2.64 Width UNION\nSELECT '1.20%' ShortTitle,  'шт.' UnitMeasure, NULL LengthCounting, 20 OrderColumn, NULL K11, NULL Width UNION\nSELECT '1.23' ShortTitle,  'шт.' UnitMeasure, 3 LengthCounting, 23 OrderColumn, 1 K11, 1.8 Width UNION\nSELECT '1.25' ShortTitle,   'м.' UnitMeasure,  NULL LengthCounting, 21 OrderColumn, 1 K11,    0.4 Width\n\nSELECT M.*,\nrtrim(C55.ShortTitle) MarkType,\n(case when ISNULL(M.Area, 0) > 0 then dbo.pp_GetMinValue(M.Area/4.0, M.Length) else 0 end) Area1,\nconvert(bit,\n(case when M.NumMark in (2384961,2385125,2384962,2384963,2384964,2384965,2384966,2384967,2384968,2384969,2384970,2384971,2385126)\nthen 1\nelse 0 end)\n) IsLinear\nINTO #ListRoadMarks\nFROM ListRoadMarks M\nJOIN Classifier C55 ON C55.id_ = M.NumMark\nWHERE M.NumDataSource = @NumDataSource\n/*and ((m.Scale = 0 and m.Offset = 0 and m.Points is NULL)or(m.NumMark in (2384974)))*/ -- раскомментировать, если нужна только осевая\n\n\nSELECT DISTINCT M.MarkType + ' (' + ISNULL(T.UnitMeasure, 'м.') + ')' ColumnName,\nM.MarkType MarkType,\nISNULL(T.UnitMeasure, 'м.') UnitMeasure,\nT.LengthCounting,\nISNULL(T.OrderColumn, 0) OrderColumn,\nT.K11, T.Width\nINTO #MarkClassifier\nFROM #ListRoadMarks M\nLEFT JOIN #MarkTypes T ON M.MarkType like T.ShortTitle\n\nDECLARE @t1 TABLE (k nvarchar(1))\n\nINSERT @t1(k)\n(select 0 union all select 1 union all select 2 union all select 3 union all select 4 union all select 5\nunion all select 6 union all select 7 union all select 8 union all select 9)\n\nSELECT cast(t1.k + t2.k + t3.k + t4.k + t5.k as int) as Number\nINTO #Numbers\nFROM @t1 t1, @t1 t2, @t1 t3, @t1 t4, @t1 t5\n\nSELECT N.Number StartKM, N.Number + 1 EndKM,\nN.Number*1000 StartPos, (N.Number + 1)*1000 EndPos\nINTO #PartsKM\nFROM ListRoadParts LRP\nJOIN #Numbers N ON N.Number between floor(LRP.STartPos/1000.0) and floor(LRP.EndPos/1000.0)\nWHERE LRP.NumPartType = 33\nand LRP.NumDataSource = @NumDataSource\nORDER BY 1\n\nSELECT KM.StartKM, KM.EndKM, M.MarkType,\nround(sum(case when M.IsLinear = 1\nthen dbo.pp_GetMinValue(M.EndPos, KM.EndPos) - dbo.pp_GetMaxValue(M.StartPos, KM.StartPos)\nelse ISNULL(M.Length, 0)\nend), 0) Length,\nISNULL(sum(ISNULL(M.Area1, 0)), 0) Area,\ncount(M.Id_) Num\nINTO #KMMarks\nFROM #ListRoadMarks M\nJOIN #PartsKM KM ON (M.StartPos >= KM.StartPos and M.StartPos < KM.EndPos)\nor (M.EndPos > KM.StartPos and M.EndPos <= KM.EndPos)\nor (M.StartPos < KM.StartPos and M.EndPos > KM.EndPos)\nGROUP BY KM.StartKM, KM.EndKM, M.MarkType\n\n\nSELECT KM.StartKM, convert(varchar(10), KM.StartKM) + ' - ' + convert(varchar(10), KM.EndKM) KM,\nMC.ColumnName, MC.LengthCounting, MC.K11, MC.Width,\n(case when MC.UnitMeasure = 'шт.' then KM.Num else Length end) Volume,\n/*(case when MC.UnitMeasure = 'шт.' then Num else 0 end)*/ KM.Num,\n/*(case when MC.UnitMeasure = 'м.' then Length else 0 end)*/ KM.Length\n,KM.Area\nINTO #PreResult\nFROM #KMMarks KM\nJOIN #MarkClassifier MC ON MC.MarkType = KM.MarkType\n\n/*Пересчитываем площадь*/\nUPDATE #PreResult SET Area = ISNULL(Volume * K11 * Width, 0) + Area\n\nSELECT StartKM, round(sum(Area), 2) Area\nINTO #AreaResult\nFROM #PreResult\nGROUP BY StartKM\n\nSELECT ColumnName, LengthCounting, K11, Width,\nsum(Volume) Volume, sum(Length) Length, sum(Num) Num,\n(case when LengthCounting is NULL then sum(Length) else sum(Num)*LengthCounting end) LM,\nsum(Area) Area\nINTO #SumResult\nFROM #PreResult\nGROUP BY ColumnName, LengthCounting, K11, Width\n\nSELECT 1 OrderColumn, '№ км' Header INTO #Header UNION\nSELECT 2 OrderColumn, 'коэф.привед. к 1.1' Header UNION\nSELECT 3 OrderColumn, 'ширина, м' Header\n\nSELECT 1 OrderColumn, 'ИТОГО:' Header INTO #Footer UNION\nSELECT 2 OrderColumn, 'лин.км.' Header UNION\nSELECT 3 OrderColumn, 'привед.км.' Header UNION\nSELECT 4 OrderColumn, 'площадь' Header\n\n/*\nSELECT KM,\nmax(case when MarkType = '1.1' then Volume else 0 end) [1.1]\nFROM #PreResult\nGROUP BY StartKM, KM\nORDER BY StartKM\n*/\n\nDECLARE @SQL varchar(8000)\nDECLARE @HEADERSQL varchar(8000)\nDECLARE @FOOTERSQL varchar(8000)\n\nDECLARE @FOOTERSQL_PART1 varchar(8000) -- в одну переменную не влезает\nDECLARE @FOOTERSQL_PART2 varchar(8000)\n\nSET @SQL = ''\nSET @HEADERSQL = ''\nSET @FOOTERSQL = ''\nSET @FOOTERSQL_PART1 = ''\nSET @FOOTERSQL_PART2 = ''\n\nDECLARE @ColumnName varchar(100), @LengthCounting numeric(10, 2), @K11 numeric(10, 2), @Width numeric(10, 2)\n\nDECLARE RECCUR CURSOR FOR\nSELECT ColumnName, LengthCounting, K11, Width\nFROM #MarkClassifier\nORDER BY OrderColumn, MarkType\n\nOPEN RECCUR\nFETCH NEXT FROM RECCUR INTO @ColumnName, @LengthCounting, @K11, @Width\n\nWHILE @@FETCH_STATUS = 0\nBEGIN\nSET @SQL = @SQL + '\n,max(case when ColumnName = ''' + @ColumnName + ''' then convert(int, Volume) else 0 end) [' + @ColumnName + ']'\n\nSET @HEADERSQL = @HEADERSQL + '\n,max(case\nwhen H.Header = ''№ км'' then ''' +  @ColumnName + '''\nwhen H.Header = ''коэф.привед. к 1.1'' then ''' + ISNULL(convert(varchar(10), @K11), '') + '''\nwhen H.Header = ''ширина, м'' then ''' + ISNULL(convert(varchar(10), @Width), '') + '''\nelse '''' end) [' + @ColumnName + ']'\n\nIF LEN( @FOOTERSQL_PART1) < 7000\nBEGIN\nSET @FOOTERSQL_PART1 = @FOOTERSQL_PART1 + '\n,max(case\nwhen F.Header = ''ИТОГО:'' then (case when ColumnName = ''' + @ColumnName + ''' then Volume else 0 end)\nwhen F.Header = ''лин.км.'' then (case when ColumnName = ''' + @ColumnName + ''' then LM else 0 end)/1000\nwhen F.Header = ''привед.км.'' then (case when ColumnName = ''' + @ColumnName + ''' then LM*K11 else 0 end)/1000\nwhen F.Header = ''площадь'' then (case when ColumnName = ''' + @ColumnName + ''' then Area else 0 end)/1000\nelse 0 end) [' + @ColumnName + ']'\nEND\nELSE\nBEGIN\nSET @FOOTERSQL_PART2 = @FOOTERSQL_PART2 + '\n,max(case\nwhen F.Header = ''ИТОГО:'' then (case when ColumnName = ''' + @ColumnName + ''' then Volume else 0 end)\nwhen F.Header = ''лин.км.'' then (case when ColumnName = ''' + @ColumnName + ''' then LM else 0 end)/1000\nwhen F.Header = ''привед.км.'' then (case when ColumnName = ''' + @ColumnName + ''' then LM*K11 else 0 end)/1000\nwhen F.Header = ''площадь'' then (case when ColumnName = ''' + @ColumnName + ''' then Area else 0 end)/1000\nelse 0 end) [' + @ColumnName + ']'\nEND\n\nFETCH NEXT FROM RECCUR INTO @ColumnName, @LengthCounting, @K11, @Width\nEND\n\nCLOSE RECCUR\nDEALLOCATE RECCUR\n\nSET @SQL = 'SELECT R.KM' + @SQL + ', A.Area\nFROM #PreResult R\nLEFT JOIN #AreaResult A ON A.StartKM = R.StartKM\nGROUP BY R.StartKM, R.KM, A.Area\nORDER BY R.StartKM'\n\nSET @HEADERSQL = 'SELECT H.Header' + @HEADERSQL + ', case when H.OrderColumn = 1 then ''кв.м.'' else '''' end [кв.м.]\nFROM #Header H\nGROUP BY H.Header, H.OrderColumn\nORDER BY H.OrderColumn'\n\n/*SET @FOOTERSQL = 'SELECT F.Header' + @FOOTERSQL + '\nFROM #Footer F\nCROSS JOIN #SumResult R\nGROUP BY F.Header, F.OrderColumn\nORDER BY F.OrderColumn'*/\n\nPRINT @HEADERSQL\n\nEXEC(@HEADERSQL)\n\nPRINT @SQL\nEXEC(@SQL)\n\nEXEC('SELECT F.Header' + @FOOTERSQL_PART1 + @FOOTERSQL_PART2 + '\nFROM #Footer F\nCROSS JOIN #SumResult R\nGROUP BY F.Header, F.OrderColumn\nORDER BY F.OrderColumn')\n\nUPDATE Classifier SET ShortTitle = '1.18' WHERE id_ in (2384982,2384983,2384984,2384985,2384986,2384987,2385131)\n\nDROP TABLE #AreaResult\nDROP TABLE #SumResult\nDROP TABLE #Footer\nDROP TABLE #Header\nDROP TABLE #MarkClassifier\nDROP TABLE #PreResult\nDROP TABLE #KMMarks\nDROP TABLE #Numbers\nDROP TABLE #PartsKM\nDROP TABLE #ListRoadMarks\nDROP TABLE #MarkTypes\n",
+			"settings":
+			{
+				"buffer_size": 10188,
 				"line_ending": "Windows",
-				"name": "212.0666"
-			}
-		},
-		{
-			"file": "AutoCADPrintForm.h",
-			"settings":
-			{
-				"buffer_size": 5296,
-				"line_ending": "Windows"
+				"name": "[CONTENT][AUTO_EXPAND]"
 			}
 		}
 	],
@@ -237,9 +182,26 @@
 	],
 	"file_history":
 	[
+		"/D/command_podd.",
+		"/D/command_podd",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCADPrintForm.h",
+		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
+		"/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part9/info.txt",
+		"/D/_MMK/_AKARIN/MathLogic/Orlova/tasks.txt",
+		"/D/_DISTR/_ASUDOR/RSign/RSign.bpr",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/A340 44-75/Cam1_об.smi",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/A340 44-75/Cam1.smi",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/100-114/Cam1.smi",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCADPrintForm.cpp",
+		"/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part8/info.txt",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/gen.bat",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/gen.bat",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1.smi",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1_об.smi",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
+		"/D/command.bat",
 		"/C/Users/m/Desktop/result.txt",
 		"/O/m/PycharmProjects/smyt.txt",
-		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1_об.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/заезд1/gen.bat",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/заезд3/Cam1_об.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/заезд3/Cam1.smi",
@@ -249,7 +211,6 @@
 		"/D/_DISTR/_ASUDOR/RSign/const.h",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1504-1509/Cam1_об.smi",
 		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADPrintForm.cpp",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/gen.bat",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Турунтаев - ул.Полевая/Cam1.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1504-1509/Cam1.smi",
@@ -278,7 +239,6 @@
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Турунтаев - пер.Рабочий/Cam1.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Турунтаев - 16 квартал/Cam1.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Турунтаев - 16 квартал/Cam1_об.smi",
-		"/D/_DISTR/_ASUDOR/RSign/RSign.bpr",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Комитет по строительству Администрации г. Улан-Удэ/Улан-Удэ ул. Пищевая до 0-го км Зиграевского тракта/Cam1.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Комитет по строительству Администрации г. Улан-Удэ/Улан-Удэ ул. Пищевая до 0-го км Зиграевского тракта/Cam1_об.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Кома - ул. Романовского/Cam1_enc.avi",
@@ -326,7 +286,6 @@
 		"/D/_DISTR/_ASUDOR/RSign/Helpers.cpp",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/.credentials",
 		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/get_podd_docx.bat",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
 		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Придорожный сервис.sql",
 		"/D/_DISTR/_ASUDOR/RSign/acadexport.h",
 		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Параметры плана.sql",
@@ -350,21 +309,7 @@
 		"/O/m/PhpstormProjects/разворачивание Drupal.txt",
 		"/H/Crack/readme.txt",
 		"/C/Users/m/Desktop/Привет! =)",
-		"/D/_DISTR/_ASUDOR/RSign/RSign.log",
-		"/D/_DISTR/_ASUDOR/RSign/RSign.ini",
-		"/D/_DISTR/_ASUDOR/RSign/RoadObj.h",
-		"/D/_DISTR/_ASUDOR/RSign/RoadObj.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/0.dct",
-		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.h",
-		"/D/_DISTR/_ASUDOR/RSign/rsign.sublime-project",
-		"/D/ticket_18759_25.csv",
-		"/F/Irkutsk2016/create_dirs.bat",
-		"/F/Irkutsk2016/PHOTO/create_dirs.bat",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/4_ширина проезжой части(кол-во полос движения)(тип покрытия).sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/ТЕХП-2016.docx",
-		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
-		"/I/Irkutsk2016/05/2016.09.12_12-52_Doroga_1_priamo_zaezd1/RoadLab.xml"
+		"/D/_DISTR/_ASUDOR/RSign/RSign.log"
 	],
 	"find":
 	{
@@ -383,6 +328,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"ТЕХП-2017-город",
 			"RUCC",
 			"\\Cam",
 			"SetFra",
@@ -509,8 +455,7 @@
 			"timespec",
 			"Половин",
 			"C:\\Users\\m\\Desktop",
-			"FillAreaBase",
-			"FillArea"
+			"FillAreaBase"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -518,6 +463,7 @@
 		"regex": true,
 		"replace_history":
 		[
+			"ТЕХП-2017-город - полный",
 			"FILENAME=\"..\\\\build\\\\\\1\\.lib\"",
 			"FILENAME=\"..\\\\\\1\\.lib\"",
 			"FILENAME=\"..\\$1\\.lib\"",
@@ -536,198 +482,30 @@
 	"groups":
 	[
 		{
-			"selected": 7,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "AutoCADPrintForm.cpp",
+					"file": "/D/command.bat",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 27638,
+						"buffer_size": 47915,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								19336,
-								19336
+								566,
+								566
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 13434.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part8/info.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1681,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1451,
-								1451
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/gen.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 134,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								62
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/gen.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 134,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1.smi",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 356969,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1_об.smi",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 355138,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								377,
-								377
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "AutoCAD/Scripts/last_mini_report.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 469,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								469,
-								469
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax",
+							"word_wrap": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -737,76 +515,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "/D/command.bat",
+					"buffer": 1,
+					"file": "/C/ZET 9/LANGUAGE/Russian/signature.txt",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 32475,
+						"buffer_size": 80,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9,
-								9
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "RSign.bpr",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 21788,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3542,
-								3542
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/XML/XML.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 480.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "/D/_MMK/_AKARIN/MathLogic/Orlova/tasks.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4431,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1403,
-								1403
+								0,
+								0
 							]
 						],
 						"settings":
@@ -814,31 +536,59 @@
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 720.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 2,
+					"file": "/C/ZET 9/Wrk/Interp.txt",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 342,
+						"buffer_size": 5712,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								341,
+								5711,
+								5711
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5710,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
 								0
 							]
 						],
 						"settings":
 						{
-							"auto_name": "В общем, так как сходу начать работать с БД наверн",
+							"auto_name": "Вы часто принимаете решения, руководствуясь только",
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
@@ -849,20 +599,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 11,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part9/info.txt",
+					"buffer": 4,
+					"file": "/D/_DOWNLOADS/=ZET 9 NEW=/Новый активатор 1.3.0.0/Важно!!!.txt",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 912,
+						"buffer_size": 426,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								519,
-								519
+								0,
+								0
 							]
 						],
 						"settings":
@@ -877,12 +627,12 @@
 					"type": "text"
 				},
 				{
-					"buffer": 12,
-					"file": ".gitignore",
+					"buffer": 5,
+					"file": "/D/command_podd.bat",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 247,
+						"buffer_size": 39478,
 						"regions":
 						{
 						},
@@ -895,7 +645,63 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/zzz A File Icon zzz/aliases/Shell Script (Git).sublime-syntax"
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/D/_MMK/_PYTHON/_WINPOLYGON/gps/2014/083/artu/artuG01_082.dat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 79134,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								196,
+								196
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/D/_MMK/_PYTHON/_WINPOLYGON/gps/run.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								26,
+								26
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -905,61 +711,31 @@
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 8,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 36,
+						"buffer_size": 10188,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								36,
-								36
+								0,
+								10188
 							]
 						],
 						"settings":
 						{
-							"auto_name": "212.0666",
+							"auto_name": "[CONTENT][AUTO_EXPAND]",
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2179.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "AutoCADPrintForm.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5296,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3997,
-								4012
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2220.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
+					"stack_index": 8,
 					"type": "text"
 				}
 			]
@@ -1012,7 +788,7 @@
 	"project": "rsign.sublime-project",
 	"replace":
 	{
-		"height": 64.0
+		"height": 74.0
 	},
 	"save_all_on_build": true,
 	"select_file":
