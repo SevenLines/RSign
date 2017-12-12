@@ -3413,12 +3413,18 @@ return res;
 }
 
 
-void __fastcall TDrawManager::LeepPoint(int& PX,int &PY,TRoadObject *obj,__int32 DL)
+bool __fastcall TDrawManager::LeepPoint(int& PX,int &PY,TRoadObject *obj,__int32 DL,bool round)
 {
 int L,X;
 Road->RConvertPoint(PX,PY,L,X);
-if (FindNearestLX(L,X,obj,2*DL)!=0 || FindNearestL(L,obj,DL)!=0)
+if (FindNearestLX(L,X,obj,2*DL)!=0 || FindNearestL(L,obj,DL)!=0) 
     Road->ConvertPoint(L,X,PX,PY);
+else if (round) {
+    Round_Int(L);
+    Road->ConvertPoint(L,X,PX,PY);
+} else
+    return false;
+return true;
 }
 
 int __fastcall TDrawManager::SelectByXY(__int32 X,__int32 Y,TRoadObject** Array,TDtaSource **Src,int *Indexes,int max)

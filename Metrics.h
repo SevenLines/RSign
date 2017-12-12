@@ -254,7 +254,7 @@ int __fastcall SumGetXNext(int L,int &n);
 int __fastcall SumGetXPred(int L,int &n);
 
 // Функция для изменения направления вектора
-void __fastcall ChangeOrientation(void);
+void __fastcall ChangeOrientation(int b,int e);
 
 // Преобразует координату X
 void __fastcall MulDiv(int Mul,int Div);

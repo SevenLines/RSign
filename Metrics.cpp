@@ -727,10 +727,9 @@ double __fastcall TPolyline::Length(void) {
 }
 
 
-void __fastcall TPolyline::ChangeOrientation(void)
+void __fastcall TPolyline::ChangeOrientation(int b,int e)
 {
-int n=FCount>>1;
-for (int i=0,j=FCount-1;i<n;i++,j--)
+for (int i=b,j=e-1;i<j;i++,j--)
     {
     TRoadPoint tmp=FPoints[i];
     FPoints[i]=FPoints[j];

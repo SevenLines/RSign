@@ -1555,11 +1555,13 @@ void __fastcall TRoadFrm::UpdateActiveObject(bool leep)
 			if (leep)
 			{
 				TRoadObject *fobj=FDrawMan->FindNearestL(L,dobj,DL);
+                if (0==fobj)
+                   FDrawMan->Round_Int(L);
 				TRoadSign *sobj=dynamic_cast<TRoadSign*>(fobj);
 				TRoadSign *aobj=dynamic_cast<TRoadSign*>(FActiveObj);
-				if (sobj&&aobj)
-				if (sobj->Direction==aobj->Direction)
-				aobj->DX=sobj->DX;
+				if (sobj&& aobj && sobj->Direction==aobj->Direction)
+				    aobj->DX=sobj->DX;
+
 			}
 			dobj->L=L;
 			MainForm->SendBroadCastMessage(CM_UPDATEOBJ,(int)dobj,(int)FActiveSource);
@@ -1582,7 +1584,8 @@ void __fastcall TRoadFrm::UpdateActiveObject(bool leep)
 				FDrawMan->Road->RConvertPoint(0,FGridMaxX,L,X);
 			}
 			if (leep)
-			FDrawMan->FindNearestL(L,cobj,DL);
+			   if ((0==FDrawMan->FindNearestL(L,cobj,DL)))
+                  FDrawMan->Round_Int(L);
 			if (FMinMov)
 			{
 				if (L<cobj->LMax)
@@ -3017,7 +3020,8 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 		FMetricData->Road->RConvertPoint(X,Y,CL,RX);
         CX=RX;
 		if (Leep)
-		FDrawMan->FindNearestL(CL,NULL,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
+ 		   if (0==FDrawMan->FindNearestL(CL,NULL,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP))
+              FDrawMan->Round_Int(CL);
 		TRoadDirection dr;
 		if (CX<0)
 		dr=roUnDirect,CX=-(CX-FMetricData->Road->LeftLine.FindX(CL));
@@ -3575,7 +3579,7 @@ int X, int Y)
 	if ((ZoomStatus==zsWaitPoint)||((ZoomStatus==zsWaitSecPoint)))
 	{
 		if (Shift.Contains(ssShift))
-		   FDrawMan->LeepPoint(X,Y,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
+		   FDrawMan->LeepPoint(X,Y,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP,true);
 		MoveCurrentPoint(X,Y);
 	}
 	else if (ZoomStatus==zsZoom)
@@ -3605,7 +3609,9 @@ int X, int Y)
 		FDrawMan->Road->RConvertPoint(CX,CY,P.L,P.X);
 		if (Shift.Contains(ssShift)) {
 		   if (0==FDrawMan->FindNearestLX(P.L,P.X,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP))
-              FDrawMan->FindNearestL(P.L,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
+              if (0==FDrawMan->FindNearestL(P.L,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP)) {
+                 FDrawMan->Round_Int(P.L);
+              }
         }
 		SetPoint(P,FActivePoint);
 		PolyFrm->UpdatePoint(FActivePoint);
@@ -3634,7 +3640,7 @@ int X, int Y)
 		{
 			int Val;
 			if (FMoving&&Shift.Contains(ssShift))
-			   FDrawMan->LeepPoint(X,Y,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP);
+			   FDrawMan->LeepPoint(X,Y,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP,true);
 			if (FPlanKind==pkGorizontal)
 			Val=X;
 			else

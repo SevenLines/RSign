@@ -10,7 +10,7 @@
 // ************************************************************************ //
 
 // C++ TLBWRTR : $Revision:   1.151.1.0.1.27  $
-// File generated on 28.10.2017 17:20:54 from Type Library described below.
+// File generated on 09.12.2017 19:15:23 from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\Projects\RSign\RSign.tlb (1)

@@ -9,8 +9,10 @@
 #include "common.h"
 #include <vector>
 #include <algorithm>
+#include <Classes.hpp>
 
-#ifdef GDIEDIT // << Костя, я отключил GDEDIT в common.h, а то не компилиться (МИША) 
+
+#ifdef GDIEDIT // << Костя, я отключил GDEDIT в common.h, а то не компилиться (МИША)
     #include "GdiEForm.h"
 #else
     #include "SettingFrm.h"
@@ -818,6 +820,23 @@ AddFromBufer();
 void __fastcall TDtaSource::BuildSimplePart(int spos,int epos,int step,TDictSource *Dict) {
 TPolyline T,Q,P;
 T.Sum(&(Road->RightLine),&(Road->LeftLine),1,-1);
+for (int i=0;i<FObjects->Count;i++)
+    {
+    TRoadObject *Obj=FObjects->Items[i];
+    if (Obj->DictId==ROADMETRIC) {
+        String t=Obj->GetPropValue("MetricsKind");
+        TMetricsKind knd=atoi(Obj->GetPropValue("MetricsKind").c_str());
+        TRoadSide plc=atoi(Obj->GetPropValue("Placement").c_str());
+        if (knd==mkDivPart) {
+            TPolyline T1;
+            if (plc==rsRight)
+               T1.Sum(&T,Obj->Poly,1,-1);
+            else
+               T1.Sum(&T,Obj->Poly,1,1);
+            T.CopyAndCut(&T1,spos,epos);
+        }
+    }
+}
 Q.CopyAndCut(&T,spos,epos);
 P.MakeSimplePart(&Q,step);
   for (int i=1;i<P.Count;i++) {
@@ -837,6 +856,23 @@ void __fastcall TDtaSource::BuildWidePart(int spos,int epos,int step,int roundva
 {
 TPolyline T,Q,P;
 T.Sum(&(Road->RightLine),&(Road->LeftLine),1,-1);
+for (int i=0;i<FObjects->Count;i++)
+    {
+    TRoadObject *Obj=FObjects->Items[i];
+    if (Obj->DictId==ROADMETRIC) {
+        String t=Obj->GetPropValue("MetricsKind");
+        TMetricsKind knd=atoi(Obj->GetPropValue("MetricsKind").c_str());
+        TRoadSide plc=atoi(Obj->GetPropValue("Placement").c_str());
+        if (knd==mkDivPart) {
+            TPolyline T1;
+            if (plc==rsRight)
+               T1.Sum(&T,Obj->Poly,1,-1);
+            else
+               T1.Sum(&T,Obj->Poly,1,1);
+            T.CopyAndCut(&T1,spos,epos);
+        }
+    }
+}
 Q.CopyAndCut(&T,spos,epos);
 P.MakeWidePart2(&Q,step,roundval);
 for (int i=1;i<P.Count;i++)

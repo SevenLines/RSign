@@ -286,7 +286,11 @@ TRoadObject* __fastcall FindNearestL(__int32 &L,TRoadObject *obj,__int32 DL);
 TRoadObject* __fastcall FindNearestLX(__int32 &L,__int32 &X, TRoadObject *obj,__int32 DL);
 // функция изменяет координаты экранной точки, так, чтобы она прилипала
 // к объекту найденному с помощью FindNearestL
-void __fastcall LeepPoint(int& PX,int &PY,TRoadObject *obj,__int32 DL);
+void Round_Int(int &L) {
+  if (L>0) L=((L+50)/100)*100;
+  else L=((L-50)/100)*100;
+}
+bool __fastcall LeepPoint(int& PX,int &PY,TRoadObject *obj,__int32 DL,bool round=false);
 void __fastcall CallDrawFunc(TDrawContents *Cont,TExtPolyline*,TDrwParamRec *par,TRect *r,__int32 fl,__int32 fx,TPlanKind pk,TPlanDirect pd,double dpsm,bool clear);
 void __fastcall CallDrawFunc(TDrawContents *Cont,TExtPolyline*,TDrwParamRec *par,TRect *r,bool clear);
 //void __fastcall CallDrawFunc(TDrawContents *Cont,TExtPolyline*,TDrwParamRec *par,TRect *r,double dpcm,bool clear);
