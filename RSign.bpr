@@ -52,8 +52,8 @@
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
-    <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE"/>
-    <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS"/>
+    <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG"/>
+    <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS;_BCB_ATL_DEBUG"/>
     <MAINSOURCE value="RSign.cpp"/>
     <INCLUDEPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;$(BCB)\Imports"/>
     <LIBPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;$(BCB)\Imports"/>
@@ -66,15 +66,15 @@
       -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; -IActiveX 
       -I$(BCB)\include -I$(BCB)\include\vcl -I$(BCB)\include\atl 
       -I$(BCB)\Imports -src_suffix cpp -DNO_PROMPT_ON_ASSERTE_FAILURE 
-      -DNO_PROMPT_ON_HRCHECK_FAILURE -boa"/>
-    <CFLAG1 value="-O2 -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; -Hc -Vx -Ve 
-      -Tkh30000 -X- -a8 -b -k- -vi -c -tW -tWM"/>
+      -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -boa"/>
+    <CFLAG1 value="-Od -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; -Hc -Vx -Ve 
+      -Tkh30000 -X- -r- -a8 -b -k -y -v -vi- -c -tW -tWM"/>
     <CFLAG2 value=""/>
     <CFLAG3 value=""/>
-    <PFLAGS value="-$Y- -$L- -$D- -$A8 -v -M -JPHNE"/>
+    <PFLAGS value="-$Y+ -$W -$O- -$A8 -v -M -JPHNE"/>
     <RFLAGS value=""/>
-    <AFLAGS value="/mx /w2 /zn"/>
-    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn"/>
+    <AFLAGS value="/mx /w2 /zi"/>
+    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn -v"/>
     <IFLAGS value=""/>
     <OTHERFILES value=""/>
   </OPTIONS>
@@ -231,8 +231,8 @@ Item0=$(BCB)\source\vcl
 
 [HistoryLists\hlConditionals]
 Count=5
-Item0=NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE
-Item1=NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG
+Item0=NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG
+Item1=NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE
 Item2=_DEBUG;NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE
 Item3=_DEBUG;NO_PROMPT_ON_ASSERTE_FAILURE
 Item4=_DEBUG
