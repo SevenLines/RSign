@@ -539,7 +539,11 @@ FRefForm->PBox->Invalidate();
 
 void __fastcall TPolyFrm::SpeedButton2Click(TObject *Sender)
 {
-FPoly->ChangeOrientation();
+int h,e;
+for (h=0;h<PolyList->Count && !PolyList->Selected[h];h++) {}
+for (e=h;e<PolyList->Count && PolyList->Selected[e];e++) {}
+if (h==PolyList->Count) h=0;
+FPoly->ChangeOrientation(h,e);
 FVector=FRefForm->BuildPoly(true);
 FRefForm->PBox->Invalidate();
 BuildList();

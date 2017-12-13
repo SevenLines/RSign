@@ -1158,7 +1158,7 @@ for (int i=0;i<FDirVideoTime->Count;i++) {
 for (int i=0;i<FUnDirVideoTime->Count;i++) {
    TVideoTime *VT=FUnDirVideoTime->Items[i];
    DB->CommandText="select * from ELEM_VideoInfo where NumDataSource="+String(FDataClass)+
-   " and Description like '%"+VT->Description+"%, and Direction=2";
+   " and Description like '%"+VT->Description+"%' and Direction=2";
    DB->Open();
    if (DB->RecordCount) {
       int n=VT->Count;
