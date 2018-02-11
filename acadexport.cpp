@@ -1021,6 +1021,24 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                 }
                 break;
             case spBetween:
+                switch (signs[0]->OnAttach) {
+                case saIn:
+                    rotationHandle = M_PI / 2;
+                    rotation = M_PI / 2;
+                    signspot = SignSpot2;
+                    fOnAttachment = true;
+                    break;
+                case saOut:
+                    rotationHandle = M_PI / 2;
+                    rotation = -M_PI / 2;
+                    signspot = SignSpot2;
+                    fOnAttachment = true;
+                    break;
+                default:
+                    rotationHandle = M_PI / 2;
+                    signspot = SignSpot1_m;
+                }
+                break;
             case spUp:
             case spLeft:
                 switch (signs[0]->OnAttach) {
@@ -1038,7 +1056,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                     break;
                 default:
                     rotationHandle = M_PI / 2;
-                    rotation = 0;
+                    rotation = M_PI;
                     signspot = SignSpot1_m;
                 }
                 break;
@@ -1085,7 +1103,7 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
                     break;
                 default:
                     rotationHandle = -M_PI / 2;
-                    rotation = 0;
+                    //rotation = -M_PI;
                     signspot = SignSpot1_m;
                 }
                 break;
