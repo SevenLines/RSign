@@ -819,6 +819,24 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly, TRoadAttach *a, bo
     return true;
 }
 
+// сортировка знаков по номеру, в случае чего править имеено тут
+bool sortSignsBlocksNamesLabelsPairs(const pair<WideString, WideString> &sign, const pair<WideString, WideString> &sign2) {
+    WideString signsPriority[] = {"5.7.1", "2", "1", "4", "5", "3", "6", "7", "8"};
+    int arraySize = sizeof(signsPriority) / sizeof(*signsPriority);
+
+    int dSign1 = findElement(signsPriority, arraySize, sign.first);
+    if (dSign1 == -1) {
+         dSign1 = findElement(signsPriority, arraySize, WideString(sign.first[0]));
+    }
+
+    int dSign2 = findElement(signsPriority, arraySize, sign2.first);
+    if (dSign2 == -1) {
+        dSign2 = findElement(signsPriority, arraySize, WideString(sign2.first[0]));
+    }
+
+    return dSign1 < dSign2 || dSign1 == dSign2 && sign.second < sign2.second;
+}
+
 bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs, int count, bool fEnd) {
     if (fEnd) {
         return true;
@@ -1210,11 +1228,16 @@ bool __fastcall TAcadExport::ExportSigns(TExtPolyline* Poly,  TRoadSign** signs,
         } else {
             vector<WideString> blockNames;
             vector<WideString> labels;
+            vector<pair<WideString, WideString> > signsInfo;
             for (int i = 0; i < count; ++i) {
                 blockNames.push_back(signs[i]->OldTitle + (signs[i]->ViewKind == 0 ? sEmpty : AnsiString("." + IntToStr(signs[i]->ViewKind))));
                 labels.push_back(signs[i]->Label);
+                signsInfo.push_back(make_pair(blockNames[i], labels[i]));
             }
-            block = AutoCAD.MakeCombineBlock(blockNames, labels);
+            
+            sort(signsInfo.begin(), signsInfo.end(), sortSignsBlocksNamesLabelsPairs);
+
+            block = AutoCAD.MakeCombineBlock(signsInfo);
             if (block.IsBound()) {
                 DrawSign(block->Name,
                          "",

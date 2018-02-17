@@ -33,4 +33,16 @@ bool operator==(TPoint p1, TPoint p2)
 
 int lessForVerticalLabels;
 
+
+template<typename T>
+int findElement(T *array, int arraySize, T value) {
+    T *end = array + arraySize;
+
+    T *result = find(array, end, value);
+    if (result != end) {
+      return (int(result) - int(array)) / sizeof(*array);
+    }
+    return -1;
+}
+
 #endif

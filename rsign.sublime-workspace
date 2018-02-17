@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"pr",
+				"priority"
+			],
+			[
 				"Hatc",
 				"hatchFill"
 			],
@@ -43,7 +47,16 @@
 			"file": "acadexport.cpp",
 			"settings":
 			{
-				"buffer_size": 140207,
+				"buffer_size": 140862,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "AcadExportThread.cpp",
+			"settings":
+			{
+				"buffer_size": 46862,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
@@ -104,10 +117,7 @@
 	},
 	"expanded_folders":
 	[
-		"/D/_DISTR/_ASUDOR/RSign",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/PDFBinder",
-		"/D/_DISTR/_ASUDOR/RSign/Help"
+		"/D/_DISTR/_ASUDOR/RSign"
 	],
 	"file_history":
 	[
@@ -257,6 +267,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"priority",
+			"SingleSign",
+			"SignPr",
+			"SignProp",
 			"DrawSign",
 			"ТЕХП-2017-город",
 			"RUCC",
@@ -380,11 +394,7 @@
 			"C:\\",
 			"c:\\",
 			"C:\\",
-			"c:\\",
-			"C:\\",
-			"timespec",
-			"Половин",
-			"C:\\Users\\m\\Desktop"
+			"c:\\"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -411,7 +421,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -420,15 +430,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 140207,
+						"buffer_size": 140862,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								44346,
-								44346
+								43046,
+								43050
 							]
 						],
 						"settings":
@@ -438,7 +448,37 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 24987.0,
+						"translation.y": 24567.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "AcadExportThread.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 46862,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15819,
+								15819
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 9467.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
