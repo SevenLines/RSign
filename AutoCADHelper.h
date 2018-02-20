@@ -391,7 +391,7 @@ public:
         AcadBlockReferencePtr DrawBlock(WideString BlockName,
                               double x = 0, double y = 0,
                               double rotation = 0, double scale = 1);
-        AcadBlockPtr MakeCombineBlock(vector<WideString> &blocksNames, vector<WideString> &labels);
+        AcadBlockPtr MakeCombineBlock(vector<pair<WideString, WideString> > &signInfo);
         /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
         /*PAPERSPACE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
