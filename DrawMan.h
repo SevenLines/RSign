@@ -290,6 +290,8 @@ void Round_Int(int &L) {
   if (L>0) L=((L+50)/100)*100;
   else L=((L-50)/100)*100;
 }
+/*Вызывает FindNearestLX и FindNearestL и учитывает приоритет*/
+bool __fastcall FindNearest(__int32&L,__int32 &X,TRoadObject *obj,__int32 DL,bool round);
 bool __fastcall LeepPoint(int& PX,int &PY,TRoadObject *obj,__int32 DL,bool round=false);
 void __fastcall CallDrawFunc(TDrawContents *Cont,TExtPolyline*,TDrwParamRec *par,TRect *r,__int32 fl,__int32 fx,TPlanKind pk,TPlanDirect pd,double dpsm,bool clear);
 void __fastcall CallDrawFunc(TDrawContents *Cont,TExtPolyline*,TDrwParamRec *par,TRect *r,bool clear);

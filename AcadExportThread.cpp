@@ -14,6 +14,7 @@
 #include "AcadExportObjects.h"
 #include "AutoCADExportForm.h"
 #include "DataSour.h"
+#include "Helpers.h"
 //---------------------------------------------------------------------------
 
 //   Important: Methods and properties of objects in VCL can only be
@@ -448,7 +449,7 @@ int __fastcall AcadExportThread::ExportMoundHeights(TDtaSource* data, TAcadExpor
 
 #define SSCOUNT 10
 const char SingleSign[SSCOUNT][5]={"1.34","5.23","5.24","5.25","5.26","6.9.","6.10","6.11","6.12","6.13"};
-const int SignPrior[8]={2,1,5,3,4,6,7,8};
+
 
 struct wpsign {
     double x,y;
@@ -475,18 +476,11 @@ bool signgroup(const wpsign &s1,const wpsign &s2) {
     return false;
 }
 
-bool operator<(const wpsign &s1,const wpsign &s2) {
-    /*int order[] = {
-       2, 1, 5, 3, 4, 6, 7, 8
-    };
 
-    int signNum1;
-    int signNum2;
-    if (TryStrToInt(s1.s->OldTitle.SubString(0,1), signNum1)
-        && TryStrToInt(s2.s->OldTitle.SubString(0,1), signNum2)) {
-        return order[signNum1-1] > order[signNum2-1];
-    }
-    return false;     */
+
+bool operator<(const wpsign &s1,const wpsign &s2) {
+    AnsiString signsPriority[] = {"5.7.1", "2", "1", "4", "5", "3", "6", "7", "8"};
+    int arraySize = sizeof(signsPriority) / sizeof(*signsPriority);
 
     if (s2.x-s1.x>50) // первый знак раньше более чем на 50 см
         return true;
@@ -494,29 +488,38 @@ bool operator<(const wpsign &s1,const wpsign &s2) {
         if (s2.y-s1.y>50) // первый знак по y раньше более 50 см
             return true;
         else {            // знаки в одной точке
-            /*int signNum1;
-            int signNum2;
-            if (TryStrToInt(s1.s->OldTitle.SubString(0,1), signNum1)
-                && TryStrToInt(s2.s->OldTitle.SubString(0,1), signNum2)) {
-                return order[signNum1-1] < order[signNum2-1];
-            } */
-            string a=s1.s->OldTitle.SubString(0,4).c_str();
-            string b=s2.s->OldTitle.SubString(0,4).c_str();
-            char da=a[0]-'1';
-            char db=b[0]-'1';
+            string a = s1.s->OldTitle.SubString(0,4).c_str();
+            string b = s2.s->OldTitle.SubString(0,4).c_str();
+
+            int da = findElement(signsPriority, arraySize, s1.s->OldTitle);
+            if (da == -1) {
+                 da = findElement(signsPriority, arraySize, AnsiString(s1.s->OldTitle[1]));
+            }
+
+            int db = findElement(signsPriority, arraySize, s2.s->OldTitle);
+            if (db == -1) {
+                db = findElement(signsPriority, arraySize, AnsiString(s2.s->OldTitle[1]));
+            }
+
             bool single=false;
+
             for (int i=0;i<SSCOUNT && !single;i++)
                 single=(a==SingleSign[i]);
             for (int i=0;i<SSCOUNT && !single;i++)
                 single=(b==SingleSign[i]);
-            if (single)
+
+            if (single) {
                 return (s1.x<s2.x || s1.x==s2.x && s1.y<s2.y);
-            else if (da<8 && db<8 && da>=0 && db>=0)
-                return SignPrior[da]<SignPrior[db] ||
-                       SignPrior[da]==SignPrior[db] && s1.s->OldTitle<s2.s->OldTitle;
+            } else {
+                return da < db || da == db && s1.s->OldTitle < s2.s->OldTitle;
+            }
         }
     }
     return false;
+}
+
+bool operator>(const wpsign &s1,const wpsign &s2) {
+   return s2 < s1;
 }
 
 bool operator<(const wpbar &s1,const wpbar &s2) {

@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"pr",
+				"priority"
+			],
+			[
 				"Hatc",
 				"hatchFill"
 			],
@@ -40,82 +44,20 @@
 	"buffers":
 	[
 		{
-			"file": "AutoCADPrintForm.cpp",
+			"file": "acadexport.cpp",
 			"settings":
 			{
-				"buffer_size": 27638,
+				"buffer_size": 140862,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part8/info.txt",
+			"file": "AcadExportThread.cpp",
 			"settings":
 			{
-				"buffer_size": 1681,
+				"buffer_size": 46862,
 				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/gen.bat",
-			"settings":
-			{
-				"buffer_size": 134,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/gen.bat",
-			"settings":
-			{
-				"buffer_size": 134,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1.smi",
-			"settings":
-			{
-				"buffer_size": 356969,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1_об.smi",
-			"settings":
-			{
-				"buffer_size": 355138,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/O/m/PycharmProjects/smyt.txt",
-			"settings":
-			{
-				"buffer_size": 3062,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "212.0666\n399.1679\n\n233.4506\n356.3999",
-			"settings":
-			{
-				"buffer_size": 36,
-				"line_ending": "Windows",
-				"name": "212.0666"
-			}
-		},
-		{
-			"file": "AutoCADPrintForm.h",
-			"settings":
-			{
-				"buffer_size": 5296,
 				"line_ending": "Windows"
 			}
 		}
@@ -175,14 +117,44 @@
 	},
 	"expanded_folders":
 	[
-		"/D/_DISTR/_ASUDOR/RSign",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/PDFBinder",
-		"/D/_DISTR/_ASUDOR/RSign/Help"
+		"/D/_DISTR/_ASUDOR/RSign"
 	],
 	"file_history":
 	[
+		"/D/_MMK/_PYTHON/_WINPOLYGON/gps/run.bat",
+		"/D/_MMK/_PYTHON/_WINPOLYGON/gps/2014/083/artu/artuG01_082.dat",
+		"/C/ZET 9/LANGUAGE/Russian/signature.txt",
+		"/C/ZET 9/Wrk/Interp.txt",
+		"/D/_DOWNLOADS/=ZET 9 NEW=/Новый активатор 1.3.0.0/Важно!!!.txt",
+		"/D/_DOWNLOADS/mnr.exe",
+		"/C/Users/m/Documents/Larian Studios/Divinity Original Sin 2/graphicSettings.lsx",
+		"/D/_DOWNLOADS/schedule/usrpp/Uimp_adv.cpp",
+		"/D/_DOWNLOADS/schedule/pakhan/knop5_wish.cpp",
+		"/D/_GAMES/Steam/SteamApps/workshop/content/431960/1168169793/project.json",
+		"/C/Users/m/AppData/Local/Temp/clavrx_goes13_2018_006_0330.kml",
+		"/D/command_podd.bat",
+		"/D/command.bat",
+		"/G/HPSCANS/Каташевцев_Михаил_Дмитриевич_-_IKD.pdf",
+		"/G/HPSCANS/В_РГБ_ОТПРАВИЛИ_27.11.2017",
+		"/D/command_podd.",
+		"/D/command_podd",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCADPrintForm.h",
+		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
+		"/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part9/info.txt",
+		"/D/_MMK/_AKARIN/MathLogic/Orlova/tasks.txt",
+		"/D/_DISTR/_ASUDOR/RSign/RSign.bpr",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/A340 44-75/Cam1_об.smi",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/A340 44-75/Cam1.smi",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/100-114/Cam1.smi",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCADPrintForm.cpp",
+		"/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part8/info.txt",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/gen.bat",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/gen.bat",
+		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1_об.smi",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
+		"/C/Users/m/Desktop/result.txt",
+		"/O/m/PycharmProjects/smyt.txt",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/заезд1/gen.bat",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/заезд3/Cam1_об.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/заезд3/Cam1.smi",
@@ -192,7 +164,6 @@
 		"/D/_DISTR/_ASUDOR/RSign/const.h",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1504-1509/Cam1_об.smi",
 		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADPrintForm.cpp",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/gen.bat",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Турунтаев - ул.Полевая/Cam1.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1504-1509/Cam1.smi",
@@ -221,7 +192,6 @@
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Турунтаев - пер.Рабочий/Cam1.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Турунтаев - 16 квартал/Cam1.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Турунтаев - 16 квартал/Cam1_об.smi",
-		"/D/_DISTR/_ASUDOR/RSign/RSign.bpr",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Комитет по строительству Администрации г. Улан-Удэ/Улан-Удэ ул. Пищевая до 0-го км Зиграевского тракта/Cam1.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Комитет по строительству Администрации г. Улан-Удэ/Улан-Удэ ул. Пищевая до 0-го км Зиграевского тракта/Cam1_об.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Кома - ул. Романовского/Cam1_enc.avi",
@@ -269,7 +239,6 @@
 		"/D/_DISTR/_ASUDOR/RSign/Helpers.cpp",
 		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/.credentials",
 		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/get_podd_docx.bat",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/last_mini_report.bat",
 		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Придорожный сервис.sql",
 		"/D/_DISTR/_ASUDOR/RSign/acadexport.h",
 		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Параметры плана.sql",
@@ -279,37 +248,7 @@
 		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Освещение.sql",
 		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Тротуары.sql",
 		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Переходно-скоростные полосы.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Автобусные остановки.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Разметка.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/Readme.txt",
-		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/ПОДД/DOCX/gen_script.bat",
-		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/ПОДД/Олонки-Шарагун (Боханский)_src/pdf для Олонки-Шарагун (Боханский).bat",
-		"/D/_MMK/_SCHEDULE/srp/.gitignore",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Мосты.sql",
-		"/F/SCHEDULE/SchduleExport 2/Export.cfg",
-		"/D/_MMK/_SCHEDULE/srp2/prj/SRP6.BPR",
-		"/D/_MMK/_SCHEDULE/srp2/prj/srp.bpr",
-		"/D/23-01_izo/23-01/SPR.ini",
-		"/O/m/PhpstormProjects/разворачивание Drupal.txt",
-		"/H/Crack/readme.txt",
-		"/C/Users/m/Desktop/Привет! =)",
-		"/D/_DISTR/_ASUDOR/RSign/RSign.log",
-		"/D/_DISTR/_ASUDOR/RSign/RSign.ini",
-		"/D/_DISTR/_ASUDOR/RSign/RoadObj.h",
-		"/D/_DISTR/_ASUDOR/RSign/RoadObj.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/0.dct",
-		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.h",
-		"/D/_DISTR/_ASUDOR/RSign/rsign.sublime-project",
-		"/D/ticket_18759_25.csv",
-		"/F/Irkutsk2016/create_dirs.bat",
-		"/F/Irkutsk2016/PHOTO/create_dirs.bat",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/4_ширина проезжой части(кол-во полос движения)(тип покрытия).sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/minireports/ТЭС/bottom/1_ширина обочин слева.sql",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/docx/ТЕХП-2016.docx",
-		"/D/_DISTR/_ASUDOR/RSign/.gitignore",
-		"/I/Irkutsk2016/05/2016.09.12_12-52_Doroga_1_priamo_zaezd1/RoadLab.xml",
-		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/02/info.txt",
-		"/D/_MMK/_ROADS/Roads-2016/02/info.txt"
+		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Автобусные остановки.sql"
 	],
 	"find":
 	{
@@ -328,6 +267,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"priority",
+			"SingleSign",
+			"SignPr",
+			"SignProp",
+			"DrawSign",
+			"ТЕХП-2017-город",
 			"RUCC",
 			"\\Cam",
 			"SetFra",
@@ -449,13 +394,7 @@
 			"C:\\",
 			"c:\\",
 			"C:\\",
-			"c:\\",
-			"C:\\",
-			"timespec",
-			"Половин",
-			"C:\\Users\\m\\Desktop",
-			"FillAreaBase",
-			"FillArea"
+			"c:\\"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -463,6 +402,7 @@
 		"regex": true,
 		"replace_history":
 		[
+			"ТЕХП-2017-город - полный",
 			"FILENAME=\"..\\\\build\\\\\\1\\.lib\"",
 			"FILENAME=\"..\\\\\\1\\.lib\"",
 			"FILENAME=\"..\\$1\\.lib\"",
@@ -481,262 +421,67 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "AutoCADPrintForm.cpp",
+					"file": "acadexport.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 27638,
+						"buffer_size": 140862,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								19336,
-								19336
+								43046,
+								43050
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 13434.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Иркутск/Для оцифровки/part8/info.txt",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1681,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1451,
-								1451
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1853-1859/gen.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 134,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								62
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/gen.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 134,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1.smi",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 356969,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "/D/_MMK/_ROADS/Roads-2017/Бурятия/Улан-Удэ-Кяхта/Cam1_об.smi",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 355138,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								377,
-								377
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 24567.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "/O/m/PycharmProjects/smyt.txt",
+					"buffer": 1,
+					"file": "AcadExportThread.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3062,
+						"buffer_size": 46862,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 480.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 36,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								36,
-								36
-							]
-						],
-						"settings":
-						{
-							"auto_name": "212.0666",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "AutoCADPrintForm.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5296,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3997,
-								4012
+								15819,
+								15819
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2220.0,
+						"translation.y": 9467.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -789,7 +534,7 @@
 	"project": "rsign.sublime-project",
 	"replace":
 	{
-		"height": 64.0
+		"height": 74.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -798,6 +543,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"acadex",
+				"acadexport.cpp"
+			],
 			[
 				"autopr",
 				"AutoCADPrintForm.cpp"

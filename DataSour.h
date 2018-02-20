@@ -78,6 +78,11 @@ void __fastcall IncRefCount()
 void __fastcall DecRefCount()
     {FRefCount--;}
 public:
+/*ѕроверка допустимости прит€гивани€ точки объекта obj1 к объекту obj2
+ ¬озвращает приоритет прит€гивани€ от 0 до 255 255 - максимальный,
+ 0 отсутствие прит€гивани€
+*/
+int __fastcall CanLeep(TRoadObject *obj1,TRoadObject *obj2);
 void __fastcall BuildClassesTree(TTreeView*,TTreeNode *TopNode);
 void __fastcall TextPropByClasses(TStrings*,__int32);
 void __fastcall BuildPagesList(TStrings*);

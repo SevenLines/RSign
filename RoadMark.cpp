@@ -56,7 +56,9 @@ FDict=dict;
 FObj=obj;
 if (FObj)
     {
+    edStart_m->Text=FObj->L%100;
     editStart->Text=FObj->L/100;
+    edEnd_m->Text=FObj->LMax%100;
     editEnd->Text=FObj->LMax/100;
     if (obj->Direction==roUnDirect)
         comboDirection->ItemIndex=1;
@@ -163,8 +165,8 @@ void __fastcall TfrmMarkParam::Button1Click(TObject *Sender)
 {
 if (FObj)
     {
-    int startl=editStart->Text.ToInt()*100;
-    int endl=editEnd->Text.ToInt()*100;
+    int startl=editStart->Text.ToInt()*100+edStart_m->Text.ToInt();
+    int endl=editEnd->Text.ToInt()*100+edEnd_m->Text.ToInt();
     if (startl<endl)
         {
         if (ListKinds->ItemIndex>=0)
@@ -184,6 +186,37 @@ if (FObj)
     else
         ShowMessage("”казанный конец линии меньше начала");
     }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmMarkParam::edStart_mChange(TObject *Sender)
+{
+TEdit *ed=dynamic_cast<TEdit*>(Sender);
+if (ed) {
+  if (ed->Text=="")
+     ed->Text="0";
+}
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmMarkParam::Label7DblClick(TObject *Sender)
+{
+int val1=edStart_m->Text.ToInt();
+int val2=editStart->Text.ToInt();
+if (val1>=50)
+  editStart->Text=IntToStr(val2+1);
+edStart_m->Text="0";
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmMarkParam::Label8DblClick(TObject *Sender)
+{
+int val1=edEnd_m->Text.ToInt();
+int val2=editEnd->Text.ToInt();
+if (val1>=50)
+  editEnd->Text=IntToStr(val2+1);
+edEnd_m->Text="0";
 }
 //---------------------------------------------------------------------------
 

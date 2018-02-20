@@ -34,12 +34,19 @@ __published:	// IDE-managed Components
     TPanel *Panel2;
     TButton *Button2;
     TButton *Button1;
+    TLabel *Label7;
+    TLabel *Label8;
+    TEdit *edStart_m;
+    TEdit *edEnd_m;
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall FormDestroy(TObject *Sender);
     void __fastcall comboKindChange(TObject *Sender);
     void __fastcall ListKindsDrawItem(TWinControl *Control, int Index,
           TRect &Rect, TOwnerDrawState State);
     void __fastcall Button1Click(TObject *Sender);
+    void __fastcall edStart_mChange(TObject *Sender);
+    void __fastcall Label7DblClick(TObject *Sender);
+    void __fastcall Label8DblClick(TObject *Sender);
 private:	// User declarations
 TDictSource *FDict;
 TRoadMark *FObj;

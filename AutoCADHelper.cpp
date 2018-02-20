@@ -1196,25 +1196,25 @@ bool AutoCADHelper::IsLarger(AnsiString name)
 }
 
 
-AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, vector<WideString> &labels)
+AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<pair<WideString, WideString> > &signInfo)
 {
   AnsiString newBlockName;
   AcadBlockPtr newBlock;
   IAcadBlock* tempBlock;
   vector<IAcadBlock*> blocks;
-    vector<WideString> labelsNew;
+  vector<WideString> labelsNew;
 
   // ищем существующие блоки и формируем имя комбинированного
-  for(int i=0;i<blocksNames.size();++i) {
+  for(int i=0;i<signInfo.size();++i) {
     try {
-      tempBlock = cadActiveDocument->Blocks->Item(Variant(blocksNames[i]));
+      tempBlock = cadActiveDocument->Blocks->Item(Variant(signInfo[i].first));
     } catch(...) {
-      BUILDER_ERROR("Блок '" << AnsiString(blocksNames[i]).c_str() << "' не найден");
+      BUILDER_ERROR("Блок '" << AnsiString(signInfo[i].first).c_str() << "' не найден");
     }
     if (newBlockName!="") newBlockName+="_";
-    newBlockName += blocksNames[i];
+    newBlockName += signInfo[i].first;
     
-    AnsiString label = labels[i];
+    AnsiString label = signInfo[i].second;
     label = StringReplace(label, " ", "", TReplaceFlags() << rfReplaceAll);
     label = StringReplace(label, "\t", "", TReplaceFlags() << rfReplaceAll);
     label = StringReplace(label, "\n", "", TReplaceFlags() << rfReplaceAll);
@@ -1222,11 +1222,11 @@ AcadBlockPtr AutoCADHelper::MakeCombineBlock(vector<WideString> &blocksNames, ve
     label = StringReplace(label, "<", "", TReplaceFlags() << rfReplaceAll);
     label = StringReplace(label, ">", "", TReplaceFlags() << rfReplaceAll);
     label = StringReplace(label, ",", "", TReplaceFlags() << rfReplaceAll);
-    if (!labels[i].IsEmpty()) {
+    if (!signInfo[i].second.IsEmpty()) {
       newBlockName += "[" + label + "]";
     }
     
-    labelsNew.push_back(labels[i]);
+    labelsNew.push_back(signInfo[i].second);
     blocks.push_back(tempBlock);
   }
   

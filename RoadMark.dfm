@@ -76,10 +76,38 @@ object frmMarkParam: TfrmMarkParam
       Height = 13
       Caption = #1056#1072#1089#1089#1090#1086#1103#1085#1080#1077
     end
+    object Label7: TLabel
+      Left = 145
+      Top = 8
+      Width = 16
+      Height = 20
+      Caption = '+'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      OnDblClick = Label7DblClick
+    end
+    object Label8: TLabel
+      Left = 145
+      Top = 32
+      Width = 9
+      Height = 20
+      Caption = '+'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      OnDblClick = Label8DblClick
+    end
     object editStart: TEdit
       Left = 88
       Top = 8
-      Width = 97
+      Width = 57
       Height = 21
       TabOrder = 0
       Text = '0'
@@ -87,7 +115,7 @@ object frmMarkParam: TfrmMarkParam
     object editEnd: TEdit
       Left = 88
       Top = 32
-      Width = 97
+      Width = 57
       Height = 21
       TabOrder = 1
       Text = '0'
@@ -145,8 +173,8 @@ object frmMarkParam: TfrmMarkParam
       Width = 15
       Height = 21
       Associate = editX
-      Min = -1000
-      Max = 1000
+      Min = -10000
+      Max = 10000
       Increment = 5
       Position = 0
       TabOrder = 6
@@ -193,6 +221,24 @@ object frmMarkParam: TfrmMarkParam
         TabOrder = 1
         OnClick = Button1Click
       end
+    end
+    object edStart_m: TEdit
+      Left = 160
+      Top = 8
+      Width = 25
+      Height = 21
+      TabOrder = 9
+      Text = '0'
+      OnChange = edStart_mChange
+    end
+    object edEnd_m: TEdit
+      Left = 160
+      Top = 32
+      Width = 25
+      Height = 21
+      TabOrder = 10
+      Text = '0'
+      OnChange = edStart_mChange
     end
   end
 end

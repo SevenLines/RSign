@@ -219,6 +219,22 @@ if (FOwnList)
     }
 }
 
+/*Реализация на коленках. Все константы хранятся в самой функции
+*/
+int __fastcall TDictSource::CanLeep(TRoadObject *obj1,TRoadObject *obj2) {
+    if (obj1==0 || obj2==0 || obj1==obj2)
+       return 0;
+    else if (obj1->DictId==obj2->DictId)
+       return 255;
+    else if (obj1->DictId==ROADMARKCODE) {
+      if (dynamic_cast<TRoadSign*>(obj2)!=0)
+         return 248;
+      else
+         return 0;
+    } else
+       return 1;
+}
+
 void __fastcall TDictSource::ChangePropOrder(__int32 ClassId,int n,TTextPropRec **NewOrder)
 {
 int j=0;

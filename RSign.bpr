@@ -9,7 +9,7 @@
       ObjForm.obj const.obj DrawSetting.obj FileSour.obj DBDataSource.obj 
       OpenRoad.obj SelNewSign.obj Factory.obj bmpexport.obj PrnForm.obj 
       VPattern.obj VPatView.obj SelNewObj.obj PreView.obj SetSigns.obj 
-      RSign_TLB.obj RoadViewImpl.obj RSign_ATL.obj CheckSigns.obj SignsUtil.obj 
+      RoadViewImpl.obj RSign_ATL.obj CheckSigns.obj SignsUtil.obj 
       SignsReports.obj OpenSource.obj AddProject.obj SettingFrm.obj 
       SignDesign.obj SignPanel.obj Document.obj PolyForm.obj DesignPattern.obj 
       MetaExport.obj ShowSigns.obj Picture.obj Measures.obj VideoForm.obj 
@@ -22,7 +22,7 @@
       MiniReports.obj ItemSelectDialog.obj TConnectionFormThreadUnit.obj 
       ConnectionFormUnit.obj VideoBar.obj ActiveX\MyActiveX.obj Helpers.obj 
       VisModeForm.obj"/>
-    <RESFILES value="RSign.res RSign.tlb"/>
+    <RESFILES value="RSign.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
     <DEFFILE value=""/>
@@ -52,8 +52,8 @@
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
-    <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE"/>
-    <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS"/>
+    <USERDEFINES value="NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG"/>
+    <SYSDEFINES value="NO_STRICT;_ATL_APARTMENT_THREADED;USING_ATLVCL;_ATL_NO_SECURITY;INC_ATL_HEADERS;_BCB_ATL_DEBUG"/>
     <MAINSOURCE value="RSign.cpp"/>
     <INCLUDEPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot;;ActiveX;$(BCB)\include;$(BCB)\include\vcl;$(BCB)\include\atl;$(BCB)\Imports"/>
     <LIBPATH value="&quot;C:\Program Files\Borland\CBuilder6\Projects&quot;;ActiveX;$(BCB)\Projects\Lib;$(BCB)\lib\obj;$(BCB)\lib;$(BCB)\Imports"/>
@@ -66,15 +66,15 @@
       -I&quot;C:\Program Files (x86)\Borland\CBuilder6\Projects&quot; -IActiveX 
       -I$(BCB)\include -I$(BCB)\include\vcl -I$(BCB)\include\atl 
       -I$(BCB)\Imports -src_suffix cpp -DNO_PROMPT_ON_ASSERTE_FAILURE 
-      -DNO_PROMPT_ON_HRCHECK_FAILURE -boa"/>
-    <CFLAG1 value="-O2 -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; -Hc -Vx -Ve 
-      -Tkh30000 -X- -a8 -b -k- -vi -c -tW -tWM"/>
+      -DNO_PROMPT_ON_HRCHECK_FAILURE -D_DEBUG -boa"/>
+    <CFLAG1 value="-Od -H=&quot;c:\Program Files\Borland\CBuilder6\Temp\RSign.csm&quot; -Hc -Vx -Ve 
+      -Tkh30000 -X- -r- -a8 -b -k -y -v -vi- -c -tW -tWM"/>
     <CFLAG2 value=""/>
     <CFLAG3 value=""/>
-    <PFLAGS value="-$Y- -$L- -$D- -$A8 -v -M -JPHNE"/>
+    <PFLAGS value="-$Y+ -$W -$O- -$A8 -v -M -JPHNE"/>
     <RFLAGS value=""/>
-    <AFLAGS value="/mx /w2 /zn"/>
-    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn"/>
+    <AFLAGS value="/mx /w2 /zi"/>
+    <LFLAGS value="-D&quot;&quot; -aa -Tpe -x -Gn -v"/>
     <IFLAGS value=""/>
     <OTHERFILES value=""/>
   </OPTIONS>
@@ -113,8 +113,6 @@
       <FILE FILENAME="SelNewObj.cpp" FORMNAME="AddObjFrm" UNITNAME="SelNewObj" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="PreView.cpp" FORMNAME="PreViewFrm" UNITNAME="PreView" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="SetSigns.cpp" FORMNAME="frmSetSigns" UNITNAME="SetSigns" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="RSign.tlb" FORMNAME="" UNITNAME="RSign.tlb" CONTAINERID="TypeLibTool" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="RSign_TLB.cpp" FORMNAME="" UNITNAME="RSign_TLB" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="RoadViewImpl.cpp" FORMNAME="" UNITNAME="RoadViewImpl" COCLASSES="RoadView" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="RSign_ATL.cpp" FORMNAME="" UNITNAME="RSign_ATL" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="CheckSigns.cpp" FORMNAME="frmCheckSigns" UNITNAME="CheckSigns" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
@@ -231,8 +229,8 @@ Item0=$(BCB)\source\vcl
 
 [HistoryLists\hlConditionals]
 Count=5
-Item0=NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE
-Item1=NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG
+Item0=NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE;_DEBUG
+Item1=NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE
 Item2=_DEBUG;NO_PROMPT_ON_ASSERTE_FAILURE;NO_PROMPT_ON_HRCHECK_FAILURE
 Item3=_DEBUG;NO_PROMPT_ON_ASSERTE_FAILURE
 Item4=_DEBUG

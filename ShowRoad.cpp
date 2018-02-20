@@ -2450,11 +2450,12 @@ void __fastcall TRoadFrm::ContinueMarkLine(void)
 				if (NR && NR->Poly)
 				minr=min(NR->Poly->Points[0].L,NR->Poly->Points[NR->Poly->Count-1].L),
 				maxr=max(NR->Poly->Points[0].L,NR->Poly->Points[NR->Poly->Count-1].L);
+/*              Теперь округление не делаем
 				minl=((minl+99)/100)*100;
 				minr=((minr+99)/100)*100;
 				maxl=((maxl)/100)*100;
 				maxr=((maxr)/100)*100;
-
+*/
 				// Особые случаи
 				if (mark->Kind==ma1||mark->Kind==ma3) {// сплошная
 					int minv=min(minl,minr);
@@ -3020,7 +3021,7 @@ void __fastcall TRoadFrm::HandlePutPoint(int X,int Y,bool Leep)
 		FMetricData->Road->RConvertPoint(X,Y,CL,RX);
         CX=RX;
 		if (Leep)
- 		   if (0==FDrawMan->FindNearestL(CL,NULL,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP))
+ 		   if (0==FDrawMan->FindNearestL(CL,FInsertingObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP))
               FDrawMan->Round_Int(CL);
 		TRoadDirection dr;
 		if (CX<0)
@@ -3579,7 +3580,7 @@ int X, int Y)
 	if ((ZoomStatus==zsWaitPoint)||((ZoomStatus==zsWaitSecPoint)))
 	{
 		if (Shift.Contains(ssShift))
-		   FDrawMan->LeepPoint(X,Y,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP,true);
+		   FDrawMan->LeepPoint(X,Y,FInsertingObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP,true);
 		MoveCurrentPoint(X,Y);
 	}
 	else if (ZoomStatus==zsZoom)
@@ -3608,10 +3609,7 @@ int X, int Y)
 		TRoadPoint P=(*FPoly)[FActivePoint];
 		FDrawMan->Road->RConvertPoint(CX,CY,P.L,P.X);
 		if (Shift.Contains(ssShift)) {
-		   if (0==FDrawMan->FindNearestLX(P.L,P.X,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP))
-              if (0==FDrawMan->FindNearestL(P.L,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP)) {
-                 FDrawMan->Round_Int(P.L);
-              }
+           FDrawMan->FindNearest(P.L,P.X,FActiveObj,max(FDrawMan->BaseScaleL,FSclL)/KFLEEP,true);
         }
 		SetPoint(P,FActivePoint);
 		PolyFrm->UpdatePoint(FActivePoint);
