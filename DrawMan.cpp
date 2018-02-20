@@ -3349,12 +3349,12 @@ void __fastcall TDrawManager::StopDrawing(void)
 TRoadObject* __fastcall TDrawManager::FindNearestL(__int32 &L,TRoadObject *obj,__int32 DL)
 {
 TRoadObject *res=NULL;
-__int32 NewL,newPrior=0,maxL=DL;
+__int32 NewL,newPrior=1,maxL=DL;
 for (int i=0;i<ObjCount;i++)
     {
     TRoadObject *robj=Objs[i];
-    int prior=obj!=0 && robj->ClassType()==obj->ClassType();
-    if (robj!=obj)
+    int prior=FDict->CanLeep(obj,robj);
+    if (prior>=newPrior)
         {
         TContRoadObject *cobj=dynamic_cast<TContRoadObject*>(robj);
         if (cobj)
@@ -3373,7 +3373,7 @@ for (int i=0;i<ObjCount;i++)
             for (int i=0;i<n;i++)
                 {
                 int d=abs(L-(*Poly)[i].L);
-                if ((d<DL && prior==newPrior || prior>newPrior) && d<maxL)
+                if ((d<DL || prior>newPrior) && d<maxL)
                     DL=d,NewL=(*Poly)[i].L,res=robj,newPrior=prior;
                 }
             }
@@ -3388,11 +3388,12 @@ return res;
 TRoadObject* __fastcall TDrawManager::FindNearestLX(__int32 &L,__int32 &X, TRoadObject *obj,__int32 DL)
 {
 TRoadObject *res=NULL;
-__int32 newL,newX;
+__int32 newL,newX,newPrior=1,maxL=DL;
 for (int i=0;i<ObjCount;i++)
     {
     TRoadObject *robj=Objs[i];
-    if (robj!=obj)
+    int prior=FDict->CanLeep(obj,robj);
+    if (prior>=newPrior)
         {
         TPolyline *Poly=robj->Poly;
         if (Poly)
@@ -3401,7 +3402,7 @@ for (int i=0;i<ObjCount;i++)
             for (int i=0;i<n;i++)
                 {
                 int d=abs(L-(*Poly)[i].L)+abs(X-(*Poly)[i].X);
-                if (d<DL)
+                if ((d<DL || prior>newPrior) && d<maxL)
                     DL=d,newL=(*Poly)[i].L,newX=(*Poly)[i].X,res=robj;
                 }
             }
@@ -3413,19 +3414,34 @@ return res;
 }
 
 
-bool __fastcall TDrawManager::LeepPoint(int& PX,int &PY,TRoadObject *obj,__int32 DL,bool round)
-{
-int L,X;
-Road->RConvertPoint(PX,PY,L,X);
-if (FindNearestLX(L,X,obj,2*DL)!=0 || FindNearestL(L,obj,DL)!=0) 
-    Road->ConvertPoint(L,X,PX,PY);
-else if (round) {
-    Round_Int(L);
-    Road->ConvertPoint(L,X,PX,PY);
-} else
-    return false;
+bool __fastcall TDrawManager::FindNearest(__int32 &L,__int32 &X,TRoadObject *obj,__int32 DL,bool round) {
+__int32 L1,L2,X1,X2;
+L1=L2=L;
+X1=X2=X;
+int p1=Dict->CanLeep(obj,FindNearestLX(L1,X1,obj,2*DL));
+int p2=Dict->CanLeep(obj,FindNearestL(L2,obj,DL));
+if (p1>=p2 && p1>0)
+    L=L1,X=X1;
+else if (p2>p1)
+    L=L2,X=X2;
+else if (round)
+   Round_Int(L);
+else
+   return false;
 return true;
 }
+
+bool __fastcall TDrawManager::LeepPoint(int& PX,int &PY,TRoadObject *obj,__int32 DL,bool round)
+{
+__int32 L,X;
+Road->RConvertPoint(PX,PY,L,X);
+if (FindNearest(L,X,obj,DL,round)) {
+  Road->ConvertPoint(L,X,PX,PY);
+  return true;
+}
+return false;
+}
+
 
 int __fastcall TDrawManager::SelectByXY(__int32 X,__int32 Y,TRoadObject** Array,TDtaSource **Src,int *Indexes,int max)
 {
