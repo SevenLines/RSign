@@ -822,10 +822,10 @@ bool __fastcall TAcadExport::ExportAttach(TExtPolyline *Poly, TRoadAttach *a, bo
 // сортировка знаков по номеру, в случае чего править имеено тут
 bool sortSignsBlocksNamesLabelsPairs(const pair<WideString, WideString> &sign, const pair<WideString, WideString> &sign2) {
     WideString signsPriority[] = {
-        "5.13.1",
-        "5.13.2",
         "5.7.2",
         "5.7.1",
+        "5.13.1",
+        "5.13.2",
         "2", "1", "4", "5", "3", "6", "7", "8"
     };
     int arraySize = sizeof(signsPriority) / sizeof(*signsPriority);
