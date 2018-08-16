@@ -81,9 +81,7 @@
     <Compile Include="Script.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".credentials">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include=".credentials" />
     <None Include="App.config" />
     <None Include="files\base2.docx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
