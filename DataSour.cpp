@@ -936,20 +936,38 @@ P.MakeWidePart(&Q,step,roundval);
 int L1,L2=min(P.Points[0].L,S.Points[0].L);
 int W1=0,W2=0;
 for (int i=0,j=0;i<P.Count || j<S.Count;) {
+// находим начало отрезка
     L1=L2;
     if (i>=P.Count)
-       L2=S.Points[j+1].L,W2=S.Points[j].X,W1=0,j+=2;
+        L1=max(L1,S.Points[j].L),L2=S.Points[j+1].L,W1=0,W2=S.Points[j].X,j+=2;
     else if (j>=S.Count)
-       L2=P.Points[i+1].L,W1=P.Points[i].X,W2=0,i+=2;
+        L1=max(L1,P.Points[i].L),L2=P.Points[i+1].L,W1=P.Points[i].X,W2=0,i+=2;
     else {
-       if (P.Points[i].L<S.Points[j].L)
-          L2=min(S.Points[j].L,P.Points[i+1].L),W1=P.Points[i].X,i+=2;
-       else
-          L2=min(S.Points[j+1].L,P.Points[i].L),W2=S.Points[j].X,j+=2;
+        L1=max(L1,min(S.Points[j].L,P.Points[i].L));
+        if (L1<S.Points[j].L) { // Если отрезок S еще не начался
+            W1=P.Points[i].X,W2=0;
+            if (S.Points[j].L<P.Points[i+1].L) //Отрезок S начинается раньше окончания P
+                L2=S.Points[j].L;
+            else
+                L2=P.Points[i+1].L,i+=2;
+        } else if (L1<P.Points[i].L) {// Отрезок P еше не начался
+            W2=S.Points[j].X,W1=0;
+            if (P.Points[i].L<S.Points[j+1].L)
+                L2=P.Points[i].L;
+            else
+                L2=S.Points[j+1].L,j+=2;
+        } else { //Оба отрезка уже начались
+            W1=P.Points[i].X;
+            W2=S.Points[j].X;
+            if (P.Points[i+1].L<S.Points[j+1].L)
+                L2=P.Points[i+1].L,i+=2;
+            else
+                L2=S.Points[j+1].L,j+=2;
+        }
     }
-    if (L1+300>L2) // Заплатка на вывод участков короче 3 метров
-        L2=L1; // Чтобы начать с этого места
-    else if (L2>L1 && (W1>=roundval/2 || W2>=roundval/2))
+//    if (L1+300>L2) // Заплатка на вывод участков короче 3 метров
+//        L2=L1; // Чтобы начать с этого места
+    if (L2>L1 && (W1>=roundval/2 || W2>=roundval/2))
         {
         TObjMetaClass *Rec=Dict->ObjClasses->Items[ROADSIDECODE];
         TRoadObject *RObj=Factory->CreateRoadObj(Rec->ClassName,0,ROADSIDECODE);

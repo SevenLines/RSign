@@ -21,7 +21,7 @@
       AttachForm.obj MoveForm.obj AddRowsDescription.obj Utils.obj 
       MiniReports.obj ItemSelectDialog.obj TConnectionFormThreadUnit.obj 
       ConnectionFormUnit.obj VideoBar.obj ActiveX\MyActiveX.obj Helpers.obj 
-      VisModeForm.obj"/>
+      VisModeForm.obj ActiveX\MediaPlayer_OCX.obj ActiveX\MediaPlayer_TLB.obj"/>
     <RESFILES value="RSign.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -45,7 +45,7 @@
     <PACKAGES value="vclx.bpi rtl.bpi vcl.bpi dbrtl.bpi vcldb.bpi bcbsmp.bpi dclocx.bpi 
       qrpt.bpi teeui.bpi vclsmp.bpi teedb.bpi tee.bpi ibsmp.bpi dss.bpi 
       nmfast.bpi inetdb.bpi inet.bpi adortl.bpi"/>
-    <PATHCPP value=".;ActiveX"/>
+    <PATHCPP value=".;ActiveX;ActiveX;ActiveX"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -163,6 +163,8 @@
       <FILE FILENAME="ActiveX\MyActiveX.cpp" FORMNAME="" UNITNAME="MyActiveX" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="Helpers.cpp" FORMNAME="" UNITNAME="Helpers" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="VisModeForm.cpp" FORMNAME="frmVisMode" UNITNAME="VisModeForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ActiveX\MediaPlayer_OCX.cpp" FORMNAME="" UNITNAME="MediaPlayer_OCX.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ActiveX\MediaPlayer_TLB.cpp" FORMNAME="" UNITNAME="MediaPlayer_TLB.cpp" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

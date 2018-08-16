@@ -1769,8 +1769,10 @@ TExtPolyline* __fastcall TDescreetSideRoadObject::GetDefMetric(TRoad *Road)
 __int32 cx;
 if (FPlacement==rsRight)
     cx=Road->RightLine.FindX(L)+FDX;
-else
+else if (FPlacement==rsLeft)
     cx=Road->LeftLine.FindX(L)-FDX;
+else
+    cx=FDX;
 TExtPolyline *Res=new TExtPolyline(1,0);
 int x,y;
 Road->ConvertPoint(FL,cx,x,y);
@@ -1783,9 +1785,11 @@ TPolyline* __fastcall TDescreetSideRoadObject::GetDefaultPlacement(TRoad* Road) 
    TPolyline *p=new TPolyline(1);
    p->Points[0].L=FL;
    if (FPlacement==rsRight)
-    p->Points[0].X=Road->RightLine.FindX(L)+FDX;
+      p->Points[0].X=Road->RightLine.FindX(L)+FDX;
+   else if (FPlacement==rsLeft)
+      p->Points[0].X=Road->LeftLine.FindX(L)-FDX;
    else
-    p->Points[0].X=Road->LeftLine.FindX(L)-FDX;
+      p->Points[0].X=FDX;
    p->Points[0].BasePar1=FL;
    p->Points[0].BasePar2=p->Points[0].X;
    p->Points[0].Code=0;
@@ -1795,12 +1799,43 @@ TPolyline* __fastcall TDescreetSideRoadObject::GetDefaultPlacement(TRoad* Road) 
 bool __fastcall TDescreetSideRoadObject::SetDefaultPlacement(TRoad* Road,TPolyline *p) {
 if (p && p->Count>0) {
    __int32 cx=p->Points[0].X;
-   if (FPlacement!=rsLeft && FPlacement!=rsRight)
-       FPlacement= cx<0 ? rsLeft : rsRight;
+   if (FPlacement!=rsLeft && FPlacement!=rsRight) {
+       if (cx>=0) {
+           FPlacement= rsRight;
+       } else {
+           FPlacement=rsLeft;
+       }
+   }
    if (FPlacement==rsRight)
       FDX=cx-Road->RightLine.FindX(L);
-   else
+   else if (FPlacement==rsLeft)
       FDX=Road->LeftLine.FindX(L)-cx;
+   else
+      FDX=cx;
+   return true;
+}
+return false;
+}
+
+
+bool __fastcall TDescreetSideCenterRoadObject::SetDefaultPlacement(TRoad* Road,TPolyline *p) {
+if (p && p->Count>0) {
+   __int32 cx=p->Points[0].X;
+   if (FPlacement!=rsLeft && FPlacement!=rsRight && FPlacement!=rsBand) {
+       if (cx>=0) {
+           __int32 kx=Road->RightLine.FindX(L);
+           FPlacement= cx>=kx ? rsRight : rsBand;
+       } else {
+           __int32 kx=Road->LeftLine.FindX(L);
+           FPlacement= cx<=kx ? rsLeft : rsBand;
+       }
+   }
+   if (FPlacement==rsRight)
+      FDX=cx-Road->RightLine.FindX(L);
+   else if (FPlacement==rsLeft)
+      FDX=Road->LeftLine.FindX(L)-cx;
+   else
+      FDX=cx;
    return true;
 }
 return false;

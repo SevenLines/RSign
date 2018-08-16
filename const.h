@@ -159,7 +159,7 @@ enum TLampKind {lkOnce=2385222,lkDouble=2385223};
 enum TRoadDirection {roEmpty=0,roDirect=246,roUnDirect=247};
 
 //#define ROADSIDECODE 5
-enum TRoadSide {rsLeft=257,rsRight=258};
+enum TRoadSide {rsLeft=257,rsRight=258,rsBand=259};
 
 // Расположение примыкания
 //#define ATCODE 6
