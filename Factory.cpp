@@ -111,6 +111,8 @@ else if (ClassName==ClassesNames[49])
         return new TTrafficLight(id,code);
 else if (ClassName==ClassesNames[50])
         return new TSpeedBump(id,code);
+else if (ClassName==ClassesNames[51])
+        return new TDescreetSideCenterRoadObject(id,code);
 return NULL;
 }
 
@@ -218,6 +220,8 @@ else if (ClassName==ClassesNames[49])
         return TrafficLightInfo;
 else if (ClassName==ClassesNames[50])
         return SpeedBumpInfo;
+else if (ClassName==ClassesNames[51])
+        return DescreetSideCenterRoadObject;
 return "";
 }
 

@@ -21,7 +21,8 @@ typedef double (__fastcall *GetFloatValueProc)(TObject*);
 typedef void (__fastcall *SetIntValueProc)(TObject*,__int32);
 typedef __int32 (__fastcall *GetIntValueProc)(TObject*);
 
-#define DEFPROPERTY(Type,Name) Type F##Name;\
+#define DEFPROPERTY(Type,Name) protected:\
+                               Type F##Name;\
                                __published:\
                                String __fastcall GetType##Name(void);\
                                Type __fastcall Get##Name(void);\
@@ -46,7 +47,7 @@ typedef __int32 (__fastcall *GetIntValueProc)(TObject*);
                                void __fastcall Class::Set##Name(Type val)\
                                 {F##Name=val;FModified=true;}\
 
-#define CLASSESCOUNT 51
+#define CLASSESCOUNT 52
 const char ClassesNames[CLASSESCOUNT][32]={"TRoadObject","TDescreetRoadObject",\
         "TDescreetDirRoadObject","TDescreetSideRoadObject",\
         "TContRoadObject","TBusStop",
@@ -69,7 +70,7 @@ const char ClassesNames[CLASSESCOUNT][32]={"TRoadObject","TDescreetRoadObject",\
         "TRoadCategory","TRoadLighting","TMoundHeight","TDivRoadPart",
         "TDangerVisMode","TDressLayer",
         "TDescreetCenterRoadObject","TMapObject",
-        "TTrafficLight","TSpeedBump"};
+        "TTrafficLight","TSpeedBump","TDescreetSideCenterRoadObject"};
 
 class TRoad;
 class TObjFrm;
@@ -358,17 +359,30 @@ virtual bool __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p)
 };
 
 
+// Еще дискретный объект
+const char DescreetSideCenterRoadObject[]="Рекламный щит. Произведен от TDescreetSideRoadObject\
+Добавлена возможность размещения на разделительной полосе";
+
+class TDescreetSideCenterRoadObject : public TDescreetSideRoadObject {
+private:
+public:
+__fastcall TDescreetSideCenterRoadObject() : TDescreetSideRoadObject() {FDX=350;}
+__fastcall TDescreetSideCenterRoadObject(__int32 id,__int32 code) : TDescreetSideRoadObject(id,code) {FDX=350;}
+virtual bool __fastcall SetDefaultPlacement(TRoad* Road,TPolyline *p);
+};
+
 // Столб освещения
 const char RoadLightingInfo[]="Столб уличного освещения. Произведен от TDescreetSideRoadObject\
 Поведение полностью унаследовано.";
 
-class TRoadLighting : public TDescreetSideRoadObject {
+class TRoadLighting : public TDescreetSideCenterRoadObject {
 private:
 DEFPROPERTY(TLampKind,Kind)
 public:
-__fastcall TRoadLighting() : TDescreetSideRoadObject() {FDX=350;}
-__fastcall TRoadLighting(__int32 id,__int32 code) : TDescreetSideRoadObject(id,code) {FDX=350;}
+__fastcall TRoadLighting() : TDescreetSideCenterRoadObject() {FDX=350;}
+__fastcall TRoadLighting(__int32 id,__int32 code) : TDescreetSideCenterRoadObject(id,code) {FDX=350;}
 };
+
 
 const char BusStopInfo[]="Автобусная остановка. Объект произведен от TDescreetSideRoadObject.\
 Вводятся три новых свойства. Name - название остановки. bool StopArea - наличие остановочной\
