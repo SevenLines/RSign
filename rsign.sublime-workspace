@@ -52,58 +52,19 @@
 	"buffers":
 	[
 		{
-			"file": "acadexport.cpp",
+			"contents": "Лаба 1.\n\nГруппа А\nДля примера: 1, 8\nСложные: 5, 6\nСредние: 2, 3, 7\nПростые: 4, 9\n\n2. Даны действительные числа A,B,C,D. Если A<=B<=C<D, то каждое число     заменить наибольшим из них; если A>B>C>D, то числа оставить без      изменения;  в противном случае все числа заменить их квадратами.\n\n 3.Даны действительные числа Х, Y. Если оба числа отрицательны, то каждое    число заменить его модулем; если отрицательно только одно из них, то оба    значения увеличить на 0.5; если оба числа положительны и ни одно из них    не принадлежит отрезку [ 0.5, 2.0 ], то оба значения уменьшить в 10 раз;    в остальных случаях числа оставить без изменения.\n 4.Заданы действительные положительные числа X, Y, Z.\nА)  Выяснить, существует ли треугольник с длинами сторон Х, Y, Z.\nБ) Если треугольник существует, то проверить, является ли он   остроугольным.\nУказание. Треугольник существует, если сумма двух его любых сторон больше третьей стороны. Треугольник является остроугольным, если сумма квадратов двух его любых сторон меньше квадрата третьей стороны\n5.Даны действительные числа A1,B1,C1,A2,B2,C2. Выяснить, верно ли, что |A1*B2-A2*B1| >=0.0001, и если верно, то найти решение системы линейных  уравнений   \nA1*X + B1*Y = C1\nA2*X + B2*Y = C2\nУказание. Решение системы двух линейных уравнений имеет вид:\n       \n6.Даны действительные числа A, B, C (A#0). Полностью исследовать  биквадратное уравнение A*X4 + B*X2 + C = 0. Если действительных  корней  нет, то  выдать соответствующее сообщение, иначе выдать значения двух или четырех корней.\n      Указание. Решение биквадратного уравнения определяется формулами:\n  , причем действительные корни существуют при не отрицательности подкоренных выражений\n  7. Среди заданных целых чисел k, l, m найти пары кратных.\n  8. Как известно, число делится на 3 тогда и только тогда, когда сумма цифр делится на 3. Проверить этот признак на примере заданного трехзначного числа.\n   9. Даны числа x, y. Проверить истинность высказывания: «Точка с координатами (x, y) лежит во второй или третьей координатной четверти».\n  10. Дано целое число, лежащее в диапазоне 1–999. Вывести его описание вида «четное двузначное число», «нечетное трехзначное число» и т. Д.\n11. Даны четыре целых числа a,b,c,d – соответственно числители и знаменатели двух простых дробей. Выдать результат проверки, какое число больше или они равны. Учесть случай равенства нулю хотя бы одного знаменателя.\n",
 			"settings":
 			{
-				"buffer_size": 0,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
+				"buffer_size": 2405,
+				"line_ending": "Windows",
+				"name": "Лаба 1."
 			}
 		},
 		{
-			"file": "AutoCADHelper.cpp",
+			"file": "AutoCAD/Scripts/last_mini_report.bat",
 			"settings":
 			{
-				"buffer_size": 69957,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "//---------------------------------------------------------------------------\n\n\n#pragma hdrstop\n\n#include \"Helpers.h\"\n#include <vector>\n\n//---------------------------------------------------------------------------\n\n#pragma package(smart_init)\n\n\nfloat Helpers::GetAngle(TPoint vec1, TPoint vec2)\n{\n    /* Возвращает угол между векторами*/\n    float temp = (float)(vec1.x * vec2.x + vec1.y * vec2.y) /\n          (sqrt(vec1.x * vec1.x + vec1.y * vec1.y) * sqrt(vec2.x * vec2.x + vec2.y * vec2.y));\n    if (temp < -1)\n        return M_PI;\n    else if (temp > 1)\n        return 0;\n    else\n        return acos(temp);\n}\n\nfloat Helpers::GetAngle2(TPoint &p1, TPoint &p2, float ScaleY, float *length) {\n    /* Возвращает угол между вектором образованым точками p1 и p2 и осью X\n     * Если указан параметр length в него попадет длина вектора\n    */\n    float yoffset = -ScaleY * (p2.y - p1.y);\n    float xoffset = p2.x - p1.x;\n    float angle = xoffset != 0 ? atan(yoffset / xoffset) : yoffset < 0 ? -M_PI_2 : M_PI_2;\n    if (xoffset < 0)angle += M_PI;\n    if (length) \n        *length = Helpers::GetLength(p1, p2, ScaleY);\n    return angle;\n}\n\n\nfloat  Helpers::GetLength(TPoint p1, TPoint p2, float ScaleY)\n{\n    float yoffset = -ScaleY * (p2.y - p1.y);\n    float xoffset = p2.x - p1.x;\n    return sqrt(yoffset * yoffset + xoffset * xoffset);\n}\n\n// функция для сортировки знаков\nbool  Helpers::compareSigns(const TRoadSign* s1, const TRoadSign* s2)\n{\n    /*    return s1->OldTitle < s2->OldTitle;*/\n    int order[] = {\n        2, 1, 5, 3, 4, 6, 7, 8\n    };\n\n    int signNum1;\n    int signNum2;\n    if (TryStrToInt(s1->OldTitle.SubString(0, 1), signNum1)\n            && TryStrToInt(s2->OldTitle.SubString(0, 1), signNum2)) {\n        if (s1->OldTitle.Pos(\"8.13\") && signNum2 != 2) {\n            return true;\n        }\n        if (signNum1 != 2 && s2->OldTitle.Pos(\"8.13\")) {\n            return false;\n        }\n        if (order[signNum1 - 1] == order[signNum2 - 1]) {\n            return s1->OldTitle < s2->OldTitle;\n        }\n        return order[signNum1 - 1] < order[signNum2 - 1];\n    }\n    return false;\n}\n\nAnsiString Helpers::SignLabelParser(AnsiString signName, AnsiString label)\n{\n    AnsiString temp = label;\n    if (signName == \"8.2.2\" ||\n            signName == \"3.13\") {\n        if (label.UpperCase()[label.Length()] == 'М') {\n            label = Trim(label.SubString(1, label.Length() - 1));\n        }\n    }\n    return label;\n}\n\nint Helpers::GetAngle(TPoint p0, TPoint p1, TPoint p2)\n{\n    float vec1[2], vec2[2];\n    vec1[0] = p1.x - p0.x;\n    vec1[1] = p1.y - p0.y;\n    vec2[0] = p2.x - p0.x;\n    vec2[1] = p2.y - p0.y;\n\n    double anorm = sqrt(vec1[0] * vec1[0] + vec1[1] * vec1[1]);\n    double bnorm = sqrt(vec2[0] * vec2[0] + vec2[1] * vec2[1]);\n\n    if (anorm == 0 || bnorm == 0) return 0;\n\n    double cosangle = (vec2[0] * vec1[0] + vec2[1] * vec1[1]) / (anorm * bnorm);\n    if (cosangle < -1) cosangle = -1;\n    if (cosangle > 1) cosangle = 1;\n    double angle = acos(cosangle);\n    float dirSign = vec1[0] * vec2[1] - vec1[1] * vec2[0];\n    if (dirSign < 0 && angle != 0)\n        angle = -angle;\n\n    if (angle == M_PI) return 180;\n    if (angle == -M_PI) return -180;\n    return angle * 180 / M_PI;\n}\n\nAnsiString Helpers::StringConvertSignals(float f1, float f2, void* data)\n{\n    int counter = 0;\n    AnsiString temp;\n    int t = int(f2) % 100000 / 100;\n    int i;\n    std::vector<int>* signalsPositions = (vector<int>*)data;\n\n    for (i = 0; i < signalsPositions->size(); ++i) {\n        if (signalsPositions->at(i) >= f1 - 1 && signalsPositions->at(i) <= f2 + 1) {\n            counter++;\n        }\n    }\n    if (fabs(f2 - f1) >= lessForVerticalLabels * 100) {\n        temp.printf(\" [%i; %i]\", int(f1) % 100000 / 100, t == 0 ? 1000 : t);\n        return IntToStr(counter) + \"шт.\" + temp;\n    }\n    return IntToStr(counter) + \"шт.\";\n}\n\n\nAnsiString Helpers::StringConvert(float f1, float f2, void* data)\n{\n    int t = int(f2) % 100000 / 100;\n    int t1, t2;\n    t1 =  int(f1) % 100000 / 100;\n    t2 =  t == 0 ? 1000 : t;\n    //if(t2-t1<50) return \"\";\n    if (t2 - t1 >= lessForVerticalLabels) {\n        AnsiString temp;\n        temp.printf(\" [%i; %i]\", t1, t2);\n        return temp;\n    } else {\n        return \"\";\n    }\n}\n\nvoid Helpers::swap(int &x, int &y)\n{\n    int t = x;\n    x = y;\n    y = t;\n}\n\n",
-			"file": "Helpers.cpp",
-			"file_size": 4465,
-			"file_write_time": 131246972720000000,
-			"settings":
-			{
-				"buffer_size": 4314,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Helpers.h",
-			"settings":
-			{
-				"buffer_size": 1328,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AutoCADHelper.h",
-			"settings":
-			{
-				"buffer_size": 21063,
-				"encoding": "Cyrillic (Windows 1251)",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "AcadExportThread.cpp",
-			"settings":
-			{
-				"buffer_size": 46625,
+				"buffer_size": 485,
 				"encoding": "Cyrillic (Windows 1251)",
 				"line_ending": "Windows"
 			}
@@ -168,6 +129,49 @@
 	],
 	"file_history":
 	[
+		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.cpp",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.h",
+		"/D/_DISTR/_ASUDOR/RSign/Helpers.h",
+		"/D/_DISTR/_ASUDOR/RSign/Helpers.cpp",
+		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.cpp",
+		"/D/_MMK/_ROADS/Roads-2018/САЙТ/Координаты 2018/Кадры ул. Лермонтова, г. Иркутск._sv",
+		"/D/_MMK/_ROADS/Roads-2018/САЙТ/Координаты 2018/Кадры ул. 6-я Советская, г. Иркутск._sv",
+		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
+		"/D/_DOWNLOADS/WaterDemo/WaterDemo/WaterDemo/Game1.cs",
+		"/D/_DOWNLOADS/WaterDemo/WaterDemo/WaterDemo/Water.cs",
+		"/C/Users/m/Desktop/Отзыв.txt",
+		"/C/Users/m/Desktop/Vue-статья",
+		"/C/Users/m/Documents/PsychopyDemos/branchedExp/branching_lastrun.py",
+		"/D/_DISTR/SQLServer 2005/ПРИ ОШИБКИ ЗАПУСКА ПРИ УСТАНОВКЕ/скопировать в.txt",
+		"/D/_DISTR/_ASUDOR/swpdExport/SwpdExport.cpp",
+		"/D/_DISTR/_ASUDOR/swpdExport/main.cpp",
+		"/C/Users/m/Desktop/МОСРВП[537]/fontello-4c5e761e/demo.html",
+		"/D/_MMK/_ROADS/Roads-2018/CITY/Настройка восьмой камеры",
+		"/D/_MMK/_PYTHON/CitySite/client/node_modules/leaflet/src/layer/ImageOverlay.js",
+		"/D/_MMK/_ROADS/Roads-2018/САЙТ/Координаты 2018/пер. 5-й Советский, г. Иркутск - весь участок.csv",
+		"/D/_MMK/_PYTHON/CityDiagnostics/out/json/бул. Гагарина, г. Иркутск.json",
+		"/G/_ROADS/IRKUTSK2018/6_sovetskaya/6 Sovetskaya_zaezd2_pryamo_2018.05.30_12-10/test.avs",
+		"/G/_ROADS/IRKUTSK2018/6_sovetskaya/6 Sovetskaya_zaezd2_pryamo_2018.05.30_12-10/_cmd.bat",
+		"/D/_MMK/_ROADS/Roads-2018/САЙТ/Координаты 2018/Кадры ул. Нижняя Набережная, г. Иркутск._sv",
+		"/D/_MMK/_ROADS/Roads-2018/САЙТ/Координаты 2018/Кадры пер. 5-й Советский, г. Иркутск._sv",
+		"/D/_MMK/_ROADS/Roads-2018/САЙТ/Координаты 2018/Кадры бул. Гагарина, г. Иркутск._sv",
+		"/G/_ROADS/IRKUTSK2018/6_sovetskaya/6 Sovetskaya_zaezd2_pryamo_2018.05.30_12-10/cmd.bat",
+		"/G/_ROADS/IRKUTSK2018/01/Chehova/Chehova_zaezd1_pryamo_2018.04.22_15-14_90/out/extract.bat",
+		"/G/_ROADS/IRKUTSK2018/11/Gryaznova/Gryaznova_zaezd1_obratno_2018.05.30_13-01/RoadLab.xml",
+		"/F/_ROADS/IRKUTSK2018/09/Trubetskogo/Trubetskogo_zaezd1_pryamo_2018.05.21_11-18/RoadLab.xml",
+		"/F/_ROADS/IRKUTSK2018/09/Trubetskogo/Trubetskogo_zaezd1_obratno_2018.05.21_11-13/RoadLab.xml",
+		"/F/_ROADS/IRKUTSK2018/09/Trubetskogo/Trubetskogo_zaezd1_pryamo_2018.05.21_11-13/RoadLab.xml",
+		"/F/2018_City/06/Yaroslavskogo/Yaroslavskogo_zaezd2_pryamo_2018.05.07_17-23_21/RoadLab.xml",
+		"/F/2018_City/06/Yaroslavskogo/Yaroslavskogo_zaezd2_obratno_2018.05.07_16-30_21/RoadLab.xml",
+		"/F/2018_City/06/Yaroslavskogo/Yaroslavskogo_zaezd1_obratno_2018.05.07_16-52_21/RoadLab.xml",
+		"/F/2018_City/06/Yaroslavskogo/Yaroslavskogo_zaezd1_pryamo_2018.05.07_17-05_21/RoadLab.xml",
+		"/F/2018_City/06/Yaroslavskogo/Yaroslavskogo_zaezd3_obratno_2018.05.05_14-28/RoadLab.xml",
+		"/E/2018_City/process_paths.py",
+		"/D/_MMK/_ROADS/Roads-2018/CITY/Насткройка восьмой камеры.",
+		"/F/2018_City/process_paths.py",
+		"/F/2018_City/process_paths.",
+		"/C/Users/m/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/lswitch.lnk",
+		"/C/Users/m/AppData/Local/Temp/Temp1_WaterDemo.zip/WaterDemo/WaterDemo/Water.cs",
 		"/D/_MMK/_PYTHON/_WINPOLYGON/gps/run.bat",
 		"/D/_MMK/_PYTHON/_WINPOLYGON/gps/2014/083/artu/artuG01_082.dat",
 		"/C/ZET 9/LANGUAGE/Russian/signature.txt",
@@ -210,7 +214,6 @@
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1831-1842/Cam1_об.smi",
 		"/D/_DISTR/_ASUDOR/RSign/const.h",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1504-1509/Cam1_об.smi",
-		"/D/_DISTR/_ASUDOR/RSign/acadexport.cpp",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/gen.bat",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Альянс/Турунтаев - ул.Полевая/Cam1.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Московский Тракт - 1504-1509/Cam1.smi",
@@ -253,49 +256,7 @@
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Байкалагропром/Cam2.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Байкалагропром/Cam1_об.smi",
 		"/D/_MMK/_ROADS/Roads-2017/Бурятия/Байкалагропром/Cam1.smi",
-		"/D/nginx/conf/nginx.conf",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.cpp",
-		"/C/Users/m/Desktop/Дороги2017/readme.txt",
-		"/D/_MMK/_AKARIN/Диссертация/Dissertation/Диссертацию смотреть как-то так",
-		"/C/Users/m/Desktop/ENGLISH/tasks.txt",
-		"/D/nginx/conf/zsch.conf",
-		"/C/Windows/System32/drivers/etc/hosts",
-		"/C/Users/m/Desktop/Статья01",
-		"/C/Users/m/AppData/Local/Temp/Temp1_httpd-2.4.27-Win64-VC15.zip/ReadMe.txt",
-		"/D/Hotel.txt",
-		"/C/Users/m/AppData/Local/Matter/matters.json",
-		"/C/Users/m/AppData/Local/Matter/matters.txt",
-		"/C/Users/m/AppData/Local/Matter/matters.dat",
-		"/C/Users/m/AppData/Local/Temp/mf_history_prod_protocol.py.txt",
-		"/D/shops.csv",
-		"/D/shops2.csv",
-		"/D/_DOWNLOADS/Foxit PhantomPDF Business 7 v7.3.6.321 Final Ml_Rus/Лечение.txt",
-		"/C/Users/m/Desktop/ENGLISH/crossword1.txt",
-		"/C/Users/m/AppData/Local/Temp/ai149736729015.tmp/ai149736729015.txt",
-		"/F/Crack/readme.txt",
-		"/G/Crack/readme.txt",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/src/AutoCAD_OCX.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADHelper.h",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/src/AutoCAD_TLB.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/src/AutoCAD_TLB.h",
-		"/D/_DISTR/_ASUDOR/RSign/AcadExportThread.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADExportForm.h",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCADExportForm.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/BuildWidePart.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/Helpers.h",
-		"/D/_DISTR/_ASUDOR/RSign/Helpers.cpp",
-		"/D/_DISTR/_ASUDOR/RSign/AutoCAD/Scripts/.credentials",
-		"/D/_MMK/_ROADS/Roads-2016/ДИАГНОСТИКА/get_podd_docx.bat",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Придорожный сервис.sql",
-		"/D/_DISTR/_ASUDOR/RSign/acadexport.h",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Параметры плана.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Знаки.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Ограждения.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Сигнальные столбики.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Освещение.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Тротуары.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Переходно-скоростные полосы.sql",
-		"/D/_MMK/_ROADS/ДИМА/ПОДД/Запросы/Автобусные остановки.sql"
+		"/D/nginx/conf/nginx.conf"
 	],
 	"find":
 	{
@@ -314,6 +275,16 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			" ",
+			"  31",
+			"  ",
+			"   ",
+			"    ",
+			"   ",
+			"  ",
+			"43",
+			"43bbdd2f",
+			"\",\n",
 			"priority",
 			"SingleSign",
 			"SignPr",
@@ -431,17 +402,7 @@
 			"C:",
 			"asu",
 			"C:",
-			"c:",
-			"C:",
-			"c:",
-			"C:",
-			"Program Files\\Borland\\CBuilder6",
-			"d\\",
-			"lib",
-			"C:\\",
-			"c:\\",
-			"C:\\",
-			"c:\\"
+			"c:"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -468,16 +429,44 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "acadexport.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 2405,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								35,
+								35
+							]
+						],
+						"settings":
+						{
+							"auto_name": "Лаба 1.",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "AutoCAD/Scripts/last_mini_report.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 485,
 						"regions":
 						{
 						},
@@ -490,165 +479,13 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "AutoCADHelper.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 69957,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								34607,
-								34607
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 23807.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "Helpers.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4314,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3848,
-								3848
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2580.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "Helpers.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1328,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1092,
-								1103
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "AutoCADHelper.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 21063,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								17491,
-								17491
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 7407.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "AcadExportThread.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 46625,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								16180,
-								16242
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 9587.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
 					"type": "text"
 				}
 			]
