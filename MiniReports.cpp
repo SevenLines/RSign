@@ -300,6 +300,54 @@ void MiniReports::ExecuteScript(AnsiString appPath, AnsiString script, Credentia
 	} */
 }
 
+void MiniReports::RoadToFromXML(map<AnsiString, AnsiString> &params, AnsiString connectionString, AnsiString method)
+{
+    AnsiString exe = ScriptsDirectory() + "RoadImporter.exe";
+    AnsiString script = exe;
+
+    script += " \"" + connectionString + "\"";
+    script += " " + params["NumRoad"];
+    script += " " + params["NumDataSource"];
+    script += " " + method;
+
+    AnsiString bat = ScriptsDirectory() + "last_mini_report.bat";
+    FILE *file = fopen( bat.c_str(), "w");
+    fprintf(file, "chcp 1251\n");
+    fprintf(file, script.c_str());
+    fclose(file);
+
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+    
+    // Start the child process. 
+    if( !CreateProcess( NULL,   // No module name (use command line)
+        bat.c_str(),        // Command line
+        NULL,           // Process handle not inheritable
+        NULL,           // Thread handle not inheritable
+        FALSE,          // Set handle inheritance to FALSE
+        0,              // No creation flags
+        NULL,           // Use parent's environment block
+        NULL,           // Use parent's starting directory 
+        &si,            // Pointer to STARTUPINFO structure
+        &pi )           // Pointer to PROCESS_INFORMATION structure
+    ) 
+    {
+        return;
+    }
+
+    // Wait until child process exits.
+    WaitForSingleObject( pi.hProcess, INFINITE );
+
+    // Close process and thread handles. 
+    CloseHandle( pi.hProcess );
+    CloseHandle( pi.hThread );
+    //WinExec( bat.c_str(), SW_SHOW );
+}
+
 void MiniReports::LoadIni(TIniFile* ini)
 {
 	_lastOutputDir = ini->ReadString("MiniReports", "LastOutputDir", _applicationDir);

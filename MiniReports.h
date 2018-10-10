@@ -41,7 +41,8 @@ public:
     vector<AnsiString> GetDocXReports();
     void GenReport(AnsiString reportName, map<AnsiString, AnsiString> &params, Credentials &credentials);
     void GenDocxReport(AnsiString reportName, map<AnsiString, AnsiString> &params, Credentials &credentials);
-    void UpdateDocxReport(AnsiString reportName, map<AnsiString, AnsiString> &params, Credentials &credentials);    
+    void UpdateDocxReport(AnsiString reportName, map<AnsiString, AnsiString> &params, Credentials &credentials);
+    void RoadToFromXML(map<AnsiString, AnsiString> &params, AnsiString connectionString, AnsiString method);  
     void ExecuteScript(AnsiString appPath, AnsiString script, Credentials &credentials);
 
     void LoadIni(TIniFile* ini);

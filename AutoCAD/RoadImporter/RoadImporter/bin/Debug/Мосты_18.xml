@@ -1,0 +1,55 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <ListBridges>
+    <NumInhabited>0</NumInhabited>
+    <Displacement>0.00</Displacement>
+    <Height>0.000</Height>
+    <Clearance xml:space="preserve">                                                  </Clearance>
+    <WalkWayWidth>0.000</WalkWayWidth>
+    <UnderBridgeWidth>0.000</UnderBridgeWidth>
+    <WayPartTransSlope>0.000</WayPartTransSlope>
+    <BridgeScheme xml:space="preserve">                                                                                                                                                                                                        </BridgeScheme>
+    <TonnageNorm1 xml:space="preserve">                                                  </TonnageNorm1>
+    <TonnageNorm2 xml:space="preserve">                                                  </TonnageNorm2>
+    <TonnageFact1>0.000</TonnageFact1>
+    <id_>0</id_>
+    <ShortTitle xml:space="preserve">                                        </ShortTitle>
+    <FullTitle xml:space="preserve">                                                                                                                                                                                                        </FullTitle>
+    <NumRoad>0</NumRoad>
+    <NumType>0</NumType>
+    <NumBrgMaterial>0</NumBrgMaterial>
+    <NumControlOrg>0</NumControlOrg>
+    <NumRoadOrg>0</NumRoadOrg>
+    <TonnageFact2>0.000</TonnageFact2>
+    <DiagnosticInfo xml:space="preserve">                                                                                                                                                                                                        </DiagnosticInfo>
+    <TonnageGeneralInStream>0.000</TonnageGeneralInStream>
+    <TonnageAxialInStream>0.000</TonnageAxialInStream>
+    <TonnageInSingleOrder>0.000</TonnageInSingleOrder>
+    <BuildingYear>0</BuildingYear>
+    <LastTestYear>0</LastTestYear>
+    <LastRepareYear>0</LastRepareYear>
+    <AntiseptitionYear>0</AntiseptitionYear>
+    <NumState>0</NumState>
+    <NumDriveWPMaterial>0</NumDriveWPMaterial>
+    <RiverMirrorWidth>0.000</RiverMirrorWidth>
+    <MaxDepth>0.000</MaxDepth>
+    <FlowSpeed>0.000</FlowSpeed>
+    <OwnerDocument xml:space="preserve">                                                                                                                                                                                                        </OwnerDocument>
+    <BalanceCost>0.000</BalanceCost>
+    <RestCost>0.000</RestCost>
+    <DeteriorationCost>0.000</DeteriorationCost>
+    <Comments />
+    <Extent>0.000</Extent>
+    <Width>0.00</Width>
+    <DriveWayWidth>0.000</DriveWayWidth>
+    <UnderBridgeHeight>0.000</UnderBridgeHeight>
+    <WayPartLongSlope>0.000</WayPartLongSlope>
+    <ObstacleName xml:space="preserve">                                                                                                    </ObstacleName>
+    <NormativeLoad xml:space="preserve">                                                                                                    </NormativeLoad>
+    <NumInvent>0</NumInvent>
+    <NumTypeObstacle>0</NumTypeObstacle>
+    <DataSource>0</DataSource>
+    <NumDataSource>0</NumDataSource>
+    <NumReason>2385112</NumReason>
+  </ListBridges>
+</DocumentElement>

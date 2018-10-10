@@ -1,0 +1,12 @@
+D:\SVN\RoadImporter\RoadImporter\bin\Debug\RoadImporter.exe.config
+D:\SVN\RoadImporter\RoadImporter\obj\x86\Debug\RoadImporter.Properties.Resources.resources
+D:\SVN\RoadImporter\RoadImporter\obj\x86\Debug\RoadImporter.csproj.GenerateResource.Cache
+D:\SVN\RoadImporter\RoadImporter\bin\Debug\RoadImporter.exe
+D:\SVN\RoadImporter\RoadImporter\bin\Debug\RoadImporter.pdb
+D:\SVN\RoadImporter\RoadImporter\obj\x86\Debug\RoadImporter.exe
+D:\SVN\RoadImporter\RoadImporter\obj\x86\Debug\RoadImporter.pdb
+D:\SVN\RoadImporter\RoadImporter\obj\x86\Debug\RoadImporter.FrmMoveToXML.resources
+D:\SVN\RoadImporter\RoadImporter\obj\x86\Debug\RoadImporter.FrmMoveToDB.resources
+D:\SVN\RoadImporter\RoadImporter\obj\x86\Debug\RoadImporter.csprojResolveAssemblyReference.cache
+D:\SVN\RoadImporter\RoadImporter\obj\x86\Debug\RoadImporter.FrmSelectRoad.resources
+D:\SVN\RoadImporter\RoadImporter\obj\x86\Debug\RoadImporter.FrmSelectDataSource.resources

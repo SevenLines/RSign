@@ -1,0 +1,23 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <ListTubes>
+    <DataSource>0</DataSource>
+    <id_>0</id_>
+    <NumRoad>0</NumRoad>
+    <NumTypeTubeCuttingShape>0</NumTypeTubeCuttingShape>
+    <NumTypeTubeWorkMode>0</NumTypeTubeWorkMode>
+    <Displacement>0.00</Displacement>
+    <Extent>0.0</Extent>
+    <NumPlace>262</NumPlace>
+    <NumMaterial>0</NumMaterial>
+    <HoleSize>0.000</HoleSize>
+    <NumTypeStrengthening>0</NumTypeStrengthening>
+    <TubeScheme xml:space="preserve">                                                                                                    </TubeScheme>
+    <NumCondition>0</NumCondition>
+    <NumInvent>0</NumInvent>
+    <HoleSize2>0.000</HoleSize2>
+    <Comment xml:space="preserve">                                        </Comment>
+    <NumDataSource>0</NumDataSource>
+    <NumReason>2385112</NumReason>
+  </ListTubes>
+</DocumentElement>

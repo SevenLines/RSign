@@ -132,6 +132,9 @@ __published:	// IDE-managed Components
     TMenuItem *ItemDocxReportUpdateFile;
     TMenuItem *N86;
     TMenuItem *N87;
+        TMenuItem *N88;
+        TMenuItem *XML1;
+        TMenuItem *XML2;
   void __fastcall OpenRoad(TObject *Sender);
   void __fastcall FormCreate(TObject *Sender);
   void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
@@ -207,6 +210,8 @@ __published:	// IDE-managed Components
     void __fastcall ItemDocxReportUpdateFileClick(TObject *Sender);
     void __fastcall N86Click(TObject *Sender);
     void __fastcall N87Click(TObject *Sender);
+        void __fastcall XML1Click(TObject *Sender);
+        void __fastcall XML2Click(TObject *Sender);
 
 
 private:	// User declarations

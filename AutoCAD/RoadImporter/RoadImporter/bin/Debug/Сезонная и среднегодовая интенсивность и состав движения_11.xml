@@ -1,0 +1,24 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <AverageYearTraffic>
+    <id_>0</id_>
+    <NumRoad>0</NumRoad>
+    <Displacement>0.000</Displacement>
+    <Traffic>0</Traffic>
+    <LightTrucks>0</LightTrucks>
+    <MediumTrucks>0</MediumTrucks>
+    <TrailersMediumTrucks>0</TrailersMediumTrucks>
+    <HeavyTrucks>0</HeavyTrucks>
+    <TrailersHeavyTrucks>0</TrailersHeavyTrucks>
+    <Cars>0</Cars>
+    <Buses>0</Buses>
+    <TrafficIncrease>0.000</TrafficIncrease>
+    <DataSource>0</DataSource>
+    <Year>0</Year>
+    <NumInvent>0</NumInvent>
+    <NumQuater>0</NumQuater>
+    <OverHeavyTrucks>0</OverHeavyTrucks>
+    <TrailersOverHeavyTrucks>0</TrailersOverHeavyTrucks>
+    <NumDataSource>0</NumDataSource>
+  </AverageYearTraffic>
+</DocumentElement>

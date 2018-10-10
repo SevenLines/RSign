@@ -1,0 +1,16 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <ListDrainageStructures>
+    <DataSource>0</DataSource>
+    <NumInvent>0</NumInvent>
+    <id_>0</id_>
+    <NumRoad>0</NumRoad>
+    <NumTypeDrainStructure>0</NumTypeDrainStructure>
+    <StartPos>0.000</StartPos>
+    <EndPos>0.000</EndPos>
+    <NumPlace>0</NumPlace>
+    <NumTypeStrengthening>0</NumTypeStrengthening>
+    <NumCondition>0</NumCondition>
+    <NumDataSource>0</NumDataSource>
+  </ListDrainageStructures>
+</DocumentElement>

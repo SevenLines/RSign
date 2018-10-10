@@ -182,8 +182,8 @@ void __fastcall TMainForm::ItemDocxReportClick(TObject *Sender)
 void __fastcall TMainForm::ItemDocxReportUpdateFileClick(TObject *Sender)
 {
 //     if (FActiveRoad) {
-		TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
-		if (!item) return;
+        TMenuItem* item = dynamic_cast<TMenuItem*>(Sender);
+        if (!item) return;
 
         std::map<AnsiString, AnsiString> params;
         String report_name = StringReplace(item->Caption, "&", "", TReplaceFlags() << rfReplaceAll);
@@ -1428,6 +1428,26 @@ void __fastcall TMainForm::N87Click(TObject *Sender)
 {
 if (FActiveRoad)
    FActiveRoad->CalculateVisibility();    
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::XML1Click(TObject *Sender)
+{
+        std::map<AnsiString, AnsiString> params;
+        if (FActiveRoad) {
+            GetActiveRoadParamsForMiniReport(params, "");
+        }
+        MiniReportsSingleton.RoadToFromXML(params, ConnectionForm->ConnectionString, "ToXML");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TMainForm::XML2Click(TObject *Sender)
+{
+        std::map<AnsiString, AnsiString> params;
+        if (FActiveRoad) {
+            GetActiveRoadParamsForMiniReport(params, "");
+        }
+        MiniReportsSingleton.RoadToFromXML(params, ConnectionForm->ConnectionString, "ToDB");        
 }
 //---------------------------------------------------------------------------
 

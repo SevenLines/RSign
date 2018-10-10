@@ -1,0 +1,25 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <ListBusStops>
+    <DataSource>0</DataSource>
+    <NumMaterial>0</NumMaterial>
+    <id_>0</id_>
+    <NumRoad>0</NumRoad>
+    <Displacement>0.000</Displacement>
+    <NumPlace>0</NumPlace>
+    <BusStopName xml:space="preserve">                                                                                                    </BusStopName>
+    <StopArea>false</StopArea>
+    <EmbarkationArea>false</EmbarkationArea>
+    <Pavilion>false</Pavilion>
+    <NumInvent>0</NumInvent>
+    <SwitchSpeedLines>false</SwitchSpeedLines>
+    <BalanceCost>0.000</BalanceCost>
+    <RestCost>0.000</RestCost>
+    <DeteriorationCost>0.000</DeteriorationCost>
+    <NumOrganization>0</NumOrganization>
+    <Comments />
+    <NumDataSource>0</NumDataSource>
+    <CheckFlag>false</CheckFlag>
+    <SideDistance>3.50</SideDistance>
+  </ListBusStops>
+</DocumentElement>

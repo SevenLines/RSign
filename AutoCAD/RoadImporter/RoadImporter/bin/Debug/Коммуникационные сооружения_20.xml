@@ -1,0 +1,51 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <ListCommunicationStruct>
+    <NumInvent>0</NumInvent>
+    <DataSource>0</DataSource>
+    <id_>0</id_>
+    <NumRoad>0</NumRoad>
+    <StartPos>0.000</StartPos>
+    <EndPos>0.000</EndPos>
+    <NumTypeComStructure>0</NumTypeComStructure>
+    <NumPlaceRoad>0</NumPlaceRoad>
+    <NumPlaceGround>0</NumPlaceGround>
+    <NumCondition>0</NumCondition>
+    <NumOrganization>0</NumOrganization>
+    <Comments />
+    <NumDataSource>0</NumDataSource>
+    <PointsCount>0</PointsCount>
+  </ListCommunicationStruct>
+  <ListCommunicationStruct>
+    <NumInvent>0</NumInvent>
+    <DataSource>0</DataSource>
+    <id_>1211641</id_>
+    <NumRoad>0</NumRoad>
+    <StartPos>2319.000</StartPos>
+    <EndPos>0.000</EndPos>
+    <NumTypeComStructure>176</NumTypeComStructure>
+    <NumPlaceRoad>262</NumPlaceRoad>
+    <NumPlaceGround>263</NumPlaceGround>
+    <NumCondition>0</NumCondition>
+    <NumOrganization>0</NumOrganization>
+    <Comments />
+    <NumDataSource>0</NumDataSource>
+    <PointsCount>0</PointsCount>
+  </ListCommunicationStruct>
+  <ListCommunicationStruct>
+    <NumInvent>0</NumInvent>
+    <DataSource>0</DataSource>
+    <id_>1854387</id_>
+    <NumRoad>0</NumRoad>
+    <StartPos>15973.000</StartPos>
+    <EndPos>15973.000</EndPos>
+    <NumTypeComStructure>175</NumTypeComStructure>
+    <NumPlaceRoad>262</NumPlaceRoad>
+    <NumPlaceGround>263</NumPlaceGround>
+    <NumCondition>0</NumCondition>
+    <NumOrganization>0</NumOrganization>
+    <Comments />
+    <NumDataSource>0</NumDataSource>
+    <PointsCount>0</PointsCount>
+  </ListCommunicationStruct>
+</DocumentElement>

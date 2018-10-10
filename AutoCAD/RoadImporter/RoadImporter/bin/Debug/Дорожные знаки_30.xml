@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <ListRoadSigns>
+    <id_>0</id_>
+    <NumRoad>0</NumRoad>
+    <NumRoadSign>0</NumRoadSign>
+    <Displacement>0.00</Displacement>
+    <NumPlace>0</NumPlace>
+    <NumMoveDirection>0</NumMoveDirection>
+    <SideDistance>0.00</SideDistance>
+    <NumTypeBearing>0</NumTypeBearing>
+    <NumCondition>0</NumCondition>
+    <NumInvent>0</NumInvent>
+    <DataSource>0</DataSource>
+    <NumExist>2135088</NumExist>
+    <NumManTest>0</NumManTest>
+    <SignLabel xml:space="preserve">                                                                                                                                                                                                                                                               </SignLabel>
+    <OnAttach>0</OnAttach>
+    <NumDataSource>0</NumDataSource>
+    <Area>0.00</Area>
+  </ListRoadSigns>
+</DocumentElement>
